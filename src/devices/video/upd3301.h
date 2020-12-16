@@ -1,0 +1,170 @@
+// license:BSD-3-Clause
+// copyright-holders:Curt Coder
+/**********************************************************************
+
+    NEC uPD3301 Programmable CRT Controller emulation
+
+**********************************************************************
+                            _____   _____
+                  VRTC   1 |*    \_/     | 40  Vcc
+                   RVV   2 |             | 39  SL0
+                   CSR   3 |             | 38  LC0
+                  LPEN   4 |             | 37  LC1
+                   INT   5 |             | 36  LC2
+                   DRQ   6 |             | 35  LC3
+                 _DACK   7 |             | 34  VSP
+                    A0   8 |             | 33  SL12
+                   _RD   9 |             | 32  GPA
+                   _WR  10 |   uPD3301   | 31  HLGT
+                   _CS  11 |             | 30  CC7
+                   DB0  12 |             | 29  CC6
+                   DB1  13 |             | 28  CC5
+                   DB2  14 |             | 27  CC4
+                   DB3  15 |             | 26  CC3
+                   DB4  16 |             | 25  CC2
+                   DB5  17 |             | 24  CC1
+                   DB6  18 |             | 23  CC0
+                   DB7  19 |             | 22  CCLK
+                   GND  20 |_____________| 21  HRTC
+
+**********************************************************************/
+
+#ifndef MAME_VIDEO_UPD3301_H
+#define MAME_VIDEO_UPD3301_H
+
+#pragma once
+
+
+
+//**************************************************************************
+//  INTERFACE CONFIGURATION MACROS
+//**************************************************************************
+
+#define UPD3301_DRAW_CHARACTER_MEMBER(_name) void _name(bitmap_rgb32 &bitmap, int y, int sx, uint8_t cc, uint8_t lc, int hlgt, int rvv, int vsp, int sl0, int sl12, int csr, int gpa)
+
+
+//**************************************************************************
+//  TYPE DEFINITIONS
+//**************************************************************************
+
+
+// ======================> upd3301_device
+
+class upd3301_device :  public device_t,
+						public device_video_interface
+{
+public:
+	typedef device_delegate<void (bitmap_rgb32 &bitmap, int y, int sx, uint8_t cc, uint8_t lc, int hlgt, int rvv, int vsp, int sl0, int sl12, int csr, int gpa)> draw_character_delegate;
+
+	// construction/destruction
+	upd3301_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+
+	void set_character_width(int value) { m_width = value; }
+	template <typename... T> void set_display_callback(T &&... args) { m_display_cb.set(std::forward<T>(args)...); }
+
+	auto drq_wr_callback() { return m_write_drq.bind(); }
+	auto int_wr_callback() { return m_write_int.bind(); }
+	auto hrtc_wr_callback() { return m_write_hrtc.bind(); }
+	auto vrtc_wr_callback() { return m_write_vrtc.bind(); }
+
+	uint8_t read(offs_t offset);
+	void write(offs_t offset, uint8_t data);
+	void dack_w(uint8_t data);
+	void lpen_w(int state);
+	int hrtc_r();
+	int vrtc_r();
+
+	uint32_t screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+protected:
+	// device-level overrides
+	virtual void device_start() override;
+	virtual void device_reset() override;
+	virtual void device_clock_changed() override;
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr) override;
+
+private:
+	enum
+	{
+		TIMER_HRTC,
+		TIMER_VRTC,
+		TIMER_DRQ
+	};
+
+	void set_interrupt(int state);
+	void set_drq(int state);
+	void set_display(int state);
+	void reset_counters();
+	void update_hrtc_timer(int state);
+	void update_vrtc_timer(int state);
+	void recompute_parameters();
+
+	void draw_scanline();
+
+	devcb_write_line   m_write_int;
+	devcb_write_line   m_write_drq;
+	devcb_write_line   m_write_hrtc;
+	devcb_write_line   m_write_vrtc;
+
+	draw_character_delegate m_display_cb;
+	int m_width;
+
+	// screen drawing
+	bitmap_rgb32 m_bitmap;     // bitmap
+	int m_y;                        // current scanline
+	int m_hrtc;                     // horizontal retrace
+	int m_vrtc;                     // vertical retrace
+
+	// live state
+	int m_mode;                     // command mode
+	uint8_t m_status;                 // status register
+	int m_param_count;              // parameter count
+
+	// FIFOs
+	uint8_t m_data_fifo[80][2];       // row data FIFO
+	uint8_t m_attr_fifo[40][2];       // attribute FIFO
+	int m_data_fifo_pos;            // row data FIFO position
+	int m_attr_fifo_pos;            // attribute FIFO position
+	int m_input_fifo;               // which FIFO is in input mode
+
+	// interrupts
+	int m_mn;                       // disable special character interrupt
+	int m_me;                       // disable end of screen interrupt
+	int m_dma_mode;                 // DMA mode
+
+	// screen geometry
+	int m_h;                        // characters per line
+	int m_b;                        // cursor blink time
+	int m_l;                        // lines per screen
+	int m_s;                        // display every other line
+	int m_c;                        // cursor mode
+	int m_r;                        // lines per character
+	int m_v;                        // vertical blanking height
+	int m_z;                        // horizontal blanking width
+
+	// attributes
+	int m_at1;                      //
+	int m_at0;                      //
+	int m_sc;                       //
+	int m_attr;                     // attributes per row
+	int m_attr_blink;               // attribute blink
+	int m_attr_frame;               // attribute blink frame counter
+
+	// cursor
+	int m_cm;                       // cursor visible
+	int m_cx;                       // cursor column
+	int m_cy;                       // cursor row
+	int m_cursor_blink;             // cursor blink
+	int m_cursor_frame;             // cursor blink frame counter
+
+	// timers
+	emu_timer *m_hrtc_timer;
+	emu_timer *m_vrtc_timer;
+	emu_timer *m_drq_timer;
+};
+
+
+// device type definition
+DECLARE_DEVICE_TYPE(UPD3301, upd3301_device)
+
+#endif // MAME_VIDEO_UPD3301_H

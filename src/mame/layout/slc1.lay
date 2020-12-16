@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+license:CC0
+-->
+<mamelayout version="2">
+
+<!-- NOTE: no chesspieces simulation here -->
+
+	<element name="g_led" defstate="0">
+		<disk>
+			<color red="0.0" green="0.75" blue="0.0" />
+		</disk>
+	</element>
+	<element name="g_digit" defstate="0">
+		<led7seg>
+			<color red="0.75" green="0.5" blue="0.0" />
+		</led7seg>
+	</element>
+	<element name="r_digit" defstate="0">
+		<led7seg>
+			<color red="0.75" green="0.0" blue="0.0" />
+		</led7seg>
+	</element>
+	<element name="background">
+		<rect>
+			<bounds left="0" top="0" right="1" bottom="1" />
+			<color red="0.0" green="0.0" blue="0.0" />
+		</rect>
+	</element>
+
+	<view name="Default Layout">
+		<!-- Black background -->
+		<element ref="background">
+			<bounds left="64" top="95" right="453" bottom="195" />
+		</element>
+		<element name="busy_led" ref="g_led">
+			<bounds left="76" right="96" top="130" bottom="150" />
+		</element>
+
+		<element name="digit0" ref="r_digit">
+			<bounds left="107" top="105" right="155" bottom="185" />
+		</element>
+		<element name="digit6" ref="r_digit">
+			<bounds left="155" top="105" right="203" bottom="185" />
+		</element>
+		<element name="digit5" ref="r_digit">
+			<bounds left="203" top="105" right="251" bottom="185" />
+		</element>
+		<element name="digit4" ref="r_digit">
+			<bounds left="251" top="105" right="299" bottom="185" />
+		</element>
+		<element name="digit3" ref="g_digit">
+			<bounds left="347" top="105" right="395" bottom="185" />
+		</element>
+		<element name="digit1" ref="g_digit">
+			<bounds left="395" top="105" right="443" bottom="185" />
+		</element>
+	</view>
+</mamelayout>
