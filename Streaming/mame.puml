@@ -132,6 +132,27 @@ osd_common_t <|-[#green]- Win32::windows_osd_interface
 osd_common_t <|-[#red]- macOS::mac_osd_interface
 osd_common_t <|-[#blue]- SDL::sdl_osd_interface
 
+class Win32::windows_osd_interface {
+    +bool video_init()    
+}
+
+class UWP::windows_osd_interface {
+    +bool video_init()    
+}
+
+class SDL::sdl_osd_interface {
+    +void init(running_machine machine)
+}
+
+note bottom of SDL::sdl_osd_interface : make_shared<sdl_window_info>()\nosd_common_t::init_subsystems()
+
+note bottom of macOS::mac_osd_interface: make_shared<mac_window_info>()
+
+note bottom of Win32::windows_osd_interface: win_window_info::create()
+
+note bottom of UWP::windows_osd_interface: uwp_window_info::create()
+note bottom of UWP::uwp_window_info: renderer().draw()
+
 osd_window -- osd_common_t
 
 osd_interface -- running_machine
@@ -157,12 +178,19 @@ class osd_common_t {
     #monitor_module m_monitor_module
     #osd_watchdog m_watchdog
     #vector<menu_item> m_sliders
-
     {abstract} + void init(running_machine machine)
     {abstract} + void update(bool skip_redraw)
     {abstract} + void input_update()
     {abstract} +bool video_init()
     {abstract} +bool window_init()
+    +void init_subsystems()
 }
+
+note top of osd_common_t
+    void init_subsystems() {
+        video_init();
+        input_init();
+    }    
+end note
 
 @enduml
