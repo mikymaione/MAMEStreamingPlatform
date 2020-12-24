@@ -1,0 +1,168 @@
+@startuml
+
+skinparam linetype ortho
+skinparam ArrowColor black
+skinparam shadowing false
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+skinparam package {
+    BackgroundColor Linen
+}
+
+set namespaceSeparator ::
+
+enum primitive_type
+{
+    INVALID
+    LINE
+    QUAD
+}
+
+class render_manager {
+    +running_machine machine()
+    +float max_update_rate()
+}
+
+running_machine --o render_manager
+
+class osd_renderer {
+    +osd_window assert_window()
+    {abstract} +int create()
+    {abstract} +render_primitive_list get_primitives()
+    {abstract} +int draw(const int update)
+}
+
+render_primitive_list --o osd_renderer
+render_primitive --o render_primitive_list
+primitive_type -- render_primitive
+
+class render_primitive {
+    +primitive_type type
+    +float width
+    +render_color color
+    +render_bounds bounds
+    +render_texinfo texture
+}
+
+class render_primitive_list {
+    void append(render_primitive prim)
+}
+
+class renderer_ogl extends osd_renderer
+class renderer_bgfx extends osd_renderer
+class renderer_gdi extends osd_renderer
+class renderer_d3d9 extends osd_renderer
+class renderer_sdl1 extends osd_renderer
+class renderer_sdl2 extends osd_renderer
+
+osd_window o-- renderer_ogl
+osd_window o-- renderer_bgfx
+osd_window o-- renderer_gdi
+osd_window o-- renderer_d3d9
+osd_window o-- renderer_sdl1
+osd_window o-- renderer_sdl2
+
+osd_window o-- render_target
+osd_window -- osd_renderer
+
+class osd_window_t<TWindowHandle> extends osd_window
+
+SDL::sdl_window_info -[#blue]- renderer_bgfx
+SDL::sdl_window_info -[#blue]- renderer_ogl
+SDL::sdl_window_info -[#blue]- renderer_sdl1
+SDL::sdl_window_info -[#blue]- renderer_sdl2
+
+macOS::mac_window_info -[#red]- renderer_bgfx
+macOS::mac_window_info -[#red]- renderer_ogl
+
+UWP::uwp_window_info -[#violet]- renderer_bgfx
+
+Win32::win_window_info -[#green]- renderer_ogl
+Win32::win_window_info -[#green]- renderer_bgfx
+Win32::win_window_info -[#green]- renderer_d3d9
+Win32::win_window_info -[#green]- renderer_gdi
+
+class osd_window {
+    {static} +osd_renderer make_for_type(int mode, osd_window window, int extra_flags)
+    +osd_renderer renderer()
+    {abstract} +running_machine machine()
+    {abstract} +render_target target()
+    {abstract} +void update()
+}
+
+render_manager --o render_target
+render_primitive_list --o render_target
+
+class render_target
+{
+    +render_manager manager()
+    +u32 width()
+    +u32 height()
+    +float pixel_aspect()
+    +render_primitive_list get_primitives()
+}
+
+class SDL::sdl_window_info<SDL_Window*> {
+    +void update()
+}
+
+class macOS::mac_window_info<void *> {
+    +void update()
+}
+
+class Win32::win_window_info<HWND> {
+    +void update()
+}
+
+class UWP::uwp_window_info<CoreWindow> {
+  +void update()
+}
+
+osd_window_t <|-[#violet]- UWP::uwp_window_info
+osd_window_t <|-[#green]- Win32::win_window_info
+osd_window_t <|-[#red]- macOS::mac_window_info
+osd_window_t <|-[#blue]- SDL::sdl_window_info
+
+osd_common_t <|-[#violet]- UWP::windows_osd_interface
+osd_common_t <|-[#green]- Win32::windows_osd_interface
+osd_common_t <|-[#red]- macOS::mac_osd_interface
+osd_common_t <|-[#blue]- SDL::sdl_osd_interface
+
+osd_window -- osd_common_t
+
+osd_interface -- running_machine
+
+osd_interface <|-- osd_common_t
+
+class osd_interface {
+	{abstract} +void init(running_machine machine)
+	{abstract} +void update(bool skip_redraw)
+	{abstract} +void input_update()
+}
+
+class osd_common_t {
+    +osd_window s_window_list
+    #sound_module m_sound
+    #debug_module m_debugger
+    #midi_module m_midi
+    #input_module m_keyboard_input
+    #input_module m_mouse_input
+    #input_module m_lightgun_input
+    #input_module m_joystick_input
+    #output_module m_output
+    #monitor_module m_monitor_module
+    #osd_watchdog m_watchdog
+    #vector<menu_item> m_sliders
+
+    {abstract} + void init(running_machine machine)
+    {abstract} + void update(bool skip_redraw)
+    {abstract} + void input_update()
+    {abstract} +bool video_init()
+    {abstract} +bool window_init()
+}
+
+@enduml
