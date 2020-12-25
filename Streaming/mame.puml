@@ -42,7 +42,7 @@ class osd_renderer {
 
 note as note_osd_renderer_make_for_type
 <b><color:Red>4)</color></b>
-osd_renderer make_for_type() {
+osd_renderer make_for_type(int mode, osd_window window, int extra_flags) {
     return new renderer_XXX(window);
 }
 end note
@@ -103,9 +103,9 @@ class render_target
     +render_primitive_list get_primitives()
 }
 
-class XXX_window_info<XXX_Window> {
-    +void update()
+class XXX_window_info<XXX_Window> {    
     +int window_init()
+    +void update()
 }
 
 osd_window_t <|-- XXX_window_info
@@ -126,7 +126,7 @@ end note
 note as note_4_XXX_window_info
 <b><color:Red>3)</color></b>
 int window_init() {
-    osd_renderer::make_for_type();
+    osd_renderer::make_for_type(video_config.mode, this);
 }
 end note
 
