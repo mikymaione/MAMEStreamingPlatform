@@ -1,5 +1,7 @@
 @startuml
 
+page 2x1
+
 skinparam linetype ortho
 skinparam ArrowColor black
 skinparam shadowing false
@@ -38,7 +40,10 @@ class osd_renderer {
 }
 
 note as note_osd_renderer_make_for_type
-<b><color:Red>4)</color></b> return make_unique<renderer_bgfx>(window);
+<b><color:Red>4)</color></b>
+osd_renderer make_for_type() {
+    return new renderer_bgfx(window);
+}
 end note
 
 osd_renderer .. note_osd_renderer_make_for_type
@@ -59,12 +64,14 @@ class render_primitive_list {
     void append(render_primitive prim)
 }
 
-class renderer_ogl extends osd_renderer
-class renderer_bgfx extends osd_renderer
-class renderer_gdi extends osd_renderer
-class renderer_d3d9 extends osd_renderer
-class renderer_sdl1 extends osd_renderer
-class renderer_sdl2 extends osd_renderer
+together {
+    class renderer_ogl extends osd_renderer
+    class renderer_bgfx extends osd_renderer
+    class renderer_gdi extends osd_renderer
+    class renderer_d3d9 extends osd_renderer
+    class renderer_sdl1 extends osd_renderer
+    class renderer_sdl2 extends osd_renderer
+}
 
 osd_window o-- renderer_ogl
 osd_window o-- renderer_bgfx
@@ -78,20 +85,14 @@ osd_window -- osd_renderer
 
 class osd_window_t<TWindowHandle> extends osd_window
 
-SDL::sdl_window_info -[#blue]- renderer_bgfx
-SDL::sdl_window_info -[#blue]- renderer_ogl
-SDL::sdl_window_info -[#blue]- renderer_sdl1
-SDL::sdl_window_info -[#blue]- renderer_sdl2
+together {
+    package Win32 {}
+    package UWP {}
+    package macOS {}
+    package SDLMame {}
+}
 
-macOS::mac_window_info -[#red]- renderer_bgfx
-macOS::mac_window_info -[#red]- renderer_ogl
-
-UWP::uwp_window_info -[#violet]- renderer_bgfx
-
-Win32::win_window_info -[#green]- renderer_ogl
-Win32::win_window_info -[#green]- renderer_bgfx
-Win32::win_window_info -[#green]- renderer_d3d9
-Win32::win_window_info -[#green]- renderer_gdi
+SDLMame::sdl_window_info -[#blue]- renderer_sdl2
 
 class osd_window {    
     +osd_renderer renderer()
@@ -112,62 +113,43 @@ class render_target
     +render_primitive_list get_primitives()
 }
 
-class SDL::sdl_window_info<SDL_Window*> {
+class SDLMame::sdl_window_info<SDL_Window*> {
     +void update()
+    +int window_init()
 }
 
-class macOS::mac_window_info<void *> {
-    +void update()
-}
+osd_window_t <|-[#blue]- SDLMame::sdl_window_info
+osd_common_t <|-[#blue]- SDLMame::sdl_osd_interface
 
-class Win32::win_window_info<HWND> {
-    +void update()
-}
-
-class UWP::uwp_window_info<CoreWindow> {
-    +void create()
-    +void update()  
-}
-
-osd_window_t <|-[#violet]- UWP::uwp_window_info
-osd_window_t <|-[#green]- Win32::win_window_info
-osd_window_t <|-[#red]- macOS::mac_window_info
-osd_window_t <|-[#blue]- SDL::sdl_window_info
-
-osd_common_t <|-[#violet]- UWP::windows_osd_interface
-osd_common_t <|-[#green]- Win32::windows_osd_interface
-osd_common_t <|-[#red]- macOS::mac_osd_interface
-osd_common_t <|-[#blue]- SDL::sdl_osd_interface
-
-class Win32::windows_osd_interface {
-    +bool video_init()    
-}
-
-class UWP::windows_osd_interface {
-    +bool video_init()    
-}
-
-class SDL::sdl_osd_interface {
+class SDLMame::sdl_osd_interface {
     +void init(running_machine machine)
+    +bool video_init()
 }
 
-note "<b><color:Red>2)</color></b> make_shared<sdl_window_info>();" as note_2_sdl_osd_interface
+note as note_5_sdl_window_info
+<b><color:Red>5)</color></b>
+void update() {
+    renderer().draw();
+}
+end note
 
-note "<b><color:Red>2)</color></b> make_shared<mac_window_info>();" as note_2_mac_osd_interface
+note as note_4_sdl_window_info
+<b><color:Red>3)</color></b>
+int window_init() {
+    osd_renderer::make_for_type();
+}
+end note
 
-note "<b><color:Red>2)</color></b> win_window_info::create();" as note_2_Win32windows_osd_interface
+note as note_2_sdl_osd_interface
+<b><color:Red>2)</color></b>
+bool video_init() {
+    new sdl_window_info();
+}
+end note
 
-note "<b><color:Red>2)</color></b> uwp_window_info::create();" as note_2_UWPwindows_osd_interface
-
-note "<b><color:Red>3)</color></b> osd_renderer::make_for_type();" as note_4_uwp_window_info
-note "<b><color:Red>5)</color></b> renderer().draw();" as note_5_uwp_window_info
-
-SDL::sdl_osd_interface .. note_2_sdl_osd_interface
-macOS::mac_osd_interface .. note_2_mac_osd_interface
-Win32::windows_osd_interface .. note_2_Win32windows_osd_interface
-UWP::windows_osd_interface .. note_2_UWPwindows_osd_interface
-UWP::uwp_window_info .. note_4_uwp_window_info
-UWP::uwp_window_info .. note_5_uwp_window_info
+SDLMame::sdl_osd_interface .. note_2_sdl_osd_interface
+SDLMame::sdl_window_info .. note_4_sdl_window_info
+SDLMame::sdl_window_info .. note_5_sdl_window_info
 
 osd_window -- osd_common_t
 
@@ -204,10 +186,21 @@ class osd_common_t {
 
 note as note_osd_common_t_init_subsystems
 <b><color:Red>1)</color></b>
-video_init();
-input_init();
+void init_subsystems() {
+    video_init();
+    input_init();
+}
 end note
 
 osd_common_t .. note_osd_common_t_init_subsystems
+
+note as note_sdl_osd_interface_init
+<b><color:Red>0)</color></b>
+void init(running_machine machine) {
+    osd_common_t::init_subsystems();
+}
+end note
+
+SDLMame::sdl_osd_interface .. note_sdl_osd_interface_init
 
 @enduml
