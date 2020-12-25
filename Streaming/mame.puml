@@ -32,6 +32,7 @@ class render_manager {
 running_machine --o render_manager
 
 class osd_renderer {
+    -osd_window  m_window
     +osd_window assert_window()
     {abstract} +int create()
     {abstract} +render_primitive_list get_primitives()
@@ -42,7 +43,7 @@ class osd_renderer {
 note as note_osd_renderer_make_for_type
 <b><color:Red>4)</color></b>
 osd_renderer make_for_type() {
-    return new renderer_bgfx(window);
+    return new renderer_XXX(window);
 }
 end note
 
@@ -64,37 +65,31 @@ class render_primitive_list {
     void append(render_primitive prim)
 }
 
-together {
-    class renderer_ogl extends osd_renderer
-    class renderer_bgfx extends osd_renderer
-    class renderer_gdi extends osd_renderer
-    class renderer_d3d9 extends osd_renderer
-    class renderer_sdl1 extends osd_renderer
-    class renderer_sdl2 extends osd_renderer
+class renderer_XXX extends osd_renderer {
+    +int draw(const int update)
 }
 
-osd_window o-- renderer_ogl
-osd_window o-- renderer_bgfx
-osd_window o-- renderer_gdi
-osd_window o-- renderer_d3d9
-osd_window o-- renderer_sdl1
-osd_window o-- renderer_sdl2
+note as note_renderer_XXX
+<b><color:Red>6)</color></b>
+int draw(const int update) {
+    auto win = assert_window();
 
+    XXX_present();
+}
+end note
+
+renderer_XXX .. note_renderer_XXX
+
+osd_window o-- renderer_XXX
 osd_window o-- render_target
 osd_window -- osd_renderer
 
 class osd_window_t<TWindowHandle> extends osd_window
 
-together {
-    package Win32 {}
-    package UWP {}
-    package macOS {}
-    package SDLMame {}
-}
-
-SDLMame::sdl_window_info -[#blue]- renderer_sdl2
+XXXMame::XXX_window_info -- renderer_XXX
 
 class osd_window {    
+    +render_primitive_list m_primlist
     +osd_renderer renderer()
     {abstract} +running_machine machine()
     {abstract} +render_target target()
@@ -113,43 +108,43 @@ class render_target
     +render_primitive_list get_primitives()
 }
 
-class SDLMame::sdl_window_info<SDL_Window*> {
+class XXXMame::XXX_window_info<XXX_Window> {
     +void update()
     +int window_init()
 }
 
-osd_window_t <|-[#blue]- SDLMame::sdl_window_info
-osd_common_t <|-[#blue]- SDLMame::sdl_osd_interface
+osd_window_t <|-- XXXMame::XXX_window_info
+osd_common_t <|-- XXXMame::XXX_osd_interface
 
-class SDLMame::sdl_osd_interface {
+class XXXMame::XXX_osd_interface {
     +void init(running_machine machine)
     +bool video_init()
 }
 
-note as note_5_sdl_window_info
+note as note_5_XXX_window_info
 <b><color:Red>5)</color></b>
 void update() {
     renderer().draw();
 }
 end note
 
-note as note_4_sdl_window_info
+note as note_4_XXX_window_info
 <b><color:Red>3)</color></b>
 int window_init() {
     osd_renderer::make_for_type();
 }
 end note
 
-note as note_2_sdl_osd_interface
+note as note_2_XXX_osd_interface
 <b><color:Red>2)</color></b>
 bool video_init() {
-    new sdl_window_info();
+    new XXX_window_info();
 }
 end note
 
-SDLMame::sdl_osd_interface .. note_2_sdl_osd_interface
-SDLMame::sdl_window_info .. note_4_sdl_window_info
-SDLMame::sdl_window_info .. note_5_sdl_window_info
+XXXMame::XXX_osd_interface .. note_2_XXX_osd_interface
+XXXMame::XXX_window_info .. note_4_XXX_window_info
+XXXMame::XXX_window_info .. note_5_XXX_window_info
 
 osd_window -- osd_common_t
 
@@ -194,13 +189,13 @@ end note
 
 osd_common_t .. note_osd_common_t_init_subsystems
 
-note as note_sdl_osd_interface_init
+note as note_XXX_osd_interface_init
 <b><color:Red>0)</color></b>
 void init(running_machine machine) {
     osd_common_t::init_subsystems();
 }
 end note
 
-SDLMame::sdl_osd_interface .. note_sdl_osd_interface_init
+XXXMame::XXX_osd_interface .. note_XXX_osd_interface_init
 
 @enduml
