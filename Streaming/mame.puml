@@ -17,20 +17,6 @@ skinparam package {
 
 set namespaceSeparator ::
 
-enum primitive_type
-{
-    INVALID
-    LINE
-    QUAD
-}
-
-class render_manager {
-    +running_machine machine()
-    +float max_update_rate()
-}
-
-running_machine --o render_manager
-
 class osd_renderer {
     -osd_window  m_window
     +osd_window assert_window()
@@ -47,22 +33,6 @@ osd_renderer make_for_type(int mode, osd_window window, int extra_flags) {
 }
 end note
 
-render_primitive_list --o osd_renderer
-render_primitive --o render_primitive_list
-primitive_type -- render_primitive
-
-class render_primitive {
-    +primitive_type type
-    +float width
-    +render_color color
-    +render_bounds bounds
-    +render_texinfo texture
-}
-
-class render_primitive_list {
-    void append(render_primitive prim)
-}
-
 class renderer_XXX extends osd_renderer {
     +int draw(const int update)
 }
@@ -76,7 +46,6 @@ int draw(const int update) {
 end note
 
 osd_window o-- renderer_XXX
-osd_window o-- render_target
 osd_window -- osd_renderer
 
 class osd_window_t<TWindowHandle> extends osd_window
@@ -85,23 +54,24 @@ XXX_window_info -- renderer_XXX
 
 class osd_window {    
     +render_primitive_list m_primlist
-    +osd_renderer renderer()
-    {abstract} +running_machine machine()
+    +osd_renderer renderer()        
     {abstract} +render_target target()
+    {abstract} +int fullscreen()
+    {abstract} +running_machine machine()
+    {abstract} +osd_dim get_size()
+    {abstract} +osd_monitor_info monitor()
+    {abstract} +void capture_pointer()
+    {abstract} +void release_pointer()
+    {abstract} +void show_pointer()
+    {abstract} +void hide_pointer()
     {abstract} +void update()
+    {abstract} +void destroy()
+    {abstract} +bool win_has_menu()
 }
 
-render_manager --o render_target
-render_primitive_list --o render_target
+osd_stream <|-- XXX_window_info
 
-class render_target
-{
-    +render_manager manager()
-    +u32 width()
-    +u32 height()
-    +float pixel_aspect()
-    +render_primitive_list get_primitives()
-}
+class osd_stream #Lavender extends osd_window
 
 class XXX_window_info<XXX_Window> {    
     +int window_init()
@@ -110,6 +80,7 @@ class XXX_window_info<XXX_Window> {
 
 osd_window_t <|-- XXX_window_info
 osd_common_t <|-- XXX_osd_interface
+XXX_window_info -- XXX_osd_interface
 
 class XXX_osd_interface {
     +void init(running_machine machine)
@@ -138,9 +109,6 @@ bool video_init() {
 end note
 
 osd_window -- osd_common_t
-
-osd_interface -- running_machine
-
 osd_interface <|-- osd_common_t
 
 class osd_interface {
