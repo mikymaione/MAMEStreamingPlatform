@@ -18,49 +18,25 @@ class osd_renderer {
     {static} +osd_renderer make_for_type(int mode, osd_window window, int extra_flags)
 }
 
-note as note_osd_renderer_make_for_type
-<b><color:Red>4)</color></b>
-osd_renderer make_for_type(int mode, osd_window window, int extra_flags) {
-    return new renderer_YYY(window);
-}
-end note
-
-class renderer_YYY extends osd_renderer {
+class renderer_YYY extends osd_renderer {    
+    +int create()
+    +render_primitive_list get_primitives()    
     +int draw(const int update)
 }
 
-note as note_renderer_YYY
-<b><color:Red>6)</color></b>
-int draw(const int update) {
-    auto win = assert_window();
-    YYY_present();
-}
-end note
-
-osd_window -- renderer_YYY
 osd_window -- osd_renderer
+renderer_YYY -- osd_renderer
 
 class osd_window_t<TWindowHandle> extends osd_window
-
-XXX_window_info -- renderer_YYY
 
 class osd_stream #Lavender
 
 class osd_window extends osd_stream {    
     +render_primitive_list m_primlist
     +osd_renderer renderer()        
-    {abstract} +render_target target()
-    {abstract} +int fullscreen()
+    {abstract} +render_target target()    
     {abstract} +running_machine machine()
-    {abstract} +osd_dim get_size()
-    {abstract} +osd_monitor_info monitor()
-    {abstract} +void capture_pointer()
-    {abstract} +void release_pointer()
-    {abstract} +void show_pointer()
-    {abstract} +void hide_pointer()
-    {abstract} +void update()
-    {abstract} +void destroy()
-    {abstract} +bool win_has_menu()
+    {abstract} +void update()    
 }
 
 class XXX_window_info<XXX_Window> extends osd_window_t {    
@@ -74,29 +50,11 @@ XXX_window_info -- XXX_osd_interface
 
 class XXX_osd_interface extends osd_common_t {
     +void init(running_machine machine)
+    +void update(bool skip_redraw)
+    +void input_update()
     +bool video_init()
+    +bool window_init()
 }
-
-note as note_5_XXX_window_info
-<b><color:Red>5)</color></b>
-void update() {
-    renderer().draw();
-}
-end note
-
-note as note_4_XXX_window_info
-<b><color:Red>3)</color></b>
-int window_init() {
-    osd_renderer::make_for_type(video_config.mode, this);
-}
-end note
-
-note as note_2_XXX_osd_interface
-<b><color:Red>2)</color></b>
-bool video_init() {
-    new XXX_window_info();
-}
-end note
 
 osd_window -- osd_common_t
 
@@ -107,18 +65,13 @@ class osd_interface {
 }
 
 class osd_common_t extends osd_interface {
-    +osd_window s_window_list
     #sound_module m_sound
-    #debug_module m_debugger
     #midi_module m_midi
     #input_module m_keyboard_input
-    #input_module m_mouse_input
-    #input_module m_lightgun_input
-    #input_module m_joystick_input
+    #input_module m_mouse_input 
     #output_module m_output
     #monitor_module m_monitor_module
-    #osd_watchdog m_watchdog
-    #vector<menu_item> m_sliders
+    +osd_window s_window_list
     {abstract} + void init(running_machine machine)
     {abstract} + void update(bool skip_redraw)
     {abstract} + void input_update()
@@ -126,28 +79,5 @@ class osd_common_t extends osd_interface {
     {abstract} +bool window_init()
     +void init_subsystems()
 }
-
-note as note_osd_common_t_init_subsystems
-<b><color:Red>1)</color></b>
-void init_subsystems() {
-    video_init();
-    input_init();
-}
-end note
-
-note as note_XXX_osd_interface_init
-<b><color:Red>0)</color></b>
-void init(running_machine machine) {
-    osd_common_t::init_subsystems();
-}
-end note
-
-osd_renderer .. note_osd_renderer_make_for_type
-osd_common_t .. note_osd_common_t_init_subsystems
-renderer_YYY .. note_renderer_YYY
-XXX_osd_interface .. note_2_XXX_osd_interface
-XXX_osd_interface .. note_XXX_osd_interface_init
-XXX_window_info .. note_4_XXX_window_info
-XXX_window_info .. note_5_XXX_window_info
 
 @enduml
