@@ -1,21 +1,13 @@
 @startuml mame
 
-page 2x1
-
-skinparam linetype ortho
+skinparam LineType ortho
 skinparam ArrowColor black
-skinparam shadowing false
+skinparam Shadowing false
 
 skinparam class {
     BackgroundColor WhiteSmoke
     BorderColor black
 }
-
-skinparam package {
-    BackgroundColor Linen
-}
-
-set namespaceSeparator ::
 
 class osd_renderer {
     -osd_window  m_window
@@ -29,30 +21,32 @@ class osd_renderer {
 note as note_osd_renderer_make_for_type
 <b><color:Red>4)</color></b>
 osd_renderer make_for_type(int mode, osd_window window, int extra_flags) {
-    return new renderer_XXX(window);
+    return new renderer_YYY(window);
 }
 end note
 
-class renderer_XXX extends osd_renderer {
+class renderer_YYY extends osd_renderer {
     +int draw(const int update)
 }
 
-note as note_renderer_XXX
+note as note_renderer_YYY
 <b><color:Red>6)</color></b>
 int draw(const int update) {
     auto win = assert_window();
-    XXX_present();
+    YYY_present();
 }
 end note
 
-osd_window o-- renderer_XXX
+osd_window -- renderer_YYY
 osd_window -- osd_renderer
 
 class osd_window_t<TWindowHandle> extends osd_window
 
-XXX_window_info -- renderer_XXX
+XXX_window_info -- renderer_YYY
 
-class osd_window {    
+class osd_stream #Lavender
+
+class osd_window extends osd_stream {    
     +render_primitive_list m_primlist
     +osd_renderer renderer()        
     {abstract} +render_target target()
@@ -69,20 +63,16 @@ class osd_window {
     {abstract} +bool win_has_menu()
 }
 
-osd_stream <|-- XXX_window_info
-
-class osd_stream #Lavender extends osd_window
-
-class XXX_window_info<XXX_Window> {    
+class XXX_window_info<XXX_Window> extends osd_window_t {    
     +int window_init()
     +void update()
 }
 
-osd_window_t <|-- XXX_window_info
-osd_common_t <|-- XXX_osd_interface
+osd_renderer -- XXX_window_info
+osd_common_t -- XXX_osd_interface
 XXX_window_info -- XXX_osd_interface
 
-class XXX_osd_interface {
+class XXX_osd_interface extends osd_common_t {
     +void init(running_machine machine)
     +bool video_init()
 }
@@ -109,7 +99,6 @@ bool video_init() {
 end note
 
 osd_window -- osd_common_t
-osd_interface <|-- osd_common_t
 
 class osd_interface {
 	{abstract} +void init(running_machine machine)
@@ -117,7 +106,7 @@ class osd_interface {
 	{abstract} +void input_update()
 }
 
-class osd_common_t {
+class osd_common_t extends osd_interface {
     +osd_window s_window_list
     #sound_module m_sound
     #debug_module m_debugger
@@ -155,7 +144,7 @@ end note
 
 osd_renderer .. note_osd_renderer_make_for_type
 osd_common_t .. note_osd_common_t_init_subsystems
-renderer_XXX .. note_renderer_XXX
+renderer_YYY .. note_renderer_YYY
 XXX_osd_interface .. note_2_XXX_osd_interface
 XXX_osd_interface .. note_XXX_osd_interface_init
 XXX_window_info .. note_4_XXX_window_info
