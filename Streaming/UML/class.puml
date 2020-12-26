@@ -1,5 +1,7 @@
 @startuml mame
 
+set namespaceSeparator ::
+
 skinparam LineType ortho
 skinparam ArrowColor black
 skinparam Shadowing false
@@ -36,6 +38,7 @@ class osd_window_t<TWindowHandle> extends osd_window {
 class osd_stream #Lavender
 
 class osd_window extends osd_stream {    
+    +HDC m_dc
     +render_primitive_list m_primlist
     +osd_renderer renderer()        
     {abstract} +render_target target()    
@@ -83,5 +86,15 @@ class osd_common_t extends osd_interface {
     {abstract} +bool window_init()
     +void init_subsystems()
 }
+
+note bottom of renderer_YYY
+Renderer:
+    -bgfx
+    -OpenGL
+    -SDL 1
+    -SDL 2
+    -DirectX 9
+    -GDI+
+end note
 
 @enduml
