@@ -27,7 +27,11 @@ class renderer_YYY extends osd_renderer {
 osd_window -- osd_renderer
 renderer_YYY -- osd_renderer
 
-class osd_window_t<TWindowHandle> extends osd_window
+class osd_window_t<TWindowHandle> extends osd_window {
+    -TWindowHandle platform_window
+    +TWindowHandle platform_window()
+	+void set_platform_window(TWindowHandle window)
+}
 
 class osd_stream #Lavender
 

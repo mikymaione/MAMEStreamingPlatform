@@ -21,3 +21,27 @@ XXX_window_info::update():
 renderer_YYY::draw(update):
     win = assert_window()
     YYY_present()
+
+
+renderer_sdl1::draw(update):
+    m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
+    SDL_RenderPresent(m_sdl_renderer)
+
+renderer_sdl2::draw(update):
+    m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
+    SDL_RenderPresent(m_sdl_renderer)
+
+renderer_bgfx::draw(update):
+	pd.nwh = win->platform_window()
+	bgfx::setPlatformData(pd)
+    bgfx::frame()
+
+renderer_d3d9::draw(update):
+    m_device = Direct3D9::CreateDevice(win->platform_window())
+    m_device->Present()
+
+renderer_gdi::draw(update):
+    StretchDIBits(win->m_dc)
+
+renderer_ogl::draw(update)
+    m_gl_context->SwapBuffer(hDC)
