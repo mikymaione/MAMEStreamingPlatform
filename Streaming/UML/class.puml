@@ -85,20 +85,20 @@ class osd_common_t extends osd_interface {
 
 note bottom of XXX_window_info
 TWindowHandle:
-    -SDL_Window
-    -CoreWindow
-    -HWND
-    -std::any
+    -SDL_Window (SDLMame)
+    -CoreWindow (UWP)
+    -HWND (Win32)
+    -std::any (mac)
 end note
 
 note bottom of renderer_YYY
 Renderer:
-    -bgfx
-    -OpenGL
-    -SDL1
-    -SDL2
-    -DirectX9
-    -GDI+
+    -bgfx {mac, SDLMame, UWP, Win32}
+    -OpenGL {mac, SDLMame, Win32}
+    -SDL1 {SDLMame}
+    -SDL2 {SDLMame}
+    -DirectX9 {Win32}
+    -GDI+ {Win32}
 end note
 
 ' class osd_stream #Lavender
