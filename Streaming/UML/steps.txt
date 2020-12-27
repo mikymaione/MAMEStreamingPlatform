@@ -8,16 +8,16 @@ osd_common_t::init_subsystems():
 3)
 XXX_osd_interface::video_init():
     new XXX_window_info()
-4)
+5)
 XXX_window_info::window_init()
     osd_renderer::make_for_type(video_config.mode, this)
-5)
+6)
 osd_renderer::make_for_type(mode, window, extra_flags):
     new renderer_YYY(window)
-6)
+8)
 XXX_window_info::update():
     renderer().draw()
-7)
+9)
 renderer_YYY::draw(update):
     win = assert_window()
     YYY_present()
