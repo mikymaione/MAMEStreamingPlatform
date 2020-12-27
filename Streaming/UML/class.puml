@@ -85,7 +85,7 @@ class osd_common_t extends osd_interface {
 
 note bottom of XXX_window_info
 TWindowHandle:
-    -SDL_Window (SDLMame)
+    -SDL_Window (All O.S.)
     -CoreWindow (UWP)
     -HWND (Win32)
     -std::any (mac)
