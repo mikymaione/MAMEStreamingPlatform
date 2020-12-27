@@ -9,6 +9,74 @@ skinparam class {
     BorderColor black
 }
 
+
+class XXX_main #Linen {
+    {static}+int main(int argc, string[] argv)
+}
+
+class XXX_osd_interface extends osd_common_t {
+    +void init(running_machine machine)
+    +void update(bool skip_redraw)
+    +void input_update()
+    +bool video_init()
+    +bool window_init()
+}
+
+XXX_main -- XXX_osd_interface
+
+class emulator_info {
+    {static}+int start_frontend(emu_options options, osd_interface osd, vector<string> args)
+    {static}+void draw_user_interface(running_machine machine)
+}
+
+XXX_main -- emulator_info
+emulator_info -- running_machine
+
+class cli_frontend {
+    +int execute(vector<string> args)
+    +void start_execution(mame_machine_manager manager, vector<string> args)
+}
+
+class mame_machine_manager {
+    +int execute()
+}
+
+class mame_ui_manager {
+    +void update_and_render(render_container container)
+}
+
+class render_container {
+    +void add_line(x0, y0, x1, y1, width, rgb_t argb, flags)
+	+void add_quad(x0, y0, x1, y1, rgb_t argb, render_texture texture, flags)
+	+void add_char(x0, y0, height, aspect, rgb_t argb, render_font font, ch)
+	+void add_point(x0, y0, diameter, rgb_t argb, flags)
+	+void add_rect(x0, y0, x1, y1, rgb_t argb, flags)
+}
+
+mame_ui_manager -- render_container
+mame_machine_manager -- mame_ui_manager
+
+emulator_info -- mame_machine_manager
+emulator_info -- cli_frontend
+mame_machine_manager -- cli_frontend
+
+class running_machine {
+    +int run(bool quiet)
+}
+
+mame_machine_manager -- running_machine
+running_machine -- video_manager
+render_container -- screen_device
+
+class video_manager {
+    +void frame_update(bool from_debugger)
+}
+
+running_machine -- osd_interface
+video_manager -- osd_interface
+video_manager -- emulator_info
+screen_device -- screen_bitmap
+
 class osd_renderer {
     -osd_window  m_window
     +osd_window assert_window()
@@ -51,14 +119,6 @@ osd_renderer -- XXX_window_info
 osd_common_t -- XXX_osd_interface
 XXX_window_info -- XXX_osd_interface
 
-class XXX_osd_interface extends osd_common_t {
-    +void init(running_machine machine)
-    +void update(bool skip_redraw)
-    +void input_update()
-    +bool video_init()
-    +bool window_init()
-}
-
 osd_window -- osd_common_t
 
 class osd_interface {
@@ -83,62 +143,8 @@ class osd_common_t extends osd_interface {
     +void init_subsystems()
 }
 
-class sdlmain #Linen {
-    +int main(int argc, string[] argv)
-}
-
-class emulator_info {
-    +int start_frontend(emu_options options, osd_interface osd, vector<string> args)
-    +void draw_user_interface(running_machine machine)
-}
-
-sdlmain -- emulator_info
-
-class cli_frontend {
-    +int execute(vector<string> args)
-    +void start_execution(mame_machine_manager manager, vector<string> args)
-}
-
-class mame_machine_manager {
-    +int execute()
-}
-
-class mame_ui_manager {
-    +void update_and_render(render_container container)
-}
-
-class render_container {
-    +void add_line(float x0, float y0, float x1, float y1, float width, rgb_t argb, u32 flags)
-	+void add_quad(float x0, float y0, float x1, float y1, rgb_t argb, render_texture *texture, u32 flags)
-	+void add_char(float x0, float y0, float height, float aspect, rgb_t argb, render_font &font, u16 ch)
-	+void add_point(float x0, float y0, float diameter, rgb_t argb, u32 flags)
-	+void add_rect(float x0, float y0, float x1, float y1, rgb_t argb, u32 flags)
-}
-
-mame_ui_manager -- render_container
-mame_machine_manager -- mame_ui_manager
-
-emulator_info -- mame_machine_manager
-emulator_info -- cli_frontend
-mame_machine_manager -- cli_frontend
-
-class running_machine {
-    +int run(bool quiet)
-}
-
-mame_machine_manager -- running_machine
-running_machine -- video_manager
-render_container -- screen_device
-
-class video_manager {
-    +void frame_update(bool from_debugger)
-}
-
-video_manager -- osd_interface
-video_manager -- emulator_info
-screen_device -- screen_bitmap
-
-note bottom of XXX_window_info
+'note bottom of XXX_window_info
+note as nXXX_window_info
 TWindowHandle:
     -SDL_Window (SDLMame = All O.S.)
     -CoreWindow (UWP)
@@ -146,7 +152,8 @@ TWindowHandle:
     -std::any (mac)
 end note
 
-note bottom of renderer_YYY
+'note bottom of renderer_YYY
+note as nrenderer_YYY
 Renderer:
     -bgfx {mac, SDLMame, UWP, Win32}
     -OpenGL {mac, SDLMame, Win32}
