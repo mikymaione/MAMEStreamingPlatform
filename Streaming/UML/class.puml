@@ -1,14 +1,13 @@
 @startuml mame
 
+skinparam Shadowing false
 skinparam LineType ortho
 skinparam ArrowColor black
-skinparam Shadowing false
 
 skinparam class {
     BackgroundColor WhiteSmoke
     BorderColor black
 }
-
 
 class XXX_main #Linen {
     {static}+int main(int argc, string[] argv)
@@ -37,10 +36,6 @@ class cli_frontend {
     +void start_execution(mame_machine_manager manager, vector<string> args)
 }
 
-class mame_machine_manager {
-    +int execute()
-}
-
 class mame_ui_manager {
     +void update_and_render(render_container container)
 }
@@ -61,21 +56,60 @@ emulator_info -- cli_frontend
 mame_machine_manager -- cli_frontend
 
 class running_machine {
+    -void start()
     +int run(bool quiet)
+    +void pause()
+    +void resume()
+    +void toggle_pause()
 }
 
 mame_machine_manager -- running_machine
 running_machine -- video_manager
+render_container -- render_manager
+running_machine -- render_manager
 render_container -- screen_device
+
+class render_manager {
+    -running_machine m_machine
+    -simple_list<render_target> m_targetlist
+    -render_target m_ui_target
+    -u32 m_live_textures
+    -u64 m_texture_id
+    -fixed_allocator<render_texture> m_texture_allocator
+    -render_container m_ui_container
+    -simple_list<render_container> m_screen_container_list
+}
+
+class screen_device {
+    -int m_width
+	-int m_height
+	-rectangle m_visarea
+}
 
 class video_manager {
     +void frame_update(bool from_debugger)
 }
 
+class machine_manager {
+    #osd_interface m_osd	
+	#running_machine m_machine
+
+    {abstract} +ui_manager create_ui(running_machine machine)
+    {abstract} +void update_machine()
+}
+
+machine_manager -- osd_interface
+machine_manager -- running_machine
+
+class mame_machine_manager extends machine_manager {
+    +int execute()
+    +ui_manager create_ui(running_machine machine)
+    +void update_machine()
+}
+
 running_machine -- osd_interface
 video_manager -- osd_interface
 video_manager -- emulator_info
-screen_device -- screen_bitmap
 
 class osd_renderer {
     -osd_window  m_window
@@ -90,10 +124,24 @@ class renderer_YYY extends osd_renderer {
     +int create()
     +render_primitive_list get_primitives()    
     +int draw(const int update)
+    {static} +void init(running_machine machine)
+	{static} +void exit()
 }
+
+class Multimedia_Library {
+    +void load()
+    +renderer create_renderer(TWindowHandle handle)
+    +void present(renderer r)
+    +void draw_line(x, y)
+    +void draw_rectangle(x, y, w, h)
+}
+
+renderer_YYY -- Multimedia_Library
+XXX_window_info -- Multimedia_Library
 
 osd_window -- osd_renderer
 renderer_YYY -- osd_renderer
+renderer_YYY -- XXX_osd_interface
 
 class osd_window_t<TWindowHandle> extends osd_window {
     -TWindowHandle platform_window
@@ -143,26 +191,39 @@ class osd_common_t extends osd_interface {
     +void init_subsystems()
 }
 
-'note bottom of XXX_window_info
-note as nXXX_window_info
-TWindowHandle:
-    -SDL_Window (SDLMame = All O.S.)
-    -CoreWindow (UWP)
-    -HWND (Win32)
-    -std::any (mac)
-end note
+' 'note bottom of XXX_window_info
+' note as nTWindowHandle
+' TWindowHandle:
+'     -SDL_Window (SDLMame = All O.S.)
+'     -CoreWindow (UWP)
+'     -HWND (Windows)
+'     -std::any (macOS)
+' end note
 
-'note bottom of renderer_YYY
-note as nrenderer_YYY
-Renderer:
-    -bgfx {mac, SDLMame, UWP, Win32}
-    -OpenGL {mac, SDLMame, Win32}
-    -SDL1 {SDLMame}
-    -SDL2 {SDLMame}
-    -DirectX9 {Win32}
-    -GDI+ {Win32}
-end note
+' 'note bottom of renderer_YYY
+' note as nrenderer_YYY
+' Renderer:
+'     -bgfx {macOS, SDLMame, UWP, Windows}
+'     -OpenGL {macOS, SDLMame, Windows}
+'     -SDL 1 {SDLMame}
+'     -SDL 2 {SDLMame}
+'     -DirectX 9 {Win32}
+'     -GDI+ {Win32}
+' end note
 
-' class osd_stream #Lavender
+' note as nXXX
+' O.S.:
+'     -macOS 
+'     -Windows
+'     -UWP
+'     -SDLMame = All O.S.
+' end note
+
+' nrenderer_YYY .. renderer_YYY
+' nrenderer_YYY .. Multimedia_Library
+' nTWindowHandle .. XXX_window_info
+' nXXX .. XXX_main
+' nXXX .. XXX_osd_interface
+' nXXX .. XXX_window_info
 
 @enduml
