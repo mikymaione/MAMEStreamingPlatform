@@ -18,6 +18,27 @@
                 "panel": "new"
             },
             "problemMatcher": []
+        },
+        {
+            "type": "cppbuild",
+            "label": "Build streamer",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "Streaming/main.cpp",
+                "-o",
+                "${workspaceFolder}/Streaming/main"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }            
         }
     ]
 }
