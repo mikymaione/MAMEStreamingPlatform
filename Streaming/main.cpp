@@ -1,10 +1,12 @@
-#include <cstdio>
+#include <iostream>
 
-using namespace std;
+#include "server_ws.hpp"
 
 int main()
 {
-    FILE *ffmpeg_in = popen("ffmpeg -i /dev/stdin -f h264 -c copy ...", "w");
+    std::cout << "Streaming test";
+
+    webpp::ws_server ws();
 
     return 0;
 }

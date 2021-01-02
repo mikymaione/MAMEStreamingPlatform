@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++ build and debug active file",
+            "name": "g++ build and debug mame64",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/mame64",
@@ -20,6 +20,27 @@
                 }
             ],
             "preLaunchTask": "Build from Makefile",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "g++ - Compila ed esegui il debug dello streaming main",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Streaming/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Abilita la riformattazione per gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build streamer",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]

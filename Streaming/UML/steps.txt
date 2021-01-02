@@ -1,47 +1,47 @@
 1)
 XXX_osd_interface::init(machine):
-    osd_common_t::init_subsystems()
+	osd_common_t::init_subsystems()
 2)
 osd_common_t::init_subsystems():
-    video_init()
-    input_init()
+	video_init()
+	input_init()
 3)
 XXX_osd_interface::video_init():
-    new XXX_window_info()
+	new XXX_window_info()
 5)
 XXX_window_info::window_init()
-    osd_renderer::make_for_type(video_config.mode, this)
+	osd_renderer::make_for_type(video_config.mode, this)
 6)
 osd_renderer::make_for_type(mode, window, extra_flags):
-    new renderer_YYY(window)
+	new renderer_YYY(window)
 8)
 XXX_window_info::update():
-    renderer().draw()
+	renderer().draw()
 9)
 renderer_YYY::draw(update):
-    win = assert_window()
-    YYY_present()
+	win = assert_window()
+	YYY_present()
 
 
 renderer_sdl1::draw(update):
-    m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
-    SDL_RenderPresent(m_sdl_renderer)
+	m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
+	SDL_RenderPresent(m_sdl_renderer)
 
 renderer_sdl2::draw(update):
-    m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
-    SDL_RenderPresent(m_sdl_renderer)
+	m_sdl_renderer = SDL_CreateRenderer(win->platform_window())
+	SDL_RenderPresent(m_sdl_renderer)
 
 renderer_bgfx::draw(update):
 	pd.nwh = win->platform_window()
 	bgfx::setPlatformData(pd)
-    bgfx::frame()
+	bgfx::frame()
 
 renderer_d3d9::draw(update):
-    m_device = Direct3D9::CreateDevice(win->platform_window())
-    m_device->Present()
+	m_device = Direct3D9::CreateDevice(win->platform_window())
+	m_device->Present()
 
 renderer_gdi::draw(update):
-    StretchDIBits(win->m_dc)
+	StretchDIBits(win->m_dc)
 
 renderer_ogl::draw(update)
-    m_gl_context->SwapBuffer(hDC)
+	m_gl_context->SwapBuffer(hDC)
