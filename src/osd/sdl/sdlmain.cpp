@@ -185,9 +185,10 @@ extern "C" DECLSPEC void SDLCALL SDL_SetModuleHandle(void *hInst);
 #include "../../streaming/TCPServer.hpp"
 //#include "TCPServer.hpp"
 
-int main(int argc, char **argv)
+std::vector<std::string> *args;
+
+void main2()
 {
-	std::vector<std::string> args = osd_get_command_line(argc, argv);
 	int res = 0;
 
 	// disable I/O buffering
@@ -211,27 +212,13 @@ int main(int argc, char **argv)
 #endif
 #endif
 
-	int porta = 50000; //default
-	int IDConnessioneInAscolto = -1;
-
-	TCPServer TCPserver;
-
-	printf("Creazione server su porta %i\n", porta);
-	printf("%s\n", TCPserver.TCP_Crea(porta, &IDConnessioneInAscolto));
-
-	if (IDConnessioneInAscolto >= 0)
 	{
-		printf("Server connesso! ID: %i\n", IDConnessioneInAscolto);
-		printf("Server in ascolto su porta %i\n", porta);
-		printf("%s\n", TCPserver.TCP_Ascolta(IDConnessioneInAscolto));
-	}
-
-	{
-
 		sdl_options options;
 		sdl_osd_interface osd(options);
+
 		osd.register_options();
-		res = emulator_info::start_frontend(options, osd, args);
+
+		res = emulator_info::start_frontend(options, osd, *args);
 	}
 
 #ifdef SDLMAME_UNIX
@@ -244,6 +231,27 @@ int main(int argc, char **argv)
 #endif
 
 	exit(res);
+}
+
+int main(int argc, char **argv)
+{
+	auto args_ = osd_get_command_line(argc, argv);
+	args = &args_;
+
+	int porta = 50000; //default
+	int IDConnessioneInAscolto = -1;
+
+	TCPServer TCPserver;
+
+	printf("Creazione server su porta %i\n", porta);
+	printf("%s\n", TCPserver.TCP_Crea(porta, &IDConnessioneInAscolto));
+
+	if (IDConnessioneInAscolto >= 0)
+	{
+		printf("Server connesso! ID: %i\n", IDConnessioneInAscolto);
+		printf("Server in ascolto su porta %i\n", porta);
+		printf("%s\n", TCPserver.TCP_Ascolta(IDConnessioneInAscolto, main2));
+	}
 }
 
 //============================================================

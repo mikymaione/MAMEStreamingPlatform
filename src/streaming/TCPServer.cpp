@@ -36,7 +36,7 @@ const char *TCPServer::TCP_Crea(const int portno, int *IDConnessioneInAscolto)
     return "TCPServer: Creato!";
 }
 
-const char *TCPServer::TCP_Ascolta(const int IDConnessioneInAscolto)
+const char *TCPServer::TCP_Ascolta(const int IDConnessioneInAscolto, void (*f)())
 {
     pid_t miopid = 0;
     struct sockaddr_in cli_addr;
@@ -57,7 +57,8 @@ const char *TCPServer::TCP_Ascolta(const int IDConnessioneInAscolto)
         {
             close(IDConnessioneInAscolto);
 
-            // gioca!
+            f(); // gioca!
+
             //processo muore
         }
     }

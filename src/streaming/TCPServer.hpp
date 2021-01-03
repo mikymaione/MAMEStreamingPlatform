@@ -16,7 +16,7 @@
 class TCPServer
 {
 public:
-    const char *TCP_Ascolta(const int IDConnessioneInAscolto);
+    const char *TCP_Ascolta(const int IDConnessioneInAscolto, void (*f)());
     const char *TCP_Crea(const int portno, int *IDConnessioneInAscolto_);
 
 private:
