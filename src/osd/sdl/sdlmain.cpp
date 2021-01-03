@@ -53,14 +53,13 @@
 
 #ifndef INI_PATH
 #if defined(SDLMAME_WIN32)
-	#define INI_PATH ".;ini;ini/presets"
+#define INI_PATH ".;ini;ini/presets"
 #elif defined(SDLMAME_MACOSX)
-	#define INI_PATH "$HOME/Library/Application Support/APP_NAME;$HOME/.APP_NAME;.;ini"
+#define INI_PATH "$HOME/Library/Application Support/APP_NAME;$HOME/.APP_NAME;.;ini"
 #else
-	#define INI_PATH "$HOME/.APP_NAME;.;ini"
+#define INI_PATH "$HOME/.APP_NAME;.;ini"
 #endif // MACOSX
 #endif // INI_PATH
-
 
 //============================================================
 //  Global variables
@@ -75,101 +74,100 @@ int sdl_entered_debugger;
 //============================================================
 
 const options_entry sdl_options::s_option_entries[] =
-{
-	{ SDLOPTION_INIPATH,                     INI_PATH,    OPTION_STRING,     "path to ini files" },
+	{
+		{SDLOPTION_INIPATH, INI_PATH, OPTION_STRING, "path to ini files"},
 
-	// performance options
-	{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL PERFORMANCE OPTIONS" },
-	{ SDLOPTION_SDLVIDEOFPS,                  "0",        OPTION_BOOLEAN,    "show sdl video performance" },
-	// video options
-	{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL VIDEO OPTIONS" },
-// OS X can be trusted to have working hardware OpenGL, so default to it on for the best user experience
-	{ SDLOPTION_CENTERH,                      "1",        OPTION_BOOLEAN,    "center horizontally within the view area" },
-	{ SDLOPTION_CENTERV,                      "1",        OPTION_BOOLEAN,    "center vertically within the view area" },
-	{ SDLOPTION_SCALEMODE ";sm",         OSDOPTVAL_NONE,  OPTION_STRING,     "Scale mode: none, hwblit, hwbest, yv12, yuy2, yv12x2, yuy2x2 (-video soft only)" },
+		// performance options
+		{nullptr, nullptr, OPTION_HEADER, "SDL PERFORMANCE OPTIONS"},
+		{SDLOPTION_SDLVIDEOFPS, "0", OPTION_BOOLEAN, "show sdl video performance"},
+		// video options
+		{nullptr, nullptr, OPTION_HEADER, "SDL VIDEO OPTIONS"},
+		// OS X can be trusted to have working hardware OpenGL, so default to it on for the best user experience
+		{SDLOPTION_CENTERH, "1", OPTION_BOOLEAN, "center horizontally within the view area"},
+		{SDLOPTION_CENTERV, "1", OPTION_BOOLEAN, "center vertically within the view area"},
+		{SDLOPTION_SCALEMODE ";sm", OSDOPTVAL_NONE, OPTION_STRING, "Scale mode: none, hwblit, hwbest, yv12, yuy2, yv12x2, yuy2x2 (-video soft only)"},
 
-	// full screen options
-	#ifdef SDLMAME_X11
-	{ nullptr,                               nullptr,  OPTION_HEADER,     "SDL FULL SCREEN OPTIONS" },
-	{ SDLOPTION_USEALLHEADS,                 "0",     OPTION_BOOLEAN,    "split full screen image across monitors" },
-	#endif
+// full screen options
+#ifdef SDLMAME_X11
+		{nullptr, nullptr, OPTION_HEADER, "SDL FULL SCREEN OPTIONS"},
+		{SDLOPTION_USEALLHEADS, "0", OPTION_BOOLEAN, "split full screen image across monitors"},
+#endif
 
-	// keyboard mapping
-	{ nullptr,                               nullptr,  OPTION_HEADER,     "SDL KEYBOARD MAPPING" },
-	{ SDLOPTION_KEYMAP,                      "0",    OPTION_BOOLEAN,    "enable keymap" },
-	{ SDLOPTION_KEYMAP_FILE,                 "keymap.dat", OPTION_STRING, "keymap filename" },
+		// keyboard mapping
+		{nullptr, nullptr, OPTION_HEADER, "SDL KEYBOARD MAPPING"},
+		{SDLOPTION_KEYMAP, "0", OPTION_BOOLEAN, "enable keymap"},
+		{SDLOPTION_KEYMAP_FILE, "keymap.dat", OPTION_STRING, "keymap filename"},
 
-	// joystick mapping
-	{ nullptr,                               nullptr,   OPTION_HEADER,     "SDL JOYSTICK MAPPING" },
-	{ SDLOPTION_JOYINDEX "1",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #1" },
-	{ SDLOPTION_JOYINDEX "2",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #2" },
-	{ SDLOPTION_JOYINDEX "3",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #3" },
-	{ SDLOPTION_JOYINDEX "4",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #4" },
-	{ SDLOPTION_JOYINDEX "5",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #5" },
-	{ SDLOPTION_JOYINDEX "6",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #6" },
-	{ SDLOPTION_JOYINDEX "7",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #7" },
-	{ SDLOPTION_JOYINDEX "8",                OSDOPTVAL_AUTO, OPTION_STRING,         "name of joystick mapped to joystick #8" },
-	{ SDLOPTION_SIXAXIS,                     "0",    OPTION_BOOLEAN,    "use special handling for PS3 Sixaxis controllers" },
+		// joystick mapping
+		{nullptr, nullptr, OPTION_HEADER, "SDL JOYSTICK MAPPING"},
+		{SDLOPTION_JOYINDEX "1", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #1"},
+		{SDLOPTION_JOYINDEX "2", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #2"},
+		{SDLOPTION_JOYINDEX "3", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #3"},
+		{SDLOPTION_JOYINDEX "4", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #4"},
+		{SDLOPTION_JOYINDEX "5", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #5"},
+		{SDLOPTION_JOYINDEX "6", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #6"},
+		{SDLOPTION_JOYINDEX "7", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #7"},
+		{SDLOPTION_JOYINDEX "8", OSDOPTVAL_AUTO, OPTION_STRING, "name of joystick mapped to joystick #8"},
+		{SDLOPTION_SIXAXIS, "0", OPTION_BOOLEAN, "use special handling for PS3 Sixaxis controllers"},
 
 #if (USE_XINPUT)
-	// lightgun mapping
-	{ nullptr,                               nullptr,   OPTION_HEADER,     "SDL LIGHTGUN MAPPING" },
-	{ SDLOPTION_LIGHTGUNINDEX "1",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #1" },
-	{ SDLOPTION_LIGHTGUNINDEX "2",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #2" },
-	{ SDLOPTION_LIGHTGUNINDEX "3",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #3" },
-	{ SDLOPTION_LIGHTGUNINDEX "4",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #4" },
-	{ SDLOPTION_LIGHTGUNINDEX "5",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #5" },
-	{ SDLOPTION_LIGHTGUNINDEX "6",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #6" },
-	{ SDLOPTION_LIGHTGUNINDEX "7",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #7" },
-	{ SDLOPTION_LIGHTGUNINDEX "8",           OSDOPTVAL_AUTO, OPTION_STRING,         "name of lightgun mapped to lightgun #8" },
+		// lightgun mapping
+		{nullptr, nullptr, OPTION_HEADER, "SDL LIGHTGUN MAPPING"},
+		{SDLOPTION_LIGHTGUNINDEX "1", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #1"},
+		{SDLOPTION_LIGHTGUNINDEX "2", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #2"},
+		{SDLOPTION_LIGHTGUNINDEX "3", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #3"},
+		{SDLOPTION_LIGHTGUNINDEX "4", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #4"},
+		{SDLOPTION_LIGHTGUNINDEX "5", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #5"},
+		{SDLOPTION_LIGHTGUNINDEX "6", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #6"},
+		{SDLOPTION_LIGHTGUNINDEX "7", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #7"},
+		{SDLOPTION_LIGHTGUNINDEX "8", OSDOPTVAL_AUTO, OPTION_STRING, "name of lightgun mapped to lightgun #8"},
 #endif
 
-	{ nullptr,                               nullptr,   OPTION_HEADER,     "SDL MOUSE MAPPING" },
-	{ SDLOPTION_MOUSEINDEX "1",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #1" },
-	{ SDLOPTION_MOUSEINDEX "2",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #2" },
-	{ SDLOPTION_MOUSEINDEX "3",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #3" },
-	{ SDLOPTION_MOUSEINDEX "4",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #4" },
-	{ SDLOPTION_MOUSEINDEX "5",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #5" },
-	{ SDLOPTION_MOUSEINDEX "6",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #6" },
-	{ SDLOPTION_MOUSEINDEX "7",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #7" },
-	{ SDLOPTION_MOUSEINDEX "8",              OSDOPTVAL_AUTO, OPTION_STRING,         "name of mouse mapped to mouse #8" },
+		{nullptr, nullptr, OPTION_HEADER, "SDL MOUSE MAPPING"},
+		{SDLOPTION_MOUSEINDEX "1", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #1"},
+		{SDLOPTION_MOUSEINDEX "2", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #2"},
+		{SDLOPTION_MOUSEINDEX "3", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #3"},
+		{SDLOPTION_MOUSEINDEX "4", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #4"},
+		{SDLOPTION_MOUSEINDEX "5", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #5"},
+		{SDLOPTION_MOUSEINDEX "6", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #6"},
+		{SDLOPTION_MOUSEINDEX "7", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #7"},
+		{SDLOPTION_MOUSEINDEX "8", OSDOPTVAL_AUTO, OPTION_STRING, "name of mouse mapped to mouse #8"},
 
-	{ nullptr,                               nullptr,   OPTION_HEADER,     "SDL KEYBOARD MAPPING" },
-	{ SDLOPTION_KEYBINDEX "1",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #1" },
-	{ SDLOPTION_KEYBINDEX "2",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #2" },
-	{ SDLOPTION_KEYBINDEX "3",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #3" },
-	{ SDLOPTION_KEYBINDEX "4",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #4" },
-	{ SDLOPTION_KEYBINDEX "5",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #5" },
-	{ SDLOPTION_KEYBINDEX "6",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #6" },
-	{ SDLOPTION_KEYBINDEX "7",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #7" },
-	{ SDLOPTION_KEYBINDEX "8",               OSDOPTVAL_AUTO, OPTION_STRING,         "name of keyboard mapped to keyboard #8" },
+		{nullptr, nullptr, OPTION_HEADER, "SDL KEYBOARD MAPPING"},
+		{SDLOPTION_KEYBINDEX "1", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #1"},
+		{SDLOPTION_KEYBINDEX "2", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #2"},
+		{SDLOPTION_KEYBINDEX "3", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #3"},
+		{SDLOPTION_KEYBINDEX "4", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #4"},
+		{SDLOPTION_KEYBINDEX "5", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #5"},
+		{SDLOPTION_KEYBINDEX "6", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #6"},
+		{SDLOPTION_KEYBINDEX "7", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #7"},
+		{SDLOPTION_KEYBINDEX "8", OSDOPTVAL_AUTO, OPTION_STRING, "name of keyboard mapped to keyboard #8"},
 
-	// SDL low level driver options
-	{ nullptr,                               nullptr,   OPTION_HEADER,     "SDL LOW-LEVEL DRIVER OPTIONS" },
-	{ SDLOPTION_VIDEODRIVER ";vd",           OSDOPTVAL_AUTO,  OPTION_STRING,        "SDL video driver to use ('x11', 'directfb', ... or 'auto' for SDL default" },
-	{ SDLOPTION_RENDERDRIVER ";rd",          OSDOPTVAL_AUTO,  OPTION_STRING,        "SDL render driver to use ('software', 'opengl', 'directfb' ... or 'auto' for SDL default" },
-	{ SDLOPTION_AUDIODRIVER ";ad",           OSDOPTVAL_AUTO,  OPTION_STRING,        "SDL audio driver to use ('alsa', 'arts', ... or 'auto' for SDL default" },
+		// SDL low level driver options
+		{nullptr, nullptr, OPTION_HEADER, "SDL LOW-LEVEL DRIVER OPTIONS"},
+		{SDLOPTION_VIDEODRIVER ";vd", OSDOPTVAL_AUTO, OPTION_STRING, "SDL video driver to use ('x11', 'directfb', ... or 'auto' for SDL default"},
+		{SDLOPTION_RENDERDRIVER ";rd", OSDOPTVAL_AUTO, OPTION_STRING, "SDL render driver to use ('software', 'opengl', 'directfb' ... or 'auto' for SDL default"},
+		{SDLOPTION_AUDIODRIVER ";ad", OSDOPTVAL_AUTO, OPTION_STRING, "SDL audio driver to use ('alsa', 'arts', ... or 'auto' for SDL default"},
 #if USE_OPENGL
-	{ SDLOPTION_GL_LIB,                      SDLOPTVAL_GLLIB, OPTION_STRING,        "alternative libGL.so to use; 'auto' for system default" },
+		{SDLOPTION_GL_LIB, SDLOPTVAL_GLLIB, OPTION_STRING, "alternative libGL.so to use; 'auto' for system default"},
 #endif
 
-	// End of list
-	{ nullptr }
-};
+		// End of list
+		{nullptr}};
 
 //============================================================
 //  sdl_options
 //============================================================
 
 sdl_options::sdl_options()
-: osd_options()
+	: osd_options()
 {
-#if defined (SDLMAME_ANDROID)
-	chdir (SDL_AndroidGetExternalStoragePath());
+#if defined(SDLMAME_ANDROID)
+	chdir(SDL_AndroidGetExternalStoragePath());
 #endif
 	std::string ini_path(INI_PATH);
 	add_entries(sdl_options::s_option_entries);
-	strreplace(ini_path,"APP_NAME", emulator_info::get_appname_lower());
+	strreplace(ini_path, "APP_NAME", emulator_info::get_appname_lower());
 	set_default_value(SDLOPTION_INIPATH, ini_path.c_str());
 }
 
@@ -184,14 +182,17 @@ sdl_options::sdl_options()
 extern "C" DECLSPEC void SDLCALL SDL_SetModuleHandle(void *hInst);
 #endif
 
-int main(int argc, char** argv)
+#include "../../streaming/TCPServer.hpp"
+//#include "TCPServer.hpp"
+
+int main(int argc, char **argv)
 {
 	std::vector<std::string> args = osd_get_command_line(argc, argv);
 	int res = 0;
 
 	// disable I/O buffering
-	setvbuf(stdout, (char *) nullptr, _IONBF, 0);
-	setvbuf(stderr, (char *) nullptr, _IONBF, 0);
+	setvbuf(stdout, (char *)nullptr, _IONBF, 0);
+	setvbuf(stderr, (char *)nullptr, _IONBF, 0);
 
 	// Initialize crash diagnostics
 	diagnostics_module::get_instance()->init_crash_diagnostics();
@@ -210,7 +211,23 @@ int main(int argc, char** argv)
 #endif
 #endif
 
+	int porta = 50000; //default
+	int IDConnessioneInAscolto = -1;
+
+	TCPServer TCPserver;
+
+	printf("Creazione server su porta %i\n", porta);
+	printf("%s\n", TCPserver.TCP_Crea(porta, &IDConnessioneInAscolto));
+
+	if (IDConnessioneInAscolto >= 0)
 	{
+		printf("Server connesso! ID: %i\n", IDConnessioneInAscolto);
+		printf("Server in ascolto su porta %i\n", porta);
+		printf("%s\n", TCPserver.TCP_Ascolta(IDConnessioneInAscolto));
+	}
+
+	{
+
 		sdl_options options;
 		sdl_osd_interface osd(options);
 		osd.register_options();
@@ -234,10 +251,9 @@ int main(int argc, char** argv)
 //============================================================
 
 sdl_osd_interface::sdl_osd_interface(sdl_options &options)
-: osd_common_t(options), m_options(options)
+	: osd_common_t(options), m_options(options)
 {
 }
-
 
 //============================================================
 //  destructor
@@ -246,7 +262,6 @@ sdl_osd_interface::sdl_osd_interface(sdl_options &options)
 sdl_osd_interface::~sdl_osd_interface()
 {
 }
-
 
 //============================================================
 //  osd_exit
@@ -264,9 +279,10 @@ void sdl_osd_interface::osd_exit()
 //============================================================
 
 #define MAC_EXPAND_STR(_m) #_m
-#define MACRO_VERBOSE(_mac) \
-	do { \
-		if (strcmp(MAC_EXPAND_STR(_mac), #_mac) != 0) \
+#define MACRO_VERBOSE(_mac)                                            \
+	do                                                                 \
+	{                                                                  \
+		if (strcmp(MAC_EXPAND_STR(_mac), #_mac) != 0)                  \
 			osd_printf_verbose("%s=%s ", #_mac, MAC_EXPAND_STR(_mac)); \
 	} while (0)
 
@@ -332,7 +348,7 @@ static void osd_sdl_info(void)
 	int i, num = SDL_GetNumVideoDrivers();
 
 	osd_printf_verbose("Available videodrivers: ");
-	for (i=0;i<num;i++)
+	for (i = 0; i < num; i++)
 	{
 		const char *name = SDL_GetVideoDriver(i);
 		osd_printf_verbose("%s ", name);
@@ -340,7 +356,7 @@ static void osd_sdl_info(void)
 	osd_printf_verbose("\n");
 	osd_printf_verbose("Current Videodriver: %s\n", SDL_GetCurrentVideoDriver());
 	num = SDL_GetNumVideoDisplays();
-	for (i=0;i<num;i++)
+	for (i = 0; i < num; i++)
 	{
 		SDL_DisplayMode mode;
 		int j;
@@ -351,7 +367,7 @@ static void osd_sdl_info(void)
 		if (SDL_GetCurrentDisplayMode(i, &mode))
 			osd_printf_verbose("\t\tCurrent Display Mode: %dx%d-%d@%d\n", mode.w, mode.h, SDL_BITSPERPIXEL(mode.format), mode.refresh_rate);
 		osd_printf_verbose("\t\tRenderdrivers:\n");
-		for (j=0; j<SDL_GetNumRenderDrivers(); j++)
+		for (j = 0; j < SDL_GetNumRenderDrivers(); j++)
 		{
 			SDL_RendererInfo info;
 			SDL_GetRenderDriverInfo(j, &info);
@@ -361,12 +377,11 @@ static void osd_sdl_info(void)
 
 	osd_printf_verbose("Available audio drivers: \n");
 	num = SDL_GetNumAudioDrivers();
-	for (i=0;i<num;i++)
+	for (i = 0; i < num; i++)
 	{
 		osd_printf_verbose("\t%-20s\n", SDL_GetAudioDriver(i));
 	}
 }
-
 
 //============================================================
 //  video_register
@@ -383,7 +398,6 @@ void sdl_osd_interface::video_register()
 	//video_options_add("auto", nullptr); // making d3d video default one
 }
 
-
 //============================================================
 //  output_oslog
 //============================================================
@@ -393,7 +407,6 @@ void sdl_osd_interface::output_oslog(const char *buffer)
 	fputs(buffer, stderr);
 }
 
-
 //============================================================
 //  osd_setup_osd_specific_emu_options
 //============================================================
@@ -402,7 +415,6 @@ void osd_setup_osd_specific_emu_options(emu_options &opts)
 {
 	opts.add_entries(osd_options::s_option_entries);
 }
-
 
 //============================================================
 //  init
@@ -507,8 +519,6 @@ void sdl_osd_interface::init(running_machine &machine)
 		using namespace std::placeholders;
 		machine.add_logerror_callback(std::bind(&sdl_osd_interface::output_oslog, this, _1));
 	}
-
-
 
 #ifdef SDLMAME_EMSCRIPTEN
 	SDL_EventState(SDL_TEXTINPUT, SDL_FALSE);
