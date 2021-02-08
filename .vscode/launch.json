@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/mame64",
-            "args": [],
+            "args": ["-streamingserver"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -64,7 +64,8 @@ private:
 	void verifysamples(const std::vector<std::string> &args);
 	void romident(const std::vector<std::string> &args);
 	void getsoftlist(const std::vector<std::string> &args);
-	void verifysoftlist(const std::vector<std::string> &args);
+	void verifysoftlist(const std::vector<std::string> &args);	
+	void streamingserver(const std::vector<std::string> &args);
 	void version(const std::vector<std::string> &args);
 
 	// internal helpers

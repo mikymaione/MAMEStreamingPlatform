@@ -429,11 +429,6 @@ project ("osd_" .. _OPTIONS["osd"])
 	end
 
 	files {
-		MAME_DIR .. "src/streaming/TCPServer.hpp",
-		MAME_DIR .. "src/streaming/TCPServer.cpp",
-	}
-
-	files {
 		MAME_DIR .. "src/osd/sdl/osdsdl.h",
 		MAME_DIR .. "src/osd/sdl/sdlprefix.h",
 		MAME_DIR .. "src/osd/sdl/sdlmain.cpp",
