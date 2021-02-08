@@ -9,8 +9,7 @@
             "command": "make",
             "args": [
                 "SOURCES=src/mame/drivers/cps3.cpp",
-                "IGNORE_GIT=1",
-                "-j3"
+                "IGNORE_GIT=1"                
             ],
             "group": "build",
             "presentation": {

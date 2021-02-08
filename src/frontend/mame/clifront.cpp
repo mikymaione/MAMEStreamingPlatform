@@ -34,6 +34,8 @@
 
 #include "osdepend.h"
 
+#include "streaming_server.h"
+
 #include <algorithm>
 #include <new>
 #include <cctype>
@@ -71,6 +73,7 @@
 #define CLICOMMAND_VERIFYSOFTWARE       "verifysoftware"
 #define CLICOMMAND_GETSOFTLIST          "getsoftlist"
 #define CLICOMMAND_VERIFYSOFTLIST       "verifysoftlist"
+#define CLICOMMAND_STREAMINGSERVER      "streamingserver"
 #define CLICOMMAND_VERSION              "version"
 
 // command options
@@ -114,7 +117,8 @@ const options_entry cli_option_entries[] =
 	{ CLICOMMAND_LISTSOFTWARE   ";lsoft",   "0",       OPTION_COMMAND,    "list known software for the system" },
 	{ CLICOMMAND_VERIFYSOFTWARE ";vsoft",   "0",       OPTION_COMMAND,    "verify known software for the system" },
 	{ CLICOMMAND_GETSOFTLIST    ";glist",   "0",       OPTION_COMMAND,    "retrieve software list by name" },
-	{ CLICOMMAND_VERIFYSOFTLIST ";vlist",   "0",       OPTION_COMMAND,    "verify software list by name" },
+	{ CLICOMMAND_VERIFYSOFTLIST ";vlist",   "0",       OPTION_COMMAND,    "verify software list by name" },	
+	{ CLICOMMAND_STREAMINGSERVER,           "0",       OPTION_COMMAND,    "start MAME streaming server" },
 	{ CLICOMMAND_VERSION,                   "0",       OPTION_COMMAND,    "get MAME version" },
 
 	{ nullptr,                              nullptr,   OPTION_HEADER,     "FRONTEND COMMAND OPTIONS" },
@@ -1420,6 +1424,22 @@ void cli_frontend::verifysoftlist(const std::vector<std::string> &args)
 	}
 }
 
+//-------------------------------------------------
+//  streamingserver - start MAME streaming server
+//-------------------------------------------------
+void elaborate(webpp::StreamingServer *streamingServer)
+{
+
+}
+
+void cli_frontend::streamingserver(const std::vector<std::string> &args)
+{
+	webpp::StreamingServer streamingServer(elaborate);
+	streamingServer.config.address = "127.0.0.1";
+	streamingServer.config.port = 8888;
+	streamingServer.config.thread_pool_size = 4;
+	streamingServer.start();
+}
 
 //-------------------------------------------------
 //  version - emit MAME version to stdout
@@ -1590,6 +1610,7 @@ const cli_frontend::info_command_struct *cli_frontend::find_command(const std::s
 		{ CLICOMMAND_ROMIDENT,          1,  1, &cli_frontend::romident,         "(file or directory path)" },
 		{ CLICOMMAND_GETSOFTLIST,       0,  1, &cli_frontend::getsoftlist,      "[system name|*]" },
 		{ CLICOMMAND_VERIFYSOFTLIST,    0,  1, &cli_frontend::verifysoftlist,   "[system name|*]" },
+		{ CLICOMMAND_STREAMINGSERVER,   0,  0, &cli_frontend::streamingserver,  "" },
 		{ CLICOMMAND_VERSION,           0,  0, &cli_frontend::version,          "" }
 	};
 
