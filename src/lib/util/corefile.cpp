@@ -1258,6 +1258,9 @@ core_file::core_file()
 
 std::string_view core_filename_extract_base(std::string_view name, bool strip_extension)
 {
+	if (name.size() == 0)
+		return std::string_view();
+
 	// find the start of the basename
 	auto const start = std::find_if(name.rbegin(), name.rend(), &util::is_directory_separator);
 
@@ -1267,7 +1270,7 @@ std::string_view core_filename_extract_base(std::string_view name, bool strip_ex
 		: start;
 	auto const end = ((chop_position != start) && (std::next(chop_position) != start))
 		? std::next(chop_position)
-		: name.rbegin();
+		: name.rbegin();	
 
 	return std::string_view(&*start.base(), end.base() - start.base());
 }
