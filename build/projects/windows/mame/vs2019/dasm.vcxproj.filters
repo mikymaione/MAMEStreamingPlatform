@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\devices">
+      <UniqueIdentifier>{CC5D779A-3813-F08F-C107-EA662DBCE693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\devices\cpu">
+      <UniqueIdentifier>{B08A7D9F-1C16-EB63-2527-6E5891314764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\devices\cpu\sh">
+      <UniqueIdentifier>{47636B16-3347-2C6C-9CA7-26BF88AA16EE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\devices\cpu\i386">
+      <UniqueIdentifier>{36FBCA5E-228A-5428-CBA8-6823B71665CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh_dasm.h">
+      <Filter>src\devices\cpu\sh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\i386\i386dasm.h">
+      <Filter>src\devices\cpu\i386</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh_dasm.cpp">
+      <Filter>src\devices\cpu\sh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\i386\i386dasm.cpp">
+      <Filter>src\devices\cpu\i386</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

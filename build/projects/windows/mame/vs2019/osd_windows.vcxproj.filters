@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd">
+      <UniqueIdentifier>{EFD348A9-5BB3-C744-64CB-521BD0292EA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules">
+      <UniqueIdentifier>{64E30D7B-D06E-7B3F-D97F-FE33458AD73F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\debugger">
+      <UniqueIdentifier>{85AFC09E-71D4-0F1F-9A1F-F5AE86A30E3D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\font">
+      <UniqueIdentifier>{B74532DE-A3D4-BBA7-4CF3-CFA23861CC4D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\midi">
+      <UniqueIdentifier>{830136DE-6F90-BFA7-18AF-D3A2041DD04D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\netdev">
+      <UniqueIdentifier>{26F3D145-12ED-FA97-FB59-91A8E7F26004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\sound">
+      <UniqueIdentifier>{895866A5-F5C4-21A0-BEB8-B9FD2AE44308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\diagnostics">
+      <UniqueIdentifier>{98969465-04A4-C24B-8D8A-BE36F9968E02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\monitor">
+      <UniqueIdentifier>{A81B00CA-1453-4861-1D5D-AC8489136F5A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\lib">
+      <UniqueIdentifier>{97418D4C-03A3-6A5A-8C10-B10CF870A119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\input">
+      <UniqueIdentifier>{D0C2B0A4-3C2F-6C9F-0523-04FD714E8E07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\output">
+      <UniqueIdentifier>{F1D84849-DDD2-719B-C63F-08ACB2D8D707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\render">
+      <UniqueIdentifier>{604B234F-4C45-4CA1-35B2-E2B1214BB20D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\opengl">
+      <UniqueIdentifier>{651AE648-5114-0F9B-3A81-A5AB261A7507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\render\bgfx">
+      <UniqueIdentifier>{A3B69116-0FC4-BFFC-98AA-BBE704B78BB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\render\d3d">
+      <UniqueIdentifier>{971ECE7C-832E-7A4D-ECE7-DE6BD81669E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\windows">
+      <UniqueIdentifier>{D600816F-428C-EE33-4B9D-7128B7A74A34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\debugger\win">
+      <UniqueIdentifier>{0F651B67-FB1F-0B13-A4D7-835D907155A3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\osd\osdnet.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\watchdog.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\debug_module.h">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\font\font_module.h">
+      <Filter>src\osd\modules\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\midi\midi_module.h">
+      <Filter>src\osd\modules\midi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\netdev\netdev_module.h">
+      <Filter>src\osd\modules\netdev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\sound\sound_module.h">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\diagnostics\diagnostics_module.h">
+      <Filter>src\osd\modules\diagnostics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\monitor\monitor_module.h">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\lib\osdobj_common.h">
+      <Filter>src\osd\modules\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_module.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_common.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_dinput.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_sdlcommon.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_windows.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\input\input_xinput.h">
+      <Filter>src\osd\modules\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\output\output_module.h">
+      <Filter>src\osd\modules\output</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\output\win32_output.h">
+      <Filter>src\osd\modules\output</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\monitor\monitor_common.h">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\opengl\gl_shader_mgr.h">
+      <Filter>src\osd\modules\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\opengl\gl_shader_tool.h">
+      <Filter>src\osd\modules\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\opengl\osd_opengl.h">
+      <Filter>src\osd\modules\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\aviwrite.h">
+      <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfxutil.h">
+      <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\blendreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\chain.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainentry.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainentryreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainmanager.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\clear.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\clearreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\cullreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\depthreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\effect.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\effectmanager.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\effectreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\entryuniformreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\inputpair.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\frameparameter.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\timeparameter.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramuniform.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramuniformreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\shadermanager.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\slider.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\sliderreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\slideruniform.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\slideruniformreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\statereader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\suppressor.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\suppressorreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\target.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\targetreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\targetmanager.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\texture.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\texturehandleprovider.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\texturemanager.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\uniform.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\uniformreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\valueuniform.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\valueuniformreader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\view.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\bgfx\writereader.h">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\d3d\d3dcomm.h">
+      <Filter>src\osd\modules\render\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\d3d\d3dhlsl.h">
+      <Filter>src\osd\modules\render\d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\drawd3d.h">
+      <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\drawgdi.h">
+      <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\drawnone.h">
+      <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\windows\video.h">
+      <Filter>src\osd\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\windows\window.h">
+      <Filter>src\osd\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\osdwindow.h">
+      <Filter>src\osd\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\windows\winmain.h">
+      <Filter>src\osd\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\osdepend.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\consolewininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\debugbaseinfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\debugviewinfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\debugwininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmbasewininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmviewinfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmwininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\editwininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\logwininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\logviewinfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\memoryviewinfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\memorywininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\pointswininfo.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\uimetrics.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\win\debugwin.h">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\osd\osdnet.cpp">
+      <Filter>src\osd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\watchdog.cpp">
+      <Filter>src\osd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\lib\osdobj_common.cpp">
+      <Filter>src\osd\modules\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\diagnostics\none.cpp">
+      <Filter>src\osd\modules\diagnostics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\diagnostics\diagnostics_win32.cpp">
+      <Filter>src\osd\modules\diagnostics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\none.cpp">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\debugwin.cpp">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\debugimgui.cpp">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\debuggdbstub.cpp">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\font\font_sdl.cpp">
+      <Filter>src\osd\modules\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\font\font_windows.cpp">
+      <Filter>src\osd\modules\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\font\font_dwrite.cpp">
+      <Filter>src\osd\modules\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\font\font_osx.cpp">
+      <Filter>src\osd\modules\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\font\font_none.cpp">
+      <Filter>src\osd\modules\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\netdev\taptun.cpp">
+      <Filter>src\osd\modules\netdev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\netdev\pcap.cpp">
+      <Filter>src\osd\modules\netdev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\netdev\none.cpp">
+      <Filter>src\osd\modules\netdev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\midi\portmidi.cpp">
+      <Filter>src\osd\modules\midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\midi\none.cpp">
+      <Filter>src\osd\modules\midi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\js_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\direct_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\pa_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\coreaudio_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\sdl_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\xaudio2_sound.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\sound\none.cpp">
+      <Filter>src\osd\modules\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_common.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_dinput.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_none.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_rawinput.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_win32.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_sdl.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_sdlcommon.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_x11.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_windows.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_xinput.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_winhybrid.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_uwp.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\input\input_mac.cpp">
+      <Filter>src\osd\modules\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\output\none.cpp">
+      <Filter>src\osd\modules\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\output\console.cpp">
+      <Filter>src\osd\modules\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\output\network.cpp">
+      <Filter>src\osd\modules\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\output\win32_output.cpp">
+      <Filter>src\osd\modules\output</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\monitor\monitor_common.cpp">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\monitor\monitor_win32.cpp">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\monitor\monitor_dxgi.cpp">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\monitor\monitor_sdl.cpp">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\monitor\monitor_mac.cpp">
+      <Filter>src\osd\modules\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawogl.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\opengl\gl_shader_tool.cpp">
+      <Filter>src\osd\modules\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\opengl\gl_shader_mgr.cpp">
+      <Filter>src\osd\modules\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawbgfx.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\aviwrite.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfxutil.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\binpacker.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\blendreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\chain.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainentry.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainentryreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainmanager.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\chainreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\clear.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\clearreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\cullreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\depthreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\effect.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\effectmanager.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\effectreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\entryuniformreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\inputpair.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\frameparameter.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\timeparameter.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramuniform.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\paramuniformreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\shadermanager.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\slider.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\sliderreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\slideruniform.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\slideruniformreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\statereader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\suppressor.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\suppressorreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\target.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\targetreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\targetmanager.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\texture.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\texturemanager.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\uniform.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\uniformreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\valueuniform.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\valueuniformreader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\view.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\bgfx\writereader.cpp">
+      <Filter>src\osd\modules\render\bgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\d3d\d3dhlsl.cpp">
+      <Filter>src\osd\modules\render\d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawd3d.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawgdi.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawnone.cpp">
+      <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\video.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\window.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\osdwindow.cpp">
+      <Filter>src\osd\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\winmenu.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\winmain.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\consolewininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\debugbaseinfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\debugviewinfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\debugwininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmbasewininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmviewinfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\disasmwininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\editwininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\logwininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\logviewinfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\memoryviewinfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\memorywininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\pointswininfo.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\win\uimetrics.cpp">
+      <Filter>src\osd\modules\debugger\win</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

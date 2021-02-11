@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu">
+      <UniqueIdentifier>{B0A848A9-1C88-C744-25A0-521B91FE2DA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu\ui">
+      <UniqueIdentifier>{8AC1C9E0-7679-0B2E-DF80-E489CB57A61E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu\debug">
+      <UniqueIdentifier>{93AB1581-FF6B-91B7-C8A6-DA343426D693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu\drivers">
+      <UniqueIdentifier>{0B2B013C-77B6-6E00-80C7-F1F4ECD1CA00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu\layout">
+      <UniqueIdentifier>{6A8638B6-5654-2CBC-3FE8-9CE22B550821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\emu\video">
+      <UniqueIdentifier>{A39C5D82-0F5D-D9B8-D897-223644171E95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{6D076287-D9E6-E022-E2FE-6BF94E5D4784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripts\font">
+      <UniqueIdentifier>{6057BBCD-4CBA-4A72-F53F-8328E18116F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend">
+      <UniqueIdentifier>{2987AB9A-15EA-3A3F-BE6F-73F5AAB106C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend\mame">
+      <UniqueIdentifier>{85A7594C-F1BD-57E2-3A35-E303A68A286A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend\mame\ui">
+      <UniqueIdentifier>{3FCC96F5-2B5B-20BF-D479-34BAC0E73065}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\src\emu\device.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\emu\dirom.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\emu\drawgfxt.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\emu\emumem_hedr.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\emu\emumem_hedw.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\emu\inpttype.ipp">
+      <Filter>src\emu</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\emu\emu.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emufwd.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\main.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\gamedrv.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\hashfile.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\addrmap.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\attotime.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\bookkeeping.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\config.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\crsshair.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debugger.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\devdelegate.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\devcb.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\devcpu.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\devfind.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\device.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\didisasm.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\diexec.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\digfx.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\diimage.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dimemory.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dinetwork.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dinvram.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dipalette.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dipty.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dirom.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dirtc.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\diserial.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\dislot.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\disound.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\distate.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\divideo.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\divtlb.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\drawgfx.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\driver.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\drivenum.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emualloc.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emucore.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_mud.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hea.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hem.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedp.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_heun.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_heu.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedr.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedw.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hep.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_het.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emuopts.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\emupal.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\fileio.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\http.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\image.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\input.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\inputdev.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\ioport.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\logmacro.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\machine.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\mconfig.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\memarray.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\natkeyboard.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\network.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\parameters.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\profiler.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\output.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\recording.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\render.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\rendertypes.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\rendfont.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\rendlay.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\rendutil.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\romload.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\romentry.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\save.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\schedule.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\screen.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\softlist.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\softlist_dev.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\sound.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\speaker.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\tilemap.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\uiinput.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\validity.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\xtal.h">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\rendersw.hxx">
+      <Filter>src\emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\ui\uimain.h">
+      <Filter>src\emu\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\ui\cmddata.h">
+      <Filter>src\emu\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugbuf.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcmd.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcon.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcpu.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debughlp.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugvw.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvdisasm.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvmemory.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvbpoints.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvwpoints.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvstate.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvtext.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\express.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\points.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\textbuf.h">
+      <Filter>src\emu\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\drivers\xtal.h">
+      <Filter>src\emu\drivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\layout\generic.h">
+      <Filter>src\emu\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\generic.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\resnet.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbutil.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbgen.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbsse.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbvmx.h">
+      <Filter>src\emu\video</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\emu\main.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\hashfile.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\addrmap.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\attotime.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\bookkeeping.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\config.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\crsshair.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debugger.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devdelegate.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devcb.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devcpu.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devfind.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\device.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\didisasm.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diexec.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\digfx.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diimage.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dimemory.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dinetwork.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dinvram.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dipalette.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dipty.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dirtc.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diserial.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dislot.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\disound.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\distate.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\divideo.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\divtlb.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drawgfx.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\driver.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drivenum.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emualloc.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emucore.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_aspace.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_mview.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_mud.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hem.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedp.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_heun.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_heu.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr0.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr1.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr2.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr3.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw0.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw1.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw2.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw3.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hep.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_het.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emuopts.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emupal.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\fileio.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\http.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\image.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\input.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\inputdev.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\ioport.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\machine.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\mconfig.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\memarray.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\natkeyboard.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\network.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\parameters.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\profiler.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\output.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\recording.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\render.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendfont.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendlay.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendutil.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\romload.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\romentry.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\save.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\schedule.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\screen.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\softlist.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\softlist_dev.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\sound.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\speaker.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\tilemap.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\uiinput.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\validity.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\xtal.cpp">
+      <Filter>src\emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugbuf.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcmd.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcon.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcpu.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debughlp.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugvw.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvdisasm.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvmemory.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvbpoints.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvwpoints.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvstate.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvtext.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\express.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\points.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\textbuf.cpp">
+      <Filter>src\emu\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drivers\empty.cpp">
+      <Filter>src\emu\drivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\generic.cpp">
+      <Filter>src\emu\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\resnet.cpp">
+      <Filter>src\emu\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbgen.cpp">
+      <Filter>src\emu\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbsse.cpp">
+      <Filter>src\emu\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbvmx.cpp">
+      <Filter>src\emu\video</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\..\scripts\font\NotoSans-Bold.bdc">
+      <Filter>scripts\font</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\frontend\mame\ui\uicmd14.png">
+      <Filter>src\frontend\mame\ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhovu.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhsxs.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhuov.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\triphsxs.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\quadhsxs.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\noscreens.lay">
+      <Filter>src\emu\layout</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
