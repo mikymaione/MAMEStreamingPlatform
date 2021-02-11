@@ -23,6 +23,7 @@
 #include "softlist_dev.h"
 #include "speaker.h"
 
+#include "corestr.h"
 #include "xmlfile.h"
 
 #include <algorithm>
@@ -364,7 +365,7 @@ void info_xml_creator::output(std::ostream &out, const std::vector<std::string> 
 		if (iter != matched.end())
 		{
 			int index = iter - matched.begin();
-			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching machines found for '%s'", patterns[index].c_str());
+			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching machines found for '%s'", patterns[index]);
 		}
 	}
 }

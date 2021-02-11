@@ -96,7 +96,6 @@ project "utils"
 		MAME_DIR .. "src/lib/util/server_https.hpp",
 		MAME_DIR .. "src/lib/util/server_ws.hpp",
 		MAME_DIR .. "src/lib/util/server_wss.hpp",
-		MAME_DIR .. "src/lib/util/streaming_server.h",
 		MAME_DIR .. "src/lib/util/strformat.cpp",
 		MAME_DIR .. "src/lib/util/strformat.h",
 		MAME_DIR .. "src/lib/util/timeconv.cpp",

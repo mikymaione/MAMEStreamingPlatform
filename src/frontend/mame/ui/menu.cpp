@@ -9,7 +9,6 @@
 *********************************************************************/
 
 #include "emu.h"
-
 #include "ui/menu.h"
 
 #include "ui/ui.h"
@@ -20,6 +19,7 @@
 #include "cheat.h"
 #include "mame.h"
 
+#include "corestr.h"
 #include "drivenum.h"
 #include "rendutil.h"
 #include "uiinput.h"

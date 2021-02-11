@@ -109,12 +109,12 @@ void menu_main::populate(float &customtop, float &custombottom)
 	if (network_interface_enumerator(machine().root_device()).first() != nullptr)
 		item_append(_("Network Devices"), 0, (void*)NETWORK_DEVICES);
 
-	if (machine().ioport().natkeyboard().keyboard_count())
+	if (machine().natkeyboard().keyboard_count())
 		item_append(_("Keyboard Mode"), 0, (void *)KEYBOARD_MODE);
 
 	item_append(_("Slider Controls"), 0, (void *)SLIDERS);
 
-	item_append(_("Video Options"), 0, (machine().render().target_by_index(1) || machine().video().snapshot_target().view_name(1)) ? (void *)VIDEO_TARGETS : (void *)VIDEO_OPTIONS);
+	item_append(_("Video Options"), 0, (void *)VIDEO_TARGETS);
 
 	if (machine().crosshair().get_usage())
 		item_append(_("Crosshair Options"), 0, (void *)CROSSHAIR);
