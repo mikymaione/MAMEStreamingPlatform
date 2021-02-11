@@ -18,23 +18,22 @@
 #include "language.h"
 #include "luaengine.h"
 #include "mame.h"
+#include "mameopts.h"
 #include "media_ident.h"
 #include "pluginopts.h"
 
 #include "emuopts.h"
-#include "mameopts.h"
 #include "romload.h"
 #include "softlist_dev.h"
 #include "validity.h"
 #include "sound/samples.h"
 
 #include "chd.h"
+#include "corestr.h"
 #include "unzip.h"
 #include "xmlfile.h"
 
 #include "osdepend.h"
-
-#include "streaming_server.h"
 
 #include <algorithm>
 #include <new>
@@ -73,7 +72,6 @@
 #define CLICOMMAND_VERIFYSOFTWARE       "verifysoftware"
 #define CLICOMMAND_GETSOFTLIST          "getsoftlist"
 #define CLICOMMAND_VERIFYSOFTLIST       "verifysoftlist"
-#define CLICOMMAND_STREAMINGSERVER      "streamingserver"
 #define CLICOMMAND_VERSION              "version"
 
 // command options
@@ -117,8 +115,7 @@ const options_entry cli_option_entries[] =
 	{ CLICOMMAND_LISTSOFTWARE   ";lsoft",   "0",       OPTION_COMMAND,    "list known software for the system" },
 	{ CLICOMMAND_VERIFYSOFTWARE ";vsoft",   "0",       OPTION_COMMAND,    "verify known software for the system" },
 	{ CLICOMMAND_GETSOFTLIST    ";glist",   "0",       OPTION_COMMAND,    "retrieve software list by name" },
-	{ CLICOMMAND_VERIFYSOFTLIST ";vlist",   "0",       OPTION_COMMAND,    "verify software list by name" },	
-	{ CLICOMMAND_STREAMINGSERVER,           "0",       OPTION_COMMAND,    "start MAME streaming server" },
+	{ CLICOMMAND_VERIFYSOFTLIST ";vlist",   "0",       OPTION_COMMAND,    "verify software list by name" },
 	{ CLICOMMAND_VERSION,                   "0",       OPTION_COMMAND,    "get MAME version" },
 
 	{ nullptr,                              nullptr,   OPTION_HEADER,     "FRONTEND COMMAND OPTIONS" },
@@ -226,19 +223,19 @@ void cli_frontend::start_execution(mame_machine_manager *manager, const std::vec
 	{
 		// if we failed, check for no command and a system name first; in that case error on the name
 		if (m_options.command().empty() && mame_options::system(m_options) == nullptr && !m_options.attempted_system_name().empty())
-			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "Unknown system '%s'", m_options.attempted_system_name().c_str());
+			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "Unknown system '%s'", m_options.attempted_system_name());
 
 		// otherwise, error on the options
-		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "%s", ex.message().c_str());
+		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "%s", ex.message());
 	}
 
 	// determine the base name of the EXE
-	std::string exename = core_filename_extract_base(args[0], true);
+	std::string_view exename = core_filename_extract_base(args[0], true);
 
 	// if we have a command, execute that
 	if (!m_options.command().empty())
 	{
-		execute_commands(exename.c_str());
+		execute_commands(exename);
 		return;
 	}
 
@@ -257,10 +254,7 @@ void cli_frontend::start_execution(mame_machine_manager *manager, const std::vec
 	manager->start_luaengine();
 
 	if (option_errors.tellp() > 0)
-	{
-		std::string option_errors_string = option_errors.str();
-		osd_printf_error("Error in command line:\n%s\n", strtrimspace(option_errors_string));
-	}
+		osd_printf_error("Error in command line:\n%s\n", strtrimspace(option_errors.str()));
 
 	// if we can't find it, give an appropriate error
 	const game_driver *system = mame_options::system(m_options);
@@ -289,9 +283,7 @@ int cli_frontend::execute(std::vector<std::string> &args)
 	// handle exceptions of various types
 	catch (emu_fatalerror &fatal)
 	{
-		std::string str(fatal.what());
-		strtrimspace(str);
-		osd_printf_error("%s\n", str);
+		osd_printf_error("%s\n", strtrimspace(fatal.what()));
 		m_result = (fatal.exitcode() != 0) ? fatal.exitcode() : EMU_ERR_FATALERROR;
 
 		// if a game was specified, wasn't a wildcard, and our error indicates this was the
@@ -314,7 +306,7 @@ int cli_frontend::execute(std::vector<std::string> &args)
 
 			// print them out
 			osd_printf_error("\n\"%s\" approximately matches the following\n"
-					"supported machines (best match first):\n\n", m_options.attempted_system_name().c_str());
+					"supported machines (best match first):\n\n", m_options.attempted_system_name());
 			for (int match : matches)
 			{
 				if (0 <= match)
@@ -572,8 +564,7 @@ void cli_frontend::listroms(const std::vector<std::string> &args)
 								length = rom_file_size(rom);
 
 							// start with the name
-							const char *name = ROM_GETNAME(rom);
-							osd_printf_info("%-32s ", name);
+							osd_printf_info("%-32s ", rom->name());
 
 							// output the length next
 							if (length >= 0)
@@ -582,7 +573,7 @@ void cli_frontend::listroms(const std::vector<std::string> &args)
 								osd_printf_info("%10s", "");
 
 							// output the hash data
-							util::hash_collection hashes(ROM_GETHASHDATA(rom));
+							util::hash_collection hashes(rom->hashdata());
 							if (!hashes.flag(util::hash_collection::FLAG_NO_DUMP))
 							{
 								if (hashes.flag(util::hash_collection::FLAG_BAD_DUMP))
@@ -945,7 +936,7 @@ void cli_frontend::verifyroms(const std::vector<std::string> &args)
 	for (std::string const &pat : args)
 	{
 		if (!*it)
-			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching systems found for '%s'", pat.c_str());
+			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching systems found for '%s'", pat);
 
 		++it;
 	}
@@ -954,9 +945,9 @@ void cli_frontend::verifyroms(const std::vector<std::string> &args)
 	{
 		// if we didn't get anything at all, display a generic end message
 		if (notfound > 0)
-			throw emu_fatalerror(EMU_ERR_MISSING_FILES, "romset \"%s\" not found!\n", args[0].c_str());
+			throw emu_fatalerror(EMU_ERR_MISSING_FILES, "romset \"%s\" not found!\n", args[0]);
 		else
-			throw emu_fatalerror(EMU_ERR_MISSING_FILES, "romset \"%s\" has no roms!\n", args[0].c_str());
+			throw emu_fatalerror(EMU_ERR_MISSING_FILES, "romset \"%s\" has no roms!\n", args[0]);
 	}
 	else
 	{
@@ -1105,7 +1096,7 @@ void cli_frontend::output_single_softlist(std::ostream &out, software_list_devic
 		util::stream_format(out, "\t\t\t<publisher>%s</publisher>\n", util::xml::normalize_string(swinfo.publisher().c_str()));
 
 		for (const feature_list_item &flist : swinfo.other_info())
-			util::stream_format(out, "\t\t\t<info name=\"%s\" value=\"%s\"/>\n", flist.name().c_str(), util::xml::normalize_string(flist.value().c_str()));
+			util::stream_format(out, "\t\t\t<info name=\"%s\" value=\"%s\"/>\n", flist.name(), util::xml::normalize_string(flist.value().c_str()));
 
 		for (const software_part &part : swinfo.parts())
 		{
@@ -1116,7 +1107,7 @@ void cli_frontend::output_single_softlist(std::ostream &out, software_list_devic
 			out << ">\n";
 
 			for (const feature_list_item &flist : part.featurelist())
-				util::stream_format(out, "\t\t\t\t<feature name=\"%s\" value=\"%s\" />\n", flist.name().c_str(), util::xml::normalize_string(flist.value().c_str()));
+				util::stream_format(out, "\t\t\t\t<feature name=\"%s\" value=\"%s\" />\n", flist.name(), util::xml::normalize_string(flist.value().c_str()));
 
 			// TODO: display ROM region information
 			for (const rom_entry *region = part.romdata().data(); region; region = rom_next_region(region))
@@ -1124,9 +1115,9 @@ void cli_frontend::output_single_softlist(std::ostream &out, software_list_devic
 				int is_disk = ROMREGION_ISDISKDATA(region);
 
 				if (!is_disk)
-					util::stream_format(out, "\t\t\t\t<dataarea name=\"%s\" size=\"%d\">\n", util::xml::normalize_string(ROMREGION_GETTAG(region)), ROMREGION_GETLENGTH(region));
+					util::stream_format(out, "\t\t\t\t<dataarea name=\"%s\" size=\"%d\">\n", util::xml::normalize_string(region->name().c_str()), region->get_length());
 				else
-					util::stream_format(out, "\t\t\t\t<diskarea name=\"%s\">\n", util::xml::normalize_string(ROMREGION_GETTAG(region)));
+					util::stream_format(out, "\t\t\t\t<diskarea name=\"%s\">\n", util::xml::normalize_string(region->name().c_str()));
 
 				for (const rom_entry *rom = rom_first_file(region); rom && !ROMENTRY_ISREGIONEND(rom); rom++)
 				{
@@ -1138,7 +1129,7 @@ void cli_frontend::output_single_softlist(std::ostream &out, software_list_devic
 							util::stream_format(out, "\t\t\t\t\t<disk name=\"%s\"", util::xml::normalize_string(ROM_GETNAME(rom)));
 
 						// dump checksum information only if there is a known dump
-						util::hash_collection hashes(ROM_GETHASHDATA(rom));
+						util::hash_collection hashes(rom->hashdata());
 						if (!hashes.flag(util::hash_collection::FLAG_NO_DUMP))
 							util::stream_format(out, " %s", hashes.attribute_string());
 						else
@@ -1424,22 +1415,6 @@ void cli_frontend::verifysoftlist(const std::vector<std::string> &args)
 	}
 }
 
-//-------------------------------------------------
-//  streamingserver - start MAME streaming server
-//-------------------------------------------------
-void elaborate(webpp::StreamingServer *streamingServer)
-{
-
-}
-
-void cli_frontend::streamingserver(const std::vector<std::string> &args)
-{
-	webpp::StreamingServer streamingServer(elaborate);
-	streamingServer.config.address = "127.0.0.1";
-	streamingServer.config.port = 8888;
-	streamingServer.config.thread_pool_size = 4;
-	streamingServer.start();
-}
 
 //-------------------------------------------------
 //  version - emit MAME version to stdout
@@ -1553,7 +1528,7 @@ template <typename T, typename U> void cli_frontend::apply_action(const std::vec
 	for (std::string const &pat : args)
 	{
 		if (!*it)
-			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching systems found for '%s'", pat.c_str());
+			throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching systems found for '%s'", pat);
 
 		++it;
 	}
@@ -1610,7 +1585,6 @@ const cli_frontend::info_command_struct *cli_frontend::find_command(const std::s
 		{ CLICOMMAND_ROMIDENT,          1,  1, &cli_frontend::romident,         "(file or directory path)" },
 		{ CLICOMMAND_GETSOFTLIST,       0,  1, &cli_frontend::getsoftlist,      "[system name|*]" },
 		{ CLICOMMAND_VERIFYSOFTLIST,    0,  1, &cli_frontend::verifysoftlist,   "[system name|*]" },
-		{ CLICOMMAND_STREAMINGSERVER,   0,  0, &cli_frontend::streamingserver,  "" },
 		{ CLICOMMAND_VERSION,           0,  0, &cli_frontend::version,          "" }
 	};
 
@@ -1628,7 +1602,7 @@ const cli_frontend::info_command_struct *cli_frontend::find_command(const std::s
 //  commands
 //-------------------------------------------------
 
-void cli_frontend::execute_commands(const char *exename)
+void cli_frontend::execute_commands(std::string_view exename)
 {
 	// help?
 	if (m_options.command() == CLICOMMAND_HELP)
@@ -1676,7 +1650,7 @@ void cli_frontend::execute_commands(const char *exename)
 			throw emu_fatalerror("Unable to create file %s.ini\n",emulator_info::get_configname());
 
 		// generate the updated INI
-		file.puts(m_options.output_ini().c_str());
+		file.puts(m_options.output_ini());
 
 		ui_options ui_opts;
 		emu_file file_ui(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
@@ -1684,7 +1658,7 @@ void cli_frontend::execute_commands(const char *exename)
 			throw emu_fatalerror("Unable to create file ui.ini\n");
 
 		// generate the updated INI
-		file_ui.puts(ui_opts.output_ini().c_str());
+		file_ui.puts(ui_opts.output_ini());
 
 		plugin_options plugin_opts;
 		path_iterator iter(m_options.plugins_path());
@@ -1699,7 +1673,7 @@ void cli_frontend::execute_commands(const char *exename)
 			throw emu_fatalerror("Unable to create file plugin.ini\n");
 
 		// generate the updated INI
-		file_plugin.puts(plugin_opts.output_ini().c_str());
+		file_plugin.puts(plugin_opts.output_ini());
 
 		return;
 	}
@@ -1738,7 +1712,7 @@ void cli_frontend::execute_commands(const char *exename)
 
 	if (!m_osd.execute_command(m_options.command().c_str()))
 		// if we get here, we don't know what has been requested
-		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "Unknown command '%s' specified", m_options.command().c_str());
+		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "Unknown command '%s' specified", m_options.command());
 }
 
 
@@ -1747,7 +1721,7 @@ void cli_frontend::execute_commands(const char *exename)
 //  output
 //-------------------------------------------------
 
-void cli_frontend::display_help(const char *exename)
+void cli_frontend::display_help(std::string_view exename)
 {
 	osd_printf_info(
 			"%3$s v%2$s\n"
