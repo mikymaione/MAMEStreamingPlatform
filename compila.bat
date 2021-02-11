@@ -1,2 +1,2 @@
 cls
-make TARGET=mame SOURCES=src/mame/drivers/cps3.cpp IGNORE_GIT=1 DEBUG=1 SYMLEVEL=2 SYMBOLS=1 OPTIMIZE=0 REGENIE=1
+make vs2019 PYTHON_EXECUTABLE=C:/Users/Public/msys64/mingw64/bin/python.exe TARGET=mame SOURCES=src/mame/drivers/cps3.cpp REGENIE=1 -j4
