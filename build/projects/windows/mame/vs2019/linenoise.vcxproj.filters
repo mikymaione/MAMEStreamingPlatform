@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{3E7DA5C5-2A4A-00D1-5363-EE783F8F355F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\linenoise">
+      <UniqueIdentifier>{201D4AEF-0C01-0B45-7561-05986164F5C6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\3rdparty\linenoise\utf8.c">
+      <Filter>3rdparty\linenoise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\linenoise\linenoise.c">
+      <Filter>3rdparty\linenoise</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

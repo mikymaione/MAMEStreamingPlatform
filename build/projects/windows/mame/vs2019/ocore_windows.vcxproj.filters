@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd">
+      <UniqueIdentifier>{EFD348A9-5BB3-C744-64CB-521BD0292EA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\windows">
+      <UniqueIdentifier>{D600816F-428C-EE33-4B9D-7128B7A74A34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules">
+      <UniqueIdentifier>{64E30D7B-D06E-7B3F-D97F-FE33458AD73F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\file">
+      <UniqueIdentifier>{E02B32DE-CCBA-BBA7-75D9-CFA26147CC4D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\lib">
+      <UniqueIdentifier>{97418D4C-03A3-6A5A-8C10-B10CF870A119}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\osd\eigccppc.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\eigccx86.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\eivc.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\eivcx86.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\eminline.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\osdcomm.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\osdcore.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\strconv.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\osdsync.h">
+      <Filter>src\osd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\windows\winutf8.h">
+      <Filter>src\osd\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\windows\winutil.h">
+      <Filter>src\osd\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\osdmodule.h">
+      <Filter>src\osd\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\file\winfile.h">
+      <Filter>src\osd\modules\file</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\osd\osdcore.cpp">
+      <Filter>src\osd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\strconv.cpp">
+      <Filter>src\osd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\osdsync.cpp">
+      <Filter>src\osd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\main.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\winutf8.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\windows\winutil.cpp">
+      <Filter>src\osd\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\osdmodule.cpp">
+      <Filter>src\osd\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\file\windir.cpp">
+      <Filter>src\osd\modules\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\file\winfile.cpp">
+      <Filter>src\osd\modules\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\file\winptty.cpp">
+      <Filter>src\osd\modules\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\file\winsocket.cpp">
+      <Filter>src\osd\modules\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\lib\osdlib_win32.cpp">
+      <Filter>src\osd\modules\lib</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
