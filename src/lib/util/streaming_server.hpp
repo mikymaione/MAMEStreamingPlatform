@@ -1,3 +1,10 @@
+// license:BSD-3-Clause
+// copyright-holders:Michele Maione
+//============================================================
+//
+//  streaming_server.hpp - MAME Game Streaming Server (aka DinoServer)
+//
+//============================================================
 #pragma once
 
 #ifndef SRC_STREAMINGSERVER_H
@@ -14,7 +21,7 @@
 
 namespace webpp
 {
-	class StreamingServer
+	class streaming_server
 	{
 	private:
 		webpp::ws_server server;

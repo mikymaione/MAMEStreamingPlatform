@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\..\..\..\src\lib\util\server_wss.hpp">
       <Filter>src\lib\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\src\lib\util\streaming_server.h">
-      <Filter>src\lib\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\src\lib\util\strformat.h">
       <Filter>src\lib\util</Filter>
     </ClInclude>
@@ -163,6 +160,9 @@
       <Filter>src\lib\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\src\lib\util\zippath.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\streaming_server.hpp">
       <Filter>src\lib\util</Filter>
     </ClInclude>
   </ItemGroup>
