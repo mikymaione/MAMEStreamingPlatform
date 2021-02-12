@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Streaming</title>
+</head>
+
+<body>
+
+	<video id="monitor" autoplay></video>
+
+	<script>
+		function FullScreen(monitor)
+		{
+			//document.exitFullscreen();
+			monitor.requestFullscreen();
+		}
+
+		function Start()
+		{
+			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+			const mimeCodec = 'video/mp4';
+
+			if (MediaSource.isTypeSupported(mimeCodec))
+			{
+				const uri = "ws://127.0.0.1:8888";
+
+				let monitor = document.getElementById('monitor');
+
+				let sourceBuffer;
+				let mediaSource = new MediaSource();
+				monitor.src = URL.createObjectURL(mediaSource);
+
+				mediaSource.onsourceopen = function (e)
+				{
+					let mediaSource = this;
+					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+				};
+
+				let ws = new WebSocket(uri);
+				//ws.binaryType = 'arraybuffer';
+
+				ws.onopen = function (e)
+				{
+					console.log('Connection opened');
+				};
+
+				ws.onclose = function (e)
+				{
+					console.log('Connection closed');
+				};
+
+				ws.onmessage = function (event)
+				{
+					let blob = event.data;
+
+					blob.arrayBuffer().then(buffer =>
+					{
+						debugger;
+						sourceBuffer.appendBuffer(buffer)
+					});
+				};
+			}
+			else 
+			{
+				console.error("Unsupported media format");
+			}
+		}
+
+		Start();
+	</script>
+</body>
+
+</html>
