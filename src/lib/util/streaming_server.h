@@ -24,7 +24,7 @@ namespace webpp
 			m_io_context = std::make_shared<asio::io_context>();
 
 			m_server = std::make_unique<webpp::http_server>();
-			m_server->m_config.port = port;
+			m_server->m_config.port = 8888;
 			m_server->set_io_context(m_io_context);
 
 			m_wsserver = std::make_unique<webpp::ws_server>();
