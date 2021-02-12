@@ -2,9 +2,9 @@
 // copyright-holders:Aaron Giles
 /***************************************************************************
 
-    mame.cpp
+	mame.cpp
 
-    Specific (per target) constants
+	Specific (per target) constants
 
 ****************************************************************************/
 
@@ -16,8 +16,8 @@
 #define COPYRIGHT               "Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
 #define COPYRIGHT_INFO          "Copyright Nicola Salmoria and the MAME team"
 
-const char * emulator_info::get_appname() { return APPNAME;}
-const char * emulator_info::get_appname_lower() { return APPNAME_LOWER;}
-const char * emulator_info::get_configname() { return CONFIGNAME;}
-const char * emulator_info::get_copyright() { return COPYRIGHT;}
-const char * emulator_info::get_copyright_info() { return COPYRIGHT_INFO;}
+const char* emulator_info::get_appname() { return APPNAME; }
+const char* emulator_info::get_appname_lower() { return APPNAME_LOWER; }
+const char* emulator_info::get_configname() { return CONFIGNAME; }
+const char* emulator_info::get_copyright() { return COPYRIGHT; }
+const char* emulator_info::get_copyright_info() { return COPYRIGHT_INFO; }

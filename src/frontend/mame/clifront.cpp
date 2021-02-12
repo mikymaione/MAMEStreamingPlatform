@@ -33,8 +33,6 @@
 #include "unzip.h"
 #include "xmlfile.h"
 
-#include "streaming_server.h"
-
 #include "osdepend.h"
 
 #include <algorithm>
@@ -236,12 +234,14 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 	// determine the base name of the EXE
 	std::string_view exename = core_filename_extract_base(args[0], true);
 
+	/* RIMETTERE
 	// if we have a command, execute that
 	if (!m_options.command().empty())
 	{
 		execute_commands(exename);
 		return;
 	}
+	*/
 
 	// read INI's, if appropriate
 	if (m_options.read_config())
@@ -252,6 +252,9 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 
 	// otherwise, check for a valid system
 	load_translation(m_options);
+
+	if (streamingServer)
+		m_streamingServer = std::make_unique<webpp::StreamingServer>(8888);
 
 	manager->start_http_server();
 
@@ -1423,19 +1426,9 @@ void cli_frontend::verifysoftlist(const std::vector<std::string>& args)
 //-------------------------------------------------
 //  streamingserver - start MAME streaming server
 //-------------------------------------------------
-void elaborate(webpp::StreamingServer* streamingServer)
-{
-
-}
-
 void cli_frontend::streamingserver(const std::vector<std::string>& args)
 {
-	webpp::StreamingServer streamingServer(elaborate);
-
-	streamingServer.config.address = "127.0.0.1";
-	streamingServer.config.port = 8888;
-	streamingServer.config.thread_pool_size = 4;
-	streamingServer.start();
+	streamingServer = true;
 }
 
 
