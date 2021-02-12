@@ -20,6 +20,8 @@
 #include "modules/diagnostics/diagnostics_module.h"
 #include "modules/monitor/monitor_common.h"
 
+#include "streaming_server.h"
+
 // standard C headers
 #include <cctype>
 #include <cstdarg>
@@ -66,7 +68,7 @@ using namespace Windows::UI::Popups;
 class winui_output_error : public osd_output
 {
 public:
-	virtual void output_callback(osd_output_channel channel, const util::format_argument_pack<std::ostream> &args) override
+	virtual void output_callback(osd_output_channel channel, const util::format_argument_pack<std::ostream>& args) override
 	{
 		if (channel == OSD_OUTPUT_CHANNEL_ERROR)
 		{
@@ -92,7 +94,7 @@ public:
 class winuniversal_output_error : public osd_output
 {
 public:
-	virtual void output_callback(osd_output_channel channel, const char *msg, va_list args) override
+	virtual void output_callback(osd_output_channel channel, const char* msg, va_list args) override
 	{
 		char buffer[2048];
 		if (channel == OSD_OUTPUT_CHANNEL_ERROR)
@@ -138,7 +140,7 @@ static int timeresult = !TIMERR_NOERROR;
 static TIMECAPS timecaps;
 #endif
 
-static running_machine *g_current_machine;
+static running_machine* g_current_machine;
 
 
 //**************************************************************************
@@ -284,15 +286,15 @@ const options_entry windows_options::s_option_entries[] =
 //  main
 //============================================================
 
-int main(int argc, char *argv[])
+int main2(int argc, char* argv[])
 {
 	std::vector<std::string> args = osd_get_command_line(argc, argv);
 
 	// use small output buffers on non-TTYs (i.e. pipes)
 	if (!isatty(fileno(stdout)))
-		setvbuf(stdout, (char *) nullptr, _IOFBF, 64);
+		setvbuf(stdout, (char*) nullptr, _IOFBF, 64);
 	if (!isatty(fileno(stderr)))
-		setvbuf(stderr, (char *) nullptr, _IOFBF, 64);
+		setvbuf(stderr, (char*) nullptr, _IOFBF, 64);
 
 	// initialize common controls
 	InitCommonControls();
@@ -325,6 +327,17 @@ int main(int argc, char *argv[])
 	}
 
 	return result;
+}
+
+int main(int argc, char* argv[])
+{
+	webpp::StreamingServer ss;
+
+	ss.on_accept = [&]() {
+		main2(argc, argv);
+	};
+
+	ss.start(8888);
 }
 
 //============================================================
@@ -400,9 +413,9 @@ void MameMainApp::Run()
 {
 	// use small output buffers on non-TTYs (i.e. pipes)
 	if (!isatty(fileno(stdout)))
-		setvbuf(stdout, (char *) nullptr, _IOFBF, 64);
+		setvbuf(stdout, (char*) nullptr, _IOFBF, 64);
 	if (!isatty(fileno(stderr)))
-		setvbuf(stderr, (char *) nullptr, _IOFBF, 64);
+		setvbuf(stderr, (char*) nullptr, _IOFBF, 64);
 
 	// parse config and cmdline options
 	m_options = std::make_unique<windows_options>();
@@ -445,13 +458,13 @@ IFrameworkView^ MameViewSource::CreateView()
 //============================================================
 
 windows_options::windows_options()
-: osd_options()
+	: osd_options()
 {
 	add_entries(s_option_entries);
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 	String^ path = ApplicationData::Current->LocalFolder->Path + L"\\";
 	set_default_value(OPTION_INIPATH, osd::text::from_wstring((LPCWSTR)path->Data()) + ";" + ini_path());
-	set_default_value(OPTION_CFG_DIRECTORY, osd::text::from_wstring((LPCWSTR)path->Data()) +  cfg_directory());
+	set_default_value(OPTION_CFG_DIRECTORY, osd::text::from_wstring((LPCWSTR)path->Data()) + cfg_directory());
 	set_default_value(OPTION_NVRAM_DIRECTORY, osd::text::from_wstring((LPCWSTR)path->Data()) + nvram_directory());
 	set_default_value(OPTION_INPUT_DIRECTORY, osd::text::from_wstring((LPCWSTR)path->Data()) + input_directory());
 	set_default_value(OPTION_STATE_DIRECTORY, osd::text::from_wstring((LPCWSTR)path->Data()) + state_directory());
@@ -469,7 +482,7 @@ windows_options::windows_options()
 //  output_oslog
 //============================================================
 
-void windows_osd_interface::output_oslog(const char *buffer)
+void windows_osd_interface::output_oslog(const char* buffer)
 {
 	if (IsDebuggerPresent())
 		win_output_debug_string_utf8(buffer);
@@ -482,7 +495,7 @@ void windows_osd_interface::output_oslog(const char *buffer)
 //  constructor
 //============================================================
 
-windows_osd_interface::windows_osd_interface(windows_options &options)
+windows_osd_interface::windows_osd_interface(windows_options& options)
 	: osd_common_t(options)
 	, m_options(options)
 {
@@ -517,13 +530,13 @@ void windows_osd_interface::video_register()
 //  init
 //============================================================
 
-void windows_osd_interface::init(running_machine &machine)
+void windows_osd_interface::init(running_machine& machine)
 {
 	// call our parent
 	osd_common_t::init(machine);
 
-	const char *stemp;
-	auto &options = downcast<windows_options &>(machine.options());
+	const char* stemp;
+	auto& options = downcast<windows_options&>(machine.options());
 
 	// determine if we are benchmarking, and adjust options appropriately
 	int bench = options.bench();
@@ -566,7 +579,7 @@ void windows_osd_interface::init(running_machine &machine)
 	osd_common_t::init_subsystems();
 
 	// notify listeners of screen configuration
-	for (const auto &info : osd_common_t::s_window_list)
+	for (const auto& info : osd_common_t::s_window_list)
 	{
 		machine.output().set_value(string_format("Orientation(%s)", info->monitor()->devicename()), std::static_pointer_cast<win_window_info>(info)->m_targetorient);
 	}
@@ -630,7 +643,7 @@ void windows_osd_interface::osd_exit()
 //  osd_setup_osd_specific_emu_options
 //============================================================
 
-void osd_setup_osd_specific_emu_options(emu_options &opts)
+void osd_setup_osd_specific_emu_options(emu_options& opts)
 {
 	opts.add_entries(osd_options::s_option_entries);
 	opts.add_entries(windows_options::s_option_entries);

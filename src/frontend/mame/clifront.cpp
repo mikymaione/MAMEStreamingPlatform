@@ -34,11 +34,11 @@
 #include "xmlfile.h"
 
 #include "osdepend.h"
-#include "streaming_server.h"
 
 #include <algorithm>
 #include <new>
 #include <cctype>
+#include <thread>
 
 
 //**************************************************************************
@@ -204,9 +204,7 @@ cli_frontend::cli_frontend(emu_options& options, osd_interface& osd)
 //  ~cli_frontend - destructor
 //-------------------------------------------------
 
-cli_frontend::~cli_frontend()
-{
-}
+cli_frontend::~cli_frontend() {}
 
 void cli_frontend::start_execution(mame_machine_manager* manager, const std::vector<std::string>& args)
 {
@@ -277,9 +275,6 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 
 int cli_frontend::execute(std::vector<std::string>& args)
 {
-	webpp::StreamingServer ss(8888);
-
-
 	// wrap the core execution in a try/catch to field all fatal errors
 	m_result = EMU_ERR_NONE;
 	mame_machine_manager* manager = mame_machine_manager::instance(m_options, m_osd);
