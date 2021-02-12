@@ -15,8 +15,6 @@
 #include <memory>
 
 #include "emuopts.h"
-#include "streaming_server.h"
-
 
 // don't include osd_interface in header files
 class osd_interface;

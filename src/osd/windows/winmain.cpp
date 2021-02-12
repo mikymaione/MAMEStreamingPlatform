@@ -20,7 +20,7 @@
 #include "modules/diagnostics/diagnostics_module.h"
 #include "modules/monitor/monitor_common.h"
 
-#include "streaming_server.h"
+#include "streaming_server.hpp"
 
 // standard C headers
 #include <cctype>
@@ -331,7 +331,7 @@ int main2(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	webpp::StreamingServer ss;
+	webpp::streaming_server ss;
 
 	ss.on_accept = [&]() {
 		main2(argc, argv);

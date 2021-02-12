@@ -277,7 +277,7 @@
     <ClInclude Include="..\..\..\..\..\src\lib\util\server_https.hpp" />
     <ClInclude Include="..\..\..\..\..\src\lib\util\server_ws.hpp" />
     <ClInclude Include="..\..\..\..\..\src\lib\util\server_wss.hpp" />
-    <ClInclude Include="..\..\..\..\..\src\lib\util\streaming_server.h" />
+    <ClInclude Include="..\..\..\..\..\src\lib\util\streaming_server.hpp" />
     <ClInclude Include="..\..\..\..\..\src\lib\util\strformat.h" />
     <ClInclude Include="..\..\..\..\..\src\lib\util\timeconv.h" />
     <ClInclude Include="..\..\..\..\..\src\lib\util\unicode.h" />
