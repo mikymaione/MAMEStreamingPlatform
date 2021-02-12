@@ -118,7 +118,8 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -141,7 +142,9 @@
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>mkdir &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\&quot; 2&gt;NUL&#x0D;&#x0A;@echo Emitting mamevers.rc...&#x0D;&#x0A;C:/Users/Public/msys64/mingw64/bin/python.exe &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py&quot; -r -b mame &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp&quot; &gt; &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc&quot;</Command>
+      <Command>mkdir "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\" 2&gt;NUL
+@echo Emitting mamevers.rc...
+C:/Users/Public/msys64/mingw64/bin/python.exe "c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py" -r -b mame "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp" &gt; "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,8 +157,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <PrecompiledHeader></PrecompiledHeader>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -178,7 +182,9 @@
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>mkdir &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\&quot; 2&gt;NUL&#x0D;&#x0A;@echo Emitting mamevers.rc...&#x0D;&#x0A;C:/Users/Public/msys64/mingw64/bin/python.exe &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py&quot; -r -b mame &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp&quot; &gt; &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc&quot;</Command>
+      <Command>mkdir "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\" 2&gt;NUL
+@echo Emitting mamevers.rc...
+C:/Users/Public/msys64/mingw64/bin/python.exe "c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py" -r -b mame "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp" &gt; "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -192,7 +198,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -217,7 +224,9 @@
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>mkdir &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\&quot; 2&gt;NUL&#x0D;&#x0A;@echo Emitting mamevers.rc...&#x0D;&#x0A;C:/Users/Public/msys64/mingw64/bin/python.exe &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py&quot; -r -b mame &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp&quot; &gt; &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc&quot;</Command>
+      <Command>mkdir "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\" 2&gt;NUL
+@echo Emitting mamevers.rc...
+C:/Users/Public/msys64/mingw64/bin/python.exe "c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py" -r -b mame "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp" &gt; "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,7 +240,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -256,7 +266,9 @@
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>mkdir &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\&quot; 2&gt;NUL&#x0D;&#x0A;@echo Emitting mamevers.rc...&#x0D;&#x0A;C:/Users/Public/msys64/mingw64/bin/python.exe &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py&quot; -r -b mame &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp&quot; &gt; &quot;c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc&quot;</Command>
+      <Command>mkdir "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\" 2&gt;NUL
+@echo Emitting mamevers.rc...
+C:/Users/Public/msys64/mingw64/bin/python.exe "c:\Users\Public\msys64\src\MAMEStreamingPlatform\scripts\build\verinfo.py" -r -b mame "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\version.cpp" &gt; "c:\Users\Public\msys64\src\MAMEStreamingPlatform\build\generated\resource\mamevers.rc"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -12585,11 +12597,12 @@
     <CustomBuild Include="..\..\..\..\generated\mame\mame.flt">
       <FileType>Text</FileType>
       <Command>@echo Building driver list...
-C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/makedep.py  driverlist ../../../../../src/mame/mame.lst  -f ../../../../generated/mame/mame.flt  > ../../../../generated/mame/mame/drivlist.cpp 
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/makedep.py  driverlist ../../../../../src/mame/mame.lst  -f ../../../../generated/mame/mame.flt  &gt; ../../../../generated/mame/mame/drivlist.cpp 
 </Command>
       <Outputs>../../../../generated/mame/mame/drivlist.cpp;%(Outputs)</Outputs>
       <SubType>Designer</SubType>
-      <Message></Message>
+      <Message>
+      </Message>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

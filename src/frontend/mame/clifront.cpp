@@ -34,6 +34,7 @@
 #include "xmlfile.h"
 
 #include "osdepend.h"
+#include "streaming_server.h"
 
 #include <algorithm>
 #include <new>
@@ -253,9 +254,6 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 	// otherwise, check for a valid system
 	load_translation(m_options);
 
-	if (streamingServer)
-		m_streamingServer = std::make_unique<webpp::StreamingServer>(8888);
-
 	manager->start_http_server();
 
 	manager->start_luaengine();
@@ -279,6 +277,9 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 
 int cli_frontend::execute(std::vector<std::string>& args)
 {
+	webpp::StreamingServer ss(8888);
+
+
 	// wrap the core execution in a try/catch to field all fatal errors
 	m_result = EMU_ERR_NONE;
 	mame_machine_manager* manager = mame_machine_manager::instance(m_options, m_osd);
@@ -1428,7 +1429,7 @@ void cli_frontend::verifysoftlist(const std::vector<std::string>& args)
 //-------------------------------------------------
 void cli_frontend::streamingserver(const std::vector<std::string>& args)
 {
-	streamingServer = true;
+
 }
 
 
