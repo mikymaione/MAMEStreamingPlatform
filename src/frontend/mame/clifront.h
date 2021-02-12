@@ -12,7 +12,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include "emuopts.h"
+#include "streaming_server.h"
+
 
 // don't include osd_interface in header files
 class osd_interface;
@@ -80,7 +84,10 @@ private:
 	// internal state
 	emu_options& m_options;
 	osd_interface& m_osd;
-	int                 m_result;
+	int m_result;
+
+	bool streamingServer = true;
+	std::unique_ptr<webpp::StreamingServer> m_streamingServer;
 };
 
 #endif  // MAME_FRONTEND_CLIFRONT_H
