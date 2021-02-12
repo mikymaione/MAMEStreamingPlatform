@@ -85,9 +85,6 @@ private:
 	emu_options& m_options;
 	osd_interface& m_osd;
 	int m_result;
-
-	bool streamingServer = true;
-	std::unique_ptr<webpp::StreamingServer> m_streamingServer;
 };
 
 #endif  // MAME_FRONTEND_CLIFRONT_H
