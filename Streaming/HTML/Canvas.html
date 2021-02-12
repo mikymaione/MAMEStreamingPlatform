@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Streaming</title>
+</head>
+
+<body>
+
+	<canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
+	<script>
+		function FullScreen(monitor)
+		{
+			//document.exitFullscreen();
+			monitor.requestFullscreen();
+		}
+
+		function Start()
+		{
+			const uri = "ws://127.0.0.1:8888";
+
+			let myCanvas = document.getElementById("myCanvas");
+			let context = myCanvas.getContext("2d"); // 2d, webgl, webgl2, bitmaprenderer
+
+			let webSocket = window.WebSocket || window.MozWebSocket,
+				ws = new webSocket(uri);
+
+			ws.onopen = function (e)
+			{
+				console.log('Connection opened');
+			};
+
+			ws.onclose = function (e)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				createImageBitmap(event.data).then((img) =>
+				{
+					context.drawImage(img, 0, 0);
+				});
+			};
+		}
+
+		Start();
+	</script>
+</body>
+
+</html>
