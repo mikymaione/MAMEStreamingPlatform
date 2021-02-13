@@ -331,13 +331,11 @@ int main2(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	webpp::streaming_server ss;
-
-	ss.on_accept = [&]() {
+	webpp::streaming_server::get().on_accept = [&]() {
 		main2(argc, argv);
 	};
 
-	ss.start(8888);
+	webpp::streaming_server::get().start(8888);
 }
 
 //============================================================
