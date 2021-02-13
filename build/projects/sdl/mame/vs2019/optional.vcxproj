@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F7D1D881-E3B5-99D7-4C16-942A38198459}</ProjectGuid>
+    <RootNamespace>optional</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <Keyword>Win32Proj</Keyword>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\..\..\vs2019\bin\x32\Debug\mame_mame\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x32\Debug\optional\</IntDir>
+    <TargetName>optional</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\..\..\vs2019\bin\x64\Debug\mame_mame\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x64\Debug\optional\</IntDir>
+    <TargetName>optional</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\..\..\vs2019\bin\x32\Release\mame_mame\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x32\Release\optional\</IntDir>
+    <TargetName>optional</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\..\..\vs2019\bin\x64\Release\mame_mame\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x64\Release\optional\</IntDir>
+    <TargetName>optional</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)optional.pdb</ProgramDataBaseFileName>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)optional.lib</OutputFile>
+    <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    <TargetMachine>MachineX86</TargetMachine>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)optional.pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)optional.pdb</ProgramDataBaseFileName>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)optional.lib</OutputFile>
+    <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    <TargetMachine>MachineX64</TargetMachine>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)optional.pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat></DebugInformationFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)optional.lib</OutputFile>
+    <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    <TargetMachine>MachineX86</TargetMachine>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat></DebugInformationFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\mame;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  <Lib>
+    <OutputFile>$(OutDir)optional.lib</OutputFile>
+    <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    <TargetMachine>MachineX64</TargetMachine>
+  </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcbec.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcbeut.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drccache.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcfe.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcuml.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\uml.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\x86log.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcumlsh.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcbex64.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\drcbex86.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh2.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh2comn.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_bus.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_sci.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_wdt.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh4.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh4comn.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh3comn.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh4tmu.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh4dmac.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\cpu\sh\sh4regs.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\sound\flt_biquad.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\sound\flt_vol.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\sound\flt_rc.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\sound\samples.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\video\poly.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\video\sprite.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\video\vector.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\video\cgapal.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\bcreader.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\buffer.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\clock.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\keyboard.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\laserdsc.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\nvram.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\ram.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\legscsi.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\sdlc.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\terminal.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\timer.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\bitbngr.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\cassette.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\chd_cd.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\diablo.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\flopdrv.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\floppy.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\harddriv.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\mfmhd.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\microdrv.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\midiin.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\midiout.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\picture.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\printer.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\snapquik.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\wafadrive.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\imagedev\avivideo.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\intelfsh.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\nscsi_bus.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\nscsi_cb.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\machine\wd33c9x.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\applecd.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\cd.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\cdd2000.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\cdrn820s.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\cw7501.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\devices.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\hd.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\s1410.h" />
+    <ClInclude Include="..\..\..\..\..\src\devices\bus\nscsi\smoc501.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcbec.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcbeut.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drccache.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcfe.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcuml.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\uml.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\x86log.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcbex64.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\drcbex86.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh2.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh2comn.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh_fe.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh2fe.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh4fe.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_bus.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_sci.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh7604_wdt.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh4.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh4comn.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh3comn.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh4tmu.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\cpu\sh\sh4dmac.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\sound\flt_biquad.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\sound\flt_vol.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\sound\flt_rc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\sound\samples.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\video\sprite.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\video\vector.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\video\cgapal.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\bcreader.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\buffer.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\clock.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\keyboard.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\laserdsc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\nvram.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\ram.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\legscsi.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\sdlc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\terminal.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\timer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\bitbngr.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\cassette.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\chd_cd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\diablo.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\flopdrv.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\floppy.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\harddriv.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\mfmhd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\microdrv.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\midiin.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\midiout.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\picture.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\printer.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\snapquik.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\wafadrive.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\imagedev\avivideo.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\intelfsh.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\nscsi_bus.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\nscsi_cb.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\machine\wd33c9x.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\applecd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\cd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\cdd2000.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\cdrn820s.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\cw7501.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\devices.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\hd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\s1410.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\devices\bus\nscsi\smoc501.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\src\devices\machine\keyboard.ipp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
