@@ -37,18 +37,18 @@ public:
 	renderer_bgfx(std::shared_ptr<osd_window> w);
 	virtual ~renderer_bgfx();
 
-	static bool init(running_machine &machine);
+	static bool init(running_machine& machine);
 	static void exit();
 
 	virtual int create() override;
 	virtual int draw(const int update) override;
 
-	virtual void add_audio_to_recording(const int16_t *buffer, int samples_this_frame) override;
+	virtual void add_audio_to_recording(const int16_t* buffer, int samples_this_frame) override;
 	virtual std::vector<ui::menu_item> get_slider_list() override;
 	virtual void set_sliders_dirty() override;
 
 #ifdef OSD_SDL
-	virtual int xy_to_render_target(const int x, const int y, int *xt, int *yt) override;
+	virtual int xy_to_render_target(const int x, const int y, int* xt, int* yt) override;
 #endif
 
 	virtual void save() override { }
@@ -58,7 +58,7 @@ public:
 	uint32_t get_window_width(uint32_t index) const;
 	uint32_t get_window_height(uint32_t index) const;
 
-	virtual render_primitive_list *get_primitives() override
+	virtual render_primitive_list* get_primitives() override
 	{
 		auto win = try_getwindow();
 		if (win == nullptr)
@@ -82,18 +82,20 @@ public:
 		return &win->target()->get_primitives();
 	}
 
-	static char const *const WINDOW_PREFIX;
+	static char const* const WINDOW_PREFIX;
 
 private:
 	void vertex(ScreenVertex* vertex, float x, float y, float z, uint32_t rgba, float u, float v);
 	void render_avi_quad();
 	void update_recording();
 
+	void send_stream();
+
 	bool update_dimensions();
 
 	void setup_ortho_view();
 
-	void allocate_buffer(render_primitive *prim, uint32_t blend, bgfx::TransientVertexBuffer *buffer);
+	void allocate_buffer(render_primitive* prim, uint32_t blend, bgfx::TransientVertexBuffer* buffer);
 	enum buffer_status
 	{
 		BUFFER_PRE_FLUSH,
@@ -107,8 +109,8 @@ private:
 	void render_textured_quad(render_primitive* prim, bgfx::TransientVertexBuffer* buffer);
 	void render_post_screen_quad(int view, render_primitive* prim, bgfx::TransientVertexBuffer* buffer, int32_t screen);
 
-	void put_packed_quad(render_primitive *prim, uint32_t hash, ScreenVertex* vertex);
-	void put_packed_line(render_primitive *prim, ScreenVertex* vertex);
+	void put_packed_quad(render_primitive* prim, uint32_t hash, ScreenVertex* vertex);
+	void put_packed_line(render_primitive* prim, ScreenVertex* vertex);
 	void put_polygon(const float* coords, uint32_t num_coords, float r, uint32_t rgba, ScreenVertex* vertex);
 	void put_line(float x0, float y0, float x1, float y1, float r, uint32_t rgba, ScreenVertex* vertex, float fth = 1.0f);
 
@@ -119,24 +121,24 @@ private:
 	bool check_for_dirty_atlas();
 	bool update_atlas();
 	void process_atlas_packs(std::vector<std::vector<rectangle_packer::packed_rectangle>>& packed);
-	uint32_t get_texture_hash(render_primitive *prim);
+	uint32_t get_texture_hash(render_primitive* prim);
 
 	osd_options& m_options;
 
-	bgfx_target *m_framebuffer;
-	bgfx_texture *m_texture_cache;
+	bgfx_target* m_framebuffer;
+	bgfx_texture* m_texture_cache;
 
 	// Original display_mode
 	osd_dim m_dimensions;
 
-	texture_manager *m_textures;
-	target_manager *m_targets;
-	shader_manager *m_shaders;
-	effect_manager *m_effects;
-	chain_manager *m_chains;
+	texture_manager* m_textures;
+	target_manager* m_targets;
+	shader_manager* m_shaders;
+	effect_manager* m_effects;
+	chain_manager* m_chains;
 
-	bgfx_effect *m_gui_effect[4];
-	bgfx_effect *m_screen_effect[4];
+	bgfx_effect* m_gui_effect[4];
+	bgfx_effect* m_screen_effect[4];
 	std::vector<uint32_t> m_seen_views;
 
 	std::map<uint32_t, rectangle_packer::packed_rectangle> m_hash_to_entry;
@@ -145,16 +147,16 @@ private:
 
 	uint32_t m_width[16];
 	uint32_t m_height[16];
-	uint32_t m_white[16*16];
-	bgfx_view *m_ortho_view;
+	uint32_t m_white[16 * 16];
+	bgfx_view* m_ortho_view;
 	uint32_t m_max_view;
 
-	bgfx_view *m_avi_view;
-	avi_write *m_avi_writer;
-	bgfx_target *m_avi_target;
+	bgfx_view* m_avi_view;
+	avi_write* m_avi_writer;
+	bgfx_target* m_avi_target;
 	bgfx::TextureHandle m_avi_texture;
 	bitmap_rgb32 m_avi_bitmap;
-	uint8_t *m_avi_data;
+	uint8_t* m_avi_data;
 
 	static const uint16_t CACHE_SIZE;
 	static const uint32_t PACKABLE_SIZE;

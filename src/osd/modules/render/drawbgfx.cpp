@@ -16,7 +16,7 @@
 #endif
 #else
 #if defined(OSD_MAC)
-extern void *GetOSWindow(void *wincontroller);
+extern void* GetOSWindow(void* wincontroller);
 #else
 #include <SDL2/SDL_syswm.h>
 #endif
@@ -51,6 +51,8 @@ extern void *GetOSWindow(void *wincontroller);
 
 #include "imgui/imgui.h"
 
+#include "streaming_server.hpp"
+
 //============================================================
 //  DEBUGGING
 //============================================================
@@ -62,7 +64,7 @@ extern void *GetOSWindow(void *wincontroller);
 uint16_t const renderer_bgfx::CACHE_SIZE = 1024;
 uint32_t const renderer_bgfx::PACKABLE_SIZE = 128;
 uint32_t const renderer_bgfx::WHITE_HASH = 0x87654321;
-char const *const renderer_bgfx::WINDOW_PREFIX = "Window 0, ";
+char const* const renderer_bgfx::WINDOW_PREFIX = "Window 0, ";
 
 //============================================================
 //  MACROS
@@ -84,7 +86,7 @@ uint32_t renderer_bgfx::s_current_view = 0;
 
 renderer_bgfx::renderer_bgfx(std::shared_ptr<osd_window> w)
 	: osd_renderer(w, FLAG_NONE)
-	, m_options(downcast<osd_options &>(w->machine().options()))
+	, m_options(downcast<osd_options&>(w->machine().options()))
 	, m_framebuffer(nullptr)
 	, m_texture_cache(nullptr)
 	, m_dimensions(0, 0)
@@ -120,7 +122,7 @@ renderer_bgfx::~renderer_bgfx()
 		bgfx::destroy(m_avi_texture);
 
 		delete m_avi_writer;
-		delete [] m_avi_data;
+		delete[] m_avi_data;
 		delete m_avi_view;
 	}
 
@@ -140,21 +142,21 @@ renderer_bgfx::~renderer_bgfx()
 inline void winSetHwnd(::HWND _window)
 {
 	bgfx::PlatformData pd;
-	pd.ndt          = NULL;
-	pd.nwh          = _window;
-	pd.context      = NULL;
-	pd.backBuffer   = NULL;
+	pd.ndt = NULL;
+	pd.nwh = _window;
+	pd.context = NULL;
+	pd.backBuffer = NULL;
 	pd.backBufferDS = NULL;
 	bgfx::setPlatformData(pd);
 }
 #elif defined(OSD_MAC)
-inline void macSetWindow(void *_window)
+inline void macSetWindow(void* _window)
 {
 	bgfx::PlatformData pd;
-	pd.ndt          = NULL;
-	pd.nwh          = GetOSWindow(_window);
-	pd.context      = NULL;
-	pd.backBuffer   = NULL;
+	pd.ndt = NULL;
+	pd.nwh = GetOSWindow(_window);
+	pd.context = NULL;
+	pd.backBuffer = NULL;
 	pd.backBufferDS = NULL;
 	bgfx::setPlatformData(pd);
 }
@@ -185,27 +187,27 @@ inline bool sdlSetWindow(SDL_Window* _window)
 {
 	SDL_SysWMinfo wmi;
 	SDL_VERSION(&wmi.version);
-	if (!SDL_GetWindowWMInfo(_window, &wmi) )
+	if (!SDL_GetWindowWMInfo(_window, &wmi))
 	{
 		return false;
 	}
 
 	bgfx::PlatformData pd;
 #   if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
-	pd.ndt          = wmi.info.x11.display;
-	pd.nwh          = (void*)(uintptr_t)wmi.info.x11.window;
+	pd.ndt = wmi.info.x11.display;
+	pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
 #   elif BX_PLATFORM_OSX
-	pd.ndt          = NULL;
-	pd.nwh          = wmi.info.cocoa.window;
+	pd.ndt = NULL;
+	pd.nwh = wmi.info.cocoa.window;
 #   elif BX_PLATFORM_WINDOWS
-	pd.ndt          = NULL;
-	pd.nwh          = wmi.info.win.window;
+	pd.ndt = NULL;
+	pd.nwh = wmi.info.win.window;
 #   elif BX_PLATFORM_STEAMLINK
-	pd.ndt          = wmi.info.vivante.display;
-	pd.nwh          = wmi.info.vivante.window;
+	pd.ndt = wmi.info.vivante.display;
+	pd.nwh = wmi.info.vivante.window;
 #   endif // BX_PLATFORM_
-	pd.context      = NULL;
-	pd.backBuffer   = NULL;
+	pd.context = NULL;
+	pd.backBuffer = NULL;
 	pd.backBufferDS = NULL;
 	bgfx::setPlatformData(pd);
 
@@ -344,7 +346,7 @@ int renderer_bgfx::create()
 	m_screen_effect[2] = m_effects->effect("screen_multiply");
 	m_screen_effect[3] = m_effects->effect("screen_add");
 
-	if (   m_gui_effect[0] == nullptr ||    m_gui_effect[1] == nullptr ||    m_gui_effect[2] == nullptr ||    m_gui_effect[3] == nullptr ||
+	if (m_gui_effect[0] == nullptr || m_gui_effect[1] == nullptr || m_gui_effect[2] == nullptr || m_gui_effect[3] == nullptr ||
 		m_screen_effect[0] == nullptr || m_screen_effect[1] == nullptr || m_screen_effect[2] == nullptr || m_screen_effect[3] == nullptr)
 	{
 		fatalerror("BGFX: Unable to load required shaders. Please check and reinstall the %s folder\n", m_options.bgfx_path());
@@ -406,9 +408,9 @@ void renderer_bgfx::record()
 	}
 }
 
-bool renderer_bgfx::init(running_machine &machine)
+bool renderer_bgfx::init(running_machine& machine)
 {
-	const char *bgfx_path = downcast<osd_options &>(machine.options()).bgfx_path();
+	const char* bgfx_path = downcast<osd_options&>(machine.options()).bgfx_path();
 
 	osd::directory::ptr directory = osd::directory::open(bgfx_path);
 	if (directory == nullptr)
@@ -433,13 +435,13 @@ void renderer_bgfx::exit()
 //============================================================
 
 #ifdef OSD_SDL
-int renderer_bgfx::xy_to_render_target(int x, int y, int *xt, int *yt)
+int renderer_bgfx::xy_to_render_target(int x, int y, int* xt, int* yt)
 {
 	*xt = x;
 	*yt = y;
-	if (*xt<0 || *xt >= m_dimensions.width())
+	if (*xt < 0 || *xt >= m_dimensions.width())
 		return 0;
-	if (*yt<0 || *yt >= m_dimensions.height())
+	if (*yt < 0 || *yt >= m_dimensions.height())
 		return 0;
 	return 1;
 }
@@ -451,7 +453,7 @@ int renderer_bgfx::xy_to_render_target(int x, int y, int *xt, int *yt)
 
 bgfx::VertexLayout ScreenVertex::ms_decl;
 
-void renderer_bgfx::put_packed_quad(render_primitive *prim, uint32_t hash, ScreenVertex* vertices)
+void renderer_bgfx::put_packed_quad(render_primitive* prim, uint32_t hash, ScreenVertex* vertices)
 {
 	rectangle_packer::packed_rectangle& rect = m_hash_to_entry[hash];
 	auto size = float(CACHE_SIZE);
@@ -538,7 +540,7 @@ void renderer_bgfx::render_post_screen_quad(int view, render_primitive* prim, bg
 	}
 
 	uint32_t blend = PRIMFLAG_GET_BLENDMODE(prim->flags);
-	bgfx::setVertexBuffer(0,buffer);
+	bgfx::setVertexBuffer(0, buffer);
 	bgfx::setTexture(0, m_screen_effect[blend]->uniform("s_tex")->handle(), m_targets->target(screen, "output")->texture(), texture_flags);
 	m_screen_effect[blend]->submit(m_ortho_view->get_index());
 }
@@ -568,7 +570,7 @@ void renderer_bgfx::render_avi_quad()
 	vertex(&vertices[4], x[2], y[2], 0, rgba, u[2], v[2]);
 	vertex(&vertices[5], x[0], y[0], 0, rgba, u[0], v[0]);
 
-	bgfx::setVertexBuffer(0,&buffer);
+	bgfx::setVertexBuffer(0, &buffer);
 	bgfx::setTexture(0, m_gui_effect[PRIMFLAG_GET_BLENDMODE(BLENDMODE_NONE)]->uniform("s_tex")->handle(), m_avi_target->texture());
 	m_gui_effect[PRIMFLAG_GET_BLENDMODE(BLENDMODE_NONE)]->submit(s_current_view);
 	s_current_view++;
@@ -618,7 +620,7 @@ void renderer_bgfx::render_textured_quad(render_primitive* prim, bgfx::Transient
 	bgfx_effect** effects = is_screen ? m_screen_effect : m_gui_effect;
 
 	uint32_t blend = PRIMFLAG_GET_BLENDMODE(prim->flags);
-	bgfx::setVertexBuffer(0,buffer);
+	bgfx::setVertexBuffer(0, buffer);
 	bgfx::setTexture(0, effects[blend]->uniform("s_tex")->handle(), texture);
 	effects[blend]->submit(m_ortho_view->get_index());
 
@@ -766,7 +768,7 @@ void renderer_bgfx::put_polygon(const float* coords, uint32_t num_coords, float 
 	}
 }
 
-void renderer_bgfx::put_packed_line(render_primitive *prim, ScreenVertex* vertex)
+void renderer_bgfx::put_packed_line(render_primitive* prim, ScreenVertex* vertex)
 {
 	float width = prim->width < 0.5f ? 0.5f : prim->width;
 	float x0 = prim->bounds.x0;
@@ -886,7 +888,7 @@ int renderer_bgfx::draw(int update)
 	// Mark our texture atlas as dirty if we need to do so
 	bool atlas_valid = update_atlas();
 
-	render_primitive *prim = win->m_primlist->first();
+	render_primitive* prim = win->m_primlist->first();
 	std::vector<void*> sources;
 	while (prim != nullptr)
 	{
@@ -915,7 +917,7 @@ int renderer_bgfx::draw(int update)
 
 		if (status != BUFFER_EMPTY && status != BUFFER_SCREEN)
 		{
-			bgfx::setVertexBuffer(0,&buffer);
+			bgfx::setVertexBuffer(0, &buffer);
 			bgfx::setTexture(0, m_gui_effect[blend]->uniform("s_tex")->handle(), m_texture_cache->texture());
 			m_gui_effect[blend]->submit(m_ortho_view->get_index());
 		}
@@ -936,17 +938,38 @@ int renderer_bgfx::draw(int update)
 	// process submitted rendering primitives.
 	if (window_index == 0)
 	{
-		if (m_avi_writer != nullptr && m_avi_writer->recording() && window_index == 0)
-		{
-			render_avi_quad();
-			bgfx::touch(s_current_view);
-			update_recording();
-		}
+		render_avi_quad();
+		bgfx::touch(s_current_view);
+		send_stream();
+		//update_recording();	
 
 		bgfx::frame();
 	}
 
 	return 0;
+}
+
+void renderer_bgfx::send_stream()
+{
+	bgfx::blit(s_current_view > 0 ? s_current_view - 1 : 0, m_avi_texture, 0, 0, bgfx::getTexture(m_avi_target->target()));
+	bgfx::readTexture(m_avi_texture, m_avi_data);
+
+	int i = 0;
+	for (int y = 0; y < m_avi_bitmap.height(); y++)
+	{
+		uint32_t* dst = &m_avi_bitmap.pix(y);
+
+		for (int x = 0; x < m_avi_bitmap.width(); x++)
+		{
+			*dst++ = 0xff000000 | (m_avi_data[i + 0] << 16) | (m_avi_data[i + 1] << 8) | m_avi_data[i + 2];
+			i += 4;
+		}
+	}
+	
+	auto send_stream = webpp::streaming_server::get().getStream();
+
+	//*send_stream << m_avi_bitmap;
+	webpp::streaming_server::get().send(std::this_thread::get_id(), send_stream);
 }
 
 void renderer_bgfx::update_recording()
@@ -957,7 +980,7 @@ void renderer_bgfx::update_recording()
 	int i = 0;
 	for (int y = 0; y < m_avi_bitmap.height(); y++)
 	{
-		uint32_t *dst = &m_avi_bitmap.pix(y);
+		uint32_t* dst = &m_avi_bitmap.pix(y);
 
 		for (int x = 0; x < m_avi_bitmap.width(); x++)
 		{
@@ -969,7 +992,7 @@ void renderer_bgfx::update_recording()
 	m_avi_writer->video_frame(m_avi_bitmap);
 }
 
-void renderer_bgfx::add_audio_to_recording(const int16_t *buffer, int samples_this_frame)
+void renderer_bgfx::add_audio_to_recording(const int16_t* buffer, int samples_this_frame)
 {
 	std::shared_ptr<osd_window> win = assert_window();
 	if (m_avi_writer != nullptr && m_avi_writer->recording() && win->index() == 0)
@@ -1048,61 +1071,61 @@ renderer_bgfx::buffer_status renderer_bgfx::buffer_primitives(bool atlas_valid, 
 	{
 		switch ((*prim)->type)
 		{
-			case render_primitive::LINE:
-				setup_ortho_view();
-				put_packed_line(*prim, (ScreenVertex*)buffer->data + vertices);
-				vertices += 30;
-				break;
+		case render_primitive::LINE:
+			setup_ortho_view();
+			put_packed_line(*prim, (ScreenVertex*)buffer->data + vertices);
+			vertices += 30;
+			break;
 
-			case render_primitive::QUAD:
-				if ((*prim)->texture.base == nullptr)
+		case render_primitive::QUAD:
+			if ((*prim)->texture.base == nullptr)
+			{
+				setup_ortho_view();
+				put_packed_quad(*prim, WHITE_HASH, (ScreenVertex*)buffer->data + vertices);
+				vertices += 6;
+			}
+			else
+			{
+				const uint32_t hash = get_texture_hash(*prim);
+				if (atlas_valid && (*prim)->packable(PACKABLE_SIZE) && hash != 0 && m_hash_to_entry[hash].hash())
 				{
 					setup_ortho_view();
-					put_packed_quad(*prim, WHITE_HASH, (ScreenVertex*)buffer->data + vertices);
+					put_packed_quad(*prim, hash, (ScreenVertex*)buffer->data + vertices);
 					vertices += 6;
 				}
 				else
 				{
-					const uint32_t hash = get_texture_hash(*prim);
-					if (atlas_valid && (*prim)->packable(PACKABLE_SIZE) && hash != 0 && m_hash_to_entry[hash].hash())
+					if (vertices > 0)
 					{
-						setup_ortho_view();
-						put_packed_quad(*prim, hash, (ScreenVertex*)buffer->data + vertices);
-						vertices += 6;
+						return BUFFER_PRE_FLUSH;
 					}
+
+					if (PRIMFLAG_GET_SCREENTEX((*prim)->flags) && m_chains->has_applicable_chain(screen))
+					{
+#if SCENE_VIEW
+						setup_view(s_current_view, true);
+						render_post_screen_quad(s_current_view, *prim, buffer, screen);
+						s_current_view++;
+#else
+						setup_ortho_view();
+						render_post_screen_quad(m_ortho_view->get_index(), *prim, buffer, screen);
+#endif
+						return BUFFER_SCREEN;
+				}
 					else
 					{
-						if (vertices > 0)
-						{
-							return BUFFER_PRE_FLUSH;
-						}
-
-						if (PRIMFLAG_GET_SCREENTEX((*prim)->flags) && m_chains->has_applicable_chain(screen))
-						{
-#if SCENE_VIEW
-							setup_view(s_current_view, true);
-							render_post_screen_quad(s_current_view, *prim, buffer, screen);
-							s_current_view++;
-#else
-							setup_ortho_view();
-							render_post_screen_quad(m_ortho_view->get_index(), *prim, buffer, screen);
-#endif
-							return BUFFER_SCREEN;
-						}
-						else
-						{
-							setup_ortho_view();
-							render_textured_quad(*prim, buffer);
-							return BUFFER_EMPTY;
-						}
+						setup_ortho_view();
+						render_textured_quad(*prim, buffer);
+						return BUFFER_EMPTY;
 					}
-				}
-				break;
-
-			default:
-				// Unhandled
-				break;
+			}
 		}
+			break;
+
+		default:
+			// Unhandled
+			break;
+	}
 
 		if ((*prim)->next() != nullptr && PRIMFLAG_GET_BLENDMODE((*prim)->next()->flags) != blend)
 		{
@@ -1110,7 +1133,7 @@ renderer_bgfx::buffer_status renderer_bgfx::buffer_primitives(bool atlas_valid, 
 		}
 
 		*prim = (*prim)->next();
-	}
+}
 
 	if (*prim == nullptr)
 	{
@@ -1177,7 +1200,7 @@ void renderer_bgfx::process_atlas_packs(std::vector<std::vector<rectangle_packer
 	}
 }
 
-uint32_t renderer_bgfx::get_texture_hash(render_primitive *prim)
+uint32_t renderer_bgfx::get_texture_hash(render_primitive* prim)
 {
 #if GIBBERISH
 	uint32_t xor_value = 0x87;
@@ -1192,7 +1215,7 @@ uint32_t renderer_bgfx::get_texture_hash(render_primitive *prim)
 
 	for (int y = 0; y < prim->texture.height; y++)
 	{
-		uint8_t *base = reinterpret_cast<uint8_t*>(prim->texture.base) + prim->texture.rowpixels * y;
+		uint8_t* base = reinterpret_cast<uint8_t*>(prim->texture.base) + prim->texture.rowpixels * y;
 		for (int x = 0; x < prim->texture.width * bpp; x++)
 		{
 			hash += base[x] ^ xor_value;
@@ -1211,7 +1234,7 @@ bool renderer_bgfx::check_for_dirty_atlas()
 
 	std::shared_ptr<osd_window> win = assert_window();
 	std::map<uint32_t, rectangle_packer::packable_rectangle> acquired_infos;
-	for (render_primitive &prim : *win->m_primlist)
+	for (render_primitive& prim : *win->m_primlist)
 	{
 		bool pack = prim.packable(PACKABLE_SIZE);
 		if (prim.type == render_primitive::QUAD && prim.texture.base != nullptr && pack)
@@ -1239,7 +1262,7 @@ bool renderer_bgfx::check_for_dirty_atlas()
 	return atlas_dirty;
 }
 
-void renderer_bgfx::allocate_buffer(render_primitive *prim, uint32_t blend, bgfx::TransientVertexBuffer *buffer)
+void renderer_bgfx::allocate_buffer(render_primitive* prim, uint32_t blend, bgfx::TransientVertexBuffer* buffer)
 {
 	int vertices = 0;
 	bool mode_switched = false;
@@ -1247,34 +1270,34 @@ void renderer_bgfx::allocate_buffer(render_primitive *prim, uint32_t blend, bgfx
 	{
 		switch (prim->type)
 		{
-			case render_primitive::LINE:
-				vertices += 30;
-				break;
+		case render_primitive::LINE:
+			vertices += 30;
+			break;
 
-			case render_primitive::QUAD:
-				if (!prim->packable(PACKABLE_SIZE))
-				{
-					if (prim->texture.base == nullptr)
-					{
-						vertices += 6;
-					}
-					else
-					{
-						if (vertices == 0)
-						{
-							vertices += 6;
-						}
-						mode_switched = true;
-					}
-				}
-				else
+		case render_primitive::QUAD:
+			if (!prim->packable(PACKABLE_SIZE))
+			{
+				if (prim->texture.base == nullptr)
 				{
 					vertices += 6;
 				}
-				break;
-			default:
-				// Do nothing
-				break;
+				else
+				{
+					if (vertices == 0)
+					{
+						vertices += 6;
+					}
+					mode_switched = true;
+				}
+			}
+			else
+			{
+				vertices += 6;
+			}
+			break;
+		default:
+			// Do nothing
+			break;
 		}
 
 		prim = prim->next();
@@ -1285,7 +1308,7 @@ void renderer_bgfx::allocate_buffer(render_primitive *prim, uint32_t blend, bgfx
 		}
 	}
 
-	if (vertices > 0 && vertices==bgfx::getAvailTransientVertexBuffer(vertices, ScreenVertex::ms_decl))
+	if (vertices > 0 && vertices == bgfx::getAvailTransientVertexBuffer(vertices, ScreenVertex::ms_decl))
 	{
 		bgfx::allocTransientVertexBuffer(buffer, vertices, ScreenVertex::ms_decl);
 	}
