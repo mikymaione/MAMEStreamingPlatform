@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{3E7DA5C5-2A4A-00D1-5363-EE783F8F355F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\lzma">
+      <UniqueIdentifier>{AE90F940-1A51-7577-E38B-BEF44F0BBA53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\lzma\C">
+      <UniqueIdentifier>{4D80A065-B90B-0E2A-C21C-911E2E276A2A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zAlloc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zArcIn.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zBuf.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zBuf2.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zCrc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zCrcOpt.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zDec.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zFile.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\7zStream.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Aes.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\AesOpt.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Alloc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Bcj2.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Bra.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Bra86.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\BraIA64.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\CpuArch.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Delta.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\LzFind.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Lzma2Dec.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Lzma2Enc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Lzma86Dec.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Lzma86Enc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\LzmaDec.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\LzmaEnc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Ppmd7.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Ppmd7Dec.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Ppmd7Enc.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Sha256.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\lzma\C\Sort.c">
+      <Filter>3rdparty\lzma\C</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

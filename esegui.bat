@@ -1,0 +1,1 @@
+mame64d.exe -window -streamingserver -video accel -sound sdl

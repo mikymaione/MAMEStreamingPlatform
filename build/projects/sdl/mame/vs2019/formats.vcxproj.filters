@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lib">
+      <UniqueIdentifier>{E0C548A9-4CA5-C744-55BD-521BC11B2EA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lib\formats">
+      <UniqueIdentifier>{3854B6BF-A4DF-2384-ADF0-A67819FB7F84}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\ioprocs.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\imageutl.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\cassimg.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\wavfile.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\flopimg.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\cqm_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\dsk_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\td0_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\hxchfe_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\hxcmfm_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\mfi_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\imd_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\ipf_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\d88_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\formats\dfi_dsk.h">
+      <Filter>src\lib\formats</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\ioprocs.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\imageutl.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\cassimg.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\wavfile.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\flopimg.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\cqm_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\dsk_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\td0_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\hxchfe_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\hxcmfm_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\mfi_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\imd_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\ipf_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\d88_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\dfi_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\formats\fdi_dsk.cpp">
+      <Filter>src\lib\formats</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
