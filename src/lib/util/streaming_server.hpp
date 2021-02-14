@@ -10,6 +10,7 @@
 #ifndef SRC_STREAMINGSERVER_H
 #define SRC_STREAMINGSERVER_H
 
+#include <list>
 #include <map>
 #include <iostream>
 #include <functional>
@@ -25,18 +26,20 @@ namespace webpp
 	class streaming_server
 	{
 	private:
+		bool active = false;
 		webpp::ws_server server;
-		std::map<std::thread::id, std::shared_ptr<Connection>> threads;
+		std::map<std::thread::id, std::shared_ptr<Connection>> connections;
+		std::map<std::thread::id, std::shared_ptr<std::thread>> threads;
 
 	public:
 		std::function<void()> on_accept;
-
 
 	private:
 		streaming_server() = default;
 		~streaming_server() = default;
 		streaming_server(const streaming_server&) = delete;
 		streaming_server& operator=(const streaming_server&) = delete;
+
 
 	public:
 		static streaming_server& get()
@@ -45,9 +48,14 @@ namespace webpp
 			return instance;
 		}
 
+		bool isActive() const
+		{
+			return active;
+		}
+
 		std::shared_ptr<Connection> get_connection(std::thread::id id)
 		{
-			return threads[id];
+			return connections[id];
 		}
 
 		void send(std::thread::id id, std::shared_ptr<webpp::ws_server::SendStream> stream)
@@ -73,17 +81,34 @@ namespace webpp
 
 			endpoint.on_open = [&](std::shared_ptr<Connection> connection) {
 				std::cout
-					<< "-Connection from "
+					<< "-Opened connection from "
 					<< connection->remote_endpoint_address
 					<< ":"
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				threads[std::thread(on_accept).get_id()] = connection;
+				auto t = std::make_shared<std::thread>(std::thread(on_accept));
+				t->detach();
+
+				auto id = t->get_id();
+
+				threads[id] = t;
+				connections[id] = connection;
 			};
 
 			endpoint.on_message = [](auto connection, auto message) {
 				// input handling
+			};
+
+			endpoint.on_close = [&](std::shared_ptr<Connection> connection, int status, const std::string& reason) {
+				std::cout
+					<< "-Closed connection from "
+					<< connection->remote_endpoint_address
+					<< ":"
+					<< connection->remote_endpoint_port
+					<< std::endl
+					<< ": " << reason
+					<< std::endl;
 			};
 
 			std::cout

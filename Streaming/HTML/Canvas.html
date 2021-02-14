@@ -7,7 +7,7 @@
 
 <body>
 
-	<canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
+	<canvas id="myCanvas" width="384" height="224" style="border:1px solid #000000;">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
 
@@ -40,8 +40,10 @@
 
 			ws.onmessage = function (event)
 			{
+				debugger;
 				createImageBitmap(event.data).then((img) =>
 				{
+					debugger;
 					context.drawImage(img, 0, 0);
 				});
 			};

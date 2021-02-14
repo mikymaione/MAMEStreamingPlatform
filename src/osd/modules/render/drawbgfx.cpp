@@ -51,8 +51,6 @@ extern void* GetOSWindow(void* wincontroller);
 
 #include "imgui/imgui.h"
 
-#include "streaming_server.hpp"
-
 //============================================================
 //  DEBUGGING
 //============================================================
@@ -940,36 +938,12 @@ int renderer_bgfx::draw(int update)
 	{
 		render_avi_quad();
 		bgfx::touch(s_current_view);
-		send_stream();
-		//update_recording();	
+		update_recording();
 
 		bgfx::frame();
 	}
 
 	return 0;
-}
-
-void renderer_bgfx::send_stream()
-{
-	bgfx::blit(s_current_view > 0 ? s_current_view - 1 : 0, m_avi_texture, 0, 0, bgfx::getTexture(m_avi_target->target()));
-	bgfx::readTexture(m_avi_texture, m_avi_data);
-
-	int i = 0;
-	for (int y = 0; y < m_avi_bitmap.height(); y++)
-	{
-		uint32_t* dst = &m_avi_bitmap.pix(y);
-
-		for (int x = 0; x < m_avi_bitmap.width(); x++)
-		{
-			*dst++ = 0xff000000 | (m_avi_data[i + 0] << 16) | (m_avi_data[i + 1] << 8) | m_avi_data[i + 2];
-			i += 4;
-		}
-	}
-	
-	auto send_stream = webpp::streaming_server::get().getStream();
-
-	//*send_stream << m_avi_bitmap;
-	webpp::streaming_server::get().send(std::this_thread::get_id(), send_stream);
 }
 
 void renderer_bgfx::update_recording()
@@ -1111,21 +1085,21 @@ renderer_bgfx::buffer_status renderer_bgfx::buffer_primitives(bool atlas_valid, 
 						render_post_screen_quad(m_ortho_view->get_index(), *prim, buffer, screen);
 #endif
 						return BUFFER_SCREEN;
-				}
+					}
 					else
 					{
 						setup_ortho_view();
 						render_textured_quad(*prim, buffer);
 						return BUFFER_EMPTY;
 					}
+				}
 			}
-		}
 			break;
 
 		default:
 			// Unhandled
 			break;
-	}
+		}
 
 		if ((*prim)->next() != nullptr && PRIMFLAG_GET_BLENDMODE((*prim)->next()->flags) != blend)
 		{
@@ -1133,7 +1107,7 @@ renderer_bgfx::buffer_status renderer_bgfx::buffer_primitives(bool atlas_valid, 
 		}
 
 		*prim = (*prim)->next();
-}
+	}
 
 	if (*prim == nullptr)
 	{
