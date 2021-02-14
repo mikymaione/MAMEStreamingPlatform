@@ -89,8 +89,6 @@ private:
 	void render_avi_quad();
 	void update_recording();
 
-	void send_stream();
-
 	bool update_dimensions();
 
 	void setup_ortho_view();
