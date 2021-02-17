@@ -737,7 +737,7 @@ int renderer_sdl2::draw(int update)
 
 		auto send_stream = webpp::streaming_server::get().getStream();
 		*send_stream << m_sdl_bitmap;
-		webpp::streaming_server::get().send(std::this_thread::get_id(), send_stream);
+		//webpp::streaming_server::get().send(std::this_thread::get_id(), send_stream);
 	}
 
 	return 0;

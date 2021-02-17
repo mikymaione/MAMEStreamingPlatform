@@ -181,6 +181,8 @@ namespace webpp {
 
 			Config(unsigned short port) : port(port) {}
 		public:
+			/// Use only one connection
+			bool client_mode=false;
 			/// Port number to use. Defaults to 80 for HTTP and 443 for HTTPS.
 			unsigned short port;
 			/// Number of threads that the server will use when start() is called. Defaults to 1 thread.
@@ -228,7 +230,7 @@ namespace webpp {
 				endpoint=asio::ip::tcp::endpoint(asio::ip::tcp::v4(), config.port);
 
 			if(!acceptor)
-				acceptor= std::make_unique<asio::ip::tcp::acceptor>(*io_context);
+				acceptor=std::make_unique<asio::ip::tcp::acceptor>(*io_context);
 			acceptor->open(endpoint.protocol());
 			acceptor->set_option(asio::socket_base::reuse_address(config.reuse_address));
 			acceptor->bind(endpoint);
@@ -697,8 +699,14 @@ namespace webpp {
 
 			acceptor->async_accept(*connection->socket, [this, connection](const std::error_code& ec) {
 				//Immediately start accepting a new connection (if io_context hasn't been stopped)
-				if (ec != asio::error::operation_aborted)
-					accept();
+
+				if (config.client_mode) {
+					acceptor->close();
+				}
+				else {
+					if (ec != asio::error::operation_aborted)
+						accept();
+				}
 
 				if(!ec) {
 					asio::ip::tcp::no_delay option(true);
