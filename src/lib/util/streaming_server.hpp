@@ -10,12 +10,9 @@
 #ifndef SRC_STREAMINGSERVER_H
 #define SRC_STREAMINGSERVER_H
 
-#include <list>
-#include <map>
 #include <iostream>
 #include <functional>
 #include <memory>
-#include <thread>
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
@@ -27,9 +24,8 @@ namespace webpp
 	{
 	private:
 		bool active = false;
-		webpp::ws_server server;
-		std::map<std::thread::id, std::shared_ptr<Connection>> connections;
-		std::map<std::thread::id, std::shared_ptr<std::thread>> threads;
+		ws_server server;
+		std::shared_ptr<Connection> m_connection;
 
 	public:
 		std::function<void()> on_accept;
@@ -53,19 +49,9 @@ namespace webpp
 			return active;
 		}
 
-		std::shared_ptr<Connection> get_connection(std::thread::id id)
+		void send(std::shared_ptr<webpp::ws_server::SendStream> stream)
 		{
-			return connections[id];
-		}
-
-		void send(std::thread::id id, std::shared_ptr<webpp::ws_server::SendStream> stream)
-		{
-			send(get_connection(id), stream);
-		}
-
-		void send(std::shared_ptr<Connection> connection, std::shared_ptr<webpp::ws_server::SendStream> stream)
-		{
-			server.send(connection, stream);
+			server.send(m_connection, stream);
 		}
 
 		std::shared_ptr<webpp::ws_server::SendStream> getStream()
@@ -75,6 +61,7 @@ namespace webpp
 
 		void start(short port)
 		{
+			server.config.client_mode = true;
 			server.config.port = port;
 
 			auto& endpoint = server.m_endpoint["/"];
@@ -87,13 +74,8 @@ namespace webpp
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				auto t = std::make_shared<std::thread>(std::thread(on_accept));
-				t->detach();
-
-				auto id = t->get_id();
-
-				threads[id] = t;
-				connections[id] = connection;
+				m_connection = connection;
+				on_accept();
 			};
 
 			endpoint.on_message = [](auto connection, auto message) {

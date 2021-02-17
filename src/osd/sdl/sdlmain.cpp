@@ -187,7 +187,7 @@ sdl_options::sdl_options()
 extern "C" DECLSPEC void SDLCALL SDL_SetModuleHandle(void* hInst);
 #endif
 
-int main2(int argc, char** argv)
+int main_sdl(int argc, char** argv)
 {
 	std::vector<std::string> args = osd_get_command_line(argc, argv);
 	int res = 0;
@@ -231,15 +231,20 @@ int main2(int argc, char** argv)
 
 	exit(res);
 }
-int main(int argc, char* argv[])
+
+int main(int argc, char** argv)
 {
+	int r = 0;
+
+	// Server
 	webpp::streaming_server::get().on_accept = [&]() {
-		main2(argc, argv);
+		system("start mame64d.exe -streamingserver -window -video accel -sound sdl"); //run MAME		
+		r = main_sdl(argc, argv);
 	};
 
 	webpp::streaming_server::get().start(8888);
 
-	return 0;
+	return r;
 }
 
 //============================================================
