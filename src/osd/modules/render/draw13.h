@@ -153,11 +153,12 @@ public:
 
 	virtual ~renderer_sdl2()
 	{
+		SDL_RWclose(m_sdl_buffer);
+		delete[] m_sdl_bitmap;
+
 		destroy_all_textures();
 		SDL_DestroyRenderer(m_sdl_renderer);
 		m_sdl_renderer = nullptr;
-
-		delete[] m_sdl_bitmap;
 	}
 
 	static void init(running_machine& machine);

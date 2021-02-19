@@ -446,7 +446,7 @@ int renderer_sdl2::create()
 		m_sdl_bitmap_cells_number = m_sdl_surface->h * m_sdl_surface->w;
 		m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
 
-		//m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number); //forse in draw
+		m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number);
 	}
 	else
 	{
@@ -721,12 +721,11 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::get().isActive())
 	{
-		//SDL_SaveBMP(m_sdl_surface, "somefile.bmp"); // FUNZIONA
-
-		m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number); // forse in create
-		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 1);
+		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
 		webpp::streaming_server::get().send(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+
+		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
 
 	return 0;
