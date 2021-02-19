@@ -716,14 +716,19 @@ int renderer_sdl2::draw(int update)
 				sa = (int)(255.0f * prim.color.a);
 
 				SDL_SetRenderDrawBlendMode(m_sdl_renderer, map_blendmode(PRIMFLAG_GET_BLENDMODE(prim.flags)));
+
 				SDL_SetRenderDrawColor(m_sdl_renderer, sr, sg, sb, sa);
-				SDL_RenderDrawLine(m_sdl_renderer, prim.bounds.x0 + hofs, prim.bounds.y0 + vofs,
+
+				SDL_RenderDrawLine(m_sdl_renderer,
+								   prim.bounds.x0 + hofs, prim.bounds.y0 + vofs,
 								   prim.bounds.x1 + hofs, prim.bounds.y1 + vofs);
 				break;
 			case render_primitive::QUAD:
 				texture = texture_update(prim);
+
 				if (texture)
 					blit_pixels += (texture->raw_height() * texture->raw_width());
+
 				render_quad(texture, prim,
 							round_nearest(hofs + prim.bounds.x0),
 							round_nearest(vofs + prim.bounds.y0));
