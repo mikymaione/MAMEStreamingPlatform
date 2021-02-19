@@ -8,7 +8,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>..\..\..\..\..</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommandArguments>-streamingserver -window -video accel -sound sdl -resolution 384x224</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-streamingserver -window -video accel -sound sdl</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

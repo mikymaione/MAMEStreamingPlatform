@@ -40,10 +40,20 @@
 
 			ws.onmessage = function (event)
 			{
-				createImageBitmap(event.data).then((img) =>
+				if (typeof event.data === 'string')
 				{
-					context.drawImage(img, 0, 0);
-				});
+					let values = event.data.split(":");	
+					
+					myCanvas.style.width = values[1] + "px";
+					myCanvas.style.height = values[2] + "px";
+				}
+				else
+				{
+					createImageBitmap(event.data).then((img) =>
+					{
+						context.drawImage(img, 0, 0);
+					});
+				}
 			};
 		}
 
