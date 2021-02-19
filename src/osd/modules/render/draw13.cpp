@@ -204,16 +204,16 @@ static inline SDL_BlendMode map_blendmode(const int blendmode)
 {
 	switch (blendmode)
 	{
-	case BLENDMODE_NONE:
-		return SDL_BLENDMODE_NONE;
-	case BLENDMODE_ALPHA:
-		return SDL_BLENDMODE_BLEND;
-	case BLENDMODE_RGB_MULTIPLY:
-		return SDL_BLENDMODE_MOD;
-	case BLENDMODE_ADD:
-		return SDL_BLENDMODE_ADD;
-	default:
-		osd_printf_warning("Unknown Blendmode %d", blendmode);
+		case BLENDMODE_NONE:
+			return SDL_BLENDMODE_NONE;
+		case BLENDMODE_ALPHA:
+			return SDL_BLENDMODE_BLEND;
+		case BLENDMODE_RGB_MULTIPLY:
+			return SDL_BLENDMODE_MOD;
+		case BLENDMODE_ADD:
+			return SDL_BLENDMODE_ADD;
+		default:
+			osd_printf_warning("Unknown Blendmode %d", blendmode);
 	}
 	return SDL_BLENDMODE_NONE;
 }
@@ -438,35 +438,23 @@ int renderer_sdl2::create()
 
 	if (webpp::streaming_server::get().isActive())
 	{
-		Uint32 rmask, gmask, bmask, amask;
+		m_sdl_surface = SDL_CreateRGBSurface(0, 384, 224, 16, 0, 0, 0, 0);
+		m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-		rmask = 0xff000000;
-		gmask = 0x00ff0000;
-		bmask = 0x0000ff00;
-		amask = 0x000000ff;
-#else
-		rmask = 0x000000ff;
-		gmask = 0x0000ff00;
-		bmask = 0x00ff0000;
-		amask = 0xff000000;
-#endif
-
-		m_sdl_surface = SDL_CreateRGBSurface(0, 384, 224, 32, rmask, gmask, bmask, amask);
-		m_mem_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
-
-		//auto cells_number = m_sdl_surface->h * m_sdl_surface->w;
-		//m_sdl_bitmap = new char[cells_number];
+		m_sdl_bitmap_cells_number = m_sdl_surface->h * m_sdl_surface->w;
+		m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
 
 		m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, sizeof(m_sdl_bitmap));
 	}
-
-	auto win = assert_window();
-
-	if (video_config.waitvsync)
-		m_sdl_renderer = SDL_CreateRenderer(std::dynamic_pointer_cast<sdl_window_info>(win)->platform_window(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	else
-		m_sdl_renderer = SDL_CreateRenderer(std::dynamic_pointer_cast<sdl_window_info>(win)->platform_window(), -1, SDL_RENDERER_ACCELERATED);
+	{
+		auto win = assert_window();
+
+		if (video_config.waitvsync)
+			m_sdl_renderer = SDL_CreateRenderer(std::dynamic_pointer_cast<sdl_window_info>(win)->platform_window(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+		else
+			m_sdl_renderer = SDL_CreateRenderer(std::dynamic_pointer_cast<sdl_window_info>(win)->platform_window(), -1, SDL_RENDERER_ACCELERATED);
+	}
 
 	if (!m_sdl_renderer)
 	{
@@ -698,27 +686,27 @@ int renderer_sdl2::draw(int update)
 
 		switch (prim.type)
 		{
-		case render_primitive::LINE:
-			sr = (int)(255.0f * prim.color.r);
-			sg = (int)(255.0f * prim.color.g);
-			sb = (int)(255.0f * prim.color.b);
-			sa = (int)(255.0f * prim.color.a);
+			case render_primitive::LINE:
+				sr = (int)(255.0f * prim.color.r);
+				sg = (int)(255.0f * prim.color.g);
+				sb = (int)(255.0f * prim.color.b);
+				sa = (int)(255.0f * prim.color.a);
 
-			SDL_SetRenderDrawBlendMode(m_sdl_renderer, map_blendmode(PRIMFLAG_GET_BLENDMODE(prim.flags)));
-			SDL_SetRenderDrawColor(m_sdl_renderer, sr, sg, sb, sa);
-			SDL_RenderDrawLine(m_sdl_renderer, prim.bounds.x0 + hofs, prim.bounds.y0 + vofs,
-				prim.bounds.x1 + hofs, prim.bounds.y1 + vofs);
-			break;
-		case render_primitive::QUAD:
-			texture = texture_update(prim);
-			if (texture)
-				blit_pixels += (texture->raw_height() * texture->raw_width());
-			render_quad(texture, prim,
-				round_nearest(hofs + prim.bounds.x0),
-				round_nearest(vofs + prim.bounds.y0));
-			break;
-		default:
-			throw emu_fatalerror("Unexpected render_primitive type\n");
+				SDL_SetRenderDrawBlendMode(m_sdl_renderer, map_blendmode(PRIMFLAG_GET_BLENDMODE(prim.flags)));
+				SDL_SetRenderDrawColor(m_sdl_renderer, sr, sg, sb, sa);
+				SDL_RenderDrawLine(m_sdl_renderer, prim.bounds.x0 + hofs, prim.bounds.y0 + vofs,
+								   prim.bounds.x1 + hofs, prim.bounds.y1 + vofs);
+				break;
+			case render_primitive::QUAD:
+				texture = texture_update(prim);
+				if (texture)
+					blit_pixels += (texture->raw_height() * texture->raw_width());
+				render_quad(texture, prim,
+							round_nearest(hofs + prim.bounds.x0),
+							round_nearest(vofs + prim.bounds.y0));
+				break;
+			default:
+				throw emu_fatalerror("Unexpected render_primitive type\n");
 		}
 	}
 
@@ -731,13 +719,11 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::get().isActive())
 	{
-		SDL_RenderPresent(m_mem_sdl_renderer); //???
+		video_config.novideo = 0;
 
-		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 1);
+		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
-		auto send_stream = webpp::streaming_server::get().getStream();
-		*send_stream << m_sdl_bitmap;
-		//webpp::streaming_server::get().send(std::this_thread::get_id(), send_stream);
+		//webpp::streaming_server::get().send();
 	}
 
 	return 0;
@@ -795,7 +781,7 @@ copy_info_t* texture_info::compute_size_type()
 bool texture_info::is_pixels_owned() const
 { // do we own / allocated it ?
 	return ((m_sdl_access == SDL_TEXTUREACCESS_STATIC)
-		&& (m_copyinfo->blitter->m_is_passthrough));
+			&& (m_copyinfo->blitter->m_is_passthrough));
 }
 
 //============================================================
@@ -836,21 +822,21 @@ texture_info::texture_info(renderer_sdl2* renderer, const render_texinfo& texsou
 
 	switch (PRIMFLAG_GET_TEXFORMAT(flags))
 	{
-	case TEXFORMAT_ARGB32:
-		m_format = SDL_TEXFORMAT_ARGB32;
-		break;
-	case TEXFORMAT_RGB32:
-		m_format = texsource.palette ? SDL_TEXFORMAT_RGB32_PALETTED : SDL_TEXFORMAT_RGB32;
-		break;
-	case TEXFORMAT_PALETTE16:
-		m_format = SDL_TEXFORMAT_PALETTE16;
-		break;
-	case TEXFORMAT_YUY16:
-		m_format = texsource.palette ? SDL_TEXFORMAT_YUY16_PALETTED : SDL_TEXFORMAT_YUY16;
-		break;
+		case TEXFORMAT_ARGB32:
+			m_format = SDL_TEXFORMAT_ARGB32;
+			break;
+		case TEXFORMAT_RGB32:
+			m_format = texsource.palette ? SDL_TEXFORMAT_RGB32_PALETTED : SDL_TEXFORMAT_RGB32;
+			break;
+		case TEXFORMAT_PALETTE16:
+			m_format = SDL_TEXFORMAT_PALETTE16;
+			break;
+		case TEXFORMAT_YUY16:
+			m_format = texsource.palette ? SDL_TEXFORMAT_YUY16_PALETTED : SDL_TEXFORMAT_YUY16;
+			break;
 
-	default:
-		osd_printf_error("Unknown textureformat %d\n", PRIMFLAG_GET_TEXFORMAT(flags));
+		default:
+			osd_printf_error("Unknown textureformat %d\n", PRIMFLAG_GET_TEXFORMAT(flags));
 	}
 
 	if (setup.rotwidth != m_texinfo.width || setup.rotheight != m_texinfo.height
@@ -871,11 +857,11 @@ texture_info::texture_info(renderer_sdl2* renderer, const render_texinfo& texsou
 	m_copyinfo = compute_size_type();
 
 	m_texture_id = SDL_CreateTexture(m_renderer->m_sdl_renderer, m_copyinfo->dst_fmt, m_sdl_access,
-		m_setup.rotwidth, m_setup.rotheight);
+									 m_setup.rotwidth, m_setup.rotheight);
 
 	if (!m_texture_id)
 		osd_printf_error("Error creating texture: %d x %d, pixelformat %s error: %s\n", m_setup.rotwidth, m_setup.rotheight,
-			m_copyinfo->dstname, SDL_GetError());
+						 m_copyinfo->dstname, SDL_GetError());
 
 	if (m_sdl_access == SDL_TEXTUREACCESS_STATIC)
 	{
@@ -1053,8 +1039,8 @@ void renderer_sdl2::exit()
 			{
 				if (bi->pixel_count)
 					osd_printf_verbose("%s -> %s %s blendmode 0x%02x, %d samples: %d KPixel/sec\n", bi->srcname, bi->dstname,
-						bi->blitter->m_is_rot ? "rot" : "norot", bi->bm_mask, bi->samples,
-						(int)bi->perf);
+									   bi->blitter->m_is_rot ? "rot" : "norot", bi->bm_mask, bi->samples,
+									   (int)bi->perf);
 				copy_info_t* freeme = bi;
 				bi = bi->next;
 				delete freeme;

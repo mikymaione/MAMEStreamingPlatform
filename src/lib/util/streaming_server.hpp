@@ -2,7 +2,7 @@
 // copyright-holders:Michele Maione
 //============================================================
 //
-//  streaming_server.hpp - MAME Game Streaming Server (aka DinoServer)
+//  streaming_server.hpp - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
 //
 //============================================================
 #pragma once
@@ -24,8 +24,7 @@ namespace webpp
 	{
 	private:
 		bool active = false;
-		ws_server server;
-		std::shared_ptr<Connection> m_connection;
+		std::unique_ptr<ws_server> server;
 
 	public:
 		std::function<void()> on_accept;
@@ -49,24 +48,43 @@ namespace webpp
 			return active;
 		}
 
-		void send(std::shared_ptr<webpp::ws_server::SendStream> stream)
+		void send()
 		{
-			server.send(m_connection, stream);
+			auto stream = std::make_shared<ws_server::SendStream>();
+			*stream << "Sto cazzo!";
+
+			for (auto c : server->get_connections()) {
+				server->send(c, stream, [](auto err) {
+					std::cout << "Errore " << err << std::endl;
+				});
+			}
 		}
 
-		std::shared_ptr<webpp::ws_server::SendStream> getStream()
+		void send(std::shared_ptr<ws_server::SendStream> stream)
 		{
-			return std::make_shared<webpp::ws_server::SendStream>();
+			///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
+
+			for (auto c : server->get_connections()) {
+				server->send(c, stream, [](auto err) {
+					std::cout << "Errore " << err << std::endl;
+				});
+			}
 		}
 
-		void start(short port)
+		std::shared_ptr<ws_server::SendStream> getStream()
 		{
-			server.config.client_mode = true;
-			server.config.port = port;
+			return std::make_shared<ws_server::SendStream>();
+		}
 
-			auto& endpoint = server.m_endpoint["/"];
+		void start(unsigned short port)
+		{
+			server = std::make_unique<ws_server>();
+			server->config.client_mode = true;
+			server->config.port = port;
 
-			endpoint.on_open = [&](std::shared_ptr<Connection> connection) {
+			auto& endpoint = server->m_endpoint["/"];
+
+			endpoint.on_open = [&](auto connection) {
 				std::cout
 					<< "-Opened connection from "
 					<< connection->remote_endpoint_address
@@ -74,7 +92,6 @@ namespace webpp
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				m_connection = connection;
 				on_accept();
 			};
 
@@ -82,7 +99,7 @@ namespace webpp
 				// input handling
 			};
 
-			endpoint.on_close = [&](std::shared_ptr<Connection> connection, int status, const std::string& reason) {
+			endpoint.on_close = [](auto connection, auto status, auto reason) {
 				std::cout
 					<< "-Closed connection from "
 					<< connection->remote_endpoint_address
@@ -91,6 +108,8 @@ namespace webpp
 					<< std::endl
 					<< ": " << reason
 					<< std::endl;
+
+				// gestire chiusura forzata
 			};
 
 			std::cout
@@ -98,9 +117,8 @@ namespace webpp
 				<< port
 				<< std::endl;
 
-			server.start();
+			server->start();
 		}
-
 	};
 } // namespace webpp
 

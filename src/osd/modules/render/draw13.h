@@ -156,6 +156,8 @@ public:
 		destroy_all_textures();
 		SDL_DestroyRenderer(m_sdl_renderer);
 		m_sdl_renderer = nullptr;
+
+		delete[] m_sdl_bitmap;
 	}
 
 	static void init(running_machine& machine);
@@ -169,12 +171,10 @@ public:
 	int RendererSupportsFormat(Uint32 format, Uint32 access, const char* sformat);
 
 	SDL_Renderer* m_sdl_renderer;
-
-	SDL_Renderer* m_mem_sdl_renderer;
 	SDL_Surface* m_sdl_surface;
 	SDL_RWops* m_sdl_buffer;
-	char m_sdl_bitmap[86016];
-	//char* m_sdl_bitmap;
+	char* m_sdl_bitmap;
+	int m_sdl_bitmap_cells_number;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 

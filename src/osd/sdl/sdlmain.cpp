@@ -229,7 +229,7 @@ int main_sdl(int argc, char** argv)
 #endif
 #endif
 
-	exit(res);
+	return res;
 }
 
 int main(int argc, char** argv)
@@ -238,13 +238,15 @@ int main(int argc, char** argv)
 
 	// Server
 	webpp::streaming_server::get().on_accept = [&]() {
-		system("start mame64d.exe -streamingserver -window -video accel -sound sdl"); //run MAME		
+		//system("start mame64d.exe -streamingserver -window -video accel -sound sdl"); //run MAME		
+		webpp::streaming_server::get().send();
 		r = main_sdl(argc, argv);
 	};
 
 	webpp::streaming_server::get().start(8888);
 
-	return r;
+	system("pause");
+	exit(r);
 }
 
 //============================================================
