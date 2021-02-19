@@ -13,6 +13,7 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include <thread>
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
@@ -23,8 +24,9 @@ namespace webpp
 	class streaming_server
 	{
 	private:
-		bool active = false;
+		bool active = true;
 		std::unique_ptr<ws_server> server;
+		std::unique_ptr<std::thread> acceptThread;
 
 	public:
 		std::function<void()> on_accept;
@@ -48,32 +50,20 @@ namespace webpp
 			return active;
 		}
 
-		void send()
+		void send(char* b, const int len)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
-			*stream << "Sto cazzo!";
+			stream->write(b, len);
 
-			for (auto c : server->get_connections()) {
+			for (auto c : server->get_connections())
+			{
+				///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
+
 				server->send(c, stream, [](auto err) {
-					std::cout << "Errore " << err << std::endl;
-				});
+					if (err.value() != 0)
+						std::cout << "Errore " << err << std::endl;
+				}, 130);
 			}
-		}
-
-		void send(std::shared_ptr<ws_server::SendStream> stream)
-		{
-			///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
-
-			for (auto c : server->get_connections()) {
-				server->send(c, stream, [](auto err) {
-					std::cout << "Errore " << err << std::endl;
-				});
-			}
-		}
-
-		std::shared_ptr<ws_server::SendStream> getStream()
-		{
-			return std::make_shared<ws_server::SendStream>();
 		}
 
 		void start(unsigned short port)
@@ -92,7 +82,7 @@ namespace webpp
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				on_accept();
+				acceptThread = std::make_unique<std::thread>(on_accept);
 			};
 
 			endpoint.on_message = [](auto connection, auto message) {
