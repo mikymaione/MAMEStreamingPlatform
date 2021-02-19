@@ -40,10 +40,8 @@
 
 			ws.onmessage = function (event)
 			{
-				debugger;
 				createImageBitmap(event.data).then((img) =>
 				{
-					debugger;
 					context.drawImage(img, 0, 0);
 				});
 			};
