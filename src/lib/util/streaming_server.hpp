@@ -14,6 +14,7 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <string>
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
@@ -50,11 +51,8 @@ namespace webpp
 			return active;
 		}
 
-		void send(char* b, const int len)
+		void send(std::shared_ptr<ws_server::SendStream> stream, unsigned char fin_rsv_opcode)
 		{
-			auto stream = std::make_shared<ws_server::SendStream>();
-			stream->write(b, len);
-
 			for (auto c : server->get_connections())
 			{
 				///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
@@ -62,8 +60,24 @@ namespace webpp
 				server->send(c, stream, [](auto err) {
 					if (err.value() != 0)
 						std::cout << "Errore " << err << std::endl;
-				}, 130);
+				}, fin_rsv_opcode);
 			}
+		}
+
+		void send_string(std::string& msg)
+		{
+			auto stream = std::make_shared<ws_server::SendStream>();
+			*stream << msg;
+
+			send(stream, 129);
+		}
+
+		void send_binary(char* b, const int len)
+		{
+			auto stream = std::make_shared<ws_server::SendStream>();
+			stream->write(b, len);
+
+			send(stream, 130);
 		}
 
 		void start(unsigned short port)

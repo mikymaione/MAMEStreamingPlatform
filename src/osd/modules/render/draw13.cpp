@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdio>
 
+#include <fstream>
 #include <string>
 
 // MAME headers
@@ -420,6 +421,31 @@ static void drawsdl_show_info(struct SDL_RendererInfo* render_info)
 			osd_printf_verbose("renderer: flag %s\n", rflist[i].name);
 }
 
+void renderer_sdl2::free_streaming_render()
+{
+	if (m_sdl_bitmap != NULL && m_sdl_bitmap != nullptr)
+	{
+		SDL_RWclose(m_sdl_buffer);
+		SDL_FreeSurface(m_sdl_surface);
+		SDL_DestroyRenderer(m_sdl_renderer);
+
+		delete[] m_sdl_bitmap;
+	}
+}
+
+void renderer_sdl2::init_streaming_render(osd_dim& nd)
+{
+	free_streaming_render();
+
+	m_sdl_bitmap_cells_number = nd.width() * nd.height();
+	m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
+
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
+
+	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
+
+	m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+}
 
 int renderer_sdl2::create()
 {
@@ -438,20 +464,15 @@ int renderer_sdl2::create()
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 	}
 
+	auto win = assert_window();
+
 	if (webpp::streaming_server::get().isActive())
 	{
-		m_sdl_surface = SDL_CreateRGBSurface(0, 384, 224, 16, 0, 0, 0, 0);
-		m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
-
-		m_sdl_bitmap_cells_number = m_sdl_surface->h * m_sdl_surface->w;
-		m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
-
-		m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+		auto nd = win->get_size();
+		init_streaming_render(nd);
 	}
 	else
 	{
-		auto win = assert_window();
-
 		if (video_config.waitvsync)
 			m_sdl_renderer = SDL_CreateRenderer(std::dynamic_pointer_cast<sdl_window_info>(win)->platform_window(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		else
@@ -723,7 +744,7 @@ int renderer_sdl2::draw(int update)
 	{
 		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
-		webpp::streaming_server::get().send(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+		webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_cells_number);
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
@@ -1019,6 +1040,7 @@ texture_info* renderer_sdl2::texture_find(const render_primitive& prim, const qu
 			/* free resources not needed any longer? */
 			texture_info* expire = texture;
 			texture = texture->next();
+
 			if (now - expire->m_last_access > osd_ticks_per_second())
 				m_texlist.remove(*expire);
 		}
@@ -1043,6 +1065,7 @@ void renderer_sdl2::exit()
 					osd_printf_verbose("%s -> %s %s blendmode 0x%02x, %d samples: %d KPixel/sec\n", bi->srcname, bi->dstname,
 									   bi->blitter->m_is_rot ? "rot" : "norot", bi->bm_mask, bi->samples,
 									   (int)bi->perf);
+
 				copy_info_t* freeme = bi;
 				bi = bi->next;
 				delete freeme;
@@ -1091,15 +1114,30 @@ texture_info* renderer_sdl2::texture_update(const render_primitive& prim)
 render_primitive_list* renderer_sdl2::get_primitives()
 {
 	auto win = assert_window();
+
 	if (win == nullptr)
 		return nullptr;
 
 	osd_dim nd = win->get_size();
+
 	if (nd != m_blit_dim)
 	{
+		std::stringstream sstm;
+		sstm
+			<< "size:"
+			<< nd.width()
+			<< ":"
+			<< nd.height();
+		std::string s = sstm.str();
+
+		init_streaming_render(nd);
+		webpp::streaming_server::get().send_string(s);
+
 		m_blit_dim = nd;
 		notify_changed();
 	}
+
 	win->target()->set_bounds(m_blit_dim.width(), m_blit_dim.height(), win->pixel_aspect());
+
 	return &win->target()->get_primitives();
 }

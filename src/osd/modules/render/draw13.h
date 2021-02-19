@@ -153,8 +153,7 @@ public:
 
 	virtual ~renderer_sdl2()
 	{
-		SDL_RWclose(m_sdl_buffer);
-		delete[] m_sdl_bitmap;
+		free_streaming_render();
 
 		destroy_all_textures();
 		SDL_DestroyRenderer(m_sdl_renderer);
@@ -174,12 +173,15 @@ public:
 	SDL_Renderer* m_sdl_renderer;
 	SDL_Surface* m_sdl_surface;
 	SDL_RWops* m_sdl_buffer;
-	char* m_sdl_bitmap;
-	int m_sdl_bitmap_cells_number;
+	char* m_sdl_bitmap = NULL;
+	int m_sdl_bitmap_cells_number;	
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 
 private:
+	void free_streaming_render();
+	void init_streaming_render(osd_dim& nd);
+
 	void expand_copy_info(const copy_info_t* list);
 	void add_list(copy_info_t** head, const copy_info_t* element, Uint32 bm);
 
