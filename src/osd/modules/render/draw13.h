@@ -174,7 +174,8 @@ public:
 	SDL_Surface* m_sdl_surface;
 	SDL_RWops* m_sdl_buffer;
 	char* m_sdl_bitmap = NULL;
-	int m_sdl_bitmap_cells_number;	
+	char* m_sdl_bitmap2 = NULL;
+	int m_sdl_bitmap_cells_number;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 
