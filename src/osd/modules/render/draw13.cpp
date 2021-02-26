@@ -15,6 +15,7 @@
 #include <cstdio>
 
 #include <fstream>
+#include <sstream>
 #include <string>
 
 // MAME headers
@@ -228,7 +229,6 @@ void texture_info::set_coloralphamode(SDL_Texture* texture_id, const render_colo
 	uint32_t sb = (uint32_t)(255.0f * color->b);
 	uint32_t sa = (uint32_t)(255.0f * color->a);
 
-
 	if (color->r >= 1.0f && color->g >= 1.0f && color->b >= 1.0f && is_opaque(color->a))
 	{
 		SDL_SetTextureColorMod(texture_id, 0xFF, 0xFF, 0xFF);
@@ -318,19 +318,23 @@ int renderer_sdl2::RendererSupportsFormat(Uint32 format, Uint32 access, const ch
 			return fmt_support[i].status;
 		}
 	}
+
 	/* not tested yet */
 	fmt_support[i].format = format;
 	fmt_support[i + 1].format = 0;
 	SDL_Texture* texid = SDL_CreateTexture(m_sdl_renderer, format, access, 16, 16);
+
 	if (texid)
 	{
 		fmt_support[i].status = 1;
 		SDL_DestroyTexture(texid);
 		return 1;
 	}
+
 	osd_printf_verbose("Pixelformat <%s> error %s \n", sformat, SDL_GetError());
 	osd_printf_verbose("Pixelformat <%s> not supported\n", sformat);
 	fmt_support[i].status = 0;
+
 	return 0;
 }
 
@@ -430,6 +434,7 @@ void renderer_sdl2::free_streaming_render()
 		SDL_DestroyRenderer(m_sdl_renderer);
 
 		delete[] m_sdl_bitmap;
+		delete[] m_sdl_bitmap2;
 	}
 }
 
@@ -437,14 +442,23 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	m_sdl_bitmap_cells_number = nd.width() * nd.height();
+	m_sdl_bitmap_cells_number = 4 * nd.width() * nd.height();
 	m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
+	m_sdl_bitmap2 = new char[m_sdl_bitmap_cells_number];
 
 	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
 	m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+
+	std::stringstream sstm;
+	sstm
+		<< "size:"
+		<< nd.width() << ":"
+		<< nd.height();
+
+	webpp::streaming_server::get().send_string(sstm.str());
 }
 
 int renderer_sdl2::create()
@@ -508,10 +522,12 @@ int renderer_sdl2::xy_to_render_target(int x, int y, int* xt, int* yt)
 {
 	*xt = x - m_last_hofs;
 	*yt = y - m_last_vofs;
+
 	if (*xt < 0 || *xt >= m_blit_dim.width())
 		return 0;
 	if (*yt < 0 || *yt >= m_blit_dim.height())
 		return 0;
+
 	return 1;
 }
 
@@ -749,7 +765,18 @@ int renderer_sdl2::draw(int update)
 	{
 		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
-		webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+		int dif = 0;
+		for (int d = 0; d < m_sdl_bitmap_cells_number; d++)
+			if (m_sdl_bitmap[d] != m_sdl_bitmap2[d])
+				dif++;
+
+		auto dif_pct = dif * 100. / m_sdl_bitmap_cells_number;
+
+		if (dif_pct > 2)
+		{
+			memcpy(m_sdl_bitmap2, m_sdl_bitmap, m_sdl_bitmap_cells_number);
+			webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
@@ -757,6 +784,38 @@ int renderer_sdl2::draw(int update)
 	return 0;
 }
 
+/*
+int mp2jpg(const char* bmp_file, const char* jeg_file)
+{
+	struct jpeg_compress_struct cinfo;
+	jpeg_create_compress(&cinfo);
+	jpeg_stdio_dest(&cinfo, outfile);
+	cinfo.image_width = bmpInfoHeader.biWidth;
+	cinfo.image_height = bmpInfoHeader.biHeight;
+	cinfo.input_components = 3;
+	cinfo.in_color_space = JCS_RGB;
+	jpeg_set_defaults(&cinfo);
+	jpeg_set_quality(&cinfo, JPEG_QUALITY, TRUE);
+	jpeg_start_compress(&cinfo, TRUE);
+
+	// Here we use the cinfo.next_scanline provided by the library as a loop counter so that we don't need to track it ourselves.
+	// Continue to loop if the next line is smaller than the height of the picture
+
+	row_stride = bmpInfoHeader.biWidth * depth;
+	while (cinfo.next_scanline < bmpInfoHeader.biHeight) {
+		/ / Take the address of the last bit of the current line of data
+			row_pointer[0] = &bmp_data[cinfo.next_scanline * row_stride];
+		/ / Write jpg format data
+		(void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
+	}
+	/ / Complete the conversion, release the object space, close the file
+		jpeg_finish_compress(&cinfo);
+	jpeg_destroy_compress(&cinfo);
+	free(bmp_data);
+	fclose(outfile);
+	return 0;
+}
+*/
 
 //============================================================
 //  texture handling
@@ -1127,18 +1186,8 @@ render_primitive_list* renderer_sdl2::get_primitives()
 
 	if (nd != m_blit_dim)
 	{
-		std::stringstream sstm;
-		sstm
-			<< "size:"
-			<< nd.width()
-			<< ":"
-			<< nd.height();
-		std::string s = sstm.str();
-
-		init_streaming_render(nd);
-		webpp::streaming_server::get().send_string(s);
-
 		m_blit_dim = nd;
+		init_streaming_render(nd);
 		notify_changed();
 	}
 

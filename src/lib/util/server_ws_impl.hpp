@@ -96,19 +96,25 @@ namespace webpp {
 
 			std::list<SendData> send_queue;
 
-			void send_from_queue(const std::shared_ptr<Connection>& connection) {
-				strand.post([this, connection]() {
-					asio::async_write(*socket, send_queue.begin()->header_stream->streambuf,
-									  strand.wrap([this, connection](const std::error_code& ec, size_t /*bytes_transferred*/) {
-						if (!ec) {
-							asio::async_write(*socket, send_queue.begin()->message_stream->streambuf,
-											  strand.wrap([this, connection]
-											  (const std::error_code& ec, size_t /*bytes_transferred*/) {
+			void send_from_queue(const std::shared_ptr<Connection>& connection)
+			{
+				strand.post([this, connection]()
+				{
+					asio::async_write(*socket, send_queue.begin()->header_stream->streambuf, strand.wrap([this, connection](const std::error_code& ec, size_t /*bytes_transferred*/)
+					{
+						if (!ec)
+						{
+							asio::async_write(*socket, send_queue.begin()->message_stream->streambuf, strand.wrap([this, connection](const std::error_code& ec, size_t /*bytes_transferred*/)
+							{
 								auto send_queued = send_queue.begin();
+
 								if (send_queued->callback)
 									send_queued->callback(ec);
-								if (!ec) {
+
+								if (!ec)
+								{
 									send_queue.erase(send_queued);
+
 									if (send_queue.size() > 0)
 										send_from_queue(connection);
 								}
@@ -116,10 +122,13 @@ namespace webpp {
 									send_queue.clear();
 							}));
 						}
-						else {
+						else
+						{
 							auto send_queued = send_queue.begin();
+
 							if (send_queued->callback)
 								send_queued->callback(ec);
+
 							send_queue.clear();
 						}
 					}));
@@ -253,11 +262,9 @@ namespace webpp {
 
 		///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
 		///See http://tools.ietf.org/html/rfc6455#section-5.2 for more information
-		void send(std::shared_ptr<webpp::Connection> conn, const std::shared_ptr<SendStream>& message_stream,
-				  const std::function<void(const std::error_code&)>& callback = nullptr,
-				  unsigned char fin_rsv_opcode = 129) const {
-
-			std::shared_ptr<Connection> connection = std::dynamic_pointer_cast<Connection> (conn);
+		void send(std::shared_ptr<webpp::Connection> conn, const std::shared_ptr<SendStream>& message_stream, const std::function<void(const std::error_code&)>& callback = nullptr, unsigned char fin_rsv_opcode = 129) const
+		{
+			std::shared_ptr<Connection> connection = std::dynamic_pointer_cast<Connection>(conn);
 
 			if (!connection)
 				return;
@@ -291,7 +298,8 @@ namespace webpp {
 			else
 				header_stream->put(static_cast<unsigned char>(length));
 
-			connection->strand.post([connection, header_stream, message_stream, callback]() {
+			connection->strand.post([connection, header_stream, message_stream, callback]()
+			{
 				connection->send_queue.emplace_back(header_stream, message_stream, callback);
 
 				if (connection->send_queue.size() == 1)

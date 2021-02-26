@@ -11,6 +11,7 @@
 #define SRC_STREAMINGSERVER_H
 
 #include <iostream>
+#include <sstream>
 #include <functional>
 #include <memory>
 #include <thread>
@@ -51,20 +52,25 @@ namespace webpp
 			return active;
 		}
 
+		///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
 		void send(std::shared_ptr<ws_server::SendStream> stream, unsigned char fin_rsv_opcode)
 		{
 			for (auto c : server->get_connections())
-			{
-				///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
+				server->send(c, stream, nullptr, fin_rsv_opcode);
 
+			/*
+			for (auto c : server->get_connections())
+			{
 				server->send(c, stream, [](auto err) {
 					if (err.value() != 0)
 						std::cout << "Errore " << err << std::endl;
 				}, fin_rsv_opcode);
+
 			}
+			*/
 		}
 
-		void send_string(std::string& msg)
+		void send_string(const std::string& msg)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 			*stream << msg;
