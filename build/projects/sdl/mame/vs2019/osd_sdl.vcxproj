@@ -84,7 +84,7 @@
     <IntDir>..\..\..\..\vs2019\obj\x64\Debug\osd_sdl\</IntDir>
     <TargetName>osd_sdl</TargetName>
     <TargetExt>.lib</TargetExt>
-    <IncludePath>C:\SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Public\msys64\src\MAMEStreamingPlatform\3rdparty\libjpeg\;C:\SDL2\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\SDL2\lib\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,7 +98,7 @@
     <IntDir>..\..\..\..\vs2019\obj\x64\Release\osd_sdl\</IntDir>
     <TargetName>osd_sdl</TargetName>
     <TargetExt>.lib</TargetExt>
-    <IncludePath>C:\SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Public\msys64\src\MAMEStreamingPlatform\3rdparty\libjpeg\;C:\SDL2\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\SDL2\lib\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -140,13 +140,13 @@
     <ClCompile>
       <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\winpcap\Include;..\..\..\..\..\3rdparty\compat\mingw;..\..\..\..\..\3rdparty\portaudio\include;..\..\..\..\..\3rdparty\compat\winsdk-override;..\..\..\..\..\3rdparty\bgfx\examples\common;..\..\..\..\..\3rdparty\bgfx\include;..\..\..\..\..\3rdparty\bgfx\3rdparty;..\..\..\..\..\3rdparty\bgfx\3rdparty\khronos;..\..\..\..\..\3rdparty\bx\include;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\portmidi\pm_common;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\osd;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\src\osd\modules\file;..\..\..\..\..\src\osd\modules\render;..\..\..\..\..\3rdparty;..\..\..\..\..\src\osd\sdl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\generated\includes;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\winpcap\Include;..\..\..\..\..\3rdparty\compat\mingw;..\..\..\..\..\3rdparty\portaudio\include;..\..\..\..\..\3rdparty\compat\winsdk-override;..\..\..\..\..\3rdparty\bgfx\examples\common;..\..\..\..\..\3rdparty\bgfx\include;..\..\..\..\..\3rdparty\bgfx\3rdparty;..\..\..\..\..\3rdparty\bgfx\3rdparty\khronos;..\..\..\..\..\3rdparty\bx\include;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\portmidi\pm_common;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\osd;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\src\osd\modules\file;..\..\..\..\..\src\osd\modules\render;..\..\..\..\..\src\osd\sdl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;USE_NETWORK;OSD_NET_USE_TAPTUN;SDLMAME_NO_X11;USE_XINPUT=0;USE_XINPUT_WII_LIGHTGUN_HACK=0;SDLMAME_SDL2=1;OSD_SDL;UNICODE;_UNICODE;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;NOMINMAX;USE_OPENGL=1;__STDC_LIMIT_MACROS;__STDC_FORMAT_MACROS;__STDC_CONSTANT_MACROS;IMGUI_DISABLE_OBSOLETE_FUNCTIONS;USE_QTDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -182,7 +182,7 @@
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -212,13 +212,13 @@
     <ClCompile>
       <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\generated\includes;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\winpcap\Include;..\..\..\..\..\3rdparty\compat\mingw;..\..\..\..\..\3rdparty\portaudio\include;..\..\..\..\..\3rdparty\compat\winsdk-override;..\..\..\..\..\3rdparty\bgfx\examples\common;..\..\..\..\..\3rdparty\bgfx\include;..\..\..\..\..\3rdparty\bgfx\3rdparty;..\..\..\..\..\3rdparty\bgfx\3rdparty\khronos;..\..\..\..\..\3rdparty\bx\include;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\portmidi\pm_common;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\osd;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\src\osd\modules\file;..\..\..\..\..\src\osd\modules\render;..\..\..\..\..\3rdparty;..\..\..\..\..\src\osd\sdl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\generated\includes;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\winpcap\Include;..\..\..\..\..\3rdparty\compat\mingw;..\..\..\..\..\3rdparty\portaudio\include;..\..\..\..\..\3rdparty\compat\winsdk-override;..\..\..\..\..\3rdparty\bgfx\examples\common;..\..\..\..\..\3rdparty\bgfx\include;..\..\..\..\..\3rdparty\bgfx\3rdparty;..\..\..\..\..\3rdparty\bgfx\3rdparty\khronos;..\..\..\..\..\3rdparty\bx\include;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\portmidi\pm_common;..\..\..\..\..\src\emu;..\..\..\..\..\src\devices;..\..\..\..\..\src\osd;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\src\osd\modules\file;..\..\..\..\..\src\osd\modules\render;..\..\..\..\..\src\osd\sdl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;USE_NETWORK;OSD_NET_USE_TAPTUN;SDLMAME_NO_X11;USE_XINPUT=0;USE_XINPUT_WII_LIGHTGUN_HACK=0;SDLMAME_SDL2=1;OSD_SDL;UNICODE;_UNICODE;_WIN32_WINNT=0x0501;WIN32_LEAN_AND_MEAN;NOMINMAX;USE_OPENGL=1;__STDC_LIMIT_MACROS;__STDC_FORMAT_MACROS;__STDC_CONSTANT_MACROS;IMGUI_DISABLE_OBSOLETE_FUNCTIONS;USE_QTDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>

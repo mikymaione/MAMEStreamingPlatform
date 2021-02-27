@@ -78,7 +78,7 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_binary(char* b, const int len)
+		void send_binary(char* b, std::streamsize len)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 			stream->write(b, len);

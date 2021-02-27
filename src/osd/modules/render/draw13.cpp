@@ -30,6 +30,8 @@
 
 #include "streaming_server.hpp"
 
+#include "jpeglib.h"
+
 //============================================================
 //  DEBUGGING
 //============================================================
@@ -435,6 +437,7 @@ void renderer_sdl2::free_streaming_render()
 
 		delete[] m_sdl_bitmap;
 		delete[] m_sdl_bitmap2;
+		delete[] m_sdl_bitmap_row;
 	}
 }
 
@@ -442,11 +445,14 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	m_sdl_bitmap_cells_number = 4 * nd.width() * nd.height();
-	m_sdl_bitmap = new char[m_sdl_bitmap_cells_number];
-	m_sdl_bitmap2 = new char[m_sdl_bitmap_cells_number];
+	m_sdl_bitmap_cells_number = 3 * nd.width();
+	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_cells_number];
 
-	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
+	m_sdl_bitmap_cells_number = 3 * nd.width() * nd.height();
+	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_cells_number];
+	m_sdl_bitmap2 = new unsigned char[m_sdl_bitmap_cells_number];
+
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
@@ -765,17 +771,14 @@ int renderer_sdl2::draw(int update)
 	{
 		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
-		int dif = 0;
-		for (int d = 0; d < m_sdl_bitmap_cells_number; d++)
-			if (m_sdl_bitmap[d] != m_sdl_bitmap2[d])
-				dif++;
-
-		auto dif_pct = dif * 100. / m_sdl_bitmap_cells_number;
-
-		if (dif_pct > 2)
+		if (memcmp(m_sdl_bitmap, m_sdl_bitmap2, m_sdl_bitmap_cells_number) != 0)
 		{
 			memcpy(m_sdl_bitmap2, m_sdl_bitmap, m_sdl_bitmap_cells_number);
-			webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+
+			//webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
+
+			bmp2jpg();
+			webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
@@ -784,38 +787,54 @@ int renderer_sdl2::draw(int update)
 	return 0;
 }
 
-/*
-int mp2jpg(const char* bmp_file, const char* jeg_file)
+#define BM_BPP				3 /* Bytes per Pixel */
+#define BM_ROW_SIZE(w)		(w * BM_BPP)
+#define BM_GETR(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 2])
+#define BM_GETG(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 1])
+#define BM_GETB(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 0])
+
+void renderer_sdl2::bmp2jpg()
 {
-	struct jpeg_compress_struct cinfo;
+	auto win = assert_window();
+	osd_dim wdim = win->get_size();
+
+	JSAMPROW row_pointer[1];
+	jpeg_compress_struct cinfo;
+	jpeg_error_mgr jerr;
+
 	jpeg_create_compress(&cinfo);
-	jpeg_stdio_dest(&cinfo, outfile);
-	cinfo.image_width = bmpInfoHeader.biWidth;
-	cinfo.image_height = bmpInfoHeader.biHeight;
+	cinfo.err = jpeg_std_error(&jerr);
+	cinfo.image_width = wdim.width();
+	cinfo.image_height = wdim.height();
 	cinfo.input_components = 3;
 	cinfo.in_color_space = JCS_RGB;
+
 	jpeg_set_defaults(&cinfo);
-	jpeg_set_quality(&cinfo, JPEG_QUALITY, TRUE);
+	jpeg_set_quality(&cinfo, 90, TRUE);
+	jpeg_mem_dest(&cinfo, &m_sdl_jpg, &m_sdl_jpg_cells_number);
 	jpeg_start_compress(&cinfo, TRUE);
 
-	// Here we use the cinfo.next_scanline provided by the library as a loop counter so that we don't need to track it ourselves.
-	// Continue to loop if the next line is smaller than the height of the picture
+	//for (JDIMENSION j = 0; j < cinfo.image_height; j++)
+	JDIMENSION j = cinfo.image_height;
+	JDIMENSION i = 0;
 
-	row_stride = bmpInfoHeader.biWidth * depth;
-	while (cinfo.next_scanline < bmpInfoHeader.biHeight) {
-		/ / Take the address of the last bit of the current line of data
-			row_pointer[0] = &bmp_data[cinfo.next_scanline * row_stride];
-		/ / Write jpg format data
-		(void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
-	}
-	/ / Complete the conversion, release the object space, close the file
-		jpeg_finish_compress(&cinfo);
+	do
+	{
+		j--;
+		for (i = 0; i < cinfo.image_width; i++)
+		{
+			m_sdl_bitmap_row[i * 3 + 0] = BM_GETR(m_sdl_bitmap, i, j, cinfo.image_width);
+			m_sdl_bitmap_row[i * 3 + 1] = BM_GETG(m_sdl_bitmap, i, j, cinfo.image_width);
+			m_sdl_bitmap_row[i * 3 + 2] = BM_GETB(m_sdl_bitmap, i, j, cinfo.image_width);
+		}
+
+		row_pointer[0] = m_sdl_bitmap_row;
+		jpeg_write_scanlines(&cinfo, row_pointer, 1);
+	} while (j > 0);
+
+	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);
-	free(bmp_data);
-	fclose(outfile);
-	return 0;
 }
-*/
 
 //============================================================
 //  texture handling
