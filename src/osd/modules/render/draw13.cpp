@@ -445,10 +445,19 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
+	int padding_bytes;
+	if ((nd.width() * 3) % 4)
+		padding_bytes = 4 - (nd.width() % 4); // the width bytes must aways fit DWORD units
+	else
+		padding_bytes = 0;
+
+	m_sdl_bitmap_cells_number = sizeof(BITMAPFILEHEADER) +
+		sizeof(BITMAPINFOHEADER) +
+		nd.height() * (nd.width() * 3 + padding_bytes);
+
 	m_sdl_bitmap_cells_number_row = 3 * nd.width();
 	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_cells_number_row];
 
-	m_sdl_bitmap_cells_number = 3 * nd.width() * nd.height();
 	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_cells_number];
 	m_sdl_bitmap2 = new unsigned char[m_sdl_bitmap_cells_number];
 
@@ -775,10 +784,15 @@ int renderer_sdl2::draw(int update)
 		{
 			memcpy(m_sdl_bitmap2, m_sdl_bitmap, m_sdl_bitmap_cells_number);
 
-			//webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
+			FILE* f;
+			f = fopen("ciao.bmp", "wb"); // wb -write binary
+			fwrite(m_sdl_bitmap, sizeof(unsigned char), m_sdl_bitmap_cells_number, f);
+			fclose(f);
 
-			bmp2jpg(wdim);
-			webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
+			webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
+
+			//bmp2jpg(wdim);
+			//webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
