@@ -8,7 +8,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>..\..\..\..\..</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommandArguments>-streamingserver -window -video accel -sound sdl -resolution 1200x600</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-window -video accel -sound sdl -resolution 1200x600</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
@@ -18,6 +18,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>..\..\..\..\..</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommandArguments>-streamingserver -window -video accel -sound sdl -resolution 1200x600</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-window -video accel -sound sdl -resolution 1200x600</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
