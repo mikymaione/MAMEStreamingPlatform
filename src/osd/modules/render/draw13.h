@@ -173,18 +173,14 @@ public:
 	SDL_Renderer* m_sdl_renderer;
 	SDL_Surface* m_sdl_surface;
 	SDL_RWops* m_sdl_buffer;
-	unsigned char* m_sdl_jpg = NULL;
-	unsigned char* m_sdl_bitmap = NULL;
-	unsigned char* m_sdl_bitmap_prev = NULL;
-	unsigned char* m_sdl_bitmap_row = NULL;
+
+	unsigned char* m_sdl_bitmap = nullptr;
+	unsigned char* m_sdl_bitmap_prev = nullptr;
 	unsigned long m_sdl_bitmap_length;
-	unsigned long m_sdl_bitmap_row_length;
-	unsigned long m_sdl_jpg_cells_number;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 
 private:
-	void bmp2jpg(osd_dim wdim);
 	void free_streaming_render();
 	void init_streaming_render(osd_dim& nd);
 
