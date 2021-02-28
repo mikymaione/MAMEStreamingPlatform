@@ -1,1 +1,2 @@
-mame64d.exe -window -streamingserver -video accel -sound sdl
+mame64.exe -window -video accel -sound sdl
+pause
