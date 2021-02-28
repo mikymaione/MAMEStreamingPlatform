@@ -178,12 +178,13 @@ public:
 	unsigned char* m_sdl_bitmap2 = NULL;
 	unsigned char* m_sdl_bitmap_row = NULL;
 	unsigned long m_sdl_bitmap_cells_number;
+	unsigned long m_sdl_bitmap_cells_number_row;
 	unsigned long m_sdl_jpg_cells_number;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 
 private:
-	void bmp2jpg();
+	void bmp2jpg(osd_dim wdim);
 	void free_streaming_render();
 	void init_streaming_render(osd_dim& nd);
 

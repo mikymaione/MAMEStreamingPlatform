@@ -445,8 +445,8 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	m_sdl_bitmap_cells_number = 3 * nd.width();
-	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_cells_number];
+	m_sdl_bitmap_cells_number_row = 3 * nd.width();
+	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_cells_number_row];
 
 	m_sdl_bitmap_cells_number = 3 * nd.width() * nd.height();
 	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_cells_number];
@@ -777,7 +777,7 @@ int renderer_sdl2::draw(int update)
 
 			//webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
 
-			bmp2jpg();
+			bmp2jpg(wdim);
 			webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
 		}
 
@@ -787,17 +787,8 @@ int renderer_sdl2::draw(int update)
 	return 0;
 }
 
-#define BM_BPP				3 /* Bytes per Pixel */
-#define BM_ROW_SIZE(w)		(w * BM_BPP)
-#define BM_GETR(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 2])
-#define BM_GETG(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 1])
-#define BM_GETB(B, X, Y, w) (B[((Y) * BM_ROW_SIZE(w) + (X) * 3) + 0])
-
-void renderer_sdl2::bmp2jpg()
+void renderer_sdl2::bmp2jpg(osd_dim wdim)
 {
-	auto win = assert_window();
-	osd_dim wdim = win->get_size();
-
 	JSAMPROW row_pointer[1];
 	jpeg_compress_struct cinfo;
 	jpeg_error_mgr jerr;
@@ -814,7 +805,7 @@ void renderer_sdl2::bmp2jpg()
 	jpeg_mem_dest(&cinfo, &m_sdl_jpg, &m_sdl_jpg_cells_number);
 	jpeg_start_compress(&cinfo, TRUE);
 
-	//for (JDIMENSION j = 0; j < cinfo.image_height; j++)
+	unsigned int bmp_row_index, bmp_row_index_dest;
 	JDIMENSION j = cinfo.image_height;
 	JDIMENSION i = 0;
 
@@ -823,9 +814,13 @@ void renderer_sdl2::bmp2jpg()
 		j--;
 		for (i = 0; i < cinfo.image_width; i++)
 		{
-			m_sdl_bitmap_row[i * 3 + 0] = BM_GETR(m_sdl_bitmap, i, j, cinfo.image_width);
-			m_sdl_bitmap_row[i * 3 + 1] = BM_GETG(m_sdl_bitmap, i, j, cinfo.image_width);
-			m_sdl_bitmap_row[i * 3 + 2] = BM_GETB(m_sdl_bitmap, i, j, cinfo.image_width);
+			bmp_row_index_dest = i * 3;
+			bmp_row_index = j * m_sdl_bitmap_cells_number_row + bmp_row_index_dest;
+
+			// BGR order
+			m_sdl_bitmap_row[bmp_row_index_dest + 0] = m_sdl_bitmap[bmp_row_index + 2];
+			m_sdl_bitmap_row[bmp_row_index_dest + 1] = m_sdl_bitmap[bmp_row_index + 1];
+			m_sdl_bitmap_row[bmp_row_index_dest + 2] = m_sdl_bitmap[bmp_row_index + 0];
 		}
 
 		row_pointer[0] = m_sdl_bitmap_row;
