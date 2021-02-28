@@ -453,8 +453,8 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 		sizeof(BITMAPINFOHEADER) +
 		nd.height() * (nd.width() * 3 + padding_bytes);
 
-	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_length];
-	m_sdl_bitmap_prev = new unsigned char[m_sdl_bitmap_length];
+	m_sdl_bitmap = new char[m_sdl_bitmap_length];
+	m_sdl_bitmap_prev = new char[m_sdl_bitmap_length];
 
 	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
 
