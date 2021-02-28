@@ -3,37 +3,47 @@
 
 <head>
 	<title>Streaming</title>
-	
-	<style>
-		html {
-			height: 100%;
-		}
-		
-		body {
-			min-height: calc(100% - 40px);
+
+	<style>	
+		body {			
+			overflow: hidden;
 		}
 	</style>
 </head>
 
-<body id="theBody">
+<body>
 
 	<canvas id="myCanvas" style="border:1px solid #000000;">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
 
 	<script>
+		let vw, vh, cw, ch, tw, th;
+
 		function FullScreen(monitor)
 		{
 			//document.exitFullscreen();
 			monitor.requestFullscreen();
 		}
 
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			myCanvas.width = cw;
+			myCanvas.height = ch;
+
+			if (cw / ch < vw / vh)
+				th = cw * vh / vw;
+			else
+				tw = ch * vw / vh;
+		}
+
 		function Start()
 		{
 			const uri = "ws://127.0.0.1:8888";
-			
-			let vw, vh, cw, ch, tw, th;
-			
+
 			let theBody = document.getElementById("theBody");
 			let myCanvas = document.getElementById("myCanvas");
 			let context = myCanvas.getContext("2d"); // 2d, webgl, webgl2, bitmaprenderer
@@ -50,25 +60,17 @@
 			{
 				console.log('Connection closed');
 			};
-			
+
 			ws.onmessage = function (event)
 			{
 				if (typeof event.data === 'string')
 				{
-					let values = event.data.split(":");	
-					
-					myCanvas.width = theBody.clientWidth;
-					myCanvas.height = theBody.clientHeight;
-					
-					cw = myCanvas.width;
-					ch = myCanvas.height;
+					let values = event.data.split(":");
+
 					vw = values[1];
 					vh = values[2];
-					
-					if (cw / ch < vw / vh)
-						th = cw * vh / vw;
-					else
-						tw = ch * vw / vh;
+
+					reportWindowSize();
 				}
 				else
 				{
@@ -76,13 +78,14 @@
 					{
 						if (cw / ch < vw / vh)
 							context.drawImage(img, 0, 0, vw, vh, 0, (ch - th) / 2, cw, th);
-						else							
+						else
 							context.drawImage(img, 0, 0, vw, vh, (cw - tw) / 2, 0, tw, ch);
 					});
 				}
 			};
 		}
 
+		window.onresize = reportWindowSize;
 		Start();
 	</script>
 </body>
