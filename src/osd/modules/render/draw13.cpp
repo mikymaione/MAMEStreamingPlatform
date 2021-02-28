@@ -429,14 +429,14 @@ static void drawsdl_show_info(struct SDL_RendererInfo* render_info)
 
 void renderer_sdl2::free_streaming_render()
 {
-	if (m_sdl_bitmap != NULL && m_sdl_bitmap != nullptr)
+	if (m_sdl_bitmap != NULL)
 	{
 		SDL_RWclose(m_sdl_buffer);
 		SDL_FreeSurface(m_sdl_surface);
 		SDL_DestroyRenderer(m_sdl_renderer);
 
 		delete[] m_sdl_bitmap;
-		delete[] m_sdl_bitmap2;
+		delete[] m_sdl_bitmap_prev;
 		delete[] m_sdl_bitmap_row;
 	}
 }
@@ -445,27 +445,26 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	int padding_bytes;
-	if ((nd.width() * 3) % 4)
-		padding_bytes = 4 - (nd.width() % 4); // the width bytes must aways fit DWORD units
-	else
-		padding_bytes = 0;
+	auto padding_bytes = (nd.width() * 3) % 4
+		? 4 - (nd.width() % 4)
+		: 0;
 
-	m_sdl_bitmap_cells_number = sizeof(BITMAPFILEHEADER) +
+	m_sdl_bitmap_length =
+		sizeof(BITMAPFILEHEADER) +
 		sizeof(BITMAPINFOHEADER) +
 		nd.height() * (nd.width() * 3 + padding_bytes);
 
-	m_sdl_bitmap_cells_number_row = 3 * nd.width();
-	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_cells_number_row];
+	m_sdl_bitmap_row_length = 3 * nd.width();
+	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_row_length];
 
-	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_cells_number];
-	m_sdl_bitmap2 = new unsigned char[m_sdl_bitmap_cells_number];
+	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_length];
+	m_sdl_bitmap_prev = new unsigned char[m_sdl_bitmap_length];
 
 	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
-	m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_cells_number);
+	m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_length);
 
 	std::stringstream sstm;
 	sstm
@@ -780,14 +779,14 @@ int renderer_sdl2::draw(int update)
 	{
 		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
-		if (memcmp(m_sdl_bitmap, m_sdl_bitmap2, m_sdl_bitmap_cells_number) != 0)
+		if (memcmp(m_sdl_bitmap, m_sdl_bitmap_prev, m_sdl_bitmap_length) != 0)
 		{
-			memcpy(m_sdl_bitmap2, m_sdl_bitmap, m_sdl_bitmap_cells_number);
+			memcpy(m_sdl_bitmap_prev, m_sdl_bitmap, m_sdl_bitmap_length);
 
-			//webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
+			webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_length);
 
-			bmp2jpg(wdim);
-			webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
+			//bmp2jpg(wdim);
+			//webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
@@ -824,7 +823,7 @@ void renderer_sdl2::bmp2jpg(osd_dim wdim)
 		for (i = 0; i < cinfo.image_width; i++)
 		{
 			bmp_row_index_dest = i * 3;
-			bmp_row_index = j * m_sdl_bitmap_cells_number_row + bmp_row_index_dest;
+			bmp_row_index = j * m_sdl_bitmap_row_length + bmp_row_index_dest;
 
 			// BGR order
 			m_sdl_bitmap_row[bmp_row_index_dest + 0] = m_sdl_bitmap[bmp_row_index + 2];

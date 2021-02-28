@@ -175,10 +175,10 @@ public:
 	SDL_RWops* m_sdl_buffer;
 	unsigned char* m_sdl_jpg = NULL;
 	unsigned char* m_sdl_bitmap = NULL;
-	unsigned char* m_sdl_bitmap2 = NULL;
+	unsigned char* m_sdl_bitmap_prev = NULL;
 	unsigned char* m_sdl_bitmap_row = NULL;
-	unsigned long m_sdl_bitmap_cells_number;
-	unsigned long m_sdl_bitmap_cells_number_row;
+	unsigned long m_sdl_bitmap_length;
+	unsigned long m_sdl_bitmap_row_length;
 	unsigned long m_sdl_jpg_cells_number;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
