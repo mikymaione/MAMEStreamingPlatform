@@ -444,19 +444,20 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	auto padding_bytes = (nd.width() * 3) % 4
+	const int colorspace = 4;
+	auto padding_bytes = (nd.width() * colorspace) % 4
 		? 4 - (nd.width() % 4)
 		: 0;
 
 	m_sdl_bitmap_length =
 		sizeof(BITMAPFILEHEADER) +
 		sizeof(BITMAPINFOHEADER) +
-		nd.height() * (nd.width() * 3 + padding_bytes);
+		nd.height() * (nd.width() * colorspace + padding_bytes);
 
 	m_sdl_bitmap = new char[m_sdl_bitmap_length];
 	m_sdl_bitmap_prev = new char[m_sdl_bitmap_length];
 
-	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
