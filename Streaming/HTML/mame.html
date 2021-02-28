@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Streaming</title>
+
+	<style>	
+		body {			
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+
+	<canvas id="myCanvas" style="border:1px solid #000000;">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
+	<script>
+		let vw, vh, cw, ch, tw, th;
+
+		function FullScreen(monitor)
+		{
+			//document.exitFullscreen();
+			monitor.requestFullscreen();
+		}
+
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			myCanvas.width = cw;
+			myCanvas.height = ch;
+
+			if (cw / ch < vw / vh)
+				th = cw * vh / vw;
+			else
+				tw = ch * vw / vh;
+		}
+
+		function Start()
+		{
+			const uri = "ws://127.0.0.1:8888";
+
+			let theBody = document.getElementById("theBody");
+			let myCanvas = document.getElementById("myCanvas");
+			let context = myCanvas.getContext("2d"); // 2d, webgl, webgl2, bitmaprenderer
+
+			let webSocket = window.WebSocket || window.MozWebSocket,
+				ws = new webSocket(uri);
+
+			ws.onopen = function (e)
+			{
+				console.log('Connection opened');
+			};
+
+			ws.onclose = function (e)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				if (typeof event.data === 'string')
+				{
+					let values = event.data.split(":");
+
+					vw = values[1];
+					vh = values[2];
+
+					reportWindowSize();
+				}
+				else
+				{
+					createImageBitmap(event.data).then((img) =>
+					{
+						if (cw / ch < vw / vh)
+							context.drawImage(img, 0, 0, vw, vh, 0, (ch - th) / 2, cw, th);
+						else
+							context.drawImage(img, 0, 0, vw, vh, (cw - tw) / 2, 0, tw, ch);
+					});
+				}
+			};
+		}
+
+		window.onresize = reportWindowSize;
+		Start();
+	</script>
+</body>
+
+</html>
