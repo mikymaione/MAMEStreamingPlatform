@@ -784,11 +784,6 @@ int renderer_sdl2::draw(int update)
 		{
 			memcpy(m_sdl_bitmap2, m_sdl_bitmap, m_sdl_bitmap_cells_number);
 
-			FILE* f;
-			f = fopen("ciao.bmp", "wb"); // wb -write binary
-			fwrite(m_sdl_bitmap, sizeof(unsigned char), m_sdl_bitmap_cells_number, f);
-			fclose(f);
-
 			webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_cells_number);
 
 			//bmp2jpg(wdim);
