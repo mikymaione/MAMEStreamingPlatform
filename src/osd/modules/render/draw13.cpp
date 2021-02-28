@@ -429,7 +429,7 @@ static void drawsdl_show_info(struct SDL_RendererInfo* render_info)
 
 void renderer_sdl2::free_streaming_render()
 {
-	if (m_sdl_bitmap != NULL)
+	if (m_sdl_bitmap != nullptr)
 	{
 		SDL_RWclose(m_sdl_buffer);
 		SDL_FreeSurface(m_sdl_surface);
@@ -437,7 +437,6 @@ void renderer_sdl2::free_streaming_render()
 
 		delete[] m_sdl_bitmap;
 		delete[] m_sdl_bitmap_prev;
-		delete[] m_sdl_bitmap_row;
 	}
 }
 
@@ -453,9 +452,6 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 		sizeof(BITMAPFILEHEADER) +
 		sizeof(BITMAPINFOHEADER) +
 		nd.height() * (nd.width() * 3 + padding_bytes);
-
-	m_sdl_bitmap_row_length = 3 * nd.width();
-	m_sdl_bitmap_row = new unsigned char[m_sdl_bitmap_row_length];
 
 	m_sdl_bitmap = new unsigned char[m_sdl_bitmap_length];
 	m_sdl_bitmap_prev = new unsigned char[m_sdl_bitmap_length];
@@ -784,59 +780,12 @@ int renderer_sdl2::draw(int update)
 			memcpy(m_sdl_bitmap_prev, m_sdl_bitmap, m_sdl_bitmap_length);
 
 			webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_length);
-
-			//bmp2jpg(wdim);
-			//webpp::streaming_server::get().send_binary((char*)m_sdl_jpg, m_sdl_jpg_cells_number);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
 
 	return 0;
-}
-
-void renderer_sdl2::bmp2jpg(osd_dim wdim)
-{
-	JSAMPROW row_pointer[1];
-	jpeg_compress_struct cinfo;
-	jpeg_error_mgr jerr;
-
-	jpeg_create_compress(&cinfo);
-	cinfo.err = jpeg_std_error(&jerr);
-	cinfo.image_width = wdim.width();
-	cinfo.image_height = wdim.height();
-	cinfo.input_components = 3;
-	cinfo.in_color_space = JCS_RGB;
-
-	jpeg_set_defaults(&cinfo);
-	jpeg_set_quality(&cinfo, 90, TRUE);
-	jpeg_mem_dest(&cinfo, &m_sdl_jpg, &m_sdl_jpg_cells_number);
-	jpeg_start_compress(&cinfo, TRUE);
-
-	unsigned int bmp_row_index, bmp_row_index_dest;
-	JDIMENSION j = cinfo.image_height;
-	JDIMENSION i = 0;
-
-	do
-	{
-		j--;
-		for (i = 0; i < cinfo.image_width; i++)
-		{
-			bmp_row_index_dest = i * 3;
-			bmp_row_index = j * m_sdl_bitmap_row_length + bmp_row_index_dest;
-
-			// BGR order
-			m_sdl_bitmap_row[bmp_row_index_dest + 0] = m_sdl_bitmap[bmp_row_index + 2];
-			m_sdl_bitmap_row[bmp_row_index_dest + 1] = m_sdl_bitmap[bmp_row_index + 1];
-			m_sdl_bitmap_row[bmp_row_index_dest + 2] = m_sdl_bitmap[bmp_row_index + 0];
-		}
-
-		row_pointer[0] = m_sdl_bitmap_row;
-		jpeg_write_scanlines(&cinfo, row_pointer, 1);
-	} while (j > 0);
-
-	jpeg_finish_compress(&cinfo);
-	jpeg_destroy_compress(&cinfo);
 }
 
 //============================================================
