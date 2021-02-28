@@ -779,7 +779,7 @@ int renderer_sdl2::draw(int update)
 		{
 			memcpy(m_sdl_bitmap_prev, m_sdl_bitmap, m_sdl_bitmap_length);
 
-			webpp::streaming_server::get().send_binary((char*)m_sdl_bitmap, m_sdl_bitmap_length);
+			webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_length);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);

@@ -174,8 +174,8 @@ public:
 	SDL_Surface* m_sdl_surface;
 	SDL_RWops* m_sdl_buffer;
 
-	unsigned char* m_sdl_bitmap = nullptr;
-	unsigned char* m_sdl_bitmap_prev = nullptr;
+	char* m_sdl_bitmap = nullptr;
+	char* m_sdl_bitmap_prev = nullptr;
 	unsigned long m_sdl_bitmap_length;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
