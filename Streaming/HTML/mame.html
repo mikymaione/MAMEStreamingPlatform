@@ -13,7 +13,11 @@
 
 <body>
 
-	<canvas id="myCanvas" style="border:1px solid #000000;">
+	<audio id="myAudio" autoplay>
+		Your browser does not support the HTML audio tag.
+	</audio>
+	
+	<canvas id="myCanvas">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
 
@@ -43,8 +47,9 @@
 		function Start()
 		{
 			const uri = "ws://127.0.0.1:8888";
-
-			let theBody = document.getElementById("theBody");
+			
+			let myAudio = document.getElementById("myAudio");
+			
 			let myCanvas = document.getElementById("myCanvas");
 			let context = myCanvas.getContext("2d"); // 2d, webgl, webgl2, bitmaprenderer
 
