@@ -30,7 +30,7 @@
 
 #include "streaming_server.hpp"
 
-#include "jpeglib.h"
+#include "SDL_savejpeg.h"
 
 //============================================================
 //  DEBUGGING
@@ -444,15 +444,7 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	const int colorspace = 4;
-	auto padding_bytes = (nd.width() * colorspace) % 4
-		? 4 - (nd.width() % 4)
-		: 0;
-
-	m_sdl_bitmap_length =
-		sizeof(BITMAPFILEHEADER) +
-		sizeof(BITMAPINFOHEADER) +
-		nd.height() * (nd.width() * colorspace + padding_bytes);
+	m_sdl_bitmap_length = nd.height() * nd.width() * 4;
 
 	m_sdl_bitmap = new char[m_sdl_bitmap_length];
 	m_sdl_bitmap_prev = new char[m_sdl_bitmap_length];
@@ -774,7 +766,7 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::get().isActive())
 	{
-		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
+		SDL_SaveJPG_RW(m_sdl_surface, m_sdl_buffer, 0, 70);
 
 		if (memcmp(m_sdl_bitmap, m_sdl_bitmap_prev, m_sdl_bitmap_length) != 0)
 		{
