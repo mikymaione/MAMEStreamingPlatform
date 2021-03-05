@@ -246,6 +246,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.h" />
     <ClInclude Include="..\..\..\..\..\src\osd\osdnet.h" />
     <ClInclude Include="..\..\..\..\..\src\osd\watchdog.h" />
     <ClInclude Include="..\..\..\..\..\src\osd\modules\debugger\debug_module.h" />
@@ -318,6 +319,7 @@
     <ClInclude Include="..\..\..\..\..\src\osd\modules\render\blit13.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.c" />
     <ClCompile Include="..\..\..\..\..\src\osd\osdnet.cpp">
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\src\osd\watchdog.cpp">

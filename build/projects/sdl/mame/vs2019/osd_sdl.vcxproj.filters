@@ -55,6 +55,9 @@
     <Filter Include="src\osd\sdl">
       <UniqueIdentifier>{CE9C9308-3A52-0CFE-C346-06D52FFB0202}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\osd\modules\render\sdl">
+      <UniqueIdentifier>{1a9f8d01-15df-4eff-9a63-ca9fa1c09e1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\src\osd\osdnet.h">
@@ -266,6 +269,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\src\osd\modules\render\blit13.h">
       <Filter>src\osd\modules\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.h">
+      <Filter>src\osd\modules\render\sdl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\src\osd\modules\render\draw13.cpp">
       <Filter>src\osd\modules\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.c">
+      <Filter>src\osd\modules\render\sdl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

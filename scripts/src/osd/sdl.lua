@@ -11,6 +11,9 @@
 
 dofile("modules.lua")
 
+includedirs {	
+	ext_includedir("jpeg"),
+}
 
 function maintargetosdoptions(_target,_subtarget)
 	osdmodulestargetconf()
@@ -441,9 +444,11 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "src/osd/modules/render/drawsdl.cpp",
 	}
 	files {
+		MAME_DIR .. "src/osd/modules/render/SDL_savejpeg.c",
+		
 		MAME_DIR .. "src/osd/modules/render/draw13.cpp",
 		MAME_DIR .. "src/osd/modules/render/blit13.h",
-	}
+	}	
 
 
 project ("ocore_" .. _OPTIONS["osd"])

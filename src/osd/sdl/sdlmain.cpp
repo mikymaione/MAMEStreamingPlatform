@@ -251,7 +251,9 @@ int main(int argc, char** argv)
 		r = main_sdl(argc, argv);
 	}
 
-	system("pause");
+	std::cout << "Press enter to exit.\n";
+	std::cin.ignore();
+
 	exit(r);
 }
 
