@@ -9,8 +9,10 @@
             "command": "make",
             "args": [
                 "SOURCES=src/mame/drivers/cps3.cpp",
+				"TARGET=mame",
                 "IGNORE_GIT=1",
-                "DEBUG=1"             
+                "DEBUG=1",
+				"OSD=sdl"        
             ],
             "group": "build",
             "presentation": {
