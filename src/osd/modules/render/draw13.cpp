@@ -444,12 +444,13 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	m_sdl_bitmap_length = nd.height() * nd.width() * 4;
+	m_sdl_bitmap_length = nd.height() * nd.width() * 3;
 
 	m_sdl_bitmap = new char[m_sdl_bitmap_length];
 	m_sdl_bitmap_prev = new char[m_sdl_bitmap_length];
 
-	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
+	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
