@@ -456,7 +456,7 @@ project ("osd_" .. _OPTIONS["osd"])
 	files {		
 		MAME_DIR .. "src/osd/modules/render/draw13.cpp",
 		MAME_DIR .. "src/osd/modules/render/blit13.h",
-	}
+	}	
 
 
 project ("ocore_" .. _OPTIONS["osd"])
