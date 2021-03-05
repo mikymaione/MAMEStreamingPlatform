@@ -429,14 +429,14 @@ static void drawsdl_show_info(struct SDL_RendererInfo* render_info)
 
 void renderer_sdl2::free_streaming_render()
 {
-	if (m_sdl_bitmap != nullptr)
+	if (m_sdl_buffer_bytes != nullptr)
 	{
 		SDL_RWclose(m_sdl_buffer);
 		SDL_FreeSurface(m_sdl_surface);
 		SDL_DestroyRenderer(m_sdl_renderer);
 
-		delete[] m_sdl_bitmap;
-		delete[] m_sdl_bitmap_prev;
+		delete[] m_sdl_buffer_bytes;
+		delete[] m_sdl_buffer_bytes_previous;
 	}
 }
 
@@ -444,17 +444,17 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 {
 	free_streaming_render();
 
-	m_sdl_bitmap_length = nd.height() * nd.width() * 3;
+	m_sdl_buffer_bytes_length = nd.height() * nd.width() * 3;
 
-	m_sdl_bitmap = new char[m_sdl_bitmap_length];
-	m_sdl_bitmap_prev = new char[m_sdl_bitmap_length];
+	m_sdl_buffer_bytes = new char[m_sdl_buffer_bytes_length];
+	m_sdl_buffer_bytes_previous = new char[m_sdl_buffer_bytes_length];
 
 	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
 	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
-	m_sdl_buffer = SDL_RWFromMem(m_sdl_bitmap, m_sdl_bitmap_length);
+	m_sdl_buffer = SDL_RWFromMem(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 
 	std::stringstream sstm;
 	sstm
@@ -769,11 +769,11 @@ int renderer_sdl2::draw(int update)
 	{
 		IMG_SaveJPG_RW(m_sdl_buffer, m_sdl_surface, 30);
 
-		if (memcmp(m_sdl_bitmap, m_sdl_bitmap_prev, m_sdl_bitmap_length) != 0)
+		if (memcmp(m_sdl_buffer_bytes, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
 		{
-			memcpy(m_sdl_bitmap_prev, m_sdl_bitmap, m_sdl_bitmap_length);
+			memcpy(m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 
-			webpp::streaming_server::get().send_binary(m_sdl_bitmap, m_sdl_bitmap_length);
+			webpp::streaming_server::get().send_binary(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
