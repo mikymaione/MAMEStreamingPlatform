@@ -765,7 +765,7 @@ int renderer_sdl2::draw(int update)
 	m_last_blit_time += osd_ticks();
 
 	if (webpp::streaming_server::get().isActive())
-	{
+	{		
 		SDL_SaveJPG_RW(m_sdl_surface, m_sdl_buffer, 0, 70);
 
 		if (memcmp(m_sdl_bitmap, m_sdl_bitmap_prev, m_sdl_bitmap_length) != 0)
