@@ -270,7 +270,10 @@
     <ClInclude Include="..\..\..\..\..\src\osd\modules\render\blit13.h">
       <Filter>src\osd\modules\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.h">
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_saveend.h">
+      <Filter>src\osd\modules\render\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_savejpg.h">
       <Filter>src\osd\modules\render\sdl</Filter>
     </ClInclude>
   </ItemGroup>
@@ -578,7 +581,7 @@
     <ClCompile Include="..\..\..\..\..\src\osd\modules\render\draw13.cpp">
       <Filter>src\osd\modules\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\SDL_savejpeg.c">
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_savejpg.c">
       <Filter>src\osd\modules\render\sdl</Filter>
     </ClCompile>
   </ItemGroup>
