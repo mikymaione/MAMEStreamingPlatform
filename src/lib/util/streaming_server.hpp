@@ -30,6 +30,10 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
+		size_t append_count_send = 5;
+		size_t append_count = 0;
+		std::shared_ptr<ws_server::SendStream> append_stream = std::make_shared<ws_server::SendStream>();
+
 	public:
 		std::function<void()> on_accept;
 
@@ -57,17 +61,6 @@ namespace webpp
 		{
 			for (auto c : server->get_connections())
 				server->send(c, stream, nullptr, fin_rsv_opcode);
-
-			/*
-			for (auto c : server->get_connections())
-			{
-				server->send(c, stream, [](auto err) {
-					if (err.value() != 0)
-						std::cout << "Errore " << err << std::endl;
-				}, fin_rsv_opcode);
-
-			}
-			*/
 		}
 
 		void send_string(const std::string& msg)
@@ -84,6 +77,21 @@ namespace webpp
 			stream->write(b, len);
 
 			send(stream, 130);
+		}
+
+		void append_binary(char* b, std::streamsize len)
+		{
+			append_stream->write(b, len);
+
+			append_count++;
+
+			if (append_count == append_count_send)
+			{
+				append_count = 0;
+				send(append_stream, 130);
+
+				append_stream->clear();
+			}
 		}
 
 		void start(unsigned short port)
