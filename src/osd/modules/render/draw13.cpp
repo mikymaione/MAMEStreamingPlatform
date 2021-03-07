@@ -30,7 +30,7 @@
 
 #include "streaming_server.hpp"
 
-#include "sdl\IMG_savejpg.h"
+#include "IMG_savejpg.h"
 
 //============================================================
 //  DEBUGGING

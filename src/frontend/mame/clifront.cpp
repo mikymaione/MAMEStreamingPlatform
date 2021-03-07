@@ -222,18 +222,17 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 		// otherwise, error on the options
 		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "%s", ex.message());
 	}
-
+/* Rimettere
 	// determine the base name of the EXE
 	std::string_view exename = core_filename_extract_base(args[0], true);
-
-	/* Rimettere
+	
 	// if we have a command, execute that
 	if (!m_options.command().empty())
 	{
 		execute_commands(exename);
 		return;
 	}
-	*/
+*/
 
 	// read INI's, if appropriate
 	if (m_options.read_config())
