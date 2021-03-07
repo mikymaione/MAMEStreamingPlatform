@@ -443,12 +443,20 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "src/osd/modules/osdwindow.h",
 		MAME_DIR .. "src/osd/modules/render/drawsdl.cpp",
 	}
+	
+	includedirs {
+		MAME_DIR .. "src/osd/modules/render/sdl/",		
+	}
+
 	files {
-		MAME_DIR .. "src/osd/modules/render/SDL_savejpeg.c",
-		
+		MAME_DIR .. "src/osd/modules/render/sdl/IMG_saveend.h",
+		MAME_DIR .. "src/osd/modules/render/sdl/IMG_savejpg.h",
+		MAME_DIR .. "src/osd/modules/render/sdl/IMG_savejpg.c",
+	}	
+	files {		
 		MAME_DIR .. "src/osd/modules/render/draw13.cpp",
 		MAME_DIR .. "src/osd/modules/render/blit13.h",
-	}	
+	}
 
 
 project ("ocore_" .. _OPTIONS["osd"])
