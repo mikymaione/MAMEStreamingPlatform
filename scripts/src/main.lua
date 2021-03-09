@@ -234,10 +234,10 @@ end
 			targetdir(MAME_DIR)
 		end
 	end
-
+	
 if (STANDALONE~=true) then
 	findfunction("linkProjects_" .. _OPTIONS["target"] .. "_" .. _OPTIONS["subtarget"])(_OPTIONS["target"], _OPTIONS["subtarget"])
-end
+end	
 	links {
 		"osd_" .. _OPTIONS["osd"],
 	}
