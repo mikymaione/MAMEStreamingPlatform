@@ -85,44 +85,44 @@ namespace
 	//**************************************************************************
 
 	const options_entry cli_option_entries[] =
-	{
-		/* core commands */
-		{nullptr, nullptr, OPTION_HEADER, "CORE COMMANDS"},
-		{CLICOMMAND_HELP ";h;?", "0", OPTION_COMMAND, "show help message"},
-		{CLICOMMAND_VALIDATE ";valid", "0", OPTION_COMMAND, "perform validation on system drivers and devices"},
+		{
+			/* core commands */
+			{nullptr, nullptr, OPTION_HEADER, "CORE COMMANDS"},
+			{CLICOMMAND_HELP ";h;?", "0", OPTION_COMMAND, "show help message"},
+			{CLICOMMAND_VALIDATE ";valid", "0", OPTION_COMMAND, "perform validation on system drivers and devices"},
 
-		/* configuration commands */
-		{nullptr, nullptr, OPTION_HEADER, "CONFIGURATION COMMANDS"},
-		{CLICOMMAND_CREATECONFIG ";cc", "0", OPTION_COMMAND, "create the default configuration file"},
-		{CLICOMMAND_SHOWCONFIG ";sc", "0", OPTION_COMMAND, "display running parameters"},
-		{CLICOMMAND_SHOWUSAGE ";su", "0", OPTION_COMMAND, "show this help"},
+			/* configuration commands */
+			{nullptr, nullptr, OPTION_HEADER, "CONFIGURATION COMMANDS"},
+			{CLICOMMAND_CREATECONFIG ";cc", "0", OPTION_COMMAND, "create the default configuration file"},
+			{CLICOMMAND_SHOWCONFIG ";sc", "0", OPTION_COMMAND, "display running parameters"},
+			{CLICOMMAND_SHOWUSAGE ";su", "0", OPTION_COMMAND, "show this help"},
 
-		/* frontend commands */
-		{nullptr, nullptr, OPTION_HEADER, "FRONTEND COMMANDS"},
-		{CLICOMMAND_LISTXML ";lx", "0", OPTION_COMMAND, "all available info on driver in XML format"},
-		{CLICOMMAND_LISTFULL ";ll", "0", OPTION_COMMAND, "short name, full name"},
-		{CLICOMMAND_LISTSOURCE ";ls", "0", OPTION_COMMAND, "driver sourcefile"},
-		{CLICOMMAND_LISTCLONES ";lc", "0", OPTION_COMMAND, "show clones"},
-		{CLICOMMAND_LISTBROTHERS ";lb", "0", OPTION_COMMAND, "show \"brothers\", or other drivers from same sourcefile"},
-		{CLICOMMAND_LISTCRC, "0", OPTION_COMMAND, "CRC-32s"},
-		{CLICOMMAND_LISTROMS ";lr", "0", OPTION_COMMAND, "list required ROMs for a driver"},
-		{CLICOMMAND_LISTSAMPLES, "0", OPTION_COMMAND, "list optional samples for a driver"},
-		{CLICOMMAND_VERIFYROMS, "0", OPTION_COMMAND, "report romsets that have problems"},
-		{CLICOMMAND_VERIFYSAMPLES, "0", OPTION_COMMAND, "report samplesets that have problems"},
-		{CLICOMMAND_ROMIDENT, "0", OPTION_COMMAND, "compare files with known MAME ROMs"},
-		{CLICOMMAND_LISTDEVICES ";ld", "0", OPTION_COMMAND, "list available devices"},
-		{CLICOMMAND_LISTSLOTS ";lslot", "0", OPTION_COMMAND, "list available slots and slot devices"},
-		{CLICOMMAND_LISTMEDIA ";lm", "0", OPTION_COMMAND, "list available media for the system"},
-		{CLICOMMAND_LISTSOFTWARE ";lsoft", "0", OPTION_COMMAND, "list known software for the system"},
-		{CLICOMMAND_VERIFYSOFTWARE ";vsoft", "0", OPTION_COMMAND, "verify known software for the system"},
-		{CLICOMMAND_GETSOFTLIST ";glist", "0", OPTION_COMMAND, "retrieve software list by name"},
-		{CLICOMMAND_VERIFYSOFTLIST ";vlist", "0", OPTION_COMMAND, "verify software list by name"},
-		{CLICOMMAND_STREAMINGSERVER, "0", OPTION_COMMAND, "start MAME streaming server"},
-		{CLICOMMAND_VERSION, "0", OPTION_COMMAND, "get MAME version"},
+			/* frontend commands */
+			{nullptr, nullptr, OPTION_HEADER, "FRONTEND COMMANDS"},
+			{CLICOMMAND_LISTXML ";lx", "0", OPTION_COMMAND, "all available info on driver in XML format"},
+			{CLICOMMAND_LISTFULL ";ll", "0", OPTION_COMMAND, "short name, full name"},
+			{CLICOMMAND_LISTSOURCE ";ls", "0", OPTION_COMMAND, "driver sourcefile"},
+			{CLICOMMAND_LISTCLONES ";lc", "0", OPTION_COMMAND, "show clones"},
+			{CLICOMMAND_LISTBROTHERS ";lb", "0", OPTION_COMMAND, "show \"brothers\", or other drivers from same sourcefile"},
+			{CLICOMMAND_LISTCRC, "0", OPTION_COMMAND, "CRC-32s"},
+			{CLICOMMAND_LISTROMS ";lr", "0", OPTION_COMMAND, "list required ROMs for a driver"},
+			{CLICOMMAND_LISTSAMPLES, "0", OPTION_COMMAND, "list optional samples for a driver"},
+			{CLICOMMAND_VERIFYROMS, "0", OPTION_COMMAND, "report romsets that have problems"},
+			{CLICOMMAND_VERIFYSAMPLES, "0", OPTION_COMMAND, "report samplesets that have problems"},
+			{CLICOMMAND_ROMIDENT, "0", OPTION_COMMAND, "compare files with known MAME ROMs"},
+			{CLICOMMAND_LISTDEVICES ";ld", "0", OPTION_COMMAND, "list available devices"},
+			{CLICOMMAND_LISTSLOTS ";lslot", "0", OPTION_COMMAND, "list available slots and slot devices"},
+			{CLICOMMAND_LISTMEDIA ";lm", "0", OPTION_COMMAND, "list available media for the system"},
+			{CLICOMMAND_LISTSOFTWARE ";lsoft", "0", OPTION_COMMAND, "list known software for the system"},
+			{CLICOMMAND_VERIFYSOFTWARE ";vsoft", "0", OPTION_COMMAND, "verify known software for the system"},
+			{CLICOMMAND_GETSOFTLIST ";glist", "0", OPTION_COMMAND, "retrieve software list by name"},
+			{CLICOMMAND_VERIFYSOFTLIST ";vlist", "0", OPTION_COMMAND, "verify software list by name"},
+			{CLICOMMAND_STREAMINGSERVER, "0", OPTION_COMMAND, "start MAME streaming server"},
+			{CLICOMMAND_VERSION, "0", OPTION_COMMAND, "get MAME version"},
 
-		{nullptr, nullptr, OPTION_HEADER, "FRONTEND COMMAND OPTIONS"},
-		{CLIOPTION_DTD, "1", OPTION_BOOLEAN, "include DTD in XML output"},
-		{nullptr} };
+			{nullptr, nullptr, OPTION_HEADER, "FRONTEND COMMAND OPTIONS"},
+			{CLIOPTION_DTD, "1", OPTION_BOOLEAN, "include DTD in XML output"},
+			{nullptr}};
 
 	void print_summary(
 		const media_auditor &auditor, media_auditor::summary summary, bool record_none_needed,
@@ -152,25 +152,25 @@ namespace
 			// switch off of the result
 			switch (summary)
 			{
-				case media_auditor::INCORRECT:
-					osd_printf_info("is bad\n");
-					++incorrect;
-					return;
+			case media_auditor::INCORRECT:
+				osd_printf_info("is bad\n");
+				++incorrect;
+				return;
 
-				case media_auditor::CORRECT:
-					osd_printf_info("is good\n");
-					++correct;
-					return;
+			case media_auditor::CORRECT:
+				osd_printf_info("is good\n");
+				++correct;
+				return;
 
-				case media_auditor::BEST_AVAILABLE:
-				case media_auditor::NONE_NEEDED:
-					osd_printf_info("is best available\n");
-					++correct;
-					return;
+			case media_auditor::BEST_AVAILABLE:
+			case media_auditor::NONE_NEEDED:
+				osd_printf_info("is best available\n");
+				++correct;
+				return;
 
-				case media_auditor::NOTFOUND:
-					osd_printf_info("not found\n");
-					return;
+			case media_auditor::NOTFOUND:
+				osd_printf_info("not found\n");
+				return;
 			}
 			assert(false);
 			osd_printf_error("has unknown status (%u)\n", unsigned(summary));
@@ -187,7 +187,7 @@ namespace
 //  cli_frontend - constructor
 //-------------------------------------------------
 
-cli_frontend::cli_frontend(emu_options& options, osd_interface& osd)
+cli_frontend::cli_frontend(emu_options &options, osd_interface &osd)
 	: m_options(options), m_osd(osd), m_result(EMU_ERR_NONE)
 {
 	m_options.add_entries(cli_option_entries);
@@ -222,7 +222,8 @@ void cli_frontend::start_execution(mame_machine_manager *manager, const std::vec
 		// otherwise, error on the options
 		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "%s", ex.message());
 	}
-/* Rimettere
+
+	/* Rimettere
 	// determine the base name of the EXE
 	std::string_view exename = core_filename_extract_base(args[0], true);
 	
@@ -232,7 +233,7 @@ void cli_frontend::start_execution(mame_machine_manager *manager, const std::vec
 		execute_commands(exename);
 		return;
 	}
-*/
+	*/
 
 	// read INI's, if appropriate
 	if (m_options.read_config())
@@ -365,7 +366,7 @@ void cli_frontend::listfull(const std::vector<std::string> &args)
 	};
 	apply_action(
 		args,
-		[&list_system_name](driver_enumerator& drivlist, bool first) { list_system_name(drivlist.driver().type, first); },
+		[&list_system_name](driver_enumerator &drivlist, bool first) { list_system_name(drivlist.driver().type, first); },
 		[&list_system_name](device_type type, bool first) { list_system_name(type, first); });
 }
 
@@ -381,7 +382,7 @@ void cli_frontend::listsource(const std::vector<std::string> &args)
 	};
 	apply_action(
 		args,
-		[&list_system_source](driver_enumerator& drivlist, bool first) { list_system_source(drivlist.driver().type); },
+		[&list_system_source](driver_enumerator &drivlist, bool first) { list_system_source(drivlist.driver().type); },
 		[&list_system_source](device_type type, bool first) { list_system_source(type); });
 }
 
@@ -489,21 +490,21 @@ void cli_frontend::listcrc(const std::vector<std::string> &args)
 {
 	apply_device_action(
 		args,
-		[](device_t& root, char const* type, bool first) {
-		for (device_t const& device : device_enumerator(root))
-		{
-			for (tiny_rom_entry const* rom = device.rom_region(); rom && !ROMENTRY_ISEND(rom); ++rom)
+		[](device_t &root, char const *type, bool first) {
+			for (device_t const &device : device_enumerator(root))
 			{
-				if (ROMENTRY_ISFILE(rom))
+				for (tiny_rom_entry const *rom = device.rom_region(); rom && !ROMENTRY_ISEND(rom); ++rom)
 				{
-					// if we have a CRC, display it
-					uint32_t crc;
-					if (util::hash_collection(rom->hashdata).crc(crc))
-						osd_printf_info("%08x %-32s\t%-16s\t%s\n", crc, rom->name, device.shortname(), device.name());
+					if (ROMENTRY_ISFILE(rom))
+					{
+						// if we have a CRC, display it
+						uint32_t crc;
+						if (util::hash_collection(rom->hashdata).crc(crc))
+							osd_printf_info("%08x %-32s\t%-16s\t%s\n", crc, rom->name, device.shortname(), device.name());
+					}
 				}
 			}
-		}
-	});
+		});
 }
 
 //-------------------------------------------------
@@ -515,60 +516,60 @@ void cli_frontend::listroms(const std::vector<std::string> &args)
 {
 	apply_device_action(
 		args,
-		[](device_t& root, char const* type, bool first) {
-		// space between items
-		if (!first)
-			osd_printf_info("\n");
+		[](device_t &root, char const *type, bool first) {
+			// space between items
+			if (!first)
+				osd_printf_info("\n");
 
-		// iterate through ROMs
-		bool hasroms = false;
-		for (device_t const& device : device_enumerator(root))
-		{
-			for (const rom_entry* region = rom_first_region(device); region; region = rom_next_region(region))
+			// iterate through ROMs
+			bool hasroms = false;
+			for (device_t const &device : device_enumerator(root))
 			{
-				for (const rom_entry* rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+				for (const rom_entry *region = rom_first_region(device); region; region = rom_next_region(region))
 				{
-					// print a header
-					if (!hasroms)
-						osd_printf_info(
-							"ROMs required for %s \"%s\".\n"
-							"%-32s %10s %s\n",
-							type, root.shortname(), "Name", "Size", "Checksum");
-					hasroms = true;
-
-					// accumulate the total length of all chunks
-					int64_t length = -1;
-					if (ROMREGION_ISROMDATA(region))
-						length = rom_file_size(rom);
-
-					// start with the name
-					osd_printf_info("%-32s ", rom->name());
-
-					// output the length next
-					if (length >= 0)
-						osd_printf_info("%10u", unsigned(uint64_t(length)));
-					else
-						osd_printf_info("%10s", "");
-
-					// output the hash data
-					util::hash_collection hashes(rom->hashdata());
-					if (!hashes.flag(util::hash_collection::FLAG_NO_DUMP))
+					for (const rom_entry *rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
-						if (hashes.flag(util::hash_collection::FLAG_BAD_DUMP))
-							osd_printf_info(" BAD");
-						osd_printf_info(" %s", hashes.macro_string());
-					}
-					else
-						osd_printf_info(" NO GOOD DUMP KNOWN");
+						// print a header
+						if (!hasroms)
+							osd_printf_info(
+								"ROMs required for %s \"%s\".\n"
+								"%-32s %10s %s\n",
+								type, root.shortname(), "Name", "Size", "Checksum");
+						hasroms = true;
 
-					// end with a CR
-					osd_printf_info("\n");
+						// accumulate the total length of all chunks
+						int64_t length = -1;
+						if (ROMREGION_ISROMDATA(region))
+							length = rom_file_size(rom);
+
+						// start with the name
+						osd_printf_info("%-32s ", rom->name());
+
+						// output the length next
+						if (length >= 0)
+							osd_printf_info("%10u", unsigned(uint64_t(length)));
+						else
+							osd_printf_info("%10s", "");
+
+						// output the hash data
+						util::hash_collection hashes(rom->hashdata());
+						if (!hashes.flag(util::hash_collection::FLAG_NO_DUMP))
+						{
+							if (hashes.flag(util::hash_collection::FLAG_BAD_DUMP))
+								osd_printf_info(" BAD");
+							osd_printf_info(" %s", hashes.macro_string());
+						}
+						else
+							osd_printf_info(" NO GOOD DUMP KNOWN");
+
+						// end with a CR
+						osd_printf_info("\n");
+					}
 				}
 			}
-		}
-		if (!hasroms)
-			osd_printf_info("No ROMs required for %s \"%s\".\n", type, root.shortname());
-	});
+			if (!hasroms)
+				osd_printf_info("No ROMs required for %s \"%s\".\n", type, root.shortname());
+		});
 }
 
 //-------------------------------------------------
@@ -825,7 +826,7 @@ void cli_frontend::verifyroms(const std::vector<std::string> &args)
 	bool const iswild((1U != args.size()) || core_iswildstr(args[0].c_str()));
 	std::vector<bool> matched(args.size(), false);
 	unsigned matchcount = 0;
-	auto const included = [&args, &matched, &matchcount](char const* name) -> bool {
+	auto const included = [&args, &matched, &matchcount](char const *name) -> bool {
 		if (args.empty())
 		{
 			++matchcount;
@@ -993,62 +994,62 @@ void cli_frontend::verifysamples(const std::vector<std::string> &args)
 }
 
 const char cli_frontend::s_softlist_xml_dtd[] =
-"<?xml version=\"1.0\"?>\n"
-"<!DOCTYPE softwarelists [\n"
-"<!ELEMENT softwarelists (softwarelist*)>\n"
-"\t<!ELEMENT softwarelist (software+)>\n"
-"\t\t<!ATTLIST softwarelist name CDATA #REQUIRED>\n"
-"\t\t<!ATTLIST softwarelist description CDATA #IMPLIED>\n"
-"\t\t<!ELEMENT software (description, year, publisher, info*, sharedfeat*, part*)>\n"
-"\t\t\t<!ATTLIST software name CDATA #REQUIRED>\n"
-"\t\t\t<!ATTLIST software cloneof CDATA #IMPLIED>\n"
-"\t\t\t<!ATTLIST software supported (yes|partial|no) \"yes\">\n"
-"\t\t\t<!ELEMENT description (#PCDATA)>\n"
-"\t\t\t<!ELEMENT year (#PCDATA)>\n"
-"\t\t\t<!ELEMENT publisher (#PCDATA)>\n"
-"\t\t\t<!ELEMENT info EMPTY>\n"
-"\t\t\t\t<!ATTLIST info name CDATA #REQUIRED>\n"
-"\t\t\t\t<!ATTLIST info value CDATA #IMPLIED>\n"
-"\t\t\t<!ELEMENT sharedfeat EMPTY>\n"
-"\t\t\t\t<!ATTLIST sharedfeat name CDATA #REQUIRED>\n"
-"\t\t\t\t<!ATTLIST sharedfeat value CDATA #IMPLIED>\n"
-"\t\t\t<!ELEMENT part (feature*, dataarea*, diskarea*, dipswitch*)>\n"
-"\t\t\t\t<!ATTLIST part name CDATA #REQUIRED>\n"
-"\t\t\t\t<!ATTLIST part interface CDATA #REQUIRED>\n"
-"\t\t\t\t<!ELEMENT feature EMPTY>\n"
-"\t\t\t\t\t<!ATTLIST feature name CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ATTLIST feature value CDATA #IMPLIED>\n"
-"\t\t\t\t<!ELEMENT dataarea (rom*)>\n"
-"\t\t\t\t\t<!ATTLIST dataarea name CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ATTLIST dataarea size CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ATTLIST dataarea databits (8|16|32|64) \"8\">\n"
-"\t\t\t\t\t<!ATTLIST dataarea endian (big|little) \"little\">\n"
-"\t\t\t\t\t<!ELEMENT rom EMPTY>\n"
-"\t\t\t\t\t\t<!ATTLIST rom name CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom size CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom length CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom crc CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom sha1 CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom offset CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom value CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST rom status (baddump|nodump|good) \"good\">\n"
-"\t\t\t\t\t\t<!ATTLIST rom loadflag (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain) #IMPLIED>\n"
-"\t\t\t\t<!ELEMENT diskarea (disk*)>\n"
-"\t\t\t\t\t<!ATTLIST diskarea name CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ELEMENT disk EMPTY>\n"
-"\t\t\t\t\t\t<!ATTLIST disk name CDATA #REQUIRED>\n"
-"\t\t\t\t\t\t<!ATTLIST disk sha1 CDATA #IMPLIED>\n"
-"\t\t\t\t\t\t<!ATTLIST disk status (baddump|nodump|good) \"good\">\n"
-"\t\t\t\t\t\t<!ATTLIST disk writeable (yes|no) \"no\">\n"
-"\t\t\t\t<!ELEMENT dipswitch (dipvalue*)>\n"
-"\t\t\t\t\t<!ATTLIST dipswitch name CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ATTLIST dipswitch tag CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ATTLIST dipswitch mask CDATA #REQUIRED>\n"
-"\t\t\t\t\t<!ELEMENT dipvalue EMPTY>\n"
-"\t\t\t\t\t\t<!ATTLIST dipvalue name CDATA #REQUIRED>\n"
-"\t\t\t\t\t\t<!ATTLIST dipvalue value CDATA #REQUIRED>\n"
-"\t\t\t\t\t\t<!ATTLIST dipvalue default (yes|no) \"no\">\n"
-"]>\n\n";
+	"<?xml version=\"1.0\"?>\n"
+	"<!DOCTYPE softwarelists [\n"
+	"<!ELEMENT softwarelists (softwarelist*)>\n"
+	"\t<!ELEMENT softwarelist (software+)>\n"
+	"\t\t<!ATTLIST softwarelist name CDATA #REQUIRED>\n"
+	"\t\t<!ATTLIST softwarelist description CDATA #IMPLIED>\n"
+	"\t\t<!ELEMENT software (description, year, publisher, info*, sharedfeat*, part*)>\n"
+	"\t\t\t<!ATTLIST software name CDATA #REQUIRED>\n"
+	"\t\t\t<!ATTLIST software cloneof CDATA #IMPLIED>\n"
+	"\t\t\t<!ATTLIST software supported (yes|partial|no) \"yes\">\n"
+	"\t\t\t<!ELEMENT description (#PCDATA)>\n"
+	"\t\t\t<!ELEMENT year (#PCDATA)>\n"
+	"\t\t\t<!ELEMENT publisher (#PCDATA)>\n"
+	"\t\t\t<!ELEMENT info EMPTY>\n"
+	"\t\t\t\t<!ATTLIST info name CDATA #REQUIRED>\n"
+	"\t\t\t\t<!ATTLIST info value CDATA #IMPLIED>\n"
+	"\t\t\t<!ELEMENT sharedfeat EMPTY>\n"
+	"\t\t\t\t<!ATTLIST sharedfeat name CDATA #REQUIRED>\n"
+	"\t\t\t\t<!ATTLIST sharedfeat value CDATA #IMPLIED>\n"
+	"\t\t\t<!ELEMENT part (feature*, dataarea*, diskarea*, dipswitch*)>\n"
+	"\t\t\t\t<!ATTLIST part name CDATA #REQUIRED>\n"
+	"\t\t\t\t<!ATTLIST part interface CDATA #REQUIRED>\n"
+	"\t\t\t\t<!ELEMENT feature EMPTY>\n"
+	"\t\t\t\t\t<!ATTLIST feature name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ATTLIST feature value CDATA #IMPLIED>\n"
+	"\t\t\t\t<!ELEMENT dataarea (rom*)>\n"
+	"\t\t\t\t\t<!ATTLIST dataarea name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ATTLIST dataarea size CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ATTLIST dataarea databits (8|16|32|64) \"8\">\n"
+	"\t\t\t\t\t<!ATTLIST dataarea endian (big|little) \"little\">\n"
+	"\t\t\t\t\t<!ELEMENT rom EMPTY>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom name CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom size CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom length CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom crc CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom sha1 CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom offset CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom value CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST rom status (baddump|nodump|good) \"good\">\n"
+	"\t\t\t\t\t\t<!ATTLIST rom loadflag (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain) #IMPLIED>\n"
+	"\t\t\t\t<!ELEMENT diskarea (disk*)>\n"
+	"\t\t\t\t\t<!ATTLIST diskarea name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ELEMENT disk EMPTY>\n"
+	"\t\t\t\t\t\t<!ATTLIST disk name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t\t<!ATTLIST disk sha1 CDATA #IMPLIED>\n"
+	"\t\t\t\t\t\t<!ATTLIST disk status (baddump|nodump|good) \"good\">\n"
+	"\t\t\t\t\t\t<!ATTLIST disk writeable (yes|no) \"no\">\n"
+	"\t\t\t\t<!ELEMENT dipswitch (dipvalue*)>\n"
+	"\t\t\t\t\t<!ATTLIST dipswitch name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ATTLIST dipswitch tag CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ATTLIST dipswitch mask CDATA #REQUIRED>\n"
+	"\t\t\t\t\t<!ELEMENT dipvalue EMPTY>\n"
+	"\t\t\t\t\t\t<!ATTLIST dipvalue name CDATA #REQUIRED>\n"
+	"\t\t\t\t\t\t<!ATTLIST dipvalue value CDATA #REQUIRED>\n"
+	"\t\t\t\t\t\t<!ATTLIST dipvalue default (yes|no) \"no\">\n"
+	"]>\n\n";
 
 void cli_frontend::output_single_softlist(std::ostream &out, software_list_device &swlistdev)
 {
@@ -1179,25 +1180,25 @@ void cli_frontend::listsoftware(const std::vector<std::string> &args)
 	bool firstlist(true);
 	apply_device_action(
 		args,
-		[this, &list_map, &firstlist](device_t& root, char const* type, bool first) {
-		for (software_list_device& swlistdev : software_list_device_enumerator(root))
-		{
-			if (list_map.insert(swlistdev.list_name()).second)
+		[this, &list_map, &firstlist](device_t &root, char const *type, bool first) {
+			for (software_list_device &swlistdev : software_list_device_enumerator(root))
 			{
-				if (!swlistdev.get_info().empty())
+				if (list_map.insert(swlistdev.list_name()).second)
 				{
-					if (firstlist)
+					if (!swlistdev.get_info().empty())
 					{
-						if (m_options.bool_value(CLIOPTION_DTD))
-							std::cout << s_softlist_xml_dtd;
-						std::cout << "<softwarelists>\n";
-						firstlist = false;
+						if (firstlist)
+						{
+							if (m_options.bool_value(CLIOPTION_DTD))
+								std::cout << s_softlist_xml_dtd;
+							std::cout << "<softwarelists>\n";
+							firstlist = false;
+						}
+						output_single_softlist(std::cout, swlistdev);
 					}
-					output_single_softlist(std::cout, swlistdev);
 				}
 			}
-		}
-	});
+		});
 
 	if (!firstlist)
 		std::cout << "</softwarelists>\n";
@@ -1290,25 +1291,25 @@ void cli_frontend::getsoftlist(const std::vector<std::string> &args)
 	bool firstlist(true);
 	apply_device_action(
 		std::vector<std::string>(),
-		[this, gamename, &list_map, &firstlist](device_t& root, char const* type, bool first) {
-		for (software_list_device& swlistdev : software_list_device_enumerator(root))
-		{
-			if (core_strwildcmp(gamename, swlistdev.list_name().c_str()) == 0 && list_map.insert(swlistdev.list_name()).second)
+		[this, gamename, &list_map, &firstlist](device_t &root, char const *type, bool first) {
+			for (software_list_device &swlistdev : software_list_device_enumerator(root))
 			{
-				if (!swlistdev.get_info().empty())
+				if (core_strwildcmp(gamename, swlistdev.list_name().c_str()) == 0 && list_map.insert(swlistdev.list_name()).second)
 				{
-					if (firstlist)
+					if (!swlistdev.get_info().empty())
 					{
-						if (m_options.bool_value(CLIOPTION_DTD))
-							std::cout << s_softlist_xml_dtd;
-						std::cout << "<softwarelists>\n";
-						firstlist = false;
+						if (firstlist)
+						{
+							if (m_options.bool_value(CLIOPTION_DTD))
+								std::cout << s_softlist_xml_dtd;
+							std::cout << "<softwarelists>\n";
+							firstlist = false;
+						}
+						output_single_softlist(std::cout, swlistdev);
 					}
-					output_single_softlist(std::cout, swlistdev);
 				}
 			}
-		}
-	});
+		});
 
 	if (!firstlist)
 		std::cout << "</softwarelists>\n";
@@ -1435,12 +1436,12 @@ void cli_frontend::romident(const std::vector<std::string> &args)
 //-------------------------------------------------
 
 template <typename T, typename U>
-void cli_frontend::apply_action(const std::vector<std::string>& args, T&& drvact, U&& devact)
+void cli_frontend::apply_action(const std::vector<std::string> &args, T &&drvact, U &&devact)
 
 {
 	bool const iswild((1U != args.size()) || core_iswildstr(args[0].c_str()));
 	std::vector<bool> matched(args.size(), false);
-	auto const included = [&args, &matched](char const* name) -> bool {
+	auto const included = [&args, &matched](char const *name) -> bool {
 		if (args.empty())
 			return true;
 
@@ -1509,20 +1510,20 @@ void cli_frontend::apply_action(const std::vector<std::string>& args, T&& drvact
 //-------------------------------------------------
 
 template <typename T>
-void cli_frontend::apply_device_action(const std::vector<std::string>& args, T&& action)
+void cli_frontend::apply_device_action(const std::vector<std::string> &args, T &&action)
 {
 	machine_config config(GAME_NAME(___empty), m_options);
 	machine_config::token const tok(config.begin_configuration(config.root_device()));
 	apply_action(
 		args,
-		[&action](driver_enumerator& drivlist, bool first) {
-		action(drivlist.config()->root_device(), "driver", first);
-	},
+		[&action](driver_enumerator &drivlist, bool first) {
+			action(drivlist.config()->root_device(), "driver", first);
+		},
 		[&action, &config](device_type type, bool first) {
-		device_t* const dev = config.device_add("_tmp", type, 0);
-		action(*dev, "device", first);
-		config.device_remove("_tmp");
-	});
+			device_t *const dev = config.device_add("_tmp", type, 0);
+			action(*dev, "device", first);
+			config.device_remove("_tmp");
+		});
 }
 
 //-------------------------------------------------
@@ -1532,27 +1533,27 @@ void cli_frontend::apply_device_action(const std::vector<std::string>& args, T&&
 const cli_frontend::info_command_struct *cli_frontend::find_command(const std::string &s)
 {
 	static const info_command_struct s_info_commands[] =
-	{
-		{CLICOMMAND_LISTXML, 0, -1, &cli_frontend::listxml, "[pattern] ..."},
-		{CLICOMMAND_LISTFULL, 0, -1, &cli_frontend::listfull, "[pattern] ..."},
-		{CLICOMMAND_LISTSOURCE, 0, -1, &cli_frontend::listsource, "[system name]"},
-		{CLICOMMAND_LISTCLONES, 0, 1, &cli_frontend::listclones, "[system name]"},
-		{CLICOMMAND_LISTBROTHERS, 0, 1, &cli_frontend::listbrothers, "[system name]"},
-		{CLICOMMAND_LISTCRC, 0, -1, &cli_frontend::listcrc, "[system name]"},
-		{CLICOMMAND_LISTDEVICES, 0, 1, &cli_frontend::listdevices, "[system name]"},
-		{CLICOMMAND_LISTSLOTS, 0, 1, &cli_frontend::listslots, "[system name]"},
-		{CLICOMMAND_LISTROMS, 0, -1, &cli_frontend::listroms, "[pattern] ..."},
-		{CLICOMMAND_LISTSAMPLES, 0, 1, &cli_frontend::listsamples, "[system name]"},
-		{CLICOMMAND_VERIFYROMS, 0, -1, &cli_frontend::verifyroms, "[pattern] ..."},
-		{CLICOMMAND_VERIFYSAMPLES, 0, 1, &cli_frontend::verifysamples, "[system name|*]"},
-		{CLICOMMAND_LISTMEDIA, 0, 1, &cli_frontend::listmedia, "[system name]"},
-		{CLICOMMAND_LISTSOFTWARE, 0, 1, &cli_frontend::listsoftware, "[system name]"},
-		{CLICOMMAND_VERIFYSOFTWARE, 0, 1, &cli_frontend::verifysoftware, "[system name|*]"},
-		{CLICOMMAND_ROMIDENT, 1, 1, &cli_frontend::romident, "(file or directory path)"},
-		{CLICOMMAND_GETSOFTLIST, 0, 1, &cli_frontend::getsoftlist, "[system name|*]"},
-		{CLICOMMAND_VERIFYSOFTLIST, 0, 1, &cli_frontend::verifysoftlist, "[system name|*]"},
-		{CLICOMMAND_STREAMINGSERVER, 0, 0, &cli_frontend::streamingserver, ""},
-		{CLICOMMAND_VERSION, 0, 0, &cli_frontend::version, ""} };
+		{
+			{CLICOMMAND_LISTXML, 0, -1, &cli_frontend::listxml, "[pattern] ..."},
+			{CLICOMMAND_LISTFULL, 0, -1, &cli_frontend::listfull, "[pattern] ..."},
+			{CLICOMMAND_LISTSOURCE, 0, -1, &cli_frontend::listsource, "[system name]"},
+			{CLICOMMAND_LISTCLONES, 0, 1, &cli_frontend::listclones, "[system name]"},
+			{CLICOMMAND_LISTBROTHERS, 0, 1, &cli_frontend::listbrothers, "[system name]"},
+			{CLICOMMAND_LISTCRC, 0, -1, &cli_frontend::listcrc, "[system name]"},
+			{CLICOMMAND_LISTDEVICES, 0, 1, &cli_frontend::listdevices, "[system name]"},
+			{CLICOMMAND_LISTSLOTS, 0, 1, &cli_frontend::listslots, "[system name]"},
+			{CLICOMMAND_LISTROMS, 0, -1, &cli_frontend::listroms, "[pattern] ..."},
+			{CLICOMMAND_LISTSAMPLES, 0, 1, &cli_frontend::listsamples, "[system name]"},
+			{CLICOMMAND_VERIFYROMS, 0, -1, &cli_frontend::verifyroms, "[pattern] ..."},
+			{CLICOMMAND_VERIFYSAMPLES, 0, 1, &cli_frontend::verifysamples, "[system name|*]"},
+			{CLICOMMAND_LISTMEDIA, 0, 1, &cli_frontend::listmedia, "[system name]"},
+			{CLICOMMAND_LISTSOFTWARE, 0, 1, &cli_frontend::listsoftware, "[system name]"},
+			{CLICOMMAND_VERIFYSOFTWARE, 0, 1, &cli_frontend::verifysoftware, "[system name|*]"},
+			{CLICOMMAND_ROMIDENT, 1, 1, &cli_frontend::romident, "(file or directory path)"},
+			{CLICOMMAND_GETSOFTLIST, 0, 1, &cli_frontend::getsoftlist, "[system name|*]"},
+			{CLICOMMAND_VERIFYSOFTLIST, 0, 1, &cli_frontend::verifysoftlist, "[system name|*]"},
+			{CLICOMMAND_STREAMINGSERVER, 0, 0, &cli_frontend::streamingserver, ""},
+			{CLICOMMAND_VERSION, 0, 0, &cli_frontend::version, ""}};
 
 	for (const auto &info_command : s_info_commands)
 	{

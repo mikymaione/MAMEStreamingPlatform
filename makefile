@@ -64,6 +64,7 @@
 
 # USE_SYSTEM_LIB_ASIO = 1
 # USE_SYSTEM_LIB_EXPAT = 1
+# USE_SYSTEM_LIB_FFMPEG = 1
 # USE_SYSTEM_LIB_ZLIB = 1
 # USE_SYSTEM_LIB_JPEG = 1
 # USE_SYSTEM_LIB_FLAC = 1
@@ -501,6 +502,10 @@ ifdef USE_SYSTEM_LIB_EXPAT
 PARAMS += --with-system-expat='$(USE_SYSTEM_LIB_EXPAT)'
 endif
 
+ifdef USE_SYSTEM_LIB_FFMPEG
+PARAMS += --with-system-ffmpeg='$(USE_SYSTEM_LIB_FFMPEG)'
+endif
+
 ifdef USE_SYSTEM_LIB_ZLIB
 PARAMS += --with-system-zlib='$(USE_SYSTEM_LIB_ZLIB)'
 endif
@@ -897,6 +902,7 @@ endif
 
 
 SCRIPTS = scripts/genie.lua \
+	scripts/src/streaming.lua \
 	scripts/src/lib.lua \
 	scripts/src/emu.lua \
 	scripts/src/machine.lua \

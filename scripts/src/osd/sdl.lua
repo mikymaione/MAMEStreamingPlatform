@@ -369,7 +369,9 @@ project ("osd_" .. _OPTIONS["osd"])
 	uuid (os.uuid("osd_" .. _OPTIONS["osd"]))
 	kind (LIBTYPE)
 
+	dofile("../streaming.lua")
 	dofile("sdl_cfg.lua")
+
 	osdmodulesbuild()
 
 	includedirs {
@@ -444,15 +446,16 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "src/osd/modules/render/drawsdl.cpp",
 	}
 	
+	-- SDL render from memory to jpg
 	includedirs {
 		MAME_DIR .. "src/osd/modules/render/sdl/",		
-	}
-
+	}	
 	files {
 		MAME_DIR .. "src/osd/modules/render/sdl/IMG_saveend.h",
 		MAME_DIR .. "src/osd/modules/render/sdl/IMG_savejpg.h",
 		MAME_DIR .. "src/osd/modules/render/sdl/IMG_savejpg.c",
-	}	
+	}
+
 	files {		
 		MAME_DIR .. "src/osd/modules/render/draw13.cpp",
 		MAME_DIR .. "src/osd/modules/render/blit13.h",

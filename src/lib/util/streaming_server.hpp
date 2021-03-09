@@ -19,7 +19,7 @@
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
-
+#include "encoding/encode_to_mp4.h"
 
 namespace webpp
 {
@@ -29,6 +29,8 @@ namespace webpp
 		bool active = true;
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
+
+		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
 
 		size_t append_count_send = 5;
 		size_t append_count = 0;
@@ -40,12 +42,11 @@ namespace webpp
 	private:
 		streaming_server() = default;
 		~streaming_server() = default;
-		streaming_server(const streaming_server&) = delete;
-		streaming_server& operator=(const streaming_server&) = delete;
-
+		streaming_server(const streaming_server &) = delete;
+		streaming_server &operator=(const streaming_server &) = delete;
 
 	public:
-		static streaming_server& get()
+		static streaming_server &get()
 		{
 			static streaming_server instance;
 			return instance;
@@ -63,7 +64,7 @@ namespace webpp
 				server->send(c, stream, nullptr, fin_rsv_opcode);
 		}
 
-		void send_string(const std::string& msg)
+		void send_string(const std::string &msg)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 			*stream << msg;
@@ -71,7 +72,7 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_binary(char* b, std::streamsize len)
+		void send_binary(char *b, std::streamsize len)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 			stream->write(b, len);
@@ -79,8 +80,10 @@ namespace webpp
 			send(stream, 130);
 		}
 
-		void append_binary(char* b, std::streamsize len)
+		void append_binary(char *b, std::streamsize len)
 		{
+			encoder->encode_frame();
+
 			append_stream->write(b, len);
 
 			append_count++;
@@ -100,7 +103,7 @@ namespace webpp
 			server->config.client_mode = true;
 			server->config.port = port;
 
-			auto& endpoint = server->m_endpoint["/"];
+			auto &endpoint = server->m_endpoint["/"];
 
 			endpoint.on_open = [&](auto connection) {
 				std::cout
