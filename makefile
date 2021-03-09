@@ -902,7 +902,6 @@ endif
 
 
 SCRIPTS = scripts/genie.lua \
-	scripts/src/streaming.lua \
 	scripts/src/lib.lua \
 	scripts/src/emu.lua \
 	scripts/src/machine.lua \
