@@ -49,7 +49,7 @@ namespace encoding
 				}
 
 				printf("encoded frame %3" PRId64 " (size=%5d)\n", pkt->pts, pkt->size);
-				fwrite(pkt->data, 1, pkt->size, buffer);
+				//fwrite(pkt->data, 1, pkt->size, buffer);
 				av_packet_unref(pkt);
 			}
 		}
@@ -57,8 +57,9 @@ namespace encoding
 	public:
 		void encode_frame()
 		{
+			avcodec_register_all();
+
 			/* find the H.264 encoder */
-			avcodec_register(AV_CODEC_ID_H264);
 			const AVCodec *codec = avcodec_find_encoder(AV_CODEC_ID_H264);
 			if (!codec)
 			{
@@ -138,7 +139,7 @@ namespace encoding
 
 			/* add sequence end code to have a real MPEG file */
 			uint8_t endcode[] = {0, 0, 1, 0xb7};
-			fwrite(endcode, 1, sizeof(endcode), f);
+			//fwrite(endcode, 1, sizeof(endcode), f);
 
 			avcodec_free_context(&c);
 			av_frame_free(&picture);

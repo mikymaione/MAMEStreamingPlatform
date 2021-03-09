@@ -370,21 +370,20 @@ project ("osd_" .. _OPTIONS["osd"])
 	kind (LIBTYPE)
 	
 	dofile("sdl_cfg.lua")	
-	--dofile("../streaming.lua")
-
+	
 	osdmodulesbuild()
 
 	includedirs {
 		MAME_DIR .. "src/emu",
 		MAME_DIR .. "src/devices", -- accessing imagedev from debugger
 		MAME_DIR .. "src/osd",
+		MAME_DIR .. "src/osd/sdl",
 		MAME_DIR .. "src/lib",
 		MAME_DIR .. "src/lib/util",
 		MAME_DIR .. "src/osd/modules/file",
 		MAME_DIR .. "src/osd/modules/render",
 		MAME_DIR .. "3rdparty",
-		MAME_DIR .. "src/osd/sdl",
-	}
+	}	
 
 	if _OPTIONS["targetos"]=="windows" then
 		files {
@@ -445,6 +444,11 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "src/osd/modules/osdwindow.h",
 		MAME_DIR .. "src/osd/modules/render/drawsdl.cpp",
 	}	
+	
+	-- audio-video compression
+	includedirs {
+		MAME_DIR .. "3rdparty/ffmpeg",
+	}
 
 	-- SDL render from memory to jpg
 	includedirs {
@@ -459,7 +463,7 @@ project ("osd_" .. _OPTIONS["osd"])
 	files {		
 		MAME_DIR .. "src/osd/modules/render/draw13.cpp",
 		MAME_DIR .. "src/osd/modules/render/blit13.h",
-	}	
+	}
 
 
 project ("ocore_" .. _OPTIONS["osd"])

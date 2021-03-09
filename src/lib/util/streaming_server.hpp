@@ -19,7 +19,7 @@
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
-//#include "encoding/encode_to_mp4.h"
+#include "encoding/encode_to_mp4.h"
 
 namespace webpp
 {
