@@ -19,7 +19,7 @@
 
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
-#include "encoding/encode_to_mp4.h"
+//#include "encoding/encode_to_mp4.h"
 
 namespace webpp
 {
@@ -30,7 +30,7 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
+		//std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
 
 		size_t append_count_send = 5;
 		size_t append_count = 0;
@@ -82,7 +82,7 @@ namespace webpp
 
 		void append_binary(char *b, std::streamsize len)
 		{
-			encoder->encode_frame();
+			//encoder->encode_frame();
 
 			append_stream->write(b, len);
 

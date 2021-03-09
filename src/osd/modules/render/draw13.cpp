@@ -774,7 +774,7 @@ int renderer_sdl2::draw(int update)
 	if (webpp::streaming_server::get().isActive())
 	{
 		//IMG_SaveJPG_RW(m_sdl_buffer, m_sdl_surface, 70);
-		SDL_SaveBMP_RW(m_sdl_buffer, m_sdl_surface, 70);
+		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
 
 		if (memcmp(m_sdl_buffer_bytes, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
 		{

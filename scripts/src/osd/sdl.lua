@@ -368,9 +368,9 @@ project ("osd_" .. _OPTIONS["osd"])
 	targetsubdir(_OPTIONS["target"] .."_" .._OPTIONS["subtarget"])
 	uuid (os.uuid("osd_" .. _OPTIONS["osd"]))
 	kind (LIBTYPE)
-
-	dofile("../streaming.lua")
-	dofile("sdl_cfg.lua")
+	
+	dofile("sdl_cfg.lua")	
+	--dofile("../streaming.lua")
 
 	osdmodulesbuild()
 
@@ -444,8 +444,8 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "src/osd/modules/osdwindow.cpp",
 		MAME_DIR .. "src/osd/modules/osdwindow.h",
 		MAME_DIR .. "src/osd/modules/render/drawsdl.cpp",
-	}
-	
+	}	
+
 	-- SDL render from memory to jpg
 	includedirs {
 		MAME_DIR .. "src/osd/modules/render/sdl/",		

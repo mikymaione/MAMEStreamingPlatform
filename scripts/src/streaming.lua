@@ -18,17 +18,17 @@ project "streaming"
 		ext_lib("libavutil"),
 	}
 
-	addprojectflags()
+	--addprojectflags()
 
-	includedirs {
-		MAME_DIR .. "3rdparty",
-		ext_includedir("ffmpeg"),
-	}
+	--includedirs {
+	--	MAME_DIR .. "3rdparty",
+	--	ext_includedir("ffmpeg"),
+	--}
 
-	includedirs {		
-		MAME_DIR .. "src/lib/util",
-		MAME_DIR .. "src/lib/util/encoding/",		
-	}
+	--includedirs {		
+	--	MAME_DIR .. "src/lib/util",
+	--	MAME_DIR .. "src/lib/util/encoding/",		
+	--}
 	
 	files {
 		MAME_DIR .. "src/lib/util/streaming_server.hpp",
