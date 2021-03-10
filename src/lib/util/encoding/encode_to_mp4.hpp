@@ -27,7 +27,7 @@ namespace encoding
 	class encode_to_mp4
 	{
 	private:
-		const int frame_per_seconds = 15;
+		const int frame_per_seconds = 30;
 
 		//AVCodec ff_h264_encoder;
 
@@ -87,11 +87,12 @@ namespace encoding
 			if (!pkt)
 				exit(1);
 
-			/* put sample parameters */
-			c->bit_rate = 8 * 2; // 2KB
 			/* resolution must be a multiple of two */
-			c->width = 352;
-			c->height = 288;
+			// 360p
+			c->width = 480;
+			c->height = 360;
+			c->bit_rate = 770000; //0.77 Mb/s
+
 			/* frames per second */
 			c->time_base = { 1, frame_per_seconds };
 			c->framerate = { frame_per_seconds, 1 };
