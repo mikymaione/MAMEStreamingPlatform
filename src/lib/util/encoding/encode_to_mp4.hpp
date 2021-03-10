@@ -31,12 +31,12 @@ namespace encoding
 
 		//AVCodec ff_h264_encoder;
 
-		AVFrame *picture;
-		AVCodecContext *c;
-		AVPacket *pkt;
+		AVFrame* picture;
+		AVCodecContext* c;
+		AVPacket* pkt;
 
 	private:
-		void encode(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt, std::shared_ptr<std::ostream> append_stream)
+		void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt, std::shared_ptr<std::ostream> append_stream)
 		{
 			/* send the frame to the encoder */
 			int ret = avcodec_send_frame(enc_ctx, frame);
@@ -61,7 +61,7 @@ namespace encoding
 				}
 
 				//fwrite(pkt->data, 1, pkt->size, dest);
-				append_stream->write((const char *)pkt->data, pkt->size);
+				append_stream->write((const char*)pkt->data, pkt->size);
 
 				av_packet_unref(pkt);
 			}
@@ -74,7 +74,7 @@ namespace encoding
 			avcodec_register_all();
 
 			/* find the H.264 encoder */
-			const AVCodec *codec = avcodec_find_encoder(AV_CODEC_ID_H264);
+			const AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_H264);
 			if (!codec)
 			{
 				fprintf(stderr, "codec not found\n");
@@ -93,10 +93,10 @@ namespace encoding
 			c->width = 352;
 			c->height = 288;
 			/* frames per second */
-			c->time_base = (AVRational){1, frame_per_seconds};
-			c->framerate = (AVRational){frame_per_seconds, 1};
+			c->time_base = { 1, frame_per_seconds };
+			c->framerate = { frame_per_seconds, 1 };
 
-			c->pix_fmt = AV_PIX_FMT_YUV420P;			
+			c->pix_fmt = AV_PIX_FMT_YUV420P;
 
 			/* open it */
 			if (avcodec_open2(c, codec, NULL) < 0)
@@ -123,17 +123,17 @@ namespace encoding
 			encode(c, NULL, pkt, append_stream);
 
 			/* add sequence end code to have a real MPEG file */
-			uint8_t endcode[] = {0, 0, 1, 0xb7};
+			uint8_t endcode[] = { 0, 0, 1, 0xb7 };
 
 			//fwrite(endcode, 1, sizeof(endcode), f);
-			append_stream->write((const char *)endcode, sizeof(endcode));
+			append_stream->write((const char*)endcode, sizeof(endcode));
 
 			avcodec_free_context(&c);
 			av_frame_free(&picture);
 			av_packet_free(&pkt);
 		}
 
-		void encode_frame(int64_t n_frame, SDL_Surface *surf, std::shared_ptr<std::ostream> append_stream)
+		void encode_frame(int64_t n_frame, SDL_Surface* surf, std::shared_ptr<std::ostream> append_stream)
 		{
 			fflush(stdout);
 
@@ -142,7 +142,7 @@ namespace encoding
 			if (ret < 0)
 				exit(1);
 
-			Uint8 *pixel = (Uint8 *)surf->pixels;
+			Uint8* pixel = (Uint8*)surf->pixels;
 			Uint8 val;
 
 			for (int y = 0; y < surf->h; y++)

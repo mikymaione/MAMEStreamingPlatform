@@ -56,7 +56,7 @@
       <UniqueIdentifier>{CE9C9308-3A52-0CFE-C346-06D52FFB0202}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\osd\modules\render\sdl">
-      <UniqueIdentifier>{1a9f8d01-15df-4eff-9a63-ca9fa1c09e1f}</UniqueIdentifier>
+      <UniqueIdentifier>{BF64CE7C-AB74-7A4D-142E-DF6B005D69E6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,14 +267,14 @@
     <ClInclude Include="..\..\..\..\..\src\osd\modules\osdwindow.h">
       <Filter>src\osd\modules</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\blit13.h">
-      <Filter>src\osd\modules\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_saveend.h">
       <Filter>src\osd\modules\render\sdl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_savejpg.h">
       <Filter>src\osd\modules\render\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\osd\modules\render\blit13.h">
+      <Filter>src\osd\modules\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -578,11 +578,11 @@
     <ClCompile Include="..\..\..\..\..\src\osd\modules\render\drawsdl.cpp">
       <Filter>src\osd\modules\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\draw13.cpp">
-      <Filter>src\osd\modules\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\src\osd\modules\render\sdl\IMG_savejpg.c">
       <Filter>src\osd\modules\render\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\render\draw13.cpp">
+      <Filter>src\osd\modules\render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
