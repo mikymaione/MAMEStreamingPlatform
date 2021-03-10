@@ -97,15 +97,13 @@ end
 -- ffmpeg library objects
 --------------------------------------------------
 
-if _OPTIONS["with-system-ffmpeg"] then	
+if not _OPTIONS["with-system-ffmpeg"] then
+
+else
 	-- audio-video compression	
-	links {		
+	links {
 		ext_lib("avcodec"),
 		ext_lib("avutil"),
-		ext_lib("avformat"),
-		ext_lib("avresample"),
-		ext_lib("swscale"),
-		ext_lib("m"),
 	}
 end
 

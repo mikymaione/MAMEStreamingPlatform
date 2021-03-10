@@ -718,6 +718,16 @@ if not _OPTIONS["with-system-flac"]~=nil then
 	}
 end
 
+if not _OPTIONS["with-system-ffmpeg"] then
+
+else
+	-- audio-video compression	
+	links {
+		ext_lib("avcodec"),
+		ext_lib("avutil"),
+	}
+end
+
 if not _OPTIONS["with-system-pugixml"] then
 	defines {
 		"PUGIXML_HEADER_ONLY",

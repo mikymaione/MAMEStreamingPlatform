@@ -450,6 +450,11 @@ project ("osd_" .. _OPTIONS["osd"])
 		MAME_DIR .. "3rdparty/ffmpeg",
 	}
 
+	links {
+		ext_lib("avcodec"),
+		ext_lib("avutil"),
+	}
+
 	-- SDL render from memory to jpg
 	includedirs {
 		MAME_DIR .. "src/osd/modules/render/sdl/",		
