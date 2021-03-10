@@ -5,16 +5,22 @@
 //  encode_to_mp4.h - Encoding to MP4 (H.264 + AAC) (aka DinoEncoding 🦕🧡🦖)
 //
 //============================================================
-
 #pragma once
 
-#ifndef SRC_ENCODETOMP4_H
-#define SRC_ENCODETOMP4_H
+#include <memory>
+#include <ostream>
 
+// standard SDL headers
+#include <SDL2/SDL.h>
+
+// FFMPEG C headers
+extern "C"
+{
 #include "libavcodec/avcodec.h"
 
 #include "libavutil/frame.h"
 #include "libavutil/imgutils.h"
+}
 
 namespace encoding
 {
@@ -23,8 +29,14 @@ namespace encoding
 	private:
 		const int frame_per_seconds = 15;
 
+		//AVCodec ff_h264_encoder;
+
+		AVFrame *picture;
+		AVCodecContext *c;
+		AVPacket *pkt;
+
 	private:
-		void encode(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt, char *buffer)
+		void encode(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt, std::shared_ptr<std::ostream> append_stream)
 		{
 			/* send the frame to the encoder */
 			int ret = avcodec_send_frame(enc_ctx, frame);
@@ -48,15 +60,17 @@ namespace encoding
 					exit(1);
 				}
 
-				printf("encoded frame %3" PRId64 " (size=%5d)\n", pkt->pts, pkt->size);
-				//fwrite(pkt->data, 1, pkt->size, buffer);
+				//fwrite(pkt->data, 1, pkt->size, dest);
+				append_stream->write((const char *)pkt->data, pkt->size);
+
 				av_packet_unref(pkt);
 			}
 		}
 
 	public:
-		void encode_frame()
+		encode_to_mp4()
 		{
+			//avcodec_register(&ff_h264_encoder);
 			avcodec_register_all();
 
 			/* find the H.264 encoder */
@@ -67,9 +81,9 @@ namespace encoding
 				exit(1);
 			}
 
-			AVCodecContext *c = avcodec_alloc_context3(codec);
-			AVFrame *picture = av_frame_alloc();
-			AVPacket *pkt = av_packet_alloc();
+			c = avcodec_alloc_context3(codec);
+			picture = av_frame_alloc();
+			pkt = av_packet_alloc();
 			if (!pkt)
 				exit(1);
 
@@ -82,7 +96,7 @@ namespace encoding
 			c->time_base = (AVRational){1, frame_per_seconds};
 			c->framerate = (AVRational){frame_per_seconds, 1};
 
-			c->pix_fmt = AV_PIX_FMT_YUV420P;
+			c->pix_fmt = AV_PIX_FMT_YUV420P;			
 
 			/* open it */
 			if (avcodec_open2(c, codec, NULL) < 0)
@@ -101,51 +115,59 @@ namespace encoding
 				fprintf(stderr, "could not alloc the frame data\n");
 				exit(1);
 			}
+		}
 
-			char *f;
-
-			/* encode 1 second of video */
-			for (int i = 0; i < frame_per_seconds; i++)
-			{
-				fflush(stdout);
-
-				/* make sure the frame data is writable */
-				ret = av_frame_make_writable(picture);
-				if (ret < 0)
-					exit(1);
-
-				/* prepare a dummy image */
-				/* Y */
-				for (int y = 0; y < c->height; y++)
-					for (int x = 0; x < c->width; x++)
-						picture->data[0][y * picture->linesize[0] + x] = x + y + i * 3;
-
-				/* Cb and Cr */
-				for (int y = 0; y < c->height / 2; y++)
-					for (int x = 0; x < c->width / 2; x++)
-					{
-						picture->data[1][y * picture->linesize[1] + x] = 128 + y + i * 2;
-						picture->data[2][y * picture->linesize[2] + x] = 64 + x + i * 5;
-					}
-
-				picture->pts = i;
-
-				/* encode the image */
-				encode(c, picture, pkt, f);
-			}
-
+		void stop(std::shared_ptr<std::ostream> append_stream)
+		{
 			/* flush the encoder */
-			encode(c, NULL, pkt, f);
+			encode(c, NULL, pkt, append_stream);
 
 			/* add sequence end code to have a real MPEG file */
 			uint8_t endcode[] = {0, 0, 1, 0xb7};
+
 			//fwrite(endcode, 1, sizeof(endcode), f);
+			append_stream->write((const char *)endcode, sizeof(endcode));
 
 			avcodec_free_context(&c);
 			av_frame_free(&picture);
 			av_packet_free(&pkt);
 		}
+
+		void encode_frame(int64_t n_frame, SDL_Surface *surf, std::shared_ptr<std::ostream> append_stream)
+		{
+			fflush(stdout);
+
+			/* make sure the frame data is writable */
+			int ret = av_frame_make_writable(picture);
+			if (ret < 0)
+				exit(1);
+
+			Uint8 *pixel = (Uint8 *)surf->pixels;
+			Uint8 val;
+
+			for (int y = 0; y < surf->h; y++)
+				for (int x = 0; x < surf->w; x++)
+				{
+					// R
+					val = *pixel;
+					picture->data[0][y * picture->linesize[0] + x] = val;
+					pixel++;
+
+					// G
+					val = *pixel;
+					picture->data[1][y * picture->linesize[1] + x] = val;
+					pixel++;
+
+					// B
+					val = *pixel;
+					picture->data[2][y * picture->linesize[2] + x] = val;
+					pixel++;
+				}
+
+			picture->pts = n_frame;
+
+			/* encode the image */
+			encode(c, picture, pkt, append_stream);
+		}
 	};
 } // namespace encoding
-
-#endif //SRC_ENCODETOMP4_H

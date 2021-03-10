@@ -7,9 +7,7 @@
 //============================================================
 #pragma once
 
-#ifndef SRC_STREAMINGSERVER_H
-#define SRC_STREAMINGSERVER_H
-
+#include <ios>
 #include <iostream>
 #include <sstream>
 #include <functional>
@@ -17,9 +15,12 @@
 #include <thread>
 #include <string>
 
+// standard SDL headers
+#include <SDL2/SDL.h>
+
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
-#include "encoding/encode_to_mp4.h"
+#include "encoding/encode_to_mp4.hpp"
 
 namespace webpp
 {
@@ -30,10 +31,10 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		//std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
+		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
 
-		size_t append_count_send = 5;
-		size_t append_count = 0;
+		int64_t append_count_send = 5;
+		int64_t append_count = 0;
 		std::shared_ptr<ws_server::SendStream> append_stream = std::make_shared<ws_server::SendStream>();
 
 	public:
@@ -80,13 +81,10 @@ namespace webpp
 			send(stream, 130);
 		}
 
-		void append_binary(char *b, std::streamsize len)
+		void append_SDL_Surface(SDL_Surface *surf)
 		{
-			//encoder->encode_frame();
-
-			append_stream->write(b, len);
-
 			append_count++;
+			encoder->encode_frame(append_count, surf, append_stream);
 
 			if (append_count == append_count_send)
 			{
@@ -142,5 +140,3 @@ namespace webpp
 		}
 	};
 } // namespace webpp
-
-#endif //SRC_STREAMINGSERVER_H

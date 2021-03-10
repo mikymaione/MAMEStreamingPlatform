@@ -1,0 +1,11 @@
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"includePath": [
+				"3rdparty/ffmpeg"
+			]
+		}
+	],
+	"version": 4
+}

@@ -1,14 +1,14 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Build from Makefile",
-            "type": "shell",
-            "command": "make",
-            "args": [
-                "OSD=sdl",
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build from Makefile",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"OSD=sdl",
 				"SOURCES=src/mame/drivers/cps3.cpp",
 				"TOOLS=0",
 				"IGNORE_GIT=1",
@@ -28,13 +28,14 @@
 				"USE_SYSTEM_LIB_GLM=1",
 				"USE_SYSTEM_LIB_RAPIDJSON=1",
 				"USE_SYSTEM_LIB_PUGIXML=1",
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": []
-        }        
-    ]
+				"-j3"
+			],
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+	]
 }
