@@ -9,17 +9,16 @@
 
 #include <memory>
 #include <ostream>
-
-// standard SDL headers
-#include <SDL2/SDL.h>
+#include <vector>
 
 // FFMPEG C headers
 extern "C"
 {
+#include "libswscale/swscale.h"
 #include "libavcodec/avcodec.h"
-
-#include "libavutil/frame.h"
-#include "libavutil/imgutils.h"
+#include "libavutil/mathematics.h"
+#include "libavutil/opt.h"
+#include "libavformat/avformat.h"
 }
 
 namespace encoding
@@ -27,148 +26,172 @@ namespace encoding
 	class encode_to_mp4
 	{
 	private:
-		const int frame_per_seconds = 30;
+		const int frame_per_seconds = 25;
 
-		//AVCodec ff_h264_encoder;
+		// 360p
+		const unsigned int width = 480;
+		const unsigned int height = 360;
+		unsigned int iframe;
 
-		AVFrame* picture;
+		SwsContext* swsCtx;
+		AVOutputFormat* fmt;
+		AVStream* stream;
+		AVFormatContext* fc;
 		AVCodecContext* c;
-		AVPacket* pkt;
+		AVPacket pkt;
 
-	private:
-		void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt, std::shared_ptr<std::ostream> append_stream)
-		{
-			/* send the frame to the encoder */
-			int ret = avcodec_send_frame(enc_ctx, frame);
-			if (ret < 0)
-			{
-				fprintf(stderr, "error sending a frame for encoding\n");
-				exit(1);
-			}
+		AVFrame* rgbpic, * yuvpic;
 
-			while (ret >= 0)
-			{
-				ret = avcodec_receive_packet(enc_ctx, pkt);
-
-				if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
-				{
-					return;
-				}
-				else if (ret < 0)
-				{
-					fprintf(stderr, "error during encoding\n");
-					exit(1);
-				}
-
-				//fwrite(pkt->data, 1, pkt->size, dest);
-				append_stream->write((const char*)pkt->data, pkt->size);
-
-				av_packet_unref(pkt);
-			}
-		}
+		std::vector<uint8_t> pixels;
 
 	public:
-		encode_to_mp4()
+		encode_to_mp4() :
+			iframe(0), pixels(4 * width * height)
 		{
-			//avcodec_register(&ff_h264_encoder);
-			avcodec_register_all();
+			// Preparing to convert my generated RGB images to YUV frames.
+			swsCtx = sws_getContext(width, height, AV_PIX_FMT_RGB24, width, height, AV_PIX_FMT_YUV420P, SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 
-			/* find the H.264 encoder */
-			const AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_H264);
-			if (!codec)
-			{
-				fprintf(stderr, "codec not found\n");
-				exit(1);
-			}
+			// Preparing the data concerning the format and codec,
+			// in order to write properly the header, frame data and end of file.			
+			fmt = av_guess_format("mp4", nullptr, nullptr);
 
-			c = avcodec_alloc_context3(codec);
-			picture = av_frame_alloc();
-			pkt = av_packet_alloc();
-			if (!pkt)
-				exit(1);
+			//SOSTITUIRE
+			//avformat_alloc_output_context2(&fc, nullptr, nullptr, filename.c_str());
+			fc = avformat_alloc_context();
 
-			/* resolution must be a multiple of two */
-			// 360p
-			c->width = 480;
-			c->height = 360;
-			c->bit_rate = 770000; //0.77 Mb/s
+			// Setting up the codec.
+			auto codec = avcodec_find_encoder(AV_CODEC_ID_H264);
 
-			/* frames per second */
-			c->time_base = { 1, frame_per_seconds };
-			c->framerate = { frame_per_seconds, 1 };
+			AVDictionary* opt = nullptr;
+			av_dict_set(&opt, "preset", "veryfast", 0);
+			av_dict_set(&opt, "crf", "20", 0);
 
+			stream = avformat_new_stream(fc, codec);
+
+			c = stream->codec;
+			c->width = width;
+			c->height = height;
 			c->pix_fmt = AV_PIX_FMT_YUV420P;
+			c->time_base = { 1, frame_per_seconds };
 
-			/* open it */
-			if (avcodec_open2(c, codec, NULL) < 0)
-			{
-				fprintf(stderr, "could not open codec\n");
-				exit(1);
-			}
+			// Setting up the format, its stream(s),
+			// linking with the codec(s) and write the header.
+			if (fc->oformat->flags & AVFMT_GLOBALHEADER)
+				// Some formats require a global header.
+				c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-			picture->format = c->pix_fmt;
-			picture->width = c->width;
-			picture->height = c->height;
+			avcodec_open2(c, codec, &opt);
+			av_dict_free(&opt);
 
-			int ret = av_frame_get_buffer(picture, 32);
-			if (ret < 0)
-			{
-				fprintf(stderr, "could not alloc the frame data\n");
-				exit(1);
-			}
+			// Once the codec is set up, we need to let the container know
+			// which codec are the streams using, in this case the only (video) stream.
+			stream->time_base = { 1, frame_per_seconds };
+
+			//SOSTITUIRE
+			//av_dump_format(fc, 0, filename.c_str(), 1);
+
+			//SOSTITUIRE
+			//avio_open(&fc->pb, filename.c_str(), AVIO_FLAG_WRITE);
+
+			avformat_write_header(fc, &opt);
+			av_dict_free(&opt);
+
+			// Preparing the containers of the frame data:
+			// Allocating memory for each RGB frame, which will be lately converted to YUV.
+			rgbpic = av_frame_alloc();
+			rgbpic->format = AV_PIX_FMT_RGB24;
+			rgbpic->width = width;
+			rgbpic->height = height;
+			av_frame_get_buffer(rgbpic, 1);
+
+			// Allocating memory for each conversion output YUV frame.
+			yuvpic = av_frame_alloc();
+			yuvpic->format = AV_PIX_FMT_YUV420P;
+			yuvpic->width = width;
+			yuvpic->height = height;
+			av_frame_get_buffer(yuvpic, 1);
+
+			// After the format, code and general frame data is set,
+			// we can write the video in the frame generation loop:
+			// std::vector<uint8_t> B(width*height*3);
 		}
 
-		void stop(std::shared_ptr<std::ostream> append_stream)
+		~encode_to_mp4()
 		{
-			/* flush the encoder */
-			encode(c, NULL, pkt, append_stream);
+			// Writing the delayed frames:
+			for (auto got_output = 1; got_output; )
+			{
+				avcodec_encode_video2(c, &pkt, nullptr, &got_output);
 
-			/* add sequence end code to have a real MPEG file */
-			uint8_t endcode[] = { 0, 0, 1, 0xb7 };
-
-			//fwrite(endcode, 1, sizeof(endcode), f);
-			append_stream->write((const char*)endcode, sizeof(endcode));
-
-			avcodec_free_context(&c);
-			av_frame_free(&picture);
-			av_packet_free(&pkt);
-		}
-
-		void encode_frame(int64_t n_frame, SDL_Surface* surf, std::shared_ptr<std::ostream> append_stream)
-		{
-			fflush(stdout);
-
-			/* make sure the frame data is writable */
-			int ret = av_frame_make_writable(picture);
-			if (ret < 0)
-				exit(1);
-
-			Uint8* pixel = (Uint8*)surf->pixels;
-			Uint8 val;
-
-			for (int y = 0; y < surf->h; y++)
-				for (int x = 0; x < surf->w; x++)
+				if (got_output)
 				{
-					// R
-					val = *pixel;
-					picture->data[0][y * picture->linesize[0] + x] = val;
-					pixel++;
+					av_packet_rescale_ts(&pkt, { 1, frame_per_seconds }, stream->time_base);
 
-					// G
-					val = *pixel;
-					picture->data[1][y * picture->linesize[1] + x] = val;
-					pixel++;
+					pkt.stream_index = stream->index;
 
-					// B
-					val = *pixel;
-					picture->data[2][y * picture->linesize[2] + x] = val;
-					pixel++;
+					av_interleaved_write_frame(fc, &pkt);
+					av_packet_unref(&pkt);
+				}
+			}
+
+			// Writing the end of the file.
+			av_write_trailer(fc);
+
+			// Closing the file.
+			if (!(fmt->flags & AVFMT_NOFILE))
+				avio_closep(&fc->pb);
+
+			avcodec_close(stream->codec);
+
+			// Freeing all the allocated memory:
+			sws_freeContext(swsCtx);
+			av_frame_free(&rgbpic);
+			av_frame_free(&yuvpic);
+			avformat_free_context(fc);
+		}
+
+		void addFrame(const uint8_t* pixels)
+		{
+			// The AVFrame data will be stored as RGBRGBRGB... row-wise,
+			// from left to right and from top to bottom.
+			for (auto y = 0u; y < height; y++)
+				for (auto x = 0u; x < width; x++)
+				{
+					// rgbpic->linesize[0] is equal to width.
+					rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 0] = pixels[y * 4 * width + 4 * x + 2];
+					rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 1] = pixels[y * 4 * width + 4 * x + 1];
+					rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 2] = pixels[y * 4 * width + 4 * x + 0];
 				}
 
-			picture->pts = n_frame;
+			// Not actually scaling anything, but just converting
+			// the RGB data to YUV and store it in yuvpic.
+			sws_scale(swsCtx, rgbpic->data, rgbpic->linesize, 0, height, yuvpic->data, yuvpic->linesize);
 
-			/* encode the image */
-			encode(c, picture, pkt, append_stream);
+			av_init_packet(&pkt);
+			pkt.data = nullptr;
+			pkt.size = 0;
+
+			// The PTS of the frame are just in a reference unit,
+			// unrelated to the format we are using. We set them,
+			// for instance, as the corresponding frame number.
+			yuvpic->pts = iframe;
+
+			int got_output;
+			avcodec_encode_video2(c, &pkt, yuvpic, &got_output);
+
+			if (got_output)
+			{
+				// We set the packet PTS and DTS taking in the account our FPS (second argument),
+				// and the time base that our selected format uses (third argument).
+				av_packet_rescale_ts(&pkt, { 1, frame_per_seconds }, stream->time_base);
+
+				pkt.stream_index = stream->index;
+
+				// Write the encoded frame to the mp4 file.
+				av_interleaved_write_frame(fc, &pkt);
+				av_packet_unref(&pkt);
+			}
 		}
+
 	};
 } // namespace encoding
