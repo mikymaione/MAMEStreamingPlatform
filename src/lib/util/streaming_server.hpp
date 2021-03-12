@@ -84,11 +84,13 @@ namespace webpp
 		void append_SDL_Surface(SDL_Surface* surf)
 		{
 			append_count++;
-			encoder->addFrame((const uint8_t*)surf->pixels);
+			encoder->addFrame(append_stream, (const uint8_t*)surf->pixels);
 
 			if (append_count == append_count_send)
 			{
 				append_count = 0;
+
+				encoder->stop();
 
 				send(append_stream, 130);
 
