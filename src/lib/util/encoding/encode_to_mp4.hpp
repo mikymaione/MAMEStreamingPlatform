@@ -55,15 +55,14 @@ namespace encoding
 			// in order to write properly the header, frame data and end of file.			
 			fmt = av_guess_format("mp4", nullptr, nullptr);
 
-			//SOSTITUIRE
-			//avformat_alloc_output_context2(&fc, nullptr, nullptr, filename.c_str());
-			fc = avformat_alloc_context();
-
 			// Setting up the codec.
-			auto codec = avcodec_find_encoder(AV_CODEC_ID_H264);
+			const AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_H264);
+
+			avformat_alloc_output_context2(&fc, nullptr, nullptr, filename.c_str());
 
 			AVDictionary* opt = nullptr;
 			av_dict_set(&opt, "preset", "veryfast", 0);
+			av_dict_set(&opt, "tune", "zerolatency", 0);
 			av_dict_set(&opt, "crf", "20", 0);
 
 			stream = avformat_new_stream(fc, codec);
@@ -87,11 +86,9 @@ namespace encoding
 			// which codec are the streams using, in this case the only (video) stream.
 			stream->time_base = { 1, frame_per_seconds };
 
-			//SOSTITUIRE
-			//av_dump_format(fc, 0, filename.c_str(), 1);
+			av_dump_format(fc, 0, filename.c_str(), 1);
 
-			//SOSTITUIRE
-			//avio_open(&fc->pb, filename.c_str(), AVIO_FLAG_WRITE);
+			avio_open(&fc->pb, filename.c_str(), AVIO_FLAG_WRITE);
 
 			avformat_write_header(fc, &opt);
 			av_dict_free(&opt);
@@ -118,6 +115,17 @@ namespace encoding
 
 		~encode_to_mp4()
 		{
+			avcodec_close(stream->codec);
+
+			// Freeing all the allocated memory:
+			sws_freeContext(swsCtx);
+			av_frame_free(&rgbpic);
+			av_frame_free(&yuvpic);
+			avformat_free_context(fc);
+		}
+
+		void stop()
+		{
 			// Writing the delayed frames:
 			for (auto got_output = 1; got_output; )
 			{
@@ -138,19 +146,11 @@ namespace encoding
 			av_write_trailer(fc);
 
 			// Closing the file.
-			if (!(fmt->flags & AVFMT_NOFILE))
-				avio_closep(&fc->pb);
-
-			avcodec_close(stream->codec);
-
-			// Freeing all the allocated memory:
-			sws_freeContext(swsCtx);
-			av_frame_free(&rgbpic);
-			av_frame_free(&yuvpic);
-			avformat_free_context(fc);
+			//if (!(fmt->flags & AVFMT_NOFILE))
+				//avio_closep(&fc->pb);
 		}
 
-		void addFrame(const uint8_t* pixels)
+		void addFrame(std::shared_ptr<std::ostream> append_stream, const uint8_t* pixels)
 		{
 			// The AVFrame data will be stored as RGBRGBRGB... row-wise,
 			// from left to right and from top to bottom.
