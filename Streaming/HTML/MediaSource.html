@@ -27,7 +27,6 @@ copyright-holders:Michele Maione
 	<script>
 		let monitor;
 		let sourceBuffer;
-		let queue = [];
 		let vw, vh, cw, ch, tw, th;
 
 		function FullScreen()
@@ -61,34 +60,13 @@ copyright-holders:Michele Maione
 
 				let mediaSource = new MediaSource();
 
-				monitor = document.getElementById('monitor');
-				monitor.src = URL.createObjectURL(mediaSource);
-
 				mediaSource.onsourceopen = function ()
 				{
 					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-
-					sourceBuffer.onupdateend = function ()
-					{
-						if (queue.length > 0)
-							sourceBuffer.appendBuffer(queue.shift());
-					};
-
-					queue.push = function (buffer)
-					{
-						if (sourceBuffer.updating)
-							Array.prototype.push.call(this, buffer);
-						else
-							try
-							{
-								sourceBuffer.appendBuffer(buffer);
-							}
-							catch (error)
-							{
-								console.error(error);
-							}
-					};
 				};
+
+				monitor = document.getElementById('monitor');
+				monitor.src = URL.createObjectURL(mediaSource);
 
 				let webSocket = window.WebSocket || window.MozWebSocket,
 					ws = new webSocket(uri);
@@ -120,7 +98,7 @@ copyright-holders:Michele Maione
 
 						blob.arrayBuffer().then(buffer =>
 						{
-							queue.push(buffer);
+							sourceBuffer.appendBuffer(buffer);
 						});
 					}
 				};
