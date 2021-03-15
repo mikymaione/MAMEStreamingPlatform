@@ -22,6 +22,12 @@
 #include "server_http_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 
+// FFMPEG C headers
+extern "C"
+{
+#include "libavcodec/avcodec.h"
+}
+
 namespace webpp
 {
 	class streaming_server
@@ -32,10 +38,7 @@ namespace webpp
 		std::unique_ptr<std::thread> acceptThread;
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>();
-
-		int64_t append_count_send = 5;
-		int64_t append_count = 0;
-		std::shared_ptr<ws_server::SendStream> append_stream = std::make_shared<ws_server::SendStream>();
+		std::shared_ptr<AVPacket> avPacket = std::make_unique<AVPacket>();
 
 	public:
 		std::function<void()> on_accept;
@@ -73,28 +76,14 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_binary(char* b, std::streamsize len)
+		void send_binary(void* b, std::streamsize len)
 		{
-			auto stream = std::make_shared<ws_server::SendStream>();
-			stream->write(b, len);
-
-			send(stream, 130);
-		}
-
-		void append_SDL_Surface(SDL_Surface* surf)
-		{
-			append_count++;
-			encoder->addFrame(append_stream, (const uint8_t*)surf->pixels);
-
-			if (append_count == append_count_send)
+			if (encoder->addFrame(b, avPacket))
 			{
-				append_count = 0;
+				auto stream = std::make_shared<ws_server::SendStream>();
+				stream->write((const char*)avPacket->data, avPacket->size);
 
-				encoder->stop();
-
-				send(append_stream, 130);
-
-				append_stream->clear();
+				send(stream, 130);
 			}
 		}
 

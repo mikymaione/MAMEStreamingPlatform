@@ -565,108 +565,6 @@ void renderer_sdl2::destroy_all_textures()
 //  sdl_info::draw
 //============================================================
 
-//int renderer_sdl2::draw(int update)
-//{
-//	texture_info* texture = nullptr;
-//	float vofs, hofs;
-//	int blit_pixels = 0;
-//
-//	if (video_config.novideo)
-//	{
-//		return 0;
-//	}
-//
-//	auto win = assert_window();
-//	osd_dim wdim = win->get_size();
-//
-//	if (has_flags(FI_CHANGED) || (wdim.width() != m_width) || (wdim.height() != m_height))
-//	{
-//		destroy_all_textures();
-//		m_width = wdim.width();
-//		m_height = wdim.height();
-//		SDL_RenderSetViewport(m_sdl_renderer, nullptr);
-//		m_blittimer = 3;
-//		clear_flags(FI_CHANGED);
-//	}
-//
-//	//SDL_SelectRenderer(window().sdl_window);
-//
-//	if (m_blittimer > 0)
-//	{
-//		/* SDL Underlays need alpha = 0 ! */
-//		SDL_SetRenderDrawBlendMode(m_sdl_renderer, SDL_BLENDMODE_NONE);
-//		//SDL_SetRenderDrawColor(0,0,0,255);
-//		SDL_SetRenderDrawColor(m_sdl_renderer, 0, 0, 0, 0);
-//		SDL_RenderFillRect(m_sdl_renderer, nullptr);
-//		m_blittimer--;
-//	}
-//
-//	// compute centering parameters
-//	vofs = hofs = 0.0f;
-//
-//	if (video_config.centerv || video_config.centerh)
-//	{
-//		int ch, cw;
-//
-//		ch = wdim.height();
-//		cw = wdim.width();
-//
-//		if (video_config.centerv)
-//		{
-//			vofs = (ch - m_blit_dim.height()) / 2.0f;
-//		}
-//		if (video_config.centerh)
-//		{
-//			hofs = (cw - m_blit_dim.width()) / 2.0f;
-//		}
-//	}
-//
-//	m_last_hofs = hofs;
-//	m_last_vofs = vofs;
-//
-//	win->m_primlist->acquire_lock();
-//
-//	// now draw
-//	for (render_primitive& prim : *win->m_primlist)
-//	{
-//		Uint8 sr, sg, sb, sa;
-//
-//		switch (prim.type)
-//		{
-//		case render_primitive::LINE:
-//			sr = (int)(255.0f * prim.color.r);
-//			sg = (int)(255.0f * prim.color.g);
-//			sb = (int)(255.0f * prim.color.b);
-//			sa = (int)(255.0f * prim.color.a);
-//
-//			SDL_SetRenderDrawBlendMode(m_sdl_renderer, map_blendmode(PRIMFLAG_GET_BLENDMODE(prim.flags)));
-//			SDL_SetRenderDrawColor(m_sdl_renderer, sr, sg, sb, sa);
-//			SDL_RenderDrawLine(m_sdl_renderer, prim.bounds.x0 + hofs, prim.bounds.y0 + vofs,
-//				prim.bounds.x1 + hofs, prim.bounds.y1 + vofs);
-//			break;
-//		case render_primitive::QUAD:
-//			texture = texture_update(prim);
-//			if (texture)
-//				blit_pixels += (texture->raw_height() * texture->raw_width());
-//			render_quad(texture, prim,
-//				round_nearest(hofs + prim.bounds.x0),
-//				round_nearest(vofs + prim.bounds.y0));
-//			break;
-//		default:
-//			throw emu_fatalerror("Unexpected render_primitive type\n");
-//		}
-//	}
-//
-//	win->m_primlist->release_lock();
-//
-//	m_last_blit_pixels = blit_pixels;
-//	m_last_blit_time = -osd_ticks();
-//	SDL_RenderPresent(m_sdl_renderer);
-//	m_last_blit_time += osd_ticks();
-//
-//	return 0;
-//}
-
 int renderer_sdl2::draw(int update)
 {
 	texture_info* texture = nullptr;
@@ -785,7 +683,15 @@ int renderer_sdl2::draw(int update)
 		}
 		*/
 
-		webpp::streaming_server::get().append_SDL_Surface(m_sdl_surface);
+		//webpp::streaming_server::get().append_SDL_Surface(m_sdl_surface);
+
+		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
+		if (memcmp(m_sdl_buffer_bytes, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
+		{
+			memcpy(m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
+
+			webpp::streaming_server::get().send_binary(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
+		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
