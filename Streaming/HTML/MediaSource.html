@@ -12,6 +12,12 @@ copyright-holders:Michele Maione
 
 <head>
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+
+	<style>
+		body {
+			overflow: hidden;
+		}
+	</style>
 </head>
 
 <body>
@@ -19,10 +25,29 @@ copyright-holders:Michele Maione
 	<video id="monitor" autoplay></video>
 
 	<script>
-		function FullScreen(monitor)
+		let monitor;
+		let sourceBuffer;
+		let queue = [];
+		let vw, vh, cw, ch, tw, th;
+
+		function FullScreen()
 		{
 			//document.exitFullscreen();
 			monitor.requestFullscreen();
+		}
+
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			monitor.width = cw;
+			monitor.height = ch;
+
+			if (cw / ch < vw / vh)
+				th = cw * vh / vw;
+			else
+				tw = ch * vw / vh;
 		}
 
 		function Start()
@@ -34,20 +59,39 @@ copyright-holders:Michele Maione
 			{
 				const uri = "ws://127.0.0.1:8888";
 
-				let monitor = document.getElementById('monitor');
-
-				let sourceBuffer;
 				let mediaSource = new MediaSource();
+
+				monitor = document.getElementById('monitor');
 				monitor.src = URL.createObjectURL(mediaSource);
 
-				mediaSource.onsourceopen = function (e)
+				mediaSource.onsourceopen = function ()
 				{
-					let mediaSource = this;
 					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+
+					sourceBuffer.onupdateend = function ()
+					{
+						if (queue.length > 0)
+							sourceBuffer.appendBuffer(queue.shift());
+					};
+
+					queue.push = function (buffer)
+					{
+						if (sourceBuffer.updating)
+							Array.prototype.push.call(this, buffer);
+						else
+							try
+							{
+								sourceBuffer.appendBuffer(buffer);
+							}
+							catch (error)
+							{
+								console.error(error);
+							}
+					};
 				};
 
-				let ws = new WebSocket(uri);
-				//ws.binaryType = 'arraybuffer';
+				let webSocket = window.WebSocket || window.MozWebSocket,
+					ws = new webSocket(uri);
 
 				ws.onopen = function (e)
 				{
@@ -61,21 +105,33 @@ copyright-holders:Michele Maione
 
 				ws.onmessage = function (event)
 				{
-					let blob = event.data;
-
-					blob.arrayBuffer().then(buffer =>
+					if (typeof event.data === 'string')
 					{
-						debugger;
-						sourceBuffer.appendBuffer(buffer)
-					});
+						let values = event.data.split(":");
+
+						vw = values[1];
+						vh = values[2];
+
+						reportWindowSize();
+					}
+					else
+					{
+						let blob = event.data;
+
+						blob.arrayBuffer().then(buffer =>
+						{
+							queue.push(buffer);
+						});
+					}
 				};
 			}
 			else 
 			{
-				console.error("Unsupported media format");
+				alert("Unsupported media format");
 			}
 		}
 
+		window.onresize = reportWindowSize;
 		Start();
 	</script>
 </body>
