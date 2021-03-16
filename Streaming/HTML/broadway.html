@@ -1,0 +1,87 @@
+<!--
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	mame.html - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
+
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+
+	<style>
+		body {
+			overflow: hidden;
+		}
+
+		#videoCanvas {
+			/* Always stretch the canvas to 640x480, regardless of its
+			internal size. */
+			width: 640px;
+			height: 480px;
+		}
+	</style>
+
+	<script type="text/javascript" src="Decoder.js"></script>
+	<script type="text/javascript" src="YUVCanvas.js"></script>
+	<script type="text/javascript" src="Player.js"></script>
+</head>
+
+<body>
+	<script>
+		function Start()
+		{
+			const uri = "ws://localhost:8888";
+
+			let player = new Player();
+			document.body.appendChild(player.canvas);
+
+			let webSocket = window.WebSocket || window.MozWebSocket,
+				ws = new webSocket(uri);
+
+			ws.binaryType = 'arraybuffer';
+
+			ws.onerror = function (event)
+			{
+				console.log('Connection error.');
+			};
+
+			ws.onopen = function (event)
+			{
+				console.log('Connection opened.');
+			};
+
+			ws.onclose = function (event)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				if (typeof event.data === 'string')
+				{
+					let values = event.data.split(":");
+
+					vw = values[1];
+					vh = values[2];
+
+					reportWindowSize();
+				}
+				else
+				{
+					let messageData = new Uint8Array(event.data);
+
+					player.decode(messageData);
+				}
+			};
+		}
+
+		Start();
+	</script>
+</body>
+
+</html>
