@@ -26,26 +26,26 @@ namespace encoding
 	class encode_to_mp4
 	{
 	private:
-		const int channels = 4;
-		const int fps = 25;
-
-		// 360p
-		const int width = 480;
-		const int height = 360;
+		const int width;
+		const int height;
+		const int channels;
+		const int fps;
 
 		AVFrame* m_pRGBFrame = new AVFrame[1];
 		AVFrame* m_pYUVFrame = new AVFrame[1];
-		AVCodec* pCodecH264;
-		AVCodecContext* c;
-		AVCodecContext* in_c;
-		SwsContext* scxt;
-		uint8_t* yuv_buff;
-		uint8_t* outbuf;
+		AVCodec* pCodecH264 = nullptr;
+		AVDictionary* opts = nullptr;
+		AVCodecContext* c = nullptr;
+		AVCodecContext* in_c = nullptr;
+		SwsContext* scxt = nullptr;
+		uint8_t* yuv_buff = nullptr;
+		uint8_t* outbuf = nullptr;
 
 		int outbuf_size;
 
 	public:
-		encode_to_mp4()
+		encode_to_mp4(const int width, const int height, const int channels, const int fps) :
+			width(width), height(height), channels(channels), fps(fps)
 		{
 			av_register_all();
 			avcodec_register_all();
@@ -59,17 +59,14 @@ namespace encoding
 			c->width = width;
 			c->height = height;
 
-			// frames per second 
-			AVRational rate;
-			rate.num = 1;
-			rate.den = fps;
-			c->time_base = rate;
+			// frames per second 			
+			c->time_base.num = 1;
+			c->time_base.den = fps;
 			c->gop_size = 10; // emit one intra frame every ten frames 
 			c->max_b_frames = 1;
 			c->thread_count = 1;
 			c->pix_fmt = AV_PIX_FMT_YUV420P;
 
-			AVDictionary* opts = nullptr;
 			av_dict_set(&opts, "profile", "baseline", 0);
 			av_dict_set(&opts, "preset", "superfast", 0);
 			av_dict_set(&opts, "tune", "zerolatency", 0);
@@ -80,7 +77,7 @@ namespace encoding
 				throw std::runtime_error("Cannot open codec");
 
 			int size = c->width * c->height * 3 / 2;
-			outbuf_size = c->width * c->height * 4;
+			outbuf_size = c->width * c->height * channels;
 
 			yuv_buff = new uint8_t[size];
 			outbuf = new uint8_t[outbuf_size];
@@ -90,17 +87,24 @@ namespace encoding
 
 		~encode_to_mp4()
 		{
-			delete[] m_pRGBFrame;
-			delete[] m_pYUVFrame;
-			delete[] outbuf;
+			/*
+			AVCodec* pCodecH264 = nullptr;
+			AVDictionary* opts = nullptr;
+			AVCodecContext* in_c = nullptr;
+			SwsContext* scxt = nullptr;
+			*/
 
 			avcodec_close(c);
 			av_free(c);
-		}
+			av_dict_free(&opts);
 
-		void stop()
-		{
+			av_frame_unref(m_pRGBFrame);
+			av_frame_unref(m_pYUVFrame);
 
+			delete[] m_pRGBFrame;
+			delete[] m_pYUVFrame;
+			delete[] outbuf;
+			delete[] yuv_buff;
 		}
 
 		bool addFrame(void* pixels, std::shared_ptr<AVPacket> avpkt)
