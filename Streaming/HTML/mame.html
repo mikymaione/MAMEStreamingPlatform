@@ -16,55 +16,52 @@ copyright-holders:Michele Maione
 	<style>
 		body {
 			overflow: hidden;
+			background-color: black;
 		}
 	</style>
+
+	<script type="text/javascript" src="Decoder.js"></script>
+	<script type="text/javascript" src="WebGLCanvas.js"></script>
+	<script type="text/javascript" src="Player.js"></script>
 </head>
 
 <body>
-	<audio id="myAudio" autoplay>
-		Your browser does not support the HTML audio tag.
-	</audio>
-
-	<canvas id="myCanvas">
-		Your browser does not support the HTML canvas tag.
-	</canvas>
-
 	<script>
-		let myAudio;
 		let myCanvas;
 		let vw, vh, cw, ch, tw, th;
-
-		function FullScreen(monitor)
-		{
-			//document.exitFullscreen();
-			monitor.requestFullscreen();
-		}
 
 		function reportWindowSize()
 		{
 			cw = window.innerWidth;
 			ch = window.innerHeight;
 
-			myCanvas.width = cw;
-			myCanvas.height = ch;
-
 			if (cw / ch < vw / vh)
+			{
+				tw = cw;
 				th = cw * vh / vw;
+			}
 			else
+			{
 				tw = ch * vw / vh;
+				th = ch;
+			}
+
+			myCanvas.style.width = tw + 'px';
+			myCanvas.style.height = th + 'px';
 		}
 
 		function Start()
 		{
-			const uri = "ws://localhost:8888";
+			const uri = "ws://192.168.1.7:8888";
 
-			myAudio = document.getElementById("myAudio");
-			myCanvas = document.getElementById("myCanvas");
-
-			let context = myCanvas.getContext("2d"); // 2d, webgl, webgl2, bitmaprenderer
+			let player = new Player();
+			myCanvas = player.canvas;
+			document.body.appendChild(myCanvas);
 
 			let webSocket = window.WebSocket || window.MozWebSocket,
 				ws = new webSocket(uri);
+
+			ws.binaryType = 'arraybuffer';
 
 			ws.onerror = function (event)
 			{
@@ -94,13 +91,9 @@ copyright-holders:Michele Maione
 				}
 				else
 				{
-					createImageBitmap(event.data).then((img) =>
-					{
-						if (cw / ch < vw / vh)
-							context.drawImage(img, 0, 0, vw, vh, 0, (ch - th) / 2, cw, th);
-						else
-							context.drawImage(img, 0, 0, vw, vh, (cw - tw) / 2, 0, tw, ch);
-					});
+					let messageData = new Uint8Array(event.data);
+
+					player.decode(messageData);
 				}
 			};
 		}
@@ -108,6 +101,8 @@ copyright-holders:Michele Maione
 		window.onresize = reportWindowSize;
 		Start();
 	</script>
+
+	<script src="fullscreen.js"></script>
 </body>
 
 </html>
