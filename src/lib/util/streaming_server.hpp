@@ -34,7 +34,7 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 320, 240, 3, 25);
+		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 320, 240, 3, 24);
 
 	public:
 		std::function<void()> on_accept;
