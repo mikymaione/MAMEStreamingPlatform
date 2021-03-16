@@ -683,7 +683,12 @@ int renderer_sdl2::draw(int update)
 		}
 		*/
 
-		webpp::streaming_server::get().send_binary(m_sdl_surface->pixels, 0);
+		if (memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
+		{
+			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
+
+			webpp::streaming_server::get().send_binary(m_sdl_surface->pixels, 0);
+		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
