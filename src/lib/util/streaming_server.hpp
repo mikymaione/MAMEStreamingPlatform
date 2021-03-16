@@ -15,9 +15,6 @@
 #include <thread>
 #include <string>
 
-// standard SDL headers
-#include <SDL2/SDL.h>
-
 #include "server_ws_impl.hpp"
 #include "server_http_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
@@ -37,7 +34,7 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 4, 15);
+		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 320, 240, 3, 25);
 		std::shared_ptr<AVPacket> avPacket = std::make_unique<AVPacket>();
 
 	public:
