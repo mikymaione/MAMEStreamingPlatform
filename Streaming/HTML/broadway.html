@@ -35,7 +35,7 @@ copyright-holders:Michele Maione
 	<script>
 		function Start()
 		{
-			const uri = "ws://localhost:8888";
+			const uri = "ws://192.168.1.7:8888";
 
 			let player = new Player();
 			document.body.appendChild(player.canvas);
@@ -64,12 +64,7 @@ copyright-holders:Michele Maione
 			{
 				if (typeof event.data === 'string')
 				{
-					let values = event.data.split(":");
-
-					vw = values[1];
-					vh = values[2];
-
-					reportWindowSize();
+					
 				}
 				else
 				{
