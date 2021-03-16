@@ -28,17 +28,17 @@ p.decode(<binary>);
 	if (typeof define === 'function' && define.amd)
 	{
 		// AMD. Register as an anonymous module.
-		define(["./Decoder", "./YUVCanvas"], factory);
+		define(["./Decoder", "./WebGLCanvas"], factory);
 	} else if (typeof exports === 'object')
 	{
 		// Node. Does not work with strict CommonJS, but
 		// only CommonJS-like environments that support module.exports,
 		// like Node.
-		module.exports = factory(require("./Decoder"), require("./YUVCanvas"));
+		module.exports = factory(require("./Decoder"), require("./WebGLCanvas"));
 	} else
 	{
 		// Browser globals (root is window)
-		root.Player = factory(root.Decoder, root.YUVCanvas);
+		root.Player = factory(root.Decoder, root.WebGLCanvas);
 	}
 }(this, function (Decoder, WebGLCanvas)
 {
@@ -321,25 +321,17 @@ p.decode(<binary>);
 			{
 				canvasObj.canvas.width = width;
 				canvasObj.canvas.height = height;
-				canvasObj.webGLCanvas = new WebGLCanvas({
-					canvas: canvasObj.canvas,
-					contextOptions: canvasObj.contextOptions,
-					width: width,
-					height: height
-				});
+				canvasObj.webGLCanvas = new WebGLCanvas(canvasObj.canvas, undefined, canvasObj.contextOptions);
 			};
 
-			var ylen = width * height;
-			var uvlen = (width / 2) * (height / 2);
-
-			canvasObj.webGLCanvas.drawNextOutputPicture({
-				yData: options.data.subarray(0, ylen),
-				uData: options.data.subarray(ylen, ylen + uvlen),
-				vData: options.data.subarray(ylen + uvlen, ylen + uvlen + uvlen)
-			});
-
+			canvasObj.webGLCanvas.drawNextOutputPicture(
+				width,
+				height,
+				null,
+				options.data);
 			var self = this;
 			self.recycleMemory(options.data);
+
 
 		},
 		renderFrameRGB: function (options)
