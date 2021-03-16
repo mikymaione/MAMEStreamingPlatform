@@ -35,7 +35,6 @@ namespace webpp
 		std::unique_ptr<std::thread> acceptThread;
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 320, 240, 3, 25);
-		std::shared_ptr<AVPacket> avPacket = std::make_unique<AVPacket>();
 
 	public:
 		std::function<void()> on_accept;
@@ -75,13 +74,10 @@ namespace webpp
 
 		void send_binary(void* b, std::streamsize len)
 		{
-			if (encoder->addFrame(b, avPacket))
-			{
-				auto stream = std::make_shared<ws_server::SendStream>();
-				stream->write((const char*)avPacket->data, avPacket->size);
+			auto stream = std::make_shared<ws_server::SendStream>();
 
+			if (encoder->addFrame(b, stream))
 				send(stream, 130);
-			}
 		}
 
 		void start(unsigned short port)

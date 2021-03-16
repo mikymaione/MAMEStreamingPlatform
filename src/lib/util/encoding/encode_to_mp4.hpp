@@ -13,12 +13,13 @@
 // FFMPEG C headers
 extern "C"
 {
-#include "libswscale/swscale.h"
 #include "libavcodec/avcodec.h"
+#include "libavutil/common.h"
 #include "libavutil/mathematics.h"
-#include "libavutil/opt.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/opt.h"
 #include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
 }
 
 namespace encoding
@@ -32,9 +33,9 @@ namespace encoding
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
 
-		AVFrame* m_pRGBFrame = new AVFrame[1];
-		AVFrame* m_pYUVFrame = new AVFrame[1];
-		AVCodec* pCodecH264 = nullptr;
+		AVPacket avpkt;
+		AVFrame* m_pRGBFrame = nullptr;
+		AVFrame* m_pYUVFrame = nullptr;
 		AVDictionary* opts = nullptr;
 		AVCodecContext* c = nullptr;
 		AVCodecContext* in_c = nullptr;
@@ -42,7 +43,7 @@ namespace encoding
 		uint8_t* yuv_buff = nullptr;
 		uint8_t* pkt_buff = nullptr;
 
-		int pkt_buff_size;
+		int pkt_buff_size, got_packet_ptr;
 
 	public:
 		encode_to_mp4(const int in_width, const int in_height, const int out_width, const int out_height, const int channels, const int fps) :
@@ -56,7 +57,7 @@ namespace encoding
 			av_register_all();
 			avcodec_register_all();
 
-			pCodecH264 = avcodec_find_encoder(AV_CODEC_ID_H264);
+			auto pCodecH264 = avcodec_find_encoder(AV_CODEC_ID_H264);
 			if (!pCodecH264)
 				throw std::runtime_error("H.264 codec not found!");
 
@@ -71,13 +72,7 @@ namespace encoding
 			av_dict_set(&opts, "tune", "zerolatency", 0);
 
 			if (avcodec_open2(c, pCodecH264, &opts) < 0)
-				throw std::runtime_error("Cannot open codec");
-
-			auto outbuf_size = out_width * out_height * 3 / 2;
-			yuv_buff = new uint8_t[outbuf_size];
-
-			pkt_buff_size = in_width * in_height * channels;
-			pkt_buff = new uint8_t[pkt_buff_size];
+				throw std::runtime_error("Cannot open codec!");
 
 			scxt = sws_getContext(
 				in_width, in_height, SDLPixelFormat,
@@ -85,38 +80,47 @@ namespace encoding
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
+			m_pRGBFrame = av_frame_alloc();
 			m_pRGBFrame->width = in_width;
 			m_pRGBFrame->height = in_height;
+			m_pRGBFrame->format = SDLPixelFormat;
+
+			m_pYUVFrame = av_frame_alloc();
 			m_pYUVFrame->width = out_width;
 			m_pYUVFrame->height = out_height;
+			m_pYUVFrame->format = h264PixelFormat;
+
+			auto outbuf_size = out_width * out_height * 3 / 2;
+			yuv_buff = new uint8_t[outbuf_size];
+
+			pkt_buff_size = in_width * in_height * channels;
+			pkt_buff = new uint8_t[pkt_buff_size];
+
+			avpicture_fill((AVPicture*)m_pYUVFrame, yuv_buff, h264PixelFormat, out_width, out_height);
 		}
 
 		~encode_to_mp4()
 		{
-			/*
-			AVCodec* pCodecH264 = nullptr;
-			AVDictionary* opts = nullptr;
-			AVCodecContext* in_c = nullptr;
-			SwsContext* scxt = nullptr;
-			*/
+			sws_freeContext(scxt);
 
+			avcodec_close(in_c);
 			avcodec_close(c);
+
+			av_free(in_c);
 			av_free(c);
+
 			av_dict_free(&opts);
 
 			av_frame_unref(m_pRGBFrame);
 			av_frame_unref(m_pYUVFrame);
 
-			delete[] m_pRGBFrame;
-			delete[] m_pYUVFrame;
 			delete[] yuv_buff;
 			delete[] pkt_buff;
 		}
 
-		bool addFrame(void* pixels, std::shared_ptr<AVPacket> avpkt)
+		bool addFrame(void* pixels, std::shared_ptr<std::ostream> stream)
 		{
 			avpicture_fill((AVPicture*)m_pRGBFrame, (uint8_t*)pixels, SDLPixelFormat, in_width, in_height);
-			avpicture_fill((AVPicture*)m_pYUVFrame, yuv_buff, h264PixelFormat, out_width, out_height);
 
 			//RGB to YUV
 			sws_scale(
@@ -125,12 +129,14 @@ namespace encoding
 				m_pYUVFrame->data, m_pYUVFrame->linesize
 			);
 
-			int got_packet_ptr;
-			av_init_packet(avpkt.get());
-			avpkt->data = pkt_buff;
-			avpkt->size = pkt_buff_size;
+			av_init_packet(&avpkt);
+			avpkt.data = pkt_buff;
+			avpkt.size = pkt_buff_size;
 
-			avcodec_encode_video2(c, avpkt.get(), m_pYUVFrame, &got_packet_ptr);
+			avcodec_encode_video2(c, &avpkt, m_pYUVFrame, &got_packet_ptr);
+
+			if (got_packet_ptr)
+				stream->write((const char*)avpkt.data, avpkt.size);
 
 			return got_packet_ptr;
 		}
