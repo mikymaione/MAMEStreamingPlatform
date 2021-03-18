@@ -26,6 +26,9 @@
 #include <fstream>
 #include <memory>
 
+#include "streaming_server.hpp"
+
+
 //============================================================
 //  DEBUGGING
 //============================================================
@@ -84,6 +87,7 @@ private:
 	int sdl_create_buffers();
 	void sdl_destroy_buffers();
 
+	int freq;
 	int sdl_xfer_samples;
 	int stream_in_initialized;
 	int attenuation;
@@ -299,22 +303,27 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 	if (data_size < len)
 	{
 		thiz->buffer_underflows++;
+
 		if (LOG_SOUND)
 			util::stream_format(*thiz->sound_log, "Underflow at sdl_callback: DS=%u FS=%u Len=%d\n", data_size, free_size, len);
 
 		// Maybe read whatever is left in the stream_buffer anyway?
 		memset(stream, 0, len);
-		return;
 	}
+	else
+	{
+		int err = thiz->stream_buffer->pop((void*)stream, len);
 
-	int err = thiz->stream_buffer->pop((void*)stream, len);
-	if (LOG_SOUND && err)
-		*thiz->sound_log << "Late detection of underflow. This shouldn't happen.\n";
+		if (LOG_SOUND && err)
+			*thiz->sound_log << "Late detection of underflow. This shouldn't happen.\n";
 
-	thiz->attenuate((int16_t*)stream, len);
+		thiz->attenuate((int16_t*)stream, len);
 
-	if (LOG_SOUND)
-		util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
+		webpp::streaming_server::get().send_audio_interval(stream, thiz->freq, thiz->sdl_xfer_samples);
+
+		if (LOG_SOUND)
+			util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
+	}
 }
 
 //============================================================
@@ -358,10 +367,12 @@ int sound_sdl::init(const osd_options& options)
 		if (SDL_OpenAudio(&aspec, &obtained) < 0)
 			goto cant_start_audio;
 
-		osd_printf_verbose("Audio: frequency: %d, channels: %d, samples: %d\n",
-						   obtained.freq, obtained.channels, obtained.samples);
+		osd_printf_verbose(
+			"Audio: frequency: %d, channels: %d, samples: %d\n",
+			obtained.freq, obtained.channels, obtained.samples);
 
 		sdl_xfer_samples = obtained.samples;
+		freq = obtained.freq;
 
 		// pin audio latency
 		audio_latency = std::max(std::min(m_audio_latency, MAX_AUDIO_LATENCY), 1);
@@ -369,6 +380,7 @@ int sound_sdl::init(const osd_options& options)
 		// compute the buffer sizes
 		stream_buffer_size = (sample_rate() * 2 * sizeof(int16_t) * (2 + audio_latency)) / 30;
 		stream_buffer_size = (stream_buffer_size / 1024) * 1024;
+
 		if (stream_buffer_size < 1024)
 			stream_buffer_size = 1024;
 
@@ -379,6 +391,7 @@ int sound_sdl::init(const osd_options& options)
 		// set the startup volume
 		set_mastervolume(attenuation);
 		osd_printf_verbose("Audio: End initialization\n");
+
 		return 0;
 
 		// error handling
@@ -431,6 +444,7 @@ int sound_sdl::sdl_create_buffers()
 
 	stream_buffer = std::make_unique<ring_buffer>(stream_buffer_size);
 	buf_locked = 0;
+
 	return 0;
 }
 
