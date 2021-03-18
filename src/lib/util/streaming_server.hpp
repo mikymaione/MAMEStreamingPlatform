@@ -31,6 +31,7 @@ namespace webpp
 	{
 	private:
 		bool active = true;
+
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
@@ -72,11 +73,27 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_binary(void* b, std::streamsize len)
+		void send_binary(uint8_t* b, std::streamsize len)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 
 			if (encoder->addFrame(b, stream))
+				send(stream, 130);
+		}
+
+		void send_video_frame(uint8_t* b)
+		{
+			auto stream = std::make_shared<ws_server::SendStream>();
+
+			if (encoder->addFrame(b, stream))
+				send(stream, 130);
+		}
+
+		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples)
+		{
+			auto stream = std::make_shared<ws_server::SendStream>();
+
+			if (encoder->addIstant(audio_stream, in_sample_rate, samples, stream))
 				send(stream, 130);
 		}
 
