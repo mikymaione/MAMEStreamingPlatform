@@ -19,12 +19,6 @@
 #include "server_http_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 
-// FFMPEG C headers
-extern "C"
-{
-#include "libavcodec/avcodec.h"
-}
-
 namespace webpp
 {
 	class streaming_server
@@ -35,7 +29,7 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 320, 240, 3, 24);
+		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 3, 24);
 
 	public:
 		std::function<void()> on_accept;
@@ -73,19 +67,11 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_binary(uint8_t* b, std::streamsize len)
-		{
-			auto stream = std::make_shared<ws_server::SendStream>();
-
-			if (encoder->addFrame(b, stream))
-				send(stream, 130);
-		}
-
 		void send_video_frame(uint8_t* b)
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->addFrame(b, stream))
+			if (encoder->add_frame(b, stream))
 				send(stream, 130);
 		}
 
@@ -93,7 +79,7 @@ namespace webpp
 		{
 			auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->addIstant(audio_stream, in_sample_rate, samples, stream))
+			if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
 				send(stream, 130);
 		}
 

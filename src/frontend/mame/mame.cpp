@@ -2,9 +2,9 @@
 // copyright-holders:Nicola Salmoria, Aaron Giles
 /***************************************************************************
 
-    mame.c
+	mame.c
 
-    Controls execution of the core MAME system.
+	Controls execution of the core MAME system.
 
 ***************************************************************************/
 
@@ -37,9 +37,9 @@
 //  MACHINE MANAGER
 //**************************************************************************
 
-mame_machine_manager *mame_machine_manager::s_manager = nullptr;
+mame_machine_manager* mame_machine_manager::s_manager = nullptr;
 
-mame_machine_manager* mame_machine_manager::instance(emu_options &options, osd_interface &osd)
+mame_machine_manager* mame_machine_manager::instance(emu_options& options, osd_interface& osd)
 {
 	if (!s_manager)
 		s_manager = new mame_machine_manager(options, osd);
@@ -56,7 +56,7 @@ mame_machine_manager* mame_machine_manager::instance()
 //  mame_machine_manager - constructor
 //-------------------------------------------------
 
-mame_machine_manager::mame_machine_manager(emu_options &options,osd_interface &osd) :
+mame_machine_manager::mame_machine_manager(emu_options& options, osd_interface& osd) :
 	machine_manager(options, osd),
 	m_plugins(std::make_unique<plugin_options>()),
 	m_lua(std::make_unique<lua_engine>()),
@@ -79,7 +79,7 @@ mame_machine_manager::~mame_machine_manager()
 
 
 /***************************************************************************
-    GLOBAL VARIABLES
+	GLOBAL VARIABLES
 ***************************************************************************/
 
 //-------------------------------------------------
@@ -87,14 +87,14 @@ mame_machine_manager::~mame_machine_manager()
 //  be loaded
 //-------------------------------------------------
 
-void mame_machine_manager::schedule_new_driver(const game_driver &driver)
+void mame_machine_manager::schedule_new_driver(const game_driver& driver)
 {
 	m_new_driver_pending = &driver;
 }
 
 
 /***************************************************************************
-    CORE IMPLEMENTATION
+	CORE IMPLEMENTATION
 ***************************************************************************/
 
 //-------------------------------------------------
@@ -112,7 +112,7 @@ void mame_machine_manager::update_machine()
 //  split
 //-------------------------------------------------
 
-static std::vector<std::string> split(const std::string &text, char sep)
+static std::vector<std::string> split(const std::string& text, char sep)
 {
 	std::vector<std::string> tokens;
 	std::size_t start = 0, end = 0;
@@ -158,7 +158,7 @@ void mame_machine_manager::start_luaengine()
 				{
 					m_plugins->parse_ini_file((util::core_file&)file);
 				}
-				catch (options_exception &)
+				catch (options_exception&)
 				{
 					osd_printf_error("**Error loading plugin.ini**\n");
 				}
@@ -166,18 +166,18 @@ void mame_machine_manager::start_luaengine()
 		}
 
 		// process includes
-		for (const std::string &incl : split(options().plugin(), ','))
+		for (const std::string& incl : split(options().plugin(), ','))
 		{
-			plugin_options::plugin *p = m_plugins->find(incl);
+			plugin_options::plugin* p = m_plugins->find(incl);
 			if (!p)
 				fatalerror("Fatal error: Could not load plugin: %s\n", incl);
 			p->m_start = true;
 		}
 
 		// process excludes
-		for (const std::string &excl : split(options().no_plugin(), ','))
+		for (const std::string& excl : split(options().no_plugin(), ','))
 		{
-			plugin_options::plugin *p = m_plugins->find(excl);
+			plugin_options::plugin* p = m_plugins->find(excl);
 			if (!p)
 				fatalerror("Fatal error: Unknown plugin: %s\n", excl);
 			p->m_start = false;
@@ -187,7 +187,7 @@ void mame_machine_manager::start_luaengine()
 	// we have a special way to open the console plugin
 	if (options().console())
 	{
-		plugin_options::plugin *p = m_plugins->find(OPTION_CONSOLE);
+		plugin_options::plugin* p = m_plugins->find(OPTION_CONSOLE);
 		if (!p)
 			fatalerror("Fatal error: Console plugin not found.\n");
 
@@ -228,7 +228,7 @@ int mame_machine_manager::execute()
 		m_new_driver_pending = nullptr;
 
 		// if no driver, use the internal empty driver
-		const game_driver *system = mame_options::system(m_options);
+		const game_driver* system = mame_options::system(m_options);
 		if (system == nullptr)
 		{
 			system = &GAME_NAME(___empty);
@@ -294,10 +294,10 @@ int mame_machine_manager::execute()
 
 TIMER_CALLBACK_MEMBER(mame_machine_manager::autoboot_callback)
 {
-	if (strlen(options().autoboot_script())!=0) {
+	if (strlen(options().autoboot_script()) != 0) {
 		mame_machine_manager::instance()->lua()->load_script(options().autoboot_script());
 	}
-	else if (strlen(options().autoboot_command())!=0) {
+	else if (strlen(options().autoboot_command()) != 0) {
 		std::string cmd = std::string(options().autoboot_command());
 		strreplace(cmd, "'", "\\'");
 		std::string val = std::string("emu.keypost('").append(cmd).append("')");
@@ -308,7 +308,7 @@ TIMER_CALLBACK_MEMBER(mame_machine_manager::autoboot_callback)
 void mame_machine_manager::reset()
 {
 	// setup autoboot if needed
-	m_autoboot_timer->adjust(attotime(options().autoboot_delay(),0),0);
+	m_autoboot_timer->adjust(attotime(options().autoboot_delay(), 0), 0);
 }
 
 ui_manager* mame_machine_manager::create_ui(running_machine& machine)
@@ -365,7 +365,7 @@ std::vector<std::reference_wrapper<const std::string>> mame_machine_manager::mis
 	assert(m_machine);
 
 	// make sure that any required image has a mounted file
-	for (device_image_interface &image : image_interface_enumerator(m_machine->root_device()))
+	for (device_image_interface& image : image_interface_enumerator(m_machine->root_device()))
 	{
 		if (image.must_be_loaded())
 		{
@@ -380,29 +380,32 @@ std::vector<std::reference_wrapper<const std::string>> mame_machine_manager::mis
 	return results;
 }
 
-const char * emulator_info::get_bare_build_version() { return bare_build_version; }
-const char * emulator_info::get_build_version() { return build_version; }
+const char* emulator_info::get_bare_build_version() { return bare_build_version; }
+const char* emulator_info::get_build_version() { return build_version; }
 
 void emulator_info::display_ui_chooser(running_machine& machine)
 {
 	// force the UI to show the game select screen
-	mame_ui_manager &mui = mame_machine_manager::instance()->ui();
-	render_container &container = machine.render().ui_container();
+	mame_ui_manager& mui = mame_machine_manager::instance()->ui();
+	render_container& container = machine.render().ui_container();
+
 	if (machine.options().ui() == emu_options::UI_SIMPLE)
 		ui::simple_menu_select_game::force_game_select(mui, container);
 	else
 		ui::menu_select_game::force_game_select(mui, container);
 }
 
-int emulator_info::start_frontend(emu_options &options, osd_interface &osd, std::vector<std::string> &args)
+int emulator_info::start_frontend(emu_options& options, osd_interface& osd, std::vector<std::string>& args)
 {
 	cli_frontend frontend(options, osd);
+
 	return frontend.execute(args);
 }
 
-int emulator_info::start_frontend(emu_options &options, osd_interface &osd, int argc, char *argv[])
+int emulator_info::start_frontend(emu_options& options, osd_interface& osd, int argc, char* argv[])
 {
 	std::vector<std::string> args(argv, argv + argc);
+
 	return start_frontend(options, osd, args);
 }
 
@@ -426,11 +429,11 @@ void emulator_info::sound_hook()
 	return mame_machine_manager::instance()->lua()->on_sound_update();
 }
 
-void emulator_info::layout_script_cb(layout_file &file, const char *script)
+void emulator_info::layout_script_cb(layout_file& file, const char* script)
 {
 	// TODO: come up with a better way to pass multiple arguments to plugin
 	//mame_machine_manager::instance()->lua()->call_plugin_set("layout", std::make_tuple(&file, script->get_value()));
-	auto &lua(mame_machine_manager::instance()->lua()->sol());
+	auto& lua(mame_machine_manager::instance()->lua()->sol());
 	sol::object obj = lua.registry()["cb_layout"];
 	if (obj.is<sol::protected_function>())
 	{
