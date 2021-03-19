@@ -245,6 +245,7 @@ void sound_sdl::update_audio_stream(bool is_throttled, const int16_t* buffer, in
 		// Fill in some zeros to prevent an initial buffer underflow
 		int8_t zero = 0;
 		size_t zsize = stream_buffer->free_size() / 2;
+
 		while (zsize--)
 			stream_buffer->append(&zero, 1);
 
@@ -269,6 +270,7 @@ void sound_sdl::update_audio_stream(bool is_throttled, const int16_t* buffer, in
 
 	size_t nfree_size = stream_buffer->free_size();
 	size_t ndata_size = stream_buffer->data_size();
+
 	if (LOG_SOUND)
 		util::stream_format(*sound_log, "Appended data: DS=%u(%u) FS=%u(%u) BTF=%u\n", data_size, ndata_size, free_size, nfree_size, bytes_this_frame);
 }
@@ -296,7 +298,7 @@ void sound_sdl::set_mastervolume(int _attenuation)
 //============================================================
 void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 {
-	sound_sdl* thiz = reinterpret_cast<sound_sdl*>(userdata);
+	sound_sdl* thiz = static_cast<sound_sdl*>(userdata);
 	size_t const free_size = thiz->stream_buffer->free_size();
 	size_t const data_size = thiz->stream_buffer->data_size();
 
@@ -312,12 +314,12 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 	}
 	else
 	{
-		int err = thiz->stream_buffer->pop((void*)stream, len);
+		int err = thiz->stream_buffer->pop(static_cast<void*>(stream), len);
 
 		if (LOG_SOUND && err)
 			*thiz->sound_log << "Late detection of underflow. This shouldn't happen.\n";
 
-		thiz->attenuate((int16_t*)stream, len);
+		thiz->attenuate(reinterpret_cast<int16_t*>(stream), len);
 
 		webpp::streaming_server::get().send_audio_interval(stream, thiz->freq, thiz->sdl_xfer_samples);
 

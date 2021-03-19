@@ -28,140 +28,125 @@ namespace encoding
 	class encode_to_mp4
 	{
 	private:
-		//Video
-		static const AVPixelFormat h264PixelFormat = AV_PIX_FMT_YUV420P;
-		static const AVPixelFormat SDLPixelFormat = AV_PIX_FMT_RGB24;
+		// Video	
+		static const enum AVPixelFormat sdl_pixel_format = AV_PIX_FMT_RGB24;
+		static const enum AVPixelFormat h264_pixel_format = AV_PIX_FMT_YUV420P;
 		//SDL_PIXELFORMAT_ARGB32 = AV_PIX_FMT_RGB32		
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
 
-		AVPacket avpkt, aspkt;
-		AVFrame* snd_in = nullptr;
-		AVFrame* m_pRGBFrame = nullptr;
-		AVFrame* m_pYUVFrame = nullptr;
-		AVDictionary* opts = nullptr;
-		AVDictionary* audio_opts = nullptr;
-		AVCodecContext* c = nullptr;
-		AVCodecContext* in_c = nullptr;
-		SwsContext* scxt = nullptr;
-		uint8_t* yuv_buff = nullptr;
-		uint8_t* pkt_buff = nullptr;
+		AVPacket video_packet, audio_packet;
+		AVFrame* sound_in_frame = nullptr;
+		AVFrame* rgb_frame = nullptr;
+		AVFrame* yuv_frame = nullptr;
+		AVDictionary* video_options = nullptr;
+		AVDictionary* audio_options = nullptr;
+		AVCodecContext* video_codec_context = nullptr;
+		SwsContext* video_sws_context = nullptr;
+		uint8_t* yuv_buffer = nullptr;
+		uint8_t* video_packet_buffer = nullptr;
 
-		int pkt_buff_size, got_packet_ptr;
-		//Video
+		int video_packet_buffer_size, got_packet_ptr;
+		// Video
 
-	private:
-		//Audio
+		// Audio
 		static const int SWR_CH_MAX = 32;
 		static const int out_sample_rate = 48000; //44100;
-		static const AVSampleFormat AudioSampleFormat = AV_SAMPLE_FMT_FLTP; //AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
+		static const enum AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP; //AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
-		AVCodecContext* encoder = nullptr;
-		AVCodecContext* encoder_sdp = nullptr;
-		SwrContext* swrctx = nullptr;
+		AVCodecContext* audio_codec_context = nullptr;
+		SwrContext* audio_swr_context = nullptr;
 
-		int dstlines[SWR_CH_MAX];
-		int source_size = -1;
-		int encoder_size = -1;
+		int audio_destination[SWR_CH_MAX];
 
-		const uint8_t* stream_buf[SWR_CH_MAX];
-		uint8_t* audio_buf[SWR_CH_MAX];
-		int audio_buf_samples = 0;
-		//Audio
+		const uint8_t* audio_stream_buffer[SWR_CH_MAX];
+		uint8_t* audio_packet_buffer[SWR_CH_MAX];
+		int audio_packet_buffer_size = 0;
+		// Audio		
 
 	private:
-		void initVideo()
+		void init_video()
 		{
-			auto pCodecH264 = avcodec_find_encoder(AV_CODEC_ID_H264);
-			if (!pCodecH264)
+			const AVCodec* encoder_h264 = avcodec_find_encoder(AV_CODEC_ID_H264);
+			if (!encoder_h264)
 				throw std::runtime_error("H.264 codec not found!");
 
-			c = avcodec_alloc_context3(pCodecH264);
-			c->width = out_width;
-			c->height = out_height;
-			c->time_base.num = 1;
-			c->time_base.den = fps;
-			c->pix_fmt = h264PixelFormat;
+			video_codec_context = avcodec_alloc_context3(encoder_h264);
+			video_codec_context->width = out_width;
+			video_codec_context->height = out_height;
+			video_codec_context->time_base.num = 1;
+			video_codec_context->time_base.den = fps;
+			video_codec_context->pix_fmt = h264_pixel_format;
 
-			av_dict_set(&opts, "preset", "ultrafast", 0);
-			av_dict_set(&opts, "tune", "zerolatency", 0);
+			av_dict_set(&video_options, "preset", "ultrafast", 0);
+			av_dict_set(&video_options, "tune", "zerolatency", 0);
 
-			if (avcodec_open2(c, pCodecH264, &opts) < 0)
+			if (avcodec_open2(video_codec_context, encoder_h264, &video_options) < 0)
 				throw std::runtime_error("Cannot open codec H.264!");
 
-			scxt = sws_getContext(
-				in_width, in_height, SDLPixelFormat,
-				out_width, out_height, h264PixelFormat,
+			video_sws_context = sws_getContext(
+				in_width, in_height, sdl_pixel_format,
+				out_width, out_height, h264_pixel_format,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
-			m_pRGBFrame = av_frame_alloc();
-			m_pRGBFrame->width = in_width;
-			m_pRGBFrame->height = in_height;
-			m_pRGBFrame->format = SDLPixelFormat;
+			rgb_frame = av_frame_alloc();
+			rgb_frame->width = in_width;
+			rgb_frame->height = in_height;
+			rgb_frame->format = sdl_pixel_format;
 
-			m_pYUVFrame = av_frame_alloc();
-			m_pYUVFrame->width = out_width;
-			m_pYUVFrame->height = out_height;
-			m_pYUVFrame->format = h264PixelFormat;
+			yuv_frame = av_frame_alloc();
+			yuv_frame->width = out_width;
+			yuv_frame->height = out_height;
+			yuv_frame->format = h264_pixel_format;
 
-			auto outbuf_size = out_width * out_height * 3 / 2;
-			yuv_buff = new uint8_t[outbuf_size];
+			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
+			yuv_buffer = new uint8_t[yuv_buffer_size];
 
-			pkt_buff_size = in_width * in_height * channels;
-			pkt_buff = new uint8_t[pkt_buff_size];
+			video_packet_buffer_size = in_width * in_height * channels;
+			video_packet_buffer = new uint8_t[video_packet_buffer_size];
 
-			avpicture_fill((AVPicture*)m_pYUVFrame, yuv_buff, h264PixelFormat, out_width, out_height);
+			avpicture_fill(
+				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
+				h264_pixel_format,
+				out_width, out_height);
 		}
 
-		void initAudio()
+		void init_audio()
 		{
-			auto pCodecAAC = avcodec_find_encoder(AV_CODEC_ID_AAC);
-			if (!pCodecAAC)
+			const AVCodec* encoder_aac = avcodec_find_encoder(AV_CODEC_ID_AAC);
+			if (!encoder_aac)
 				throw std::runtime_error("AAC codec not found!");
 
 			// alloc encoder
-			encoder = avcodec_alloc_context3(pCodecAAC);
-			encoder->sample_fmt = AudioSampleFormat;
-			encoder->sample_rate = out_sample_rate;
-			encoder->channels = 2;
-			encoder->channel_layout = AV_CH_LAYOUT_STEREO;
-			encoder->time_base.num = 1;
-			encoder->time_base.den = out_sample_rate;
+			audio_codec_context = avcodec_alloc_context3(encoder_aac);
+			audio_codec_context->sample_fmt = audio_sample_format;
+			audio_codec_context->sample_rate = out_sample_rate;
+			audio_codec_context->channels = 2;
+			audio_codec_context->channel_layout = AV_CH_LAYOUT_STEREO;
+			audio_codec_context->time_base.num = 1;
+			audio_codec_context->time_base.den = out_sample_rate;
 
-			// need ctx with CODEC_FLAG_GLOBAL_HEADER flag
-			encoder_sdp = avcodec_alloc_context3(pCodecAAC);
-			encoder_sdp->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-			encoder_sdp->sample_fmt = AudioSampleFormat;
-			encoder_sdp->sample_rate = out_sample_rate;
-			encoder_sdp->channels = 2;
-			encoder_sdp->channel_layout = AV_CH_LAYOUT_STEREO;
-			encoder_sdp->time_base.num = 1;
-			encoder_sdp->time_base.den = out_sample_rate;
+			av_dict_set(&audio_options, "profile", "aac_low", 0);
+			av_dict_set(&audio_options, "aac_coder", "fast", 0);
 
-			av_dict_set(&audio_opts, "profile", "aac_low", 0);
-			av_dict_set(&audio_opts, "aac_coder", "fast", 0);
-
-			if (avcodec_open2(encoder, pCodecAAC, &audio_opts) < 0)
-				throw std::runtime_error("Cannot open codec AAC!");
-
-			if (avcodec_open2(encoder_sdp, pCodecAAC, &audio_opts) < 0)
+			if (avcodec_open2(audio_codec_context, encoder_aac, &audio_options) < 0)
 				throw std::runtime_error("Cannot open codec AAC!");
 
 			// estimate sizes
-			source_size = av_samples_get_buffer_size(
+			av_samples_get_buffer_size(
 				nullptr,
 				2,
-				encoder->frame_size,
-				AudioSampleFormat,
+				audio_codec_context->frame_size,
+				audio_sample_format,
 				1 /*no-alignment*/
 			);
 
-			encoder_size = av_samples_get_buffer_size(
-				dstlines,
-				encoder->channels,
-				encoder->frame_size,
-				encoder->sample_fmt,
+			av_samples_get_buffer_size(
+				audio_destination,
+				audio_codec_context->channels,
+				audio_codec_context->frame_size,
+				audio_codec_context->sample_fmt,
 				1 /*no-alignment*/
 			);
 		}
@@ -178,138 +163,138 @@ namespace encoding
 			av_register_all();
 			avcodec_register_all();
 
-			initVideo();
-			initAudio();
+			init_video();
+			init_audio();
 		}
 
 		~encode_to_mp4()
 		{
 			//Video
-			sws_freeContext(scxt);
+			sws_freeContext(video_sws_context);
 
-			avcodec_close(in_c);
-			avcodec_close(c);
+			avcodec_close(video_codec_context);
+			av_free(video_codec_context);
 
-			av_free(in_c);
-			av_free(c);
+			av_dict_free(&video_options);
 
-			av_dict_free(&opts);
+			av_frame_unref(rgb_frame);
+			av_frame_unref(yuv_frame);
 
-			av_frame_unref(m_pRGBFrame);
-			av_frame_unref(m_pYUVFrame);
-
-			delete[] yuv_buff;
-			delete[] pkt_buff;
+			delete[] yuv_buffer;
+			delete[] video_packet_buffer;
 
 			//Audio
-			swr_free(&swrctx);
+			swr_free(&audio_swr_context);
 
-			avcodec_close(encoder);
-			av_free(encoder);
+			avcodec_close(audio_codec_context);
+			av_free(audio_codec_context);
 
-			avcodec_close(encoder_sdp);
-			av_free(encoder_sdp);
+			av_dict_free(&audio_options);
 
-			av_dict_free(&audio_opts);
-
-			av_frame_unref(snd_in);
+			av_frame_unref(sound_in_frame);
 		}
 
-		bool addIstant(uint8_t* stream, int in_sample_rate, int samples, std::shared_ptr<std::ostream> ws_stream)
+		bool add_instant(const uint8_t* audio_stream, const int in_sample_rate, const int samples, std::shared_ptr<std::ostream> ws_stream)
 		{
-			if (swrctx == nullptr)
+			if (audio_swr_context == nullptr)
 			{
-				swrctx = swr_alloc_set_opts(
+				audio_swr_context = swr_alloc_set_opts(
 					nullptr,
 					AV_CH_LAYOUT_STEREO,
-					AudioSampleFormat,
+					audio_sample_format,
 					out_sample_rate,
 					AV_CH_LAYOUT_STEREO,
-					AudioSampleFormat,
+					audio_sample_format,
 					in_sample_rate,
 					0,
 					nullptr
 				);
 
-				swr_init(swrctx);
+				swr_init(audio_swr_context);
 
 				// allocate resample buffer
-				audio_buf_samples = av_rescale_rnd(
+				audio_packet_buffer_size = av_rescale_rnd(
 					samples,
 					out_sample_rate,
 					in_sample_rate,
 					AV_ROUND_UP
 				);
 
-				int bufreq = av_samples_get_buffer_size(
+				const auto audio_buf_size = av_samples_get_buffer_size(
 					nullptr,
 					2,
-					audio_buf_samples * 2,
-					AudioSampleFormat,
+					audio_packet_buffer_size * 2,
+					audio_sample_format,
 					1 /*no-alignment*/
 				);
 
 				for (size_t i = 0; i < SWR_CH_MAX; i++)
 				{
-					audio_buf[i] = nullptr;
-					stream_buf[i] = nullptr;
+					audio_packet_buffer[i] = nullptr;
+					audio_stream_buffer[i] = nullptr;
 				}
 
-				audio_buf[0] = new uint8_t[bufreq];
+				audio_packet_buffer[0] = new uint8_t[audio_buf_size];
+
+				sound_in_frame = av_frame_alloc();
 			}
 
-			stream_buf[0] = stream;
+			audio_stream_buffer[0] = audio_stream;
 
 			swr_convert(
-				swrctx,
-				audio_buf, audio_buf_samples,
-				stream_buf, samples
+				audio_swr_context,
+				audio_packet_buffer, audio_packet_buffer_size,
+				audio_stream_buffer, samples
 			);
 
-			snd_in->nb_samples = encoder->frame_size;
-			snd_in->format = encoder->sample_fmt;
-			snd_in->channel_layout = encoder->channel_layout;
+			sound_in_frame->nb_samples = audio_codec_context->frame_size;
+			sound_in_frame->format = audio_codec_context->sample_fmt;
+			sound_in_frame->channel_layout = audio_codec_context->channel_layout;
 
 			avcodec_fill_audio_frame(
-				snd_in,
-				encoder->channels,
-				encoder->sample_fmt,
-				audio_buf[0] /*samples+offset*/,
-				audio_buf_samples /*encoder_size*/,
+				sound_in_frame,
+				audio_codec_context->channels,
+				audio_codec_context->sample_fmt,
+				audio_packet_buffer[0] /*samples+offset*/,
+				audio_packet_buffer_size /*encoder_size*/,
 				1 /*no-alignment*/
 			);
 
-			av_init_packet(&aspkt);
-			aspkt.data = audio_buf[0];
-			aspkt.size = audio_buf_samples;
+			av_init_packet(&audio_packet);
+			audio_packet.data = audio_packet_buffer[0];
+			audio_packet.size = audio_packet_buffer_size;
 
-			avcodec_encode_audio2(encoder, &aspkt, snd_in, &got_packet_ptr);
+			avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
-				ws_stream->write((const char*)avpkt.data, avpkt.size);
+				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
 
 			return got_packet_ptr;
 		}
 
-		bool addFrame(uint8_t* pixels, std::shared_ptr<std::ostream> ws_stream)
+		bool add_frame(uint8_t* pixels, std::shared_ptr<std::ostream> ws_stream)
 		{
-			avpicture_fill((AVPicture*)m_pRGBFrame, pixels, SDLPixelFormat, in_width, in_height);
+			avpicture_fill(
+				reinterpret_cast<AVPicture*>(rgb_frame),
+				pixels,
+				sdl_pixel_format,
+				in_width, in_height);
 
 			//RGB to YUV
 			sws_scale(
-				scxt,
-				m_pRGBFrame->data, m_pRGBFrame->linesize, 0, in_height,
-				m_pYUVFrame->data, m_pYUVFrame->linesize
+				video_sws_context,
+				rgb_frame->data, rgb_frame->linesize, 0, in_height,
+				yuv_frame->data, yuv_frame->linesize
 			);
 
-			av_init_packet(&avpkt);
-			avpkt.data = pkt_buff;
-			avpkt.size = pkt_buff_size;
+			av_init_packet(&video_packet);
+			video_packet.data = video_packet_buffer;
+			video_packet.size = video_packet_buffer_size;
 
-			avcodec_encode_video2(c, &avpkt, m_pYUVFrame, &got_packet_ptr);
+			avcodec_encode_video2(video_codec_context, &video_packet, yuv_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
-				ws_stream->write((const char*)avpkt.data, avpkt.size);
+				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
 
 			return got_packet_ptr;
 		}
