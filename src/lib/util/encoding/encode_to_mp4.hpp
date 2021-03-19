@@ -35,7 +35,8 @@ namespace encoding
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
 
-		AVPacket avpkt;
+		AVPacket avpkt, aspkt;
+		AVFrame* snd_in = nullptr;
 		AVFrame* m_pRGBFrame = nullptr;
 		AVFrame* m_pYUVFrame = nullptr;
 		AVDictionary* opts = nullptr;
@@ -210,6 +211,8 @@ namespace encoding
 			av_free(encoder_sdp);
 
 			av_dict_free(&audio_opts);
+
+			av_frame_unref(snd_in);
 		}
 
 		bool addIstant(uint8_t* stream, int in_sample_rate, int samples, std::shared_ptr<std::ostream> ws_stream)
@@ -263,7 +266,29 @@ namespace encoding
 				stream_buf, samples
 			);
 
-			return true;
+			snd_in->nb_samples = encoder->frame_size;
+			snd_in->format = encoder->sample_fmt;
+			snd_in->channel_layout = encoder->channel_layout;
+
+			avcodec_fill_audio_frame(
+				snd_in,
+				encoder->channels,
+				encoder->sample_fmt,
+				audio_buf[0] /*samples+offset*/,
+				audio_buf_samples /*encoder_size*/,
+				1 /*no-alignment*/
+			);
+
+			av_init_packet(&aspkt);
+			aspkt.data = audio_buf[0];
+			aspkt.size = audio_buf_samples;
+
+			avcodec_encode_audio2(encoder, &aspkt, snd_in, &got_packet_ptr);
+
+			if (got_packet_ptr)
+				ws_stream->write((const char*)avpkt.data, avpkt.size);
+
+			return got_packet_ptr;
 		}
 
 		bool addFrame(uint8_t* pixels, std::shared_ptr<std::ostream> ws_stream)
