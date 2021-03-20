@@ -29,8 +29,8 @@ namespace encoding
 	{
 	private:
 		// Video	
-		static const enum AVPixelFormat sdl_pixel_format = AV_PIX_FMT_RGB24;
-		static const enum AVPixelFormat h264_pixel_format = AV_PIX_FMT_YUV420P;
+		static const enum AVPixelFormat SDL_pixel_format = AV_PIX_FMT_RGB24;
+		static const enum AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
 		//SDL_PIXELFORMAT_ARGB32 = AV_PIX_FMT_RGB32		
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
@@ -67,38 +67,38 @@ namespace encoding
 	private:
 		void init_video()
 		{
-			const AVCodec* encoder_h264 = avcodec_find_encoder(AV_CODEC_ID_H264);
-			if (!encoder_h264)
+			const AVCodec* encoder_H264 = avcodec_find_encoder(AV_CODEC_ID_H264);
+			if (!encoder_H264)
 				throw std::runtime_error("H.264 codec not found!");
 
-			video_codec_context = avcodec_alloc_context3(encoder_h264);
+			video_codec_context = avcodec_alloc_context3(encoder_H264);
 			video_codec_context->width = out_width;
 			video_codec_context->height = out_height;
 			video_codec_context->time_base.num = 1;
 			video_codec_context->time_base.den = fps;
-			video_codec_context->pix_fmt = h264_pixel_format;
+			video_codec_context->pix_fmt = H264_pixel_format;
 
 			av_dict_set(&video_options, "preset", "ultrafast", 0);
 			av_dict_set(&video_options, "tune", "zerolatency", 0);
 
-			if (avcodec_open2(video_codec_context, encoder_h264, &video_options) < 0)
+			if (avcodec_open2(video_codec_context, encoder_H264, &video_options) < 0)
 				throw std::runtime_error("Cannot open codec H.264!");
 
 			video_sws_context = sws_getContext(
-				in_width, in_height, sdl_pixel_format,
-				out_width, out_height, h264_pixel_format,
+				in_width, in_height, SDL_pixel_format,
+				out_width, out_height, H264_pixel_format,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
 			rgb_frame->width = in_width;
 			rgb_frame->height = in_height;
-			rgb_frame->format = sdl_pixel_format;
+			rgb_frame->format = SDL_pixel_format;
 
 			yuv_frame = av_frame_alloc();
 			yuv_frame->width = out_width;
 			yuv_frame->height = out_height;
-			yuv_frame->format = h264_pixel_format;
+			yuv_frame->format = H264_pixel_format;
 
 			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
@@ -108,18 +108,18 @@ namespace encoding
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
-				h264_pixel_format,
+				H264_pixel_format,
 				out_width, out_height);
 		}
 
 		void init_audio()
 		{
-			const AVCodec* encoder_aac = avcodec_find_encoder(AV_CODEC_ID_AAC);
-			if (!encoder_aac)
+			const AVCodec* encoder_AAC = avcodec_find_encoder(AV_CODEC_ID_AAC);
+			if (!encoder_AAC)
 				throw std::runtime_error("AAC codec not found!");
 
 			// alloc encoder
-			audio_codec_context = avcodec_alloc_context3(encoder_aac);
+			audio_codec_context = avcodec_alloc_context3(encoder_AAC);
 			audio_codec_context->sample_fmt = audio_sample_format;
 			audio_codec_context->sample_rate = out_sample_rate;
 			audio_codec_context->channels = 2;
@@ -130,7 +130,7 @@ namespace encoding
 			av_dict_set(&audio_options, "profile", "aac_low", 0);
 			av_dict_set(&audio_options, "aac_coder", "fast", 0);
 
-			if (avcodec_open2(audio_codec_context, encoder_aac, &audio_options) < 0)
+			if (avcodec_open2(audio_codec_context, encoder_AAC, &audio_options) < 0)
 				throw std::runtime_error("Cannot open codec AAC!");
 
 			// estimate sizes
@@ -277,7 +277,7 @@ namespace encoding
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
-				sdl_pixel_format,
+				SDL_pixel_format,
 				in_width, in_height);
 
 			//RGB to YUV
