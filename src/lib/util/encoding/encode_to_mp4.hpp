@@ -11,7 +11,8 @@
 #include <ostream>
 
 // FFMPEG C headers
-extern "C" {
+extern "C"
+{
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
 #include "libavutil/mathematics.h"
@@ -28,11 +29,12 @@ namespace encoding
 	{
 	private:
 		// Video
+		static const AVCodecID video_codec = AV_CODEC_ID_H264;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
-		static const enum AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
-		static const enum AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
+		static const AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
+		static const AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
 
@@ -51,9 +53,11 @@ namespace encoding
 		// Video
 
 		// Audio
+		static const AVCodecID audio_codec = AV_CODEC_ID_AAC;
+
 		static const int SWR_CH_MAX = 32;
 		static const int out_sample_rate = 48000; //44100;
-		static const enum AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP;
+		static const AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP;
 		//AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
 		AVCodecContext* audio_codec_context = nullptr;
@@ -69,22 +73,24 @@ namespace encoding
 	private:
 		void init_video()
 		{
-			const AVCodec* encoder_H264 = avcodec_find_encoder(AV_CODEC_ID_H264);
-			if (!encoder_H264)
-				throw std::runtime_error("H.264 codec not found!");
+			const AVCodec* video_encoder = avcodec_find_encoder(video_codec);
+			if (!video_encoder)
+				throw std::runtime_error("Video codec not found!");
 
-			video_codec_context = avcodec_alloc_context3(encoder_H264);
+			video_codec_context = avcodec_alloc_context3(video_encoder);
 			video_codec_context->width = out_width;
 			video_codec_context->height = out_height;
 			video_codec_context->time_base.num = 1;
 			video_codec_context->time_base.den = fps;
 			video_codec_context->pix_fmt = H264_pixel_format;
 
+			// H.264
 			av_dict_set(&video_options, "preset", "ultrafast", 0);
 			av_dict_set(&video_options, "tune", "zerolatency", 0);
+			// H.264
 
-			if (avcodec_open2(video_codec_context, encoder_H264, &video_options) < 0)
-				throw std::runtime_error("Cannot open codec H.264!");
+			if (avcodec_open2(video_codec_context, video_encoder, &video_options) < 0)
+				throw std::runtime_error("Cannot open video codec!");
 
 			video_sws_context = sws_getContext(
 				in_width, in_height, SDL_pixel_format,
@@ -116,12 +122,12 @@ namespace encoding
 
 		void init_audio()
 		{
-			const AVCodec* encoder_AAC = avcodec_find_encoder(AV_CODEC_ID_AAC);
-			if (!encoder_AAC)
-				throw std::runtime_error("AAC codec not found!");
+			const AVCodec* audio_encoder = avcodec_find_encoder(audio_codec);
+			if (!audio_encoder)
+				throw std::runtime_error("Audio codec not found!");
 
 			// alloc encoder
-			audio_codec_context = avcodec_alloc_context3(encoder_AAC);
+			audio_codec_context = avcodec_alloc_context3(audio_encoder);
 			audio_codec_context->sample_fmt = audio_sample_format;
 			audio_codec_context->sample_rate = out_sample_rate;
 			audio_codec_context->channels = 2;
@@ -129,11 +135,13 @@ namespace encoding
 			audio_codec_context->time_base.num = 1;
 			audio_codec_context->time_base.den = out_sample_rate;
 
+			// AAC
 			av_dict_set(&audio_options, "profile", "aac_low", 0);
 			av_dict_set(&audio_options, "aac_coder", "fast", 0);
+			// AAC
 
-			if (avcodec_open2(audio_codec_context, encoder_AAC, &audio_options) < 0)
-				throw std::runtime_error("Cannot open codec AAC!");
+			if (avcodec_open2(audio_codec_context, audio_encoder, &audio_options) < 0)
+				throw std::runtime_error("Cannot open audio codec!");
 
 			// estimate sizes
 			av_samples_get_buffer_size(
@@ -154,7 +162,9 @@ namespace encoding
 		}
 
 	public:
-		encode_to_mp4(const int in_width, const int in_height, const int out_width, const int out_height, const int channels, const int fps) :
+		encode_to_mp4(const int in_width, const int in_height,
+					  const int out_width, const int out_height,
+					  const int channels, const int fps) :
 			in_width(in_width),
 			in_height(in_height),
 			out_width(out_width),
@@ -196,7 +206,9 @@ namespace encoding
 			av_frame_unref(sound_in_frame);
 		}
 
-		bool add_instant(const uint8_t* audio_stream, const int in_sample_rate, const int samples, std::shared_ptr<std::ostream> ws_stream)
+		bool add_instant(const uint8_t* audio_stream,
+						 const int in_sample_rate, const int samples,
+						 const std::shared_ptr<std::ostream>& ws_stream)
 		{
 			if (audio_swr_context == nullptr)
 			{
@@ -274,7 +286,8 @@ namespace encoding
 			return got_packet_ptr;
 		}
 
-		bool add_frame(uint8_t* pixels, std::shared_ptr<std::ostream> ws_stream)
+		bool add_frame(uint8_t* pixels,
+					   const std::shared_ptr<std::ostream>& ws_stream)
 		{
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
