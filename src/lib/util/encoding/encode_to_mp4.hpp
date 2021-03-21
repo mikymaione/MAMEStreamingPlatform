@@ -45,7 +45,7 @@ namespace encoding
 		AVDictionary* video_options = nullptr;
 		AVDictionary* audio_options = nullptr;
 		AVCodecContext* video_codec_context = nullptr;
-		SwsContext* video_sws_context = nullptr;
+		SwsContext* video_converter_context = nullptr;
 		uint8_t* yuv_buffer = nullptr;
 		uint8_t* video_packet_buffer = nullptr;
 
@@ -61,7 +61,7 @@ namespace encoding
 		//AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
 		AVCodecContext* audio_codec_context = nullptr;
-		SwrContext* audio_swr_context = nullptr;
+		SwrContext* audio_converter_context = nullptr;
 
 		int audio_destination[SWR_CH_MAX];
 
@@ -92,7 +92,7 @@ namespace encoding
 			if (avcodec_open2(video_codec_context, video_encoder, &video_options) < 0)
 				throw std::runtime_error("Cannot open video codec!");
 
-			video_sws_context = sws_getContext(
+			video_converter_context = sws_getContext(
 				in_width, in_height, SDL_pixel_format,
 				out_width, out_height, H264_pixel_format,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
@@ -182,7 +182,7 @@ namespace encoding
 		~encode_to_mp4()
 		{
 			//Video
-			sws_freeContext(video_sws_context);
+			sws_freeContext(video_converter_context);
 
 			avcodec_close(video_codec_context);
 			av_free(video_codec_context);
@@ -196,7 +196,7 @@ namespace encoding
 			delete[] video_packet_buffer;
 
 			//Audio
-			swr_free(&audio_swr_context);
+			swr_free(&audio_converter_context);
 
 			avcodec_close(audio_codec_context);
 			av_free(audio_codec_context);
@@ -210,9 +210,9 @@ namespace encoding
 						 const int in_sample_rate, const int samples,
 						 const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			if (audio_swr_context == nullptr)
+			if (audio_converter_context == nullptr)
 			{
-				audio_swr_context = swr_alloc_set_opts(
+				audio_converter_context = swr_alloc_set_opts(
 					nullptr,
 					AV_CH_LAYOUT_STEREO,
 					audio_sample_format,
@@ -224,7 +224,7 @@ namespace encoding
 					nullptr
 				);
 
-				swr_init(audio_swr_context);
+				swr_init(audio_converter_context);
 
 				// allocate resample buffer
 				audio_packet_buffer_size = av_rescale_rnd(
@@ -256,7 +256,7 @@ namespace encoding
 			audio_stream_buffer[0] = audio_stream;
 
 			swr_convert(
-				audio_swr_context,
+				audio_converter_context,
 				audio_packet_buffer, audio_packet_buffer_size,
 				audio_stream_buffer, samples
 			);
@@ -297,7 +297,7 @@ namespace encoding
 
 			//RGB to YUV
 			sws_scale(
-				video_sws_context,
+				video_converter_context,
 				rgb_frame->data, rgb_frame->linesize, 0, in_height,
 				yuv_frame->data, yuv_frame->linesize
 			);

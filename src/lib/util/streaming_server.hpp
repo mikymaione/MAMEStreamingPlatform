@@ -77,10 +77,10 @@ namespace webpp
 
 		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples) const
 		{
-			//const auto stream = std::make_shared<ws_server::SendStream>();
+			const auto stream = std::make_shared<ws_server::SendStream>();
 
-			//if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
-			//send(stream, 130);
+			if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
+				send(stream, 130);
 		}
 
 		void start(const unsigned short port)
