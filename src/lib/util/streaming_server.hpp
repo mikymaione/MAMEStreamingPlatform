@@ -7,9 +7,7 @@
 //============================================================
 #pragma once
 
-#include <ios>
 #include <iostream>
-#include <sstream>
 #include <functional>
 #include <memory>
 #include <thread>
@@ -29,12 +27,13 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder = std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 3, 24);
+		std::unique_ptr<encoding::encode_to_mp4> encoder
+			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 4, 24);
 
 	public:
 		std::function<void()> on_accept;
 
-	private:
+	public:
 		streaming_server() = default;
 		~streaming_server() = default;
 		streaming_server(const streaming_server&) = delete;
@@ -47,43 +46,43 @@ namespace webpp
 			return instance;
 		}
 
-		bool isActive() const
+		bool is_active() const
 		{
 			return active;
 		}
 
-		///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
-		void send(std::shared_ptr<ws_server::SendStream> stream, unsigned char fin_rsv_opcode)
+		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
+		void send(const std::shared_ptr<ws_server::SendStream>& stream, const unsigned char fin_rsv_operation_code) const
 		{
-			for (auto c : server->get_connections())
-				server->send(c, stream, nullptr, fin_rsv_opcode);
+			for (const auto& c : server->get_connections())
+				server->send(c, stream, nullptr, fin_rsv_operation_code);
 		}
 
-		void send_string(const std::string& msg)
+		void send_string(const std::string& msg) const
 		{
-			auto stream = std::make_shared<ws_server::SendStream>();
+			const auto stream = std::make_shared<ws_server::SendStream>();
 			*stream << msg;
 
 			send(stream, 129);
 		}
 
-		void send_video_frame(uint8_t* b)
+		void send_video_frame(uint8_t* b) const
 		{
-			auto stream = std::make_shared<ws_server::SendStream>();
+			const auto stream = std::make_shared<ws_server::SendStream>();
 
 			if (encoder->add_frame(b, stream))
 				send(stream, 130);
 		}
 
-		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples)
+		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples) const
 		{
-			auto stream = std::make_shared<ws_server::SendStream>();
+			//const auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
-				send(stream, 130);
+			//if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
+			//send(stream, 130);
 		}
 
-		void start(unsigned short port)
+		void start(const unsigned short port)
 		{
 			server = std::make_unique<ws_server>();
 			server->config.client_mode = true;
@@ -91,7 +90,8 @@ namespace webpp
 
 			auto& endpoint = server->m_endpoint["/"];
 
-			endpoint.on_open = [&](auto connection) {
+			endpoint.on_open = [&](auto connection)
+			{
 				std::cout
 					<< "-Opened connection from "
 					<< connection->remote_endpoint_address
@@ -102,11 +102,13 @@ namespace webpp
 				acceptThread = std::make_unique<std::thread>(on_accept);
 			};
 
-			endpoint.on_message = [](auto connection, auto message) {
+			endpoint.on_message = [](auto connection, auto message)
+			{
 				// input handling
 			};
 
-			endpoint.on_close = [](auto connection, auto status, auto reason) {
+			endpoint.on_close = [](auto connection, auto status, auto reason)
+			{
 				std::cout
 					<< "-Closed connection from "
 					<< connection->remote_endpoint_address
@@ -120,11 +122,12 @@ namespace webpp
 			};
 
 			std::cout
-				<< "Game streming server listening on "
+				<< "Game streaming server listening on "
 				<< port
 				<< std::endl;
 
 			server->start();
 		}
+
 	};
 } // namespace webpp

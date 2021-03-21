@@ -445,19 +445,19 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 	free_streaming_render();
 
 	//jpg or bmp24
-	m_sdl_buffer_bytes_length = nd.height() * nd.width() * 3;
+	//m_sdl_buffer_bytes_length = nd.height() * nd.width() * 3;
 
 	//bmp32
-	//m_sdl_buffer_bytes_length = nd.height() * nd.width() * 4;
+	m_sdl_buffer_bytes_length = nd.height() * nd.width() * 4;
 
 	m_sdl_buffer_bytes = new char[m_sdl_buffer_bytes_length];
 	m_sdl_buffer_bytes_previous = new char[m_sdl_buffer_bytes_length];
 
 	//jpg or bmp24
-	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
+	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
 
 	//bmp32
-	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_ARGB32); // == AV_PIX_FMT_RGB32
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
@@ -491,7 +491,7 @@ int renderer_sdl2::create()
 
 	auto win = assert_window();
 
-	if (webpp::streaming_server::get().isActive())
+	if (webpp::streaming_server::get().is_active())
 	{
 		auto nd = win->get_size();
 		init_streaming_render(nd);
@@ -669,7 +669,7 @@ int renderer_sdl2::draw(int update)
 	SDL_RenderPresent(m_sdl_renderer);
 	m_last_blit_time += osd_ticks();
 
-	if (webpp::streaming_server::get().isActive())
+	if (webpp::streaming_server::get().is_active())
 	{
 		//IMG_SaveJPG_RW(m_sdl_buffer, m_sdl_surface, 70);
 		/*

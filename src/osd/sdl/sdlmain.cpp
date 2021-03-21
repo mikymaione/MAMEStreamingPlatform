@@ -237,7 +237,7 @@ int main(int argc, char** argv)
 	int r = 0;
 
 	// Server
-	if (webpp::streaming_server::get().isActive())
+	if (webpp::streaming_server::get().is_active())
 	{
 		webpp::streaming_server::get().on_accept = [&]() {
 			//system("start mame64d.exe -streamingserver -window -video accel -sound sdl"); //run MAME
