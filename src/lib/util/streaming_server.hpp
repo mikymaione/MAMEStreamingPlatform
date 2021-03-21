@@ -31,7 +31,13 @@ namespace webpp
 			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 4, 15);
 
 	public:
+		/**
+		 * \brief Accept callback
+		 */
 		std::function<void()> on_accept;
+		/**
+		 * \brief Connection closed callback
+		 */
 		std::function<void()> on_connection_closed;
 
 	public:
@@ -40,7 +46,19 @@ namespace webpp
 		streaming_server(const streaming_server&) = delete;
 		streaming_server& operator=(const streaming_server&) = delete;
 
+	private:
+		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
+		void send(const std::shared_ptr<ws_server::SendStream>& stream, const unsigned char fin_rsv_operation_code) const
+		{
+			for (const auto& c : server->get_connections())
+				server->send(c, stream, nullptr, fin_rsv_operation_code);
+		}
+
 	public:
+		/**
+		 * \brief Return the singleton instance of the class
+		 * \return the instance
+		 */
 		static streaming_server& get()
 		{
 			static streaming_server instance;
@@ -52,13 +70,10 @@ namespace webpp
 			return active;
 		}
 
-		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
-		void send(const std::shared_ptr<ws_server::SendStream>& stream, const unsigned char fin_rsv_operation_code) const
-		{
-			for (const auto& c : server->get_connections())
-				server->send(c, stream, nullptr, fin_rsv_operation_code);
-		}
-
+		/**
+		 * \brief Send a string to the client
+		 * \param msg
+		 */
 		void send_string(const std::string& msg) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();
@@ -67,14 +82,24 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		void send_video_frame(uint8_t* b) const
+		/**
+		 * \brief Send video frame to client
+		 * \param pixels
+		 */
+		void send_video_frame(uint8_t* pixels) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->add_frame(b, stream))
+			if (encoder->add_frame(pixels, stream))
 				send(stream, 130);
 		}
 
+		/**
+		 * \brief Send audio interval to client
+		 * \param audio_stream
+		 * \param in_sample_rate
+		 * \param samples
+		 */
 		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();

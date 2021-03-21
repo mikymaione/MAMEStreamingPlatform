@@ -36,7 +36,8 @@ namespace encoding
 		static const AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
 		static const AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
 
-		const int in_width, in_height, out_width, out_height, channels, fps;
+		int in_width, in_height, out_width, out_height;
+		const int channels, fps;
 
 		AVPacket video_packet, audio_packet;
 		AVFrame* sound_in_frame = nullptr;
@@ -206,6 +207,36 @@ namespace encoding
 			av_frame_unref(sound_in_frame);
 		}
 
+		/**
+		 * \brief Change input size
+		 * \param new_in_width
+		 * \param new_in_height
+		 */
+		void set_input_size(const int new_in_width, const int new_in_height)
+		{
+			in_width = new_in_width;
+			in_height = new_in_height;
+		}
+
+		/**
+		 * \brief Change output size
+		 * \param new_out_width
+		 * \param new_out_height
+		 */
+		void set_output_size(const int new_out_width, const int new_out_height)
+		{
+			out_width = new_out_width;
+			out_height = new_out_height;
+		}
+
+		/**
+		 * \brief Add audio instant
+		 * \param audio_stream
+		 * \param in_sample_rate
+		 * \param samples
+		 * \param ws_stream
+		 * \return success
+		 */
 		bool add_instant(const uint8_t* audio_stream,
 						 const int in_sample_rate, const int samples,
 						 const std::shared_ptr<std::ostream>& ws_stream)
@@ -286,6 +317,12 @@ namespace encoding
 			return got_packet_ptr;
 		}
 
+		/**
+		 * \brief Add video frame
+		 * \param pixels
+		 * \param ws_stream
+		 * \return success
+		 */
 		bool add_frame(uint8_t* pixels,
 					   const std::shared_ptr<std::ostream>& ws_stream)
 		{
