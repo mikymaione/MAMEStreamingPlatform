@@ -11,8 +11,7 @@
 #include <ostream>
 
 // FFMPEG C headers
-extern "C"
-{
+extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
 #include "libavutil/mathematics.h"
@@ -28,10 +27,12 @@ namespace encoding
 	class encode_to_mp4
 	{
 	private:
-		// Video	
-		static const enum AVPixelFormat SDL_pixel_format = AV_PIX_FMT_RGB24;
+		// Video
+
+		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
+		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
+		static const enum AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
 		static const enum AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
-		//SDL_PIXELFORMAT_ARGB32 = AV_PIX_FMT_RGB32		
 
 		const int in_width, in_height, out_width, out_height, channels, fps;
 
@@ -52,7 +53,8 @@ namespace encoding
 		// Audio
 		static const int SWR_CH_MAX = 32;
 		static const int out_sample_rate = 48000; //44100;
-		static const enum AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP; //AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
+		static const enum AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP;
+		//AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
 		AVCodecContext* audio_codec_context = nullptr;
 		SwrContext* audio_swr_context = nullptr;
