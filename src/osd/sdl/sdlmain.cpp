@@ -244,6 +244,11 @@ int main(int argc, char** argv)
 			r = main_sdl(argc, argv);
 		};
 
+		webpp::streaming_server::get().on_connection_closed = [&]()
+		{
+			exit(r);
+		};
+
 		webpp::streaming_server::get().start(8888);
 	}
 	else

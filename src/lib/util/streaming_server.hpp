@@ -28,10 +28,11 @@ namespace webpp
 		std::unique_ptr<std::thread> acceptThread;
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder
-			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 4, 24);
+			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 4, 15);
 
 	public:
 		std::function<void()> on_accept;
+		std::function<void()> on_connection_closed;
 
 	public:
 		streaming_server() = default;
@@ -107,7 +108,7 @@ namespace webpp
 				// input handling
 			};
 
-			endpoint.on_close = [](auto connection, auto status, auto reason)
+			endpoint.on_close = [&](auto connection, auto status, auto reason)
 			{
 				std::cout
 					<< "-Closed connection from "
@@ -118,7 +119,7 @@ namespace webpp
 					<< ": " << reason
 					<< std::endl;
 
-				// gestire chiusura forzata
+				on_connection_closed();
 			};
 
 			std::cout
