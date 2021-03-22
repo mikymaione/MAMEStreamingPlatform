@@ -15,8 +15,8 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
-#include "libavutil/imgutils.h"
 #include "libavutil/mathematics.h"
+#include "libavutil/imgutils.h"
 #include "libavutil/opt.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
@@ -40,6 +40,7 @@ namespace encoding
 		const int channels, fps;
 
 		AVPacket video_packet, audio_packet;
+		AVFrame* sound_in_frame = nullptr;
 		AVFrame* rgb_frame = nullptr;
 		AVFrame* yuv_frame = nullptr;
 		AVDictionary* video_options = nullptr;
@@ -56,28 +57,22 @@ namespace encoding
 		static const AVCodecID audio_codec = AV_CODEC_ID_AAC;
 
 		static const int SWR_CH_MAX = 32;
-		static const int in_sample_rate = 48000; //44100;
 		static const int out_sample_rate = 48000; //44100;
+		static const int in_sample_rate = 48000;
 		static const int samples = 512;
 		static const AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_FLTP;
 		static const AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
-		static const int audio_source_bitspersample = 16;
-		//AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
 		AVCodecContext* audio_codec_context = nullptr;
 		SwrContext* audio_converter_context = nullptr;
 
-		int dstlines[SWR_CH_MAX];
-		const uint8_t* srcplanes[SWR_CH_MAX];
-		uint8_t* dstplanes[SWR_CH_MAX];
+		int audio_destination[SWR_CH_MAX];
 
-		uint8_t* audio_buf = nullptr;
-		int audio_buf_samples = 0;
-		int bufreq = 0;
+		const uint8_t* audio_stream_buffer[SWR_CH_MAX];
+		uint8_t* audio_packet_buffer[SWR_CH_MAX];
+		uint8_t* audio_packet_buf = nullptr;
 
-		uint8_t* convbuf = nullptr;
-
-		int source_size, encoder_size;
+		int in_buffer_size, out_buffer_size, audio_packet_buffer_size;
 		// Audio		
 
 	private:
@@ -154,21 +149,53 @@ namespace encoding
 				throw std::runtime_error("Cannot open audio codec!");
 
 			// estimate sizes
-			if (av_samples_get_buffer_size(
+			in_buffer_size = av_samples_get_buffer_size(
 				nullptr,
 				2,
-				audio_codec_context->frame_size,
-				audio_sample_format,
-				1 /*no-alignment*/) < 0)
-				throw std::runtime_error("Cannot estimate input audio buffer size!");
+				audio_codec_context->frame_size, // check
+				audio_sample_format_in,
+				1 /*no-alignment*/
+			);
 
-			if (av_samples_get_buffer_size(
+			out_buffer_size = av_samples_get_buffer_size(
 				audio_destination,
-				audio_codec_context->channels,
+				2,
 				audio_codec_context->frame_size,
-				audio_codec_context->sample_fmt,
-				1 /*no-alignment*/) < 0)
-				throw std::runtime_error("Cannot estimate output audio buffer size !");
+				audio_sample_format_out,
+				1 /*no-alignment*/
+			);
+
+			/////////////////////////////////////////////////////////
+			audio_converter_context = swr_alloc_set_opts(
+				nullptr,
+				AV_CH_LAYOUT_STEREO,
+				audio_sample_format_out,
+				out_sample_rate,
+				AV_CH_LAYOUT_STEREO,
+				audio_sample_format_in,
+				in_sample_rate,
+				0,
+				nullptr
+			);
+
+			swr_init(audio_converter_context);
+
+			// allocate resample buffer
+			audio_packet_buffer_size = av_rescale_rnd(
+				samples,
+				out_sample_rate,
+				in_sample_rate,
+				AV_ROUND_UP
+			);
+
+			for (size_t i = 0; i < SWR_CH_MAX; i++)
+			{
+				audio_packet_buffer[i] = nullptr;
+				audio_stream_buffer[i] = nullptr;
+			}
+
+			audio_packet_buf = new uint8_t[out_buffer_size];
+			sound_in_frame = av_frame_alloc();
 		}
 
 	public:
@@ -213,7 +240,7 @@ namespace encoding
 
 			av_dict_free(&audio_options);
 
-			delete[] audio_buf;
+			av_frame_unref(sound_in_frame);
 		}
 
 		/**
@@ -246,77 +273,33 @@ namespace encoding
 		 */
 		bool add_instant(const uint8_t* audio_stream, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			if (audio_converter_context == nullptr)
-			{
-				audio_converter_context = swr_alloc_set_opts(
-					nullptr,
-					AV_CH_LAYOUT_STEREO,
-					audio_sample_format,
-					out_sample_rate,
-					AV_CH_LAYOUT_STEREO,
-					audio_sample_format,
-					in_sample_rate,
-					0,
-					nullptr
-				);
-
-				if (swr_init(audio_converter_context) < 0)
-					throw std::runtime_error("Cannot initialize audio converter context!");
-
-				// allocate resample buffer
-				audio_packet_buffer_size = av_rescale_rnd(
-					samples,
-					out_sample_rate,
-					in_sample_rate,
-					AV_ROUND_UP
-				);
-
-				const auto audio_buf_size = av_samples_get_buffer_size(
-					nullptr,
-					2,
-					audio_packet_buffer_size * 2,
-					audio_sample_format,
-					1 /*no-alignment*/
-				);
-
-				for (size_t i = 0; i < SWR_CH_MAX; i++)
-				{
-					audio_packet_buffer[i] = nullptr;
-					audio_stream_buffer[i] = nullptr;
-				}
-
-				audio_packet_buffer[0] = new uint8_t[audio_buf_size];
-
-				sound_in_frame = av_frame_alloc();
-			}
-
+			audio_packet_buffer[0] = audio_packet_buf;
 			audio_stream_buffer[0] = audio_stream;
 
-			if (swr_convert(
+			swr_convert(
 				audio_converter_context,
 				audio_packet_buffer, audio_packet_buffer_size,
-				audio_stream_buffer, samples) < 0)
-				throw std::runtime_error("Cannot convert audio!");
+				audio_stream_buffer, samples
+			);
 
 			sound_in_frame->nb_samples = audio_codec_context->frame_size;
 			sound_in_frame->format = audio_codec_context->sample_fmt;
 			sound_in_frame->channel_layout = audio_codec_context->channel_layout;
 
-			if (avcodec_fill_audio_frame(
+			avcodec_fill_audio_frame(
 				sound_in_frame,
 				audio_codec_context->channels,
 				audio_codec_context->sample_fmt,
 				audio_packet_buffer[0] /*samples+offset*/,
 				audio_packet_buffer_size /*encoder_size*/,
-				1 /*no-alignment*/) < 0)
-				throw std::runtime_error("Cannot fill audio frame!");
+				1 /*no-alignment*/
+			);
 
 			av_init_packet(&audio_packet);
 			audio_packet.data = audio_packet_buffer[0];
 			audio_packet.size = audio_packet_buffer_size;
 
-			if (avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr) < 0)
-				throw std::runtime_error("Cannot encode audio!");
+			avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
@@ -332,26 +315,24 @@ namespace encoding
 		 */
 		bool add_frame(uint8_t* pixels, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			if (avpicture_fill(
+			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
 				SDL_pixel_format,
-				in_width, in_height) < 0)
-				throw std::runtime_error("Cannot fill video frame!");
+				in_width, in_height);
 
 			//RGB to YUV
-			if (sws_scale(
+			sws_scale(
 				video_converter_context,
 				rgb_frame->data, rgb_frame->linesize, 0, in_height,
-				yuv_frame->data, yuv_frame->linesize) < 0)
-				throw std::runtime_error("Cannot convert video frame!");
+				yuv_frame->data, yuv_frame->linesize
+			);
 
 			av_init_packet(&video_packet);
 			video_packet.data = video_packet_buffer;
 			video_packet.size = video_packet_buffer_size;
 
-			if (avcodec_encode_video2(video_codec_context, &video_packet, yuv_frame, &got_packet_ptr) < 0)
-				throw std::runtime_error("Cannot encode video frame!");
+			avcodec_encode_video2(video_codec_context, &video_packet, yuv_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
