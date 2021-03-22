@@ -100,11 +100,11 @@ namespace webpp
 		 * \param in_sample_rate
 		 * \param samples
 		 */
-		void send_audio_interval(uint8_t* audio_stream, int in_sample_rate, int samples) const
+		void send_audio_interval(uint8_t* audio_stream) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->add_instant(audio_stream, in_sample_rate, samples, stream))
+			if (encoder->add_instant(audio_stream, stream))
 				send(stream, 130);
 		}
 
