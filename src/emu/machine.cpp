@@ -374,7 +374,7 @@ int running_machine::run(bool quiet)
 		// break out to our async javascript loop and halt
 		emscripten_set_running_machine(this);
 #endif
-
+		
 		// run the CPUs until a reset or exit
 		while ((!m_hard_reset_pending && !m_exit_pending) || m_saveload_schedule != saveload_schedule::NONE)
 		{

@@ -72,7 +72,7 @@ namespace encoding
 		uint8_t* audio_packet_buffer[SWR_CH_MAX];
 		uint8_t* audio_packet_buf = nullptr;
 
-		int in_buffer_size, out_buffer_size, audio_packet_buffer_size;
+		int in_buffer_size, out_buffer_size, audio_packet_buffer_size, bufreq;
 		// Audio		
 
 	private:
@@ -188,13 +188,21 @@ namespace encoding
 				AV_ROUND_UP
 			);
 
-			for (size_t i = 0; i < SWR_CH_MAX; i++)
+			bufreq = av_samples_get_buffer_size(
+				nullptr,
+				2,
+				audio_packet_buffer_size * 2,
+				audio_sample_format_out,
+				1 /*no-alignment*/
+			);
+
+			for (auto i = 0; i < SWR_CH_MAX; i++)
 			{
 				audio_packet_buffer[i] = nullptr;
 				audio_stream_buffer[i] = nullptr;
 			}
 
-			audio_packet_buf = new uint8_t[out_buffer_size];
+			audio_packet_buf = new uint8_t[bufreq];
 			sound_in_frame = av_frame_alloc();
 		}
 
@@ -273,20 +281,20 @@ namespace encoding
 		 */
 		bool add_instant(const uint8_t* audio_stream, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			audio_packet_buffer[0] = audio_packet_buf;
 			audio_stream_buffer[0] = audio_stream;
+			audio_packet_buffer[0] = audio_packet_buf;
 
-			swr_convert(
+			auto ret = swr_convert(
 				audio_converter_context,
-				audio_packet_buffer, audio_packet_buffer_size,
-				audio_stream_buffer, samples
+				audio_packet_buffer, audio_packet_buffer_size, // output
+				audio_stream_buffer, samples // input
 			);
 
 			sound_in_frame->nb_samples = audio_codec_context->frame_size;
 			sound_in_frame->format = audio_codec_context->sample_fmt;
 			sound_in_frame->channel_layout = audio_codec_context->channel_layout;
 
-			avcodec_fill_audio_frame(
+			ret = avcodec_fill_audio_frame(
 				sound_in_frame,
 				audio_codec_context->channels,
 				audio_codec_context->sample_fmt,
@@ -299,7 +307,7 @@ namespace encoding
 			audio_packet.data = audio_packet_buffer[0];
 			audio_packet.size = audio_packet_buffer_size;
 
-			avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr);
+			ret = avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
