@@ -15,8 +15,8 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
-#include "libavutil/mathematics.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
@@ -40,7 +40,6 @@ namespace encoding
 		const int channels, fps;
 
 		AVPacket video_packet, audio_packet;
-		AVFrame* sound_in_frame = nullptr;
 		AVFrame* rgb_frame = nullptr;
 		AVFrame* yuv_frame = nullptr;
 		AVDictionary* video_options = nullptr;
@@ -57,19 +56,28 @@ namespace encoding
 		static const AVCodecID audio_codec = AV_CODEC_ID_AAC;
 
 		static const int SWR_CH_MAX = 32;
+		static const int in_sample_rate = 48000; //44100;
 		static const int out_sample_rate = 48000; //44100;
-		static const AVSampleFormat audio_sample_format = AV_SAMPLE_FMT_FLTP;
+		static const int samples = 512;
+		static const AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_FLTP;
+		static const AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
+		static const int audio_source_bitspersample = 16;
 		//AV_SAMPLE_FMT_S16; //AV_SAMPLE_FMT_U8
 
 		AVCodecContext* audio_codec_context = nullptr;
 		SwrContext* audio_converter_context = nullptr;
 
-		int audio_destination[SWR_CH_MAX];
+		int dstlines[SWR_CH_MAX];
+		const uint8_t* srcplanes[SWR_CH_MAX];
+		uint8_t* dstplanes[SWR_CH_MAX];
 
-		const uint8_t* audio_stream_buffer[SWR_CH_MAX];
-		uint8_t* audio_packet_buffer[SWR_CH_MAX];
+		uint8_t* audio_buf = nullptr;
+		int audio_buf_samples = 0;
+		int bufreq = 0;
 
-		int audio_packet_buffer_size = 0;
+		uint8_t* convbuf = nullptr;
+
+		int source_size, encoder_size;
 		// Audio		
 
 	private:
@@ -130,7 +138,7 @@ namespace encoding
 
 			// alloc encoder
 			audio_codec_context = avcodec_alloc_context3(audio_encoder);
-			audio_codec_context->sample_fmt = audio_sample_format;
+			audio_codec_context->sample_fmt = audio_sample_format_out;
 			audio_codec_context->sample_rate = out_sample_rate;
 			audio_codec_context->channels = 2;
 			audio_codec_context->channel_layout = AV_CH_LAYOUT_STEREO;
@@ -205,7 +213,7 @@ namespace encoding
 
 			av_dict_free(&audio_options);
 
-			av_frame_unref(sound_in_frame);
+			delete[] audio_buf;
 		}
 
 		/**
@@ -233,29 +241,10 @@ namespace encoding
 		/**
 		 * \brief Add audio instant
 		 * \param audio_stream
-		 * \param in_sample_rate
-		 * \param samples
 		 * \param ws_stream
 		 * \return success
 		 */
-		bool add_instant(const uint8_t* audio_stream,
-						 const int in_sample_rate, const int samples,
-						 const std::shared_ptr<std::ostream>& ws_stream)
-		{
-			try
-			{
-				return add_instant2(audio_stream, in_sample_rate, samples, ws_stream);
-			}
-			catch (const std::runtime_error& error)
-			{
-				std::cout << error.what() << std::endl;
-				throw error;
-			}
-		}
-
-		bool add_instant2(const uint8_t* audio_stream,
-						  const int in_sample_rate, const int samples,
-						  const std::shared_ptr<std::ostream>& ws_stream)
+		bool add_instant(const uint8_t* audio_stream, const std::shared_ptr<std::ostream>& ws_stream)
 		{
 			if (audio_converter_context == nullptr)
 			{
@@ -341,8 +330,7 @@ namespace encoding
 		 * \param ws_stream
 		 * \return success
 		 */
-		bool add_frame(uint8_t* pixels,
-					   const std::shared_ptr<std::ostream>& ws_stream)
+		bool add_frame(uint8_t* pixels, const std::shared_ptr<std::ostream>& ws_stream)
 		{
 			if (avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
