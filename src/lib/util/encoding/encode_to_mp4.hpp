@@ -258,11 +258,20 @@ namespace encoding
 		 */
 		bool add_instant(const uint8_t* audio_stream, const int audio_stream_size, const std::shared_ptr<std::ostream>& ws_stream)
 		{
+			const auto temp = new uint8_t[audio_stream_size];
+			aac_buffer[0] = temp;
+			wav_buffer[0] = audio_stream;
+
+			swr_convert(
+				audio_converter_context,
+				aac_buffer, audio_stream_size, // destination
+				wav_buffer, audio_stream_size); //source
+
 			avcodec_fill_audio_frame(
 				aac_frame,
 				audio_codec_context->channels,
 				audio_codec_context->sample_fmt,
-				audio_stream,
+				temp,
 				audio_stream_size,
 				1 /*no-alignment*/);
 
@@ -279,6 +288,8 @@ namespace encoding
 				ws_stream->write(reinterpret_cast<const char*>(audio_packet.data), audio_packet.size);
 
 			av_packet_unref(&audio_packet);
+
+			delete[] temp;
 
 			return got_packet_ptr;
 		}
