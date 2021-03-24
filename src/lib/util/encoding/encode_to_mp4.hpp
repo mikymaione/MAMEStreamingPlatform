@@ -9,7 +9,6 @@
 
 #include <memory>
 #include <ostream>
-#include <fstream>
 
 // FFMPEG C headers
 extern "C"
@@ -80,9 +79,7 @@ namespace encoding
 
 		//uint8_t* video_packet_buffer = nullptr;
 		//uint8_t* audio_packet_buffer = nullptr;
-		//int video_packet_buffer_size, audio_packet_buffer_size;
-
-		std::ofstream myFile_Handler;
+		//int video_packet_buffer_size, audio_packet_buffer_size;	
 
 	private:
 		void init_video()
@@ -165,7 +162,7 @@ namespace encoding
 			aac_frame->format = audio_codec_context->sample_fmt;
 			aac_frame->sample_rate = audio_codec_context->sample_rate;
 
-			av_frame_get_buffer(aac_frame, 0);
+			//av_frame_get_buffer(aac_frame, 0);
 
 			// Resampler
 			audio_converter_context = swr_alloc_set_opts(
@@ -199,8 +196,6 @@ namespace encoding
 
 			init_video();
 			init_audio();
-
-			myFile_Handler.open("File_1.txt");
 		}
 
 		~encode_to_mp4()
@@ -229,9 +224,7 @@ namespace encoding
 
 			av_frame_unref(aac_frame);
 
-			//delete[] audio_packet_buffer;
-
-			myFile_Handler.close();
+			//delete[] audio_packet_buffer;			
 		}
 
 		/**
@@ -265,15 +258,13 @@ namespace encoding
 		 */
 		bool add_instant(const uint8_t* audio_stream, const int audio_stream_size, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			const auto temp = new uint8_t[audio_stream_size];
-			aac_buffer[0] = temp;
-			wav_buffer[0] = audio_stream;
-
-			swr_convert(
-				audio_converter_context,
-				aac_buffer, audio_stream_size, //output
-				wav_buffer, audio_stream_size //input
-			);
+			avcodec_fill_audio_frame(
+				aac_frame,
+				audio_codec_context->channels,
+				audio_codec_context->sample_fmt,
+				audio_stream,
+				audio_stream_size,
+				1 /*no-alignment*/);
 
 			av_init_packet(&audio_packet);
 			//audio_packet.data = audio_packet_buffer;
@@ -282,12 +273,12 @@ namespace encoding
 			avcodec_send_frame(audio_codec_context, aac_frame);
 			got_packet_ptr = avcodec_receive_packet(audio_codec_context, &audio_packet) == 0;
 
+			audio_packet.stream_index = 1;
+
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(audio_packet.data), audio_packet.size);
 
 			av_packet_unref(&audio_packet);
-
-			delete[] temp;
 
 			return got_packet_ptr;
 		}
