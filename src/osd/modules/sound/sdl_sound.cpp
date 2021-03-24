@@ -321,8 +321,7 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 
 		thiz->attenuate(reinterpret_cast<int16_t*>(stream), len);
 
-		//thiz->freq, thiz->sdl_xfer_samples		
-		webpp::streaming_server::get().send_audio_interval(stream);
+		webpp::streaming_server::get().send_audio_interval(stream, len);
 
 		if (LOG_SOUND)
 			util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);

@@ -86,7 +86,7 @@ namespace webpp
 		 * \brief Send video frame to client
 		 * \param pixels
 		 */
-		void send_video_frame(uint8_t* pixels) const
+		void send_video_frame(const uint8_t* pixels) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();
 
@@ -97,14 +97,15 @@ namespace webpp
 		/**
 		 * \brief Send audio interval to client
 		 * \param audio_stream
+		 * \param audio_stream_size
 		 * \param in_sample_rate
 		 * \param samples
 		 */
-		void send_audio_interval(uint8_t* audio_stream) const
+		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size) const
 		{
 			const auto stream = std::make_shared<ws_server::SendStream>();
 
-			if (encoder->add_instant(audio_stream, stream))
+			if (encoder->add_instant(audio_stream, audio_stream_size, stream))
 				send(stream, 130);
 		}
 
