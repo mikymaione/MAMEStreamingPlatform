@@ -36,44 +36,58 @@ namespace encoding
 		static const AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
 		static const AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
 
-		int in_width, in_height, out_width, out_height;
-		const int channels, fps;
-
-		AVPacket video_packet, audio_packet;
-		AVFrame* sound_in_frame = nullptr;
-		AVFrame* rgb_frame = nullptr;
-		AVFrame* yuv_frame = nullptr;
-		AVDictionary* video_options = nullptr;
-		AVDictionary* audio_options = nullptr;
-		AVCodecContext* video_codec_context = nullptr;
-		SwsContext* video_converter_context = nullptr;
-		uint8_t* yuv_buffer = nullptr;
-		uint8_t* video_packet_buffer = nullptr;
-
-		int video_packet_buffer_size, got_packet_ptr;
-		// Video
-
 		// Audio
 		static const AVCodecID audio_codec = AV_CODEC_ID_AAC;
 
-		static const int SWR_CH_MAX = 32;
+		static const int audio_channels_in = 2;
+		static const int audio_channels_out = 1;
+		static const uint64_t audio_channel_layout_in = AV_CH_LAYOUT_STEREO;
+		static const uint64_t audio_channel_layout_out = AV_CH_LAYOUT_MONO;
+
 		static const int out_sample_rate = 48000; //44100;
 		static const int in_sample_rate = 48000;
 		static const int samples = 512;
 		static const AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_FLTP;
 		static const AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
 
+	private:
+		int in_width, in_height, out_width, out_height;
+		const int channels, fps;
+
+	private:
+		AVPacket video_packet, audio_packet;
+
+		AVFrame* aac_frame = nullptr;
+
+		AVFrame* rgb_frame = nullptr;
+		AVFrame* yuv_frame = nullptr;
+
+		AVDictionary* video_options = nullptr;
+		AVDictionary* audio_options = nullptr;
+
+		AVCodecContext* video_codec_context = nullptr;
 		AVCodecContext* audio_codec_context = nullptr;
+
+		SwsContext* video_converter_context = nullptr;
 		SwrContext* audio_converter_context = nullptr;
 
-		int audio_destination[SWR_CH_MAX];
+		uint8_t* yuv_buffer = nullptr;
+		uint8_t* aac_buffer = nullptr;
+		uint8_t* wav_buffer = nullptr;
 
-		const uint8_t* audio_stream_buffer[SWR_CH_MAX];
-		uint8_t* audio_packet_buffer[SWR_CH_MAX];
-		uint8_t* audio_packet_buf = nullptr;
+		int aac_buffer_size;
+		int wav_buffer_size;
 
-		int in_buffer_size, out_buffer_size, audio_packet_buffer_size, bufreq;
-		// Audio		
+		uint8_t* video_packet_buffer = nullptr;
+		uint8_t* audio_packet_buffer = nullptr;
+
+		int video_packet_buffer_size;
+		int audio_packet_buffer_size;
+
+		const uint8_t* audio_convert_in_buffer[2];
+		uint8_t* audio_convert_out_buffer[2];
+
+		int got_packet_ptr;
 
 	private:
 		void init_video()
@@ -136,8 +150,8 @@ namespace encoding
 			audio_codec_context = avcodec_alloc_context3(audio_encoder);
 			audio_codec_context->sample_fmt = audio_sample_format_out;
 			audio_codec_context->sample_rate = out_sample_rate;
-			audio_codec_context->channels = 2;
-			audio_codec_context->channel_layout = AV_CH_LAYOUT_STEREO;
+			audio_codec_context->channels = audio_channels_out;
+			audio_codec_context->channel_layout = audio_channel_layout_out;
 			audio_codec_context->time_base.num = 1;
 			audio_codec_context->time_base.den = out_sample_rate;
 
@@ -149,30 +163,12 @@ namespace encoding
 			if (avcodec_open2(audio_codec_context, audio_encoder, &audio_options) < 0)
 				throw std::runtime_error("Cannot open audio codec!");
 
-			// estimate sizes
-			in_buffer_size = av_samples_get_buffer_size(
-				nullptr,
-				2,
-				audio_codec_context->frame_size, // check
-				audio_sample_format_in,
-				1 /*no-alignment*/
-			);
-
-			out_buffer_size = av_samples_get_buffer_size(
-				audio_destination,
-				2,
-				audio_codec_context->frame_size,
-				audio_sample_format_out,
-				1 /*no-alignment*/
-			);
-
-			/////////////////////////////////////////////////////////
 			audio_converter_context = swr_alloc_set_opts(
 				nullptr,
-				AV_CH_LAYOUT_STEREO,
+				audio_channel_layout_out,
 				audio_sample_format_out,
 				out_sample_rate,
-				AV_CH_LAYOUT_STEREO,
+				audio_channel_layout_in,
 				audio_sample_format_in,
 				in_sample_rate,
 				0,
@@ -181,30 +177,27 @@ namespace encoding
 
 			swr_init(audio_converter_context);
 
-			// allocate resample buffer
-			audio_packet_buffer_size = av_rescale_rnd(
-				samples,
-				out_sample_rate,
-				in_sample_rate,
-				AV_ROUND_UP
-			);
+			aac_frame = av_frame_alloc();
+			aac_frame->nb_samples = samples;
+			aac_frame->channels = audio_codec_context->channels;
+			aac_frame->channel_layout = audio_codec_context->channel_layout;
+			aac_frame->format = audio_codec_context->sample_fmt;
+			aac_frame->sample_rate = audio_codec_context->sample_rate;
 
-			bufreq = av_samples_get_buffer_size(
+			audio_packet_buffer_size = av_samples_get_buffer_size(
 				nullptr,
-				2,
-				audio_packet_buffer_size * 2,
+				audio_channels_out,
+				samples,
 				audio_sample_format_out,
 				1 /*no-alignment*/
 			);
 
-			for (auto i = 0; i < SWR_CH_MAX; i++)
-			{
-				audio_packet_buffer[i] = nullptr;
-				audio_stream_buffer[i] = nullptr;
-			}
+			aac_buffer_size = audio_packet_buffer_size;
+			wav_buffer_size = audio_packet_buffer_size;
 
-			audio_packet_buf = new uint8_t[bufreq];
-			sound_in_frame = av_frame_alloc();
+			aac_buffer = new uint8_t[aac_buffer_size];
+			wav_buffer = new uint8_t[wav_buffer_size];
+			audio_packet_buffer = new uint8_t[audio_packet_buffer_size];
 		}
 
 	public:
@@ -249,7 +242,10 @@ namespace encoding
 
 			av_dict_free(&audio_options);
 
-			av_frame_unref(sound_in_frame);
+			av_frame_unref(aac_frame);
+
+			delete[] aac_buffer;
+			delete[] audio_packet_buffer;
 		}
 
 		/**
@@ -277,41 +273,43 @@ namespace encoding
 		/**
 		 * \brief Add audio instant
 		 * \param audio_stream
+		 * \param audio_stream_size
 		 * \param ws_stream
 		 * \return success
 		 */
-		bool add_instant(const uint8_t* audio_stream, const std::shared_ptr<std::ostream>& ws_stream)
+		bool add_instant(const uint8_t* audio_stream, const int audio_stream_size, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			audio_stream_buffer[0] = audio_stream;
-			audio_packet_buffer[0] = audio_packet_buf;
+			audio_convert_in_buffer[0] = audio_stream;
+			audio_convert_in_buffer[1] = nullptr;
+			audio_convert_out_buffer[0] = wav_buffer;
+			audio_convert_out_buffer[1] = nullptr;
 
-			auto ret = swr_convert(
+			//WAV to AAC
+			swr_convert(
 				audio_converter_context,
-				audio_packet_buffer, audio_packet_buffer_size, // output
-				audio_stream_buffer, samples // input
+				audio_convert_out_buffer, wav_buffer_size, // output
+				audio_convert_in_buffer, audio_stream_size // input
 			);
 
-			sound_in_frame->nb_samples = audio_codec_context->frame_size;
-			sound_in_frame->format = audio_codec_context->sample_fmt;
-			sound_in_frame->channel_layout = audio_codec_context->channel_layout;
-
-			ret = avcodec_fill_audio_frame(
-				sound_in_frame,
+			avcodec_fill_audio_frame(
+				aac_frame,
 				audio_codec_context->channels,
 				audio_codec_context->sample_fmt,
-				audio_packet_buffer[0] /*samples+offset*/,
-				audio_packet_buffer_size /*encoder_size*/,
+				aac_buffer,
+				aac_buffer_size,
 				1 /*no-alignment*/
 			);
 
 			av_init_packet(&audio_packet);
-			audio_packet.data = audio_packet_buffer[0];
+			audio_packet.data = audio_packet_buffer;
 			audio_packet.size = audio_packet_buffer_size;
 
-			ret = avcodec_encode_audio2(audio_codec_context, &audio_packet, sound_in_frame, &got_packet_ptr);
+			avcodec_encode_audio2(audio_codec_context, &audio_packet, aac_frame, &got_packet_ptr);
 
 			if (got_packet_ptr)
-				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
+				ws_stream->write(reinterpret_cast<const char*>(audio_packet.data), audio_packet.size);
+
+			av_packet_unref(&audio_packet);
 
 			return got_packet_ptr;
 		}
@@ -322,7 +320,7 @@ namespace encoding
 		 * \param ws_stream
 		 * \return success
 		 */
-		bool add_frame(uint8_t* pixels, const std::shared_ptr<std::ostream>& ws_stream)
+		bool add_frame(const uint8_t* pixels, const std::shared_ptr<std::ostream>& ws_stream)
 		{
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
@@ -345,6 +343,8 @@ namespace encoding
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
+
+			av_packet_unref(&video_packet);
 
 			return got_packet_ptr;
 		}
