@@ -78,10 +78,9 @@ namespace encoding
 		uint8_t* aac_buffer[audio_channels_out];
 		const uint8_t* wav_buffer[audio_channels_out];
 
-		uint8_t* video_packet_buffer = nullptr;
-		uint8_t* audio_packet_buffer = nullptr;
-
-		int video_packet_buffer_size;
+		//uint8_t* video_packet_buffer = nullptr;
+		//uint8_t* audio_packet_buffer = nullptr;
+		//int video_packet_buffer_size, audio_packet_buffer_size;
 
 		std::ofstream myFile_Handler;
 
@@ -127,8 +126,8 @@ namespace encoding
 			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
-			video_packet_buffer_size = in_width * in_height * channels;
-			video_packet_buffer = new uint8_t[video_packet_buffer_size];
+			//video_packet_buffer_size = in_width * in_height * channels;
+			//video_packet_buffer = new uint8_t[video_packet_buffer_size];
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
@@ -218,7 +217,7 @@ namespace encoding
 			av_frame_unref(yuv_frame);
 
 			delete[] yuv_buffer;
-			delete[] video_packet_buffer;
+			//delete[] video_packet_buffer;
 
 			//Audio
 			swr_free(&audio_converter_context);
@@ -230,7 +229,7 @@ namespace encoding
 
 			av_frame_unref(aac_frame);
 
-			delete[] audio_packet_buffer;
+			//delete[] audio_packet_buffer;
 
 			myFile_Handler.close();
 		}
@@ -277,6 +276,8 @@ namespace encoding
 			);
 
 			av_init_packet(&audio_packet);
+			//audio_packet.data = audio_packet_buffer;
+			//audio_packet.size = audio_packet_buffer_size;
 
 			avcodec_send_frame(audio_codec_context, aac_frame);
 			got_packet_ptr = avcodec_receive_packet(audio_codec_context, &audio_packet) == 0;
@@ -313,8 +314,8 @@ namespace encoding
 			);
 
 			av_init_packet(&video_packet);
-			video_packet.data = video_packet_buffer;
-			video_packet.size = video_packet_buffer_size;
+			//video_packet.data = video_packet_buffer;
+			//video_packet.size = video_packet_buffer_size;
 
 			avcodec_send_frame(video_codec_context, yuv_frame);
 			got_packet_ptr = avcodec_receive_packet(video_codec_context, &video_packet) == 0;
@@ -323,8 +324,6 @@ namespace encoding
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
-
-			av_packet_unref(&video_packet);
 
 			return got_packet_ptr;
 		}
