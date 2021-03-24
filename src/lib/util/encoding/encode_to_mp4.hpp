@@ -92,6 +92,7 @@ namespace encoding
 			// H.264
 			av_dict_set(&video_options, "preset", "ultrafast", 0);
 			av_dict_set(&video_options, "tune", "zerolatency", 0);
+			av_dict_set(&video_options, "crf", "40", 0);
 			// H.264
 
 			if (avcodec_open2(video_codec_context, video_encoder, &video_options) < 0)
