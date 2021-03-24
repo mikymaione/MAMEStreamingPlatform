@@ -16,6 +16,7 @@ copyright-holders:Michele Maione
 	<style>
 		body {
 			overflow: hidden;
+			background-color: black;
 		}
 	</style>
 </head>
@@ -58,14 +59,28 @@ copyright-holders:Michele Maione
 			{
 				const uri = "ws://127.0.0.1:8888";
 
+				monitor = document.getElementById('monitor');
+
 				let mediaSource = new MediaSource();
 
 				mediaSource.onsourceopen = function ()
 				{
 					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+					sourceBuffer.mode = 'sequence';
+
+					sourceBuffer.onupdateend = function ()
+					{
+						//hack to get safari on mac to start playing, monitor.currentTime gets stuck on 0
+						if (mediaSource.duration !== Number.POSITIVE_INFINITY && monitor.currentTime === 0 && mediaSource.duration > 0)
+						{
+							monitor.currentTime = mediaSource.duration - 1;
+							mediaSource.duration = Number.POSITIVE_INFINITY;
+						}
+
+						monitor.play();
+					};
 				};
 
-				monitor = document.getElementById('monitor');
 				monitor.src = URL.createObjectURL(mediaSource);
 
 				let webSocket = window.WebSocket || window.MozWebSocket,
@@ -94,12 +109,8 @@ copyright-holders:Michele Maione
 					}
 					else
 					{
-						let blob = event.data;
-
-						blob.arrayBuffer().then(buffer =>
-						{
-							sourceBuffer.appendBuffer(buffer);
-						});
+						let buffer = new Uint8Array(event.data);
+						sourceBuffer.appendBuffer(buffer);
 					}
 				};
 			}
