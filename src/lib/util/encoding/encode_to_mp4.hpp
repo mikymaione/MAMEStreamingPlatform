@@ -15,7 +15,6 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
-#include "libavutil/mathematics.h"
 #include "libavutil/imgutils.h"
 #include "libavutil/opt.h"
 #include "libavformat/avformat.h"
@@ -55,6 +54,8 @@ namespace encoding
 		const int channels, fps;
 
 	private:
+		bool got_packet_ptr = false;
+
 		AVPacket video_packet, audio_packet;
 
 		AVFrame* aac_frame = nullptr;
@@ -72,22 +73,14 @@ namespace encoding
 		SwrContext* audio_converter_context = nullptr;
 
 		uint8_t* yuv_buffer = nullptr;
-		uint8_t* aac_buffer = nullptr;
-		uint8_t* wav_buffer = nullptr;
 
-		int aac_buffer_size;
-		int wav_buffer_size;
+		uint8_t* aac_buffer[audio_channels_out];
+		const uint8_t* wav_buffer[audio_channels_out];
 
 		uint8_t* video_packet_buffer = nullptr;
 		uint8_t* audio_packet_buffer = nullptr;
 
 		int video_packet_buffer_size;
-		int audio_packet_buffer_size;
-
-		const uint8_t* audio_convert_in_buffer[2];
-		uint8_t* audio_convert_out_buffer[2];
-
-		int got_packet_ptr;
 
 	private:
 		void init_video()
@@ -163,6 +156,16 @@ namespace encoding
 			if (avcodec_open2(audio_codec_context, audio_encoder, &audio_options) < 0)
 				throw std::runtime_error("Cannot open audio codec!");
 
+			aac_frame = av_frame_alloc();
+			aac_frame->nb_samples = samples;
+			aac_frame->channels = audio_codec_context->channels;
+			aac_frame->channel_layout = audio_codec_context->channel_layout;
+			aac_frame->format = audio_codec_context->sample_fmt;
+			aac_frame->sample_rate = audio_codec_context->sample_rate;
+
+			av_frame_get_buffer(aac_frame, 0);
+
+			// Resampler
 			audio_converter_context = swr_alloc_set_opts(
 				nullptr,
 				audio_channel_layout_out,
@@ -176,28 +179,6 @@ namespace encoding
 			);
 
 			swr_init(audio_converter_context);
-
-			aac_frame = av_frame_alloc();
-			aac_frame->nb_samples = samples;
-			aac_frame->channels = audio_codec_context->channels;
-			aac_frame->channel_layout = audio_codec_context->channel_layout;
-			aac_frame->format = audio_codec_context->sample_fmt;
-			aac_frame->sample_rate = audio_codec_context->sample_rate;
-
-			audio_packet_buffer_size = av_samples_get_buffer_size(
-				nullptr,
-				audio_channels_out,
-				samples,
-				audio_sample_format_out,
-				1 /*no-alignment*/
-			);
-
-			aac_buffer_size = audio_packet_buffer_size;
-			wav_buffer_size = audio_packet_buffer_size;
-
-			aac_buffer = new uint8_t[aac_buffer_size];
-			wav_buffer = new uint8_t[wav_buffer_size];
-			audio_packet_buffer = new uint8_t[audio_packet_buffer_size];
 		}
 
 	public:
@@ -244,7 +225,6 @@ namespace encoding
 
 			av_frame_unref(aac_frame);
 
-			delete[] aac_buffer;
 			delete[] audio_packet_buffer;
 		}
 
@@ -279,37 +259,27 @@ namespace encoding
 		 */
 		bool add_instant(const uint8_t* audio_stream, const int audio_stream_size, const std::shared_ptr<std::ostream>& ws_stream)
 		{
-			audio_convert_in_buffer[0] = audio_stream;
-			audio_convert_in_buffer[1] = nullptr;
-			audio_convert_out_buffer[0] = wav_buffer;
-			audio_convert_out_buffer[1] = nullptr;
+			const auto temp = new uint8_t[audio_stream_size];
+			aac_buffer[0] = temp;
+			wav_buffer[0] = audio_stream;
 
-			//WAV to AAC
 			swr_convert(
 				audio_converter_context,
-				audio_convert_out_buffer, wav_buffer_size, // output
-				audio_convert_in_buffer, audio_stream_size // input
-			);
-
-			avcodec_fill_audio_frame(
-				aac_frame,
-				audio_codec_context->channels,
-				audio_codec_context->sample_fmt,
-				aac_buffer,
-				aac_buffer_size,
-				1 /*no-alignment*/
+				aac_buffer, audio_stream_size, //output
+				wav_buffer, audio_stream_size //input
 			);
 
 			av_init_packet(&audio_packet);
-			audio_packet.data = audio_packet_buffer;
-			audio_packet.size = audio_packet_buffer_size;
 
-			avcodec_encode_audio2(audio_codec_context, &audio_packet, aac_frame, &got_packet_ptr);
+			avcodec_send_frame(audio_codec_context, aac_frame);
+			got_packet_ptr = avcodec_receive_packet(audio_codec_context, &audio_packet) == 0;
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(audio_packet.data), audio_packet.size);
 
 			av_packet_unref(&audio_packet);
+
+			delete[] temp;
 
 			return got_packet_ptr;
 		}
@@ -339,7 +309,10 @@ namespace encoding
 			video_packet.data = video_packet_buffer;
 			video_packet.size = video_packet_buffer_size;
 
-			avcodec_encode_video2(video_codec_context, &video_packet, yuv_frame, &got_packet_ptr);
+			avcodec_send_frame(video_codec_context, yuv_frame);
+			got_packet_ptr = avcodec_receive_packet(video_codec_context, &video_packet) == 0;
+
+			video_packet.stream_index = 0;
 
 			if (got_packet_ptr)
 				ws_stream->write(reinterpret_cast<const char*>(video_packet.data), video_packet.size);
