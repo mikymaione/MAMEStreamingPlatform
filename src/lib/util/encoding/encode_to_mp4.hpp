@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <ostream>
+#include <fstream>
 
 // FFMPEG C headers
 extern "C"
@@ -81,6 +82,8 @@ namespace encoding
 		uint8_t* audio_packet_buffer = nullptr;
 
 		int video_packet_buffer_size;
+
+		std::ofstream myFile_Handler;
 
 	private:
 		void init_video()
@@ -197,6 +200,8 @@ namespace encoding
 
 			init_video();
 			init_audio();
+
+			myFile_Handler.open("File_1.txt");
 		}
 
 		~encode_to_mp4()
@@ -226,6 +231,8 @@ namespace encoding
 			av_frame_unref(aac_frame);
 
 			delete[] audio_packet_buffer;
+
+			myFile_Handler.close();
 		}
 
 		/**
