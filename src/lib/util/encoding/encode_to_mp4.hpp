@@ -32,8 +32,8 @@ namespace encoding
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
-		static const AVPixelFormat SDL_pixel_format = AV_PIX_FMT_BGR32;
-		static const AVPixelFormat H264_pixel_format = AV_PIX_FMT_YUV420P;
+		static const AVPixelFormat Pixel_Format_in = AV_PIX_FMT_BGR32;
+		static const AVPixelFormat Pixel_Format_out = AV_PIX_FMT_YUV420P;
 
 		// Audio
 		static const AVCodecID audio_codec = AV_CODEC_ID_AAC;
@@ -51,7 +51,7 @@ namespace encoding
 
 	private:
 		int in_width, in_height, out_width, out_height;
-		const int channels, fps;
+		const int fps;
 
 	private:
 		bool got_packet_ptr = false;
@@ -77,10 +77,6 @@ namespace encoding
 		uint8_t* aac_buffer[audio_channels_out];
 		const uint8_t* wav_buffer[audio_channels_out];
 
-		//uint8_t* video_packet_buffer = nullptr;
-		//uint8_t* audio_packet_buffer = nullptr;
-		//int video_packet_buffer_size, audio_packet_buffer_size;	
-
 	private:
 		void init_video()
 		{
@@ -93,7 +89,7 @@ namespace encoding
 			video_codec_context->height = out_height;
 			video_codec_context->time_base.num = 1;
 			video_codec_context->time_base.den = fps;
-			video_codec_context->pix_fmt = H264_pixel_format;
+			video_codec_context->pix_fmt = Pixel_Format_out;
 
 			// H.264
 			av_dict_set(&video_options, "preset", "ultrafast", 0);
@@ -105,30 +101,27 @@ namespace encoding
 				throw std::runtime_error("Cannot open video codec!");
 
 			video_converter_context = sws_getContext(
-				in_width, in_height, SDL_pixel_format,
-				out_width, out_height, H264_pixel_format,
+				in_width, in_height, Pixel_Format_in,
+				out_width, out_height, Pixel_Format_out,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
 			rgb_frame->width = in_width;
 			rgb_frame->height = in_height;
-			rgb_frame->format = SDL_pixel_format;
+			rgb_frame->format = Pixel_Format_in;
 
 			yuv_frame = av_frame_alloc();
 			yuv_frame->width = out_width;
 			yuv_frame->height = out_height;
-			yuv_frame->format = H264_pixel_format;
+			yuv_frame->format = Pixel_Format_out;
 
 			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
-			//video_packet_buffer_size = in_width * in_height * channels;
-			//video_packet_buffer = new uint8_t[video_packet_buffer_size];
-
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
-				H264_pixel_format,
+				Pixel_Format_out,
 				out_width, out_height);
 		}
 
@@ -162,8 +155,6 @@ namespace encoding
 			aac_frame->format = audio_codec_context->sample_fmt;
 			aac_frame->sample_rate = audio_codec_context->sample_rate;
 
-			//av_frame_get_buffer(aac_frame, 0);
-
 			// Resampler
 			audio_converter_context = swr_alloc_set_opts(
 				nullptr,
@@ -183,12 +174,11 @@ namespace encoding
 	public:
 		encode_to_mp4(const int in_width, const int in_height,
 					  const int out_width, const int out_height,
-					  const int channels, const int fps) :
+					  const int fps) :
 			in_width(in_width),
 			in_height(in_height),
 			out_width(out_width),
 			out_height(out_height),
-			channels(channels),
 			fps(fps)
 		{
 			av_register_all();
@@ -212,7 +202,6 @@ namespace encoding
 			av_frame_unref(yuv_frame);
 
 			delete[] yuv_buffer;
-			//delete[] video_packet_buffer;
 
 			//Audio
 			swr_free(&audio_converter_context);
@@ -223,8 +212,6 @@ namespace encoding
 			av_dict_free(&audio_options);
 
 			av_frame_unref(aac_frame);
-
-			//delete[] audio_packet_buffer;			
 		}
 
 		/**
@@ -276,8 +263,6 @@ namespace encoding
 				1 /*no-alignment*/);
 
 			av_init_packet(&audio_packet);
-			//audio_packet.data = audio_packet_buffer;
-			//audio_packet.size = audio_packet_buffer_size;
 
 			avcodec_send_frame(audio_codec_context, aac_frame);
 			got_packet_ptr = avcodec_receive_packet(audio_codec_context, &audio_packet) == 0;
@@ -305,7 +290,7 @@ namespace encoding
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
-				SDL_pixel_format,
+				Pixel_Format_in,
 				in_width, in_height);
 
 			//RGB to YUV
@@ -316,8 +301,6 @@ namespace encoding
 			);
 
 			av_init_packet(&video_packet);
-			//video_packet.data = video_packet_buffer;
-			//video_packet.size = video_packet_buffer_size;
 
 			avcodec_send_frame(video_codec_context, yuv_frame);
 			got_packet_ptr = avcodec_receive_packet(video_codec_context, &video_packet) == 0;
