@@ -28,6 +28,9 @@ copyright-holders:Michele Maione
 	<script>
 		let monitor;
 		let sourceBuffer;
+		let mediaSource;
+		let queue = [];
+
 		let vw, vh, cw, ch, tw, th;
 
 		function FullScreen()
@@ -53,6 +56,7 @@ copyright-holders:Michele Maione
 		function Start()
 		{
 			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+			//const mimeCodec = 'video/mp4; codecs="av01, mp3"';
 			const mimeCodec = 'video/mp4';
 
 			if (MediaSource.isTypeSupported(mimeCodec))
@@ -61,23 +65,19 @@ copyright-holders:Michele Maione
 
 				monitor = document.getElementById('monitor');
 
-				let mediaSource = new MediaSource();
+				mediaSource = new MediaSource();
 
 				mediaSource.onsourceopen = function ()
 				{
+					//monitor.play();
+
 					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
 					sourceBuffer.mode = 'sequence';
 
-					sourceBuffer.onupdateend = function ()
+					sourceBuffer.onupdate = function ()
 					{
-						//hack to get safari on mac to start playing, monitor.currentTime gets stuck on 0
-						if (mediaSource.duration !== Number.POSITIVE_INFINITY && monitor.currentTime === 0 && mediaSource.duration > 0)
-						{
-							monitor.currentTime = mediaSource.duration - 1;
-							mediaSource.duration = Number.POSITIVE_INFINITY;
-						}
-
-						monitor.play();
+						if (queue.length > 0 && !sourceBuffer.updating)
+							sourceBuffer.appendBuffer(queue.shift());
 					};
 				};
 
@@ -85,6 +85,8 @@ copyright-holders:Michele Maione
 
 				let webSocket = window.WebSocket || window.MozWebSocket,
 					ws = new webSocket(uri);
+
+				ws.binaryType = 'arraybuffer';
 
 				ws.onopen = function (e)
 				{
@@ -109,8 +111,13 @@ copyright-holders:Michele Maione
 					}
 					else
 					{
-						let buffer = new Uint8Array(event.data);
-						sourceBuffer.appendBuffer(buffer);
+						//let messageData = new Uint8Array(event.data);
+						let messageData = event.data;
+
+						if (sourceBuffer.updating || queue.length > 0)
+							queue.push(messageData);
+						else
+							sourceBuffer.appendBuffer(messageData);
 					}
 				};
 			}
