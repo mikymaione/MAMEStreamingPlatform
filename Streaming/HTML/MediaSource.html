@@ -32,6 +32,7 @@ copyright-holders:Michele Maione
 		let queue = [];
 
 		let vw, vh, cw, ch, tw, th;
+		let vuoto = true;
 
 		function FullScreen()
 		{
@@ -57,11 +58,11 @@ copyright-holders:Michele Maione
 		{
 			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 			//const mimeCodec = 'video/mp4; codecs="av01, mp3"';
-			const mimeCodec = 'video/mp4';
+			const mimeCodec = 'video/mp4';			
 
 			if (MediaSource.isTypeSupported(mimeCodec))
 			{
-				const uri = "ws://127.0.0.1:8888";
+				const uri = "ws://127.0.0.1:8082";
 
 				monitor = document.getElementById('monitor');
 
@@ -69,15 +70,17 @@ copyright-holders:Michele Maione
 
 				mediaSource.onsourceopen = function ()
 				{
-					//monitor.play();
+					monitor.play();
 
 					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
 					sourceBuffer.mode = 'sequence';
 
 					sourceBuffer.onupdate = function ()
-					{
-						if (queue.length > 0 && !sourceBuffer.updating)
+					{					
+						if (queue.length > 0)
 							sourceBuffer.appendBuffer(queue.shift());
+
+						vuoto = (queue.length == 0);
 					};
 				};
 
@@ -111,13 +114,16 @@ copyright-holders:Michele Maione
 					}
 					else
 					{
-						//let messageData = new Uint8Array(event.data);
-						let messageData = event.data;
-
-						if (sourceBuffer.updating || queue.length > 0)
-							queue.push(messageData);
-						else
+						let messageData = new Uint8Array(event.data);
+						//let messageData = event.data;
+						
+						if (vuoto)
+						{
+							vuoto = false;
 							sourceBuffer.appendBuffer(messageData);
+						}
+						else
+							queue.push(messageData);
 					}
 				};
 			}

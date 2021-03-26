@@ -1,0 +1,131 @@
+<!--
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	mame.html - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
+
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+
+	<style>
+		body {
+			overflow: hidden;
+			background-color: black;
+		}
+	</style>
+
+	<script src="jsmpeg.min.js"></script>
+</head>
+
+<body>
+	<canvas id="myCanvas">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
+	<script>
+		let myCanvas;
+		let player;
+		let vw, vh, cw, ch, tw, th;
+
+		function onUnlocked()
+		{	
+			player.volume = 1;
+			document.removeEventListener('touchstart', onTouchStart);
+		}
+		
+		function onTouchStart()
+		{
+			player.audioOut.unlock(onUnlocked);
+			document.removeEventListener('touchstart', onTouchStart);
+		}
+		
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			if (cw / ch < vw / vh)
+			{
+				tw = cw;
+				th = cw * vh / vw;
+			}
+			else
+			{
+				tw = ch * vw / vh;
+				th = ch;
+			}
+
+			myCanvas.style.width = tw + 'px';
+			myCanvas.style.height = th + 'px';
+		}
+
+		function Start()
+		{
+			const uri = "ws://192.168.1.8:8888";
+
+			myCanvas = document.getElementById("myCanvas");
+
+			player = new JSMpeg.Player(uri, {
+				canvas: myCanvas,
+				autoplay: true,
+				chunkSize: 1024 * 2, //2 KB
+				videoBufferSize: 1024 * 1024 * 3, //3 MB
+				audioBufferSize: 1024 * 1024 * 3, //3 MB
+				loop: false
+			});
+
+			let webSocket = window.WebSocket || window.MozWebSocket,
+				ws = new webSocket(uri);
+
+			ws.binaryType = 'arraybuffer';
+
+			ws.onerror = function (event)
+			{
+				console.log('Connection error.');
+			};
+
+			ws.onopen = function (event)
+			{
+				console.log('Connection opened.');
+			};
+
+			ws.onclose = function (event)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				if (typeof event.data === 'string')
+				{
+					let values = event.data.split(":");
+
+					vw = values[1];
+					vh = values[2];
+
+					reportWindowSize();
+				}
+				else
+				{					
+					player.decode(event.data);
+				}
+			};
+
+			player.audioOut.unlock(onUnlocked);
+			document.addEventListener('touchstart', onTouchStart, false);
+		}		
+
+		window.onresize = reportWindowSize;		
+		Start();
+	</script>
+
+	<script src="fullscreen.js"></script>
+</body>
+
+</html>
