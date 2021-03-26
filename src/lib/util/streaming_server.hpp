@@ -28,7 +28,7 @@ namespace webpp
 		std::unique_ptr<std::thread> acceptThread;
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder
-			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 30);
+			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 24);
 
 	public:
 		/**
@@ -88,10 +88,7 @@ namespace webpp
 		 */
 		void send_video_frame(const uint8_t* pixels) const
 		{
-			const auto stream = std::make_shared<ws_server::SendStream>();
-
-			if (encoder->add_frame(pixels, stream))
-				send(stream, 130);
+			encoder->add_frame(pixels);
 		}
 
 		/**
@@ -103,10 +100,7 @@ namespace webpp
 		 */
 		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size) const
 		{
-			const auto stream = std::make_shared<ws_server::SendStream>();
-
-			if (encoder->add_instant(audio_stream, audio_stream_size, stream))
-				send(stream, 130);
+			encoder->add_instant(audio_stream, audio_stream_size);
 		}
 
 		void start(const unsigned short port)
@@ -114,6 +108,17 @@ namespace webpp
 			server = std::make_unique<ws_server>();
 			server->config.client_mode = true;
 			server->config.port = port;
+
+			encoder->on_write = [&](uint8_t* buf, int buf_size)->int
+			{
+				const auto stream = std::make_shared<ws_server::SendStream>();
+
+				stream->write(reinterpret_cast<const char*>(buf), buf_size);
+
+				send(stream, 130);
+
+				return 1;
+			};
 
 			auto& endpoint = server->m_endpoint["/"];
 
@@ -132,6 +137,7 @@ namespace webpp
 			endpoint.on_message = [](auto connection, auto message)
 			{
 				// input handling
+				std::cout << "Received: " << message << std::endl;
 			};
 
 			endpoint.on_close = [&](auto connection, auto status, auto reason)
