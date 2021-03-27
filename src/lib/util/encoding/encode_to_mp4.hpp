@@ -47,7 +47,7 @@ namespace encoding
 		};
 
 	private:
-		static const int memory_kb = 1024 * 5;
+		static const int memory_kb = 1024 * 500;
 
 		// Video
 		static const AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
@@ -110,7 +110,6 @@ namespace encoding
 		static int write_buffer(void* opaque, uint8_t* buf, int buf_size)
 		{
 			const auto this_ = static_cast<encode_to_mp4*>(opaque);
-			std::cout << "Sending " << buf_size << "bits" << std::endl;
 
 			return this_->on_write(buf, buf_size);
 		}
@@ -220,9 +219,19 @@ namespace encoding
 				aframe = 0;
 				vframe = 0;
 
-				//if (av_write_trailer(encoder_context->format_context) != 0)
-					//die("Error writing trailer");
+				if (av_write_trailer(encoder_context->format_context) != 0)
+					die("Error writing trailer");
+
+				write_header();
 			}
+		}
+
+		void write_header() const
+		{
+			AVDictionary* options = nullptr;
+
+			if (avformat_write_header(encoder_context->format_context, &options) < 0)
+				die("an error occurred when opening output file");
 		}
 
 	public:
@@ -254,10 +263,7 @@ namespace encoding
 			if (encoder_context->format_context->oformat->flags & AVFMT_GLOBALHEADER)
 				encoder_context->format_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-			AVDictionary* options = nullptr;
-
-			if (avformat_write_header(encoder_context->format_context, &options) < 0)
-				die("an error occurred when opening output file");
+			write_header();
 		}
 
 		~encode_to_mp4()
@@ -283,6 +289,8 @@ namespace encoding
 			av_free(encoder_context->audio_codec_context);
 
 			av_frame_unref(aac_frame);
+
+			av_free(memory_output_buffer);
 
 			delete encoder_context;
 		}

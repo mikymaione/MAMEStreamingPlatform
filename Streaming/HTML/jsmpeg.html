@@ -33,18 +33,20 @@ copyright-holders:Michele Maione
 		let player;
 		let vw, vh, cw, ch, tw, th;
 
+		let X = 0;
+
 		function onUnlocked()
-		{	
+		{
 			player.volume = 1;
 			document.removeEventListener('touchstart', onTouchStart);
 		}
-		
+
 		function onTouchStart()
 		{
 			player.audioOut.unlock(onUnlocked);
 			document.removeEventListener('touchstart', onTouchStart);
 		}
-		
+
 		function reportWindowSize()
 		{
 			cw = window.innerWidth;
@@ -67,61 +69,25 @@ copyright-holders:Michele Maione
 
 		function Start()
 		{
-			const uri = "ws://localhost:8888";
+			const uri = "ws://192.168.1.8:8888";
 
 			myCanvas = document.getElementById("myCanvas");
 
 			player = new JSMpeg.Player(uri, {
 				canvas: myCanvas,
 				autoplay: true,
-				chunkSize: 1024 * 2, //2 KB
-				videoBufferSize: 1024 * 1024 * 3, //3 MB
-				audioBufferSize: 1024 * 1024 * 3, //3 MB
-				loop: false
+				chunkSize: 1024 * 500, //500 KB
+				videoBufferSize: 1024 * 1024 * 4, //4 MB
+				audioBufferSize: 1024 * 1024 * 4, //4 MB
+				loop: false,
+				pauseWhenHidden: false
 			});
-
-			let webSocket = window.WebSocket || window.MozWebSocket,
-				ws = new webSocket(uri);
-
-			ws.binaryType = 'arraybuffer';
-
-			ws.onerror = function (event)
-			{
-				console.log('Connection error.');
-			};
-
-			ws.onopen = function (event)
-			{
-				console.log('Connection opened.');
-			};
-
-			ws.onclose = function (event)
-			{
-				console.log('Connection closed');
-			};
-
-			ws.onmessage = function (event)
-			{
-				if (typeof event.data === 'string')
-				{
-					let values = event.data.split(":");
-
-					vw = values[1];
-					vh = values[2];
-
-					reportWindowSize();
-				}
-				else
-				{					
-					player.decode(event.data);
-				}
-			};
 
 			player.audioOut.unlock(onUnlocked);
 			document.addEventListener('touchstart', onTouchStart, false);
-		}		
+		}
 
-		window.onresize = reportWindowSize;		
+		window.onresize = reportWindowSize;
 		Start();
 	</script>
 
