@@ -668,12 +668,13 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::get().is_active())
 	{
-		if (memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
+		/*if (memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
 		{
 			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
 
 			webpp::streaming_server::get().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
-		}
+		}*/
+		webpp::streaming_server::get().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}

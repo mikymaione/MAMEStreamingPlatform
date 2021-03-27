@@ -7,6 +7,7 @@
 //============================================================
 #pragma once
 
+#include <chrono>
 #include <ostream>
 #include <queue>
 
@@ -45,7 +46,7 @@ namespace encoding
 		};
 
 	private:
-		static constexpr int memory_output_buffer_size = 1024 * 150; //150 KB
+		static constexpr int memory_output_buffer_size = 1024 * 1024 * 100; //100MB
 
 		const char* CONTAINER_NAME = "mpegts";
 
@@ -78,6 +79,9 @@ namespace encoding
 		const int fps;
 
 	private:
+		std::chrono::time_point<std::chrono::system_clock> start_time =
+			std::chrono::system_clock::now();
+
 		char error_buffer[AV_ERROR_MAX_STRING_SIZE];
 
 		StreamingContext* encoder_context = nullptr;
@@ -116,7 +120,7 @@ namespace encoding
 		static int write_buffer(void* opaque, uint8_t* buf, int buf_size)
 		{
 			const auto this_ = static_cast<encode_to_mp4*>(opaque);
-
+			std::cout << "Pacchetto: " << buf_size << std::endl;
 			return this_->on_write(buf, buf_size);
 		}
 
@@ -232,6 +236,7 @@ namespace encoding
 
 		void send_it()
 		{
+			std::cout << "Invio" << std::endl;
 			const auto ret = av_write_trailer(encoder_context->format_context);
 			if (ret < 0)
 				die("Error writing trailer", ret);
@@ -366,7 +371,14 @@ namespace encoding
 				if (ret < 0)
 					die("Error while writing video frame", ret);
 
-				send_it();
+				const auto end_time = std::chrono::system_clock::now();
+				const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+				if (milliseconds.count() > 100)
+				{
+					send_it();
+					start_time = std::chrono::system_clock::now();
+				}
 			}
 		}
 
