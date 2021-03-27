@@ -8,6 +8,7 @@
 #pragma once
 
 #include <ostream>
+#include <queue>
 
 // FFMPEG C headers
 extern "C"
@@ -44,7 +45,7 @@ namespace encoding
 		};
 
 	private:
-		static constexpr int memory_output_buffer_size = 1024 * 2; //2 KB
+		static constexpr int memory_output_buffer_size = 1024 * 100; //100 KB
 
 		const char* CONTAINER_NAME = "mpegts";
 
@@ -93,6 +94,8 @@ namespace encoding
 
 		uint8_t* yuv_buffer = nullptr;
 
+		uint8_t* audio_input_buffer = nullptr;
+		std::queue<uint8_t> audio_input_queue;
 		int audio_converter_output_channels_buffer_size = 0;
 		uint8_t* audio_converter_output_channels_buffer = nullptr;
 		uint8_t* audio_converter_output_channels[audio_channels_out];
@@ -371,48 +374,71 @@ namespace encoding
 		 * \brief Add audio instant
 		 * \param audio_stream
 		 * \param audio_stream_size
+		 * \param samples
+		 * \param freq
 		 * \return success
 		 */
-		void add_instant(const uint8_t* audio_stream, const int audio_stream_size)
+		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq)
 		{
-			audio_converter_output_channels[0] = audio_converter_output_channels_buffer;
-			audio_converter_input_channels[0] = audio_stream;
+			if (audio_input_buffer == nullptr)
+				audio_input_buffer = new uint8_t[aac_frame->nb_samples];
 
-			auto ret = swr_convert(
-				encoder_context->audio_converter_context,
-				audio_converter_output_channels, audio_converter_output_channels_buffer_size, // destination
-				audio_converter_input_channels, audio_stream_size); //source			
-			if (ret < 0)
-				die("Cannot convert audio", ret);
+			for (auto i = 0; i < audio_stream_size; ++i)
+				audio_input_queue.push(audio_stream[i]);
 
-			ret = avcodec_fill_audio_frame(
-				aac_frame,
-				encoder_context->audio_codec_context->channels,
-				encoder_context->audio_codec_context->sample_fmt,
-				audio_converter_output_channels_buffer,
-				audio_converter_output_channels_buffer_size,
-				1); //no-alignment
-			if (ret < 0)
-				die("Cannot fill audio frame", ret);
-
-			av_init_packet(&audio_packet);
-
-			ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
-			if (ret < 0)
-				die("Cannot encode audio frame", ret);
-
-			got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
-
-			if (got_packet_ptr)
+			while (audio_input_queue.size() >= aac_frame->nb_samples)
 			{
-				audio_packet.stream_index = 1;
+				for (auto i = 0; i < aac_frame->nb_samples; ++i)
+				{
+					audio_input_buffer[i] = audio_input_queue.front();
+					audio_input_queue.pop();
+				}
 
-				ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
+				audio_converter_output_channels[0] = audio_converter_output_channels_buffer;
+				audio_converter_input_channels[0] = audio_input_buffer;
+
+				const auto audio_buf_samples = av_rescale_rnd(
+					samples,
+					in_sample_rate,
+					freq,
+					AV_ROUND_UP);
+
+				auto ret = swr_convert(
+					encoder_context->audio_converter_context,
+					audio_converter_output_channels, audio_buf_samples, // destination
+					audio_converter_input_channels, aac_frame->nb_samples); //source			
 				if (ret < 0)
-					die("Error while writing audio frame", ret);
-			}
+					die("Cannot convert audio", ret);
 
-			av_packet_unref(&audio_packet);
+				ret = avcodec_fill_audio_frame(
+					aac_frame,
+					encoder_context->audio_codec_context->channels,
+					encoder_context->audio_codec_context->sample_fmt,
+					audio_converter_output_channels_buffer,
+					audio_converter_output_channels_buffer_size,
+					1); //no-alignment
+				if (ret < 0)
+					die("Cannot fill audio frame", ret);
+
+				av_init_packet(&audio_packet);
+
+				ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
+				if (ret < 0)
+					die("Cannot encode audio frame", ret);
+
+				got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
+
+				if (got_packet_ptr)
+				{
+					audio_packet.stream_index = 1;
+
+					ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
+					if (ret < 0)
+						die("Error while writing audio frame", ret);
+				}
+
+				av_packet_unref(&audio_packet);
+			}
 		}
 
 	};

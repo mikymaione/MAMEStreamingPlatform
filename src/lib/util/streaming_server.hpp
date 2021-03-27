@@ -94,12 +94,12 @@ namespace webpp
 		 * \brief Send audio interval to client
 		 * \param audio_stream
 		 * \param audio_stream_size
-		 * \param in_sample_rate
 		 * \param samples
+		 * \param freq
 		 */
-		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size) const
+		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq) const
 		{
-			encoder->add_instant(audio_stream, audio_stream_size);
+			encoder->add_instant(audio_stream, audio_stream_size, samples, freq);
 		}
 
 		void start(const unsigned short port)
