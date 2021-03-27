@@ -14,9 +14,7 @@
 #include <cmath>
 #include <cstdio>
 
-#include <fstream>
 #include <sstream>
-#include <string>
 
 // MAME headers
 #include "emu.h"
@@ -29,7 +27,6 @@
 #include "draw13.h"
 
 #include "streaming_server.hpp"
-//#include "IMG_savejpg.h"
 
 
 //============================================================
@@ -671,18 +668,6 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::get().is_active())
 	{
-		//IMG_SaveJPG_RW(m_sdl_buffer, m_sdl_surface, 70);
-		/*
-		SDL_SaveBMP_RW(m_sdl_surface, m_sdl_buffer, 0);
-
-		if (memcmp(m_sdl_buffer_bytes, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
-		{
-			memcpy(m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
-
-			webpp::streaming_server::get().append_binary(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
-		}
-		*/
-
 		if (memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
 		{
 			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
