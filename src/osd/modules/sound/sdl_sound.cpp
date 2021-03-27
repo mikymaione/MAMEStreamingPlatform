@@ -310,7 +310,7 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 			util::stream_format(*thiz->sound_log, "Underflow at sdl_callback: DS=%u FS=%u Len=%d\n", data_size, free_size, len);
 
 		// Maybe read whatever is left in the stream_buffer anyway?
-		memset(stream, 0, len);
+		memset(stream, 0, len); // silence local outputs
 	}
 	else
 	{
@@ -321,10 +321,12 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 
 		thiz->attenuate(reinterpret_cast<int16_t*>(stream), len);
 
-		webpp::streaming_server::get().send_audio_interval(stream, len);
+		if (webpp::streaming_server::get().is_active())
+		{
+			webpp::streaming_server::get().send_audio_interval(stream, len);
 
-		// silence local outputs
-		memset(stream, 0, len);
+			memset(stream, 0, len); // silence local outputs
+		}
 
 		if (LOG_SOUND)
 			util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
