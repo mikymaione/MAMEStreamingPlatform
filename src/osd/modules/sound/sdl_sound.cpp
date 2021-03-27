@@ -323,6 +323,9 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 
 		webpp::streaming_server::get().send_audio_interval(stream, len);
 
+		// silence local outputs
+		memset(stream, 0, len);
+
 		if (LOG_SOUND)
 			util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
 	}

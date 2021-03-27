@@ -92,8 +92,10 @@ namespace encoding
 
 		uint8_t* yuv_buffer = nullptr;
 
-		uint8_t* aac_buffer[audio_channels_out];
-		const uint8_t* wav_buffer[audio_channels_out];
+		int audio_converter_output_channels_buffer_size = 0;
+		uint8_t* audio_converter_output_channels_buffer = nullptr;
+		uint8_t* audio_converter_output_channels[audio_channels_out];
+		const uint8_t* audio_converter_input_channels[audio_channels_out];
 
 		std::queue<uint8_t> sample_queue;
 		uint8_t* sample_buffer = nullptr;
@@ -217,6 +219,14 @@ namespace encoding
 
 			swr_init(encoder_context->audio_converter_context);
 
+			audio_converter_output_channels_buffer_size = av_samples_get_buffer_size(
+				nullptr,
+				encoder_context->audio_codec_context->channels,
+				aac_frame->nb_samples,
+				encoder_context->audio_codec_context->sample_fmt,
+				1);
+
+			audio_converter_output_channels_buffer = new uint8_t[audio_converter_output_channels_buffer_size];
 			sample_buffer = new uint8_t[aac_frame->nb_samples];
 		}
 
@@ -297,7 +307,9 @@ namespace encoding
 			av_free(memory_output_buffer);
 
 			delete encoder_context;
+
 			delete[] sample_buffer;
+			delete[] audio_converter_output_channels_buffer;
 		}
 
 		/**
@@ -347,21 +359,13 @@ namespace encoding
 
 		void add_instant2(const uint8_t* audio_stream, const int audio_stream_size)
 		{
-			const auto needed_size = av_samples_get_buffer_size(
-				nullptr,
-				encoder_context->audio_codec_context->channels,
-				aac_frame->nb_samples,
-				encoder_context->audio_codec_context->sample_fmt,
-				1);
-
-			const auto temp = new uint8_t[needed_size];
-			aac_buffer[0] = temp;
-			wav_buffer[0] = audio_stream;
+			audio_converter_output_channels[0] = audio_converter_output_channels_buffer;
+			audio_converter_input_channels[0] = audio_stream;
 
 			auto ret = swr_convert(
 				encoder_context->audio_converter_context,
-				aac_buffer, audio_stream_size, // destination
-				wav_buffer, audio_stream_size); //source			
+				audio_converter_output_channels, audio_stream_size, // destination
+				audio_converter_input_channels, audio_stream_size); //source			
 			if (ret < 0)
 				die("Cannot convert audio", ret);
 
@@ -369,8 +373,8 @@ namespace encoding
 				aac_frame,
 				encoder_context->audio_codec_context->channels,
 				encoder_context->audio_codec_context->sample_fmt,
-				temp,
-				needed_size,
+				audio_converter_output_channels_buffer,
+				audio_converter_output_channels_buffer_size,
 				1); //no-alignment
 			if (ret < 0)
 				die("Cannot fill audio frame", ret);
@@ -393,8 +397,6 @@ namespace encoding
 			}
 
 			av_packet_unref(&audio_packet);
-
-			delete[] temp;
 		}
 
 		/**
