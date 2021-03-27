@@ -8,6 +8,7 @@
 #pragma once
 
 #include <ostream>
+#include <queue>
 
 // FFMPEG C headers
 extern "C"
@@ -41,9 +42,6 @@ namespace encoding
 
 			SwsContext* video_converter_context = nullptr;
 			SwrContext* audio_converter_context = nullptr;
-
-			int video_index = 0;
-			int audio_index = 1;
 		};
 
 	private:
@@ -67,7 +65,6 @@ namespace encoding
 
 		static const int out_sample_rate = 48000; //44100;
 		static const int in_sample_rate = 48000;
-		static const int samples = 512;
 		static const AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_S16;
 		static const AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
 
@@ -79,8 +76,13 @@ namespace encoding
 		const int fps;
 
 	private:
+		char error_buffer[AV_ERROR_MAX_STRING_SIZE];
+
 		StreamingContext* encoder_context = nullptr;
 
+		uint8_t* memory_output_buffer;
+
+		bool got_packet_ptr = false;
 		AVPacket video_packet, audio_packet;
 
 		AVFrame* aac_frame = nullptr;
@@ -93,18 +95,19 @@ namespace encoding
 		uint8_t* aac_buffer[audio_channels_out];
 		const uint8_t* wav_buffer[audio_channels_out];
 
-		uint8_t* memory_output_buffer;
-
-		unsigned aframe = 0;
-		unsigned vframe = 0;
-
-		bool got_packet_ptr = false;
+		std::queue<uint8_t> sample_queue;
+		uint8_t* sample_buffer = nullptr;
 
 	private:
-		static void die(const std::string& msg)
+		void die(const std::string& msg, const int error_code)
 		{
 			std::cerr << msg << std::endl;
-			exit(-100);
+
+			if (error_code < 0)
+				if (av_strerror(error_code, error_buffer, AV_ERROR_MAX_STRING_SIZE) == 0)
+					std::cerr << "--" << error_buffer << std::endl;
+
+			exit(error_code);
 		}
 
 		static int write_buffer(void* opaque, uint8_t* buf, int buf_size)
@@ -120,11 +123,11 @@ namespace encoding
 
 			encoder_context->video_codec = avcodec_find_encoder(video_codec);
 			if (!encoder_context->video_codec)
-				die("could not find the proper codec");
+				die("could not find the proper codec", 0);
 
 			encoder_context->video_codec_context = avcodec_alloc_context3(encoder_context->video_codec);
 			if (!encoder_context->video_codec_context)
-				die("could not allocated memory for codec context");
+				die("Could not allocated memory for codec context", 0);
 
 			encoder_context->video_codec_context->width = out_width;
 			encoder_context->video_codec_context->height = out_height;
@@ -133,10 +136,13 @@ namespace encoding
 			encoder_context->video_codec_context->time_base = { 1,fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
-			if (avcodec_open2(encoder_context->video_codec_context, encoder_context->video_codec, nullptr) < 0)
-				die("could not open the codec");
+			auto ret = avcodec_open2(encoder_context->video_codec_context, encoder_context->video_codec, nullptr);
+			if (ret < 0)
+				die("Could not open the codec", ret);
 
-			avcodec_parameters_from_context(encoder_context->video_stream->codecpar, encoder_context->video_codec_context);
+			ret = avcodec_parameters_from_context(encoder_context->video_stream->codecpar, encoder_context->video_codec_context);
+			if (ret < 0)
+				die("Could not retrieve parameters from context", ret);
 
 			encoder_context->video_converter_context = sws_getContext(
 				in_width, in_height, Pixel_Format_in,
@@ -169,28 +175,28 @@ namespace encoding
 
 			encoder_context->audio_codec = avcodec_find_encoder(audio_codec);
 			if (!encoder_context->audio_codec)
-				die("could not find the proper codec");
+				die("could not find the proper codec", 0);
 
 			encoder_context->audio_codec_context = avcodec_alloc_context3(encoder_context->audio_codec);
 			if (!encoder_context->audio_codec_context)
-				die("could not allocated memory for codec context");
+				die("could not allocated memory for codec context", 0);
 
 			encoder_context->audio_codec_context->channels = 1;
 			encoder_context->audio_codec_context->channel_layout = av_get_default_channel_layout(encoder_context->audio_codec_context->channels);
-
 			encoder_context->audio_codec_context->sample_rate = out_sample_rate;
 			encoder_context->audio_codec_context->sample_fmt = audio_sample_format_out;
 
 			encoder_context->audio_codec_context->time_base = { 1,out_sample_rate };
 			encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
 
-			if (avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, nullptr) < 0)
-				die("could not open the codec");
+			const auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, nullptr);
+			if (ret < 0)
+				die("could not open the codec", ret);
 
 			avcodec_parameters_from_context(encoder_context->audio_stream->codecpar, encoder_context->audio_codec_context);
 
 			aac_frame = av_frame_alloc();
-			aac_frame->nb_samples = samples;
+			aac_frame->nb_samples = encoder_context->audio_codec_context->frame_size; //1152;
 			aac_frame->channels = encoder_context->audio_codec_context->channels;
 			aac_frame->channel_layout = encoder_context->audio_codec_context->channel_layout;
 			aac_frame->format = encoder_context->audio_codec_context->sample_fmt;
@@ -210,28 +216,26 @@ namespace encoding
 			);
 
 			swr_init(encoder_context->audio_converter_context);
+
+			sample_buffer = new uint8_t[aac_frame->nb_samples];
 		}
 
 		void send_it()
 		{
-			if (vframe > 5 || aframe > 5)
-			{
-				aframe = 0;
-				vframe = 0;
+			const auto ret = av_write_trailer(encoder_context->format_context);
+			if (ret < 0)
+				die("Error writing trailer", ret);
 
-				if (av_write_trailer(encoder_context->format_context) != 0)
-					die("Error writing trailer");
-
-				write_header();
-			}
+			write_header();
 		}
 
-		void write_header() const
+		void write_header()
 		{
 			AVDictionary* options = nullptr;
 
-			if (avformat_write_header(encoder_context->format_context, &options) < 0)
-				die("an error occurred when opening output file");
+			const auto ret = avformat_write_header(encoder_context->format_context, &options);
+			if (ret < 0)
+				die("Could not write header", ret);
 		}
 
 	public:
@@ -293,6 +297,7 @@ namespace encoding
 			av_free(memory_output_buffer);
 
 			delete encoder_context;
+			delete[] sample_buffer;
 		}
 
 		/**
@@ -321,54 +326,80 @@ namespace encoding
 		 * \brief Add audio instant
 		 * \param audio_stream
 		 * \param audio_stream_size
-		 * \param ws_stream
 		 * \return success
 		 */
 		void add_instant(const uint8_t* audio_stream, const int audio_stream_size)
 		{
-			const auto temp = new uint8_t[audio_stream_size];
+			for (auto i = 0; i < audio_stream_size; ++i)
+				sample_queue.push(audio_stream[i]);
+
+			if (sample_queue.size() < aac_frame->nb_samples)
+				return;
+
+			for (auto i = 0; i < aac_frame->nb_samples; ++i)
+			{
+				sample_buffer[i] = sample_queue.front();
+				sample_queue.pop();
+			}
+
+			add_instant2(sample_buffer, aac_frame->nb_samples);
+		}
+
+		void add_instant2(const uint8_t* audio_stream, const int audio_stream_size)
+		{
+			const auto needed_size = av_samples_get_buffer_size(
+				nullptr,
+				encoder_context->audio_codec_context->channels,
+				aac_frame->nb_samples,
+				encoder_context->audio_codec_context->sample_fmt,
+				1);
+
+			const auto temp = new uint8_t[needed_size];
 			aac_buffer[0] = temp;
 			wav_buffer[0] = audio_stream;
 
-			swr_convert(
+			auto ret = swr_convert(
 				encoder_context->audio_converter_context,
 				aac_buffer, audio_stream_size, // destination
-				wav_buffer, audio_stream_size); //source
+				wav_buffer, audio_stream_size); //source			
+			if (ret < 0)
+				die("Cannot convert audio", ret);
 
-			avcodec_fill_audio_frame(
+			ret = avcodec_fill_audio_frame(
 				aac_frame,
 				encoder_context->audio_codec_context->channels,
 				encoder_context->audio_codec_context->sample_fmt,
 				temp,
-				audio_stream_size,
-				1 /*no-alignment*/);
+				needed_size,
+				1); //no-alignment
+			if (ret < 0)
+				die("Cannot fill audio frame", ret);
 
 			av_init_packet(&audio_packet);
 
-			avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
-			got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
+			ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
+			if (ret < 0)
+				die("Cannot encode audio frame", ret);
 
-			audio_packet.stream_index = 1;
+			got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
 
 			if (got_packet_ptr)
 			{
-				if (av_interleaved_write_frame(encoder_context->format_context, &audio_packet) != 0)
-					die("Error while writing audio frame");
+				audio_packet.stream_index = 1;
 
-				aframe++;
+				ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
+				if (ret < 0)
+					die("Error while writing audio frame", ret);
 			}
 
 			av_packet_unref(&audio_packet);
 
 			delete[] temp;
-
-			send_it();
 		}
 
 		/**
 		 * \brief Add video frame
 		 * \param pixels
-		 * \param ws_stream
 		 * \return success
 		 */
 		void add_frame(const uint8_t* pixels)
@@ -391,17 +422,16 @@ namespace encoding
 			avcodec_send_frame(encoder_context->video_codec_context, yuv_frame);
 			got_packet_ptr = avcodec_receive_packet(encoder_context->video_codec_context, &video_packet) == 0;
 
-			video_packet.stream_index = 0;
-
 			if (got_packet_ptr)
 			{
-				if (av_interleaved_write_frame(encoder_context->format_context, &video_packet) != 0)
-					die("Error while writing video frame");
+				video_packet.stream_index = 0;
 
-				vframe++;
+				const auto ret = av_interleaved_write_frame(encoder_context->format_context, &video_packet);
+				if (ret < 0)
+					die("Error while writing video frame", ret);
+
+				send_it();
 			}
-
-			send_it();
 		}
 
 	};
