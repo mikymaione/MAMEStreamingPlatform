@@ -14,7 +14,6 @@
 #include <string>
 
 #include "server_ws_impl.hpp"
-#include "server_http_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 
 namespace webpp
@@ -28,7 +27,7 @@ namespace webpp
 		std::unique_ptr<std::thread> acceptThread;
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder
-			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 24);
+			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 25);
 
 	public:
 		/**
