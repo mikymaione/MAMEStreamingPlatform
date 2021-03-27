@@ -120,7 +120,7 @@ namespace encoding
 		static int write_buffer(void* opaque, uint8_t* buf, int buf_size)
 		{
 			const auto this_ = static_cast<encode_to_mp4*>(opaque);
-			std::cout << "Pacchetto: " << buf_size << std::endl;
+
 			return this_->on_write(buf, buf_size);
 		}
 
@@ -236,7 +236,6 @@ namespace encoding
 
 		void send_it()
 		{
-			std::cout << "Invio" << std::endl;
 			const auto ret = av_write_trailer(encoder_context->format_context);
 			if (ret < 0)
 				die("Error writing trailer", ret);
