@@ -45,28 +45,28 @@ namespace encoding
 		};
 
 	private:
-		static const int memory_kb = 1024 * 500;
+		static constexpr int memory_output_buffer_size = 1024 * 1024; //1 MB
 
 		// Video
-		static const AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
+		static constexpr AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
-		static const AVPixelFormat Pixel_Format_in = AV_PIX_FMT_BGR32;
-		static const AVPixelFormat Pixel_Format_out = AV_PIX_FMT_YUV420P;
+		static constexpr AVPixelFormat Pixel_Format_in = AV_PIX_FMT_BGR32;
+		static constexpr AVPixelFormat Pixel_Format_out = AV_PIX_FMT_YUV420P;
 
 		// Audio
-		static const AVCodecID audio_codec = AV_CODEC_ID_MP2;
+		static constexpr AVCodecID audio_codec = AV_CODEC_ID_MP2;
 
-		static const int audio_channels_in = 2;
-		static const int audio_channels_out = 1;
-		static const uint64_t audio_channel_layout_in = AV_CH_LAYOUT_STEREO;
-		static const uint64_t audio_channel_layout_out = AV_CH_LAYOUT_MONO;
+		static constexpr int audio_channels_in = 2;
+		static constexpr int audio_channels_out = 1;
+		static constexpr uint64_t audio_channel_layout_in = AV_CH_LAYOUT_STEREO;
+		static constexpr uint64_t audio_channel_layout_out = AV_CH_LAYOUT_MONO;
 
-		static const int out_sample_rate = 48000; //44100;
-		static const int in_sample_rate = 48000;
-		static const AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_S16;
-		static const AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
+		static constexpr int out_sample_rate = 48000; //44100;
+		static constexpr int in_sample_rate = 48000;
+		static constexpr AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_S16;
+		static constexpr AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
 
 	public:
 		std::function<int(uint8_t* buf, int buf_size)> on_write;
@@ -263,8 +263,8 @@ namespace encoding
 
 			encoder_context = new StreamingContext();
 
-			memory_output_buffer = static_cast<uint8_t*>(av_malloc(memory_kb));
-			encoder_context->io_context = avio_alloc_context(memory_output_buffer, memory_kb, 1, this, nullptr, write_buffer, nullptr);
+			memory_output_buffer = static_cast<uint8_t*>(av_malloc(memory_output_buffer_size));
+			encoder_context->io_context = avio_alloc_context(memory_output_buffer, memory_output_buffer_size, 1, this, nullptr, write_buffer, nullptr);
 
 			avformat_alloc_output_context2(&encoder_context->format_context, nullptr, "mpegts", nullptr);
 
