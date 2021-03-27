@@ -47,6 +47,8 @@ namespace encoding
 	private:
 		static constexpr int memory_output_buffer_size = 1024 * 1024; //1 MB
 
+		const char* CONTAINER_NAME = "mpegts";
+
 		// Video
 		static constexpr AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
 
@@ -266,7 +268,7 @@ namespace encoding
 			memory_output_buffer = static_cast<uint8_t*>(av_malloc(memory_output_buffer_size));
 			encoder_context->io_context = avio_alloc_context(memory_output_buffer, memory_output_buffer_size, 1, this, nullptr, write_buffer, nullptr);
 
-			avformat_alloc_output_context2(&encoder_context->format_context, nullptr, "mpegts", nullptr);
+			avformat_alloc_output_context2(&encoder_context->format_context, nullptr, CONTAINER_NAME, nullptr);
 
 			encoder_context->format_context->pb = encoder_context->io_context;
 			encoder_context->format_context->flags = AVFMT_FLAG_CUSTOM_IO;
