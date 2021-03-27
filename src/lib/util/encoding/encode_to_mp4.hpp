@@ -45,7 +45,7 @@ namespace encoding
 		};
 
 	private:
-		static constexpr int memory_output_buffer_size = 1024 * 100; //100 KB
+		static constexpr int memory_output_buffer_size = 1024 * 150; //150 KB
 
 		const char* CONTAINER_NAME = "mpegts";
 
