@@ -11,6 +11,12 @@ copyright-holders:Michele Maione
 <html>
 
 <head>
+	<meta charset="UTF-8">
+
+	<meta name="date" content="2021-03-28" scheme="YYYY-MM-DD">
+	<meta name="author" content="Maione Michele">
+	<meta name="description" content="MAME Game Streaming Server">
+
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
 
 	<style>
@@ -19,14 +25,14 @@ copyright-holders:Michele Maione
 			background-color: black;
 		}
 	</style>
-
-	<script src="jsmpeg.min.js"></script>
 </head>
 
 <body>
 	<canvas id="myCanvas">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
+
+	<script src="jsmpeg.js"></script>
 
 	<script>
 		let myCanvas;
@@ -82,6 +88,16 @@ copyright-holders:Michele Maione
 				loop: false,
 				pauseWhenHidden: false
 			});
+
+			player.source.onStringMessageCallback = function (event)
+			{
+				let values = event.data.split(":");
+
+				vw = values[1];
+				vh = values[2];
+
+				reportWindowSize();
+			};
 
 			player.audioOut.unlock(onUnlocked);
 			document.addEventListener('touchstart', onTouchStart, false);
