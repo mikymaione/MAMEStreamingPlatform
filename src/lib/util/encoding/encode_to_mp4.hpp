@@ -62,9 +62,9 @@ namespace encoding
 		static constexpr AVCodecID audio_codec = AV_CODEC_ID_MP2;
 
 		static constexpr int audio_channels_in = 2;
-		static constexpr int audio_channels_out = 1;
+		static constexpr int audio_channels_out = 2; //1
 		static constexpr uint64_t audio_channel_layout_in = AV_CH_LAYOUT_STEREO;
-		static constexpr uint64_t audio_channel_layout_out = AV_CH_LAYOUT_MONO;
+		static constexpr uint64_t audio_channel_layout_out = AV_CH_LAYOUT_STEREO; //AV_CH_LAYOUT_MONO
 
 		static constexpr int out_sample_rate = 48000; //44100;
 		static constexpr int in_sample_rate = 48000;
@@ -188,7 +188,7 @@ namespace encoding
 			if (!encoder_context->audio_codec_context)
 				die("could not allocated memory for codec context", 0);
 
-			encoder_context->audio_codec_context->channels = 1;
+			encoder_context->audio_codec_context->channels = audio_channels_out;
 			encoder_context->audio_codec_context->channel_layout = av_get_default_channel_layout(encoder_context->audio_codec_context->channels);
 			encoder_context->audio_codec_context->sample_rate = out_sample_rate;
 			encoder_context->audio_codec_context->sample_fmt = audio_sample_format_out;
@@ -392,40 +392,24 @@ namespace encoding
 		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq)
 		{
 			if (audio_input_buffer == nullptr)
-				audio_input_buffer = new uint8_t[aac_frame->nb_samples];
+				audio_input_buffer = new uint8_t[audio_converter_output_channels_buffer_size];
 
 			for (auto i = 0; i < audio_stream_size; ++i)
 				audio_input_queue.push(audio_stream[i]);
 
-			while (audio_input_queue.size() >= aac_frame->nb_samples)
+			while (audio_input_queue.size() >= audio_converter_output_channels_buffer_size)
 			{
-				for (auto i = 0; i < aac_frame->nb_samples; ++i)
+				for (auto i = 0; i < audio_converter_output_channels_buffer_size; ++i)
 				{
 					audio_input_buffer[i] = audio_input_queue.front();
 					audio_input_queue.pop();
 				}
 
-				audio_converter_output_channels[0] = audio_converter_output_channels_buffer;
-				audio_converter_input_channels[0] = audio_input_buffer;
-
-				const auto audio_buf_samples = av_rescale_rnd(
-					samples,
-					in_sample_rate,
-					freq,
-					AV_ROUND_UP);
-
-				auto ret = swr_convert(
-					encoder_context->audio_converter_context,
-					audio_converter_output_channels, audio_buf_samples, // destination
-					audio_converter_input_channels, aac_frame->nb_samples); //source			
-				if (ret < 0)
-					die("Cannot convert audio", ret);
-
-				ret = avcodec_fill_audio_frame(
+				auto ret = avcodec_fill_audio_frame(
 					aac_frame,
 					encoder_context->audio_codec_context->channels,
 					encoder_context->audio_codec_context->sample_fmt,
-					audio_converter_output_channels_buffer,
+					audio_input_buffer,
 					audio_converter_output_channels_buffer_size,
 					1); //no-alignment
 				if (ret < 0)
