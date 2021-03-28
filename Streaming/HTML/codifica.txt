@@ -1,0 +1,3 @@
+mpegts
+ffmpeg -i c:\video\d.webm -f mpegts -codec:v mpeg1video -s 640x360 -b:v 128k -bf 0 -codec:a mp2 -b:a 96k http://localhost:8081/1
+

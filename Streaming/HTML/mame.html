@@ -20,15 +20,32 @@ copyright-holders:Michele Maione
 		}
 	</style>
 
-	<script type="text/javascript" src="Decoder.js"></script>
-	<script type="text/javascript" src="WebGLCanvas.js"></script>
-	<script type="text/javascript" src="Player.js"></script>
+	<script src="jsmpeg.min.js"></script>
 </head>
 
 <body>
+	<canvas id="myCanvas">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
 	<script>
 		let myCanvas;
+		let player;
 		let vw, vh, cw, ch, tw, th;
+
+		let X = 0;
+
+		function onUnlocked()
+		{
+			player.volume = 1;
+			document.removeEventListener('touchstart', onTouchStart);
+		}
+
+		function onTouchStart()
+		{
+			player.audioOut.unlock(onUnlocked);
+			document.removeEventListener('touchstart', onTouchStart);
+		}
 
 		function reportWindowSize()
 		{
@@ -54,47 +71,20 @@ copyright-holders:Michele Maione
 		{
 			const uri = "ws://192.168.1.8:8888";
 
-			let player = new Player();
-			myCanvas = player.canvas;
-			document.body.appendChild(myCanvas);
+			myCanvas = document.getElementById("myCanvas");
 
-			let webSocket = window.WebSocket || window.MozWebSocket,
-				ws = new webSocket(uri);
+			player = new JSMpeg.Player(uri, {
+				canvas: myCanvas,
+				autoplay: true,
+				chunkSize: 1024 * 300, //300 KB
+				videoBufferSize: 1024 * 1024 * 4, //4 MB
+				audioBufferSize: 1024 * 1024 * 4, //4 MB
+				loop: false,
+				pauseWhenHidden: false
+			});
 
-			ws.binaryType = 'arraybuffer';
-
-			ws.onerror = function (event)
-			{
-				console.log('Connection error.');
-			};
-
-			ws.onopen = function (event)
-			{
-				console.log('Connection opened.');
-			};
-
-			ws.onclose = function (event)
-			{
-				console.log('Connection closed');
-			};
-
-			ws.onmessage = function (event)
-			{
-				if (typeof event.data === 'string')
-				{
-					let values = event.data.split(":");
-
-					vw = values[1];
-					vh = values[2];
-
-					reportWindowSize();
-				}
-				else
-				{
-					let messageData = new Uint8Array(event.data);
-					player.decode(messageData);
-				}
-			};
+			player.audioOut.unlock(onUnlocked);
+			document.addEventListener('touchstart', onTouchStart, false);
 		}
 
 		window.onresize = reportWindowSize;
