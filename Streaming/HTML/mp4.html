@@ -52,7 +52,7 @@ copyright-holders:Michele Maione
 
 		function Start()
 		{
-			const uri = "ws://192.168.1.8:8888";
+			const uri = "ws://localhost:8888";
 
 			let player = new Player();
 			myCanvas = player.canvas;
@@ -91,7 +91,7 @@ copyright-holders:Michele Maione
 				}
 				else
 				{
-					let messageData = new Uint8Array(event.data);
+					let messageData = new Uint8Array(event.data);					
 					player.decode(messageData);
 				}
 			};
