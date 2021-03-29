@@ -52,6 +52,7 @@ namespace encoding
 
 		// Video
 		static constexpr AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
+		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -60,6 +61,7 @@ namespace encoding
 
 		// Audio
 		static constexpr AVCodecID audio_codec = AV_CODEC_ID_MP2;
+		static constexpr int64_t AUDIO_BIT_RATE = 96 * 1000;
 
 		static constexpr int audio_channels_in = 2;
 		static constexpr int audio_channels_out = 2; //1
@@ -139,6 +141,8 @@ namespace encoding
 			encoder_context->video_codec_context->width = out_width;
 			encoder_context->video_codec_context->height = out_height;
 
+			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
+
 			encoder_context->video_codec_context->pix_fmt = Pixel_Format_out;
 			encoder_context->video_codec_context->time_base = { 1,fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
@@ -192,6 +196,8 @@ namespace encoding
 			encoder_context->audio_codec_context->channel_layout = av_get_default_channel_layout(encoder_context->audio_codec_context->channels);
 			encoder_context->audio_codec_context->sample_rate = out_sample_rate;
 			encoder_context->audio_codec_context->sample_fmt = audio_sample_format_out;
+
+			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
 			encoder_context->audio_codec_context->time_base = { 1,out_sample_rate };
 			encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
