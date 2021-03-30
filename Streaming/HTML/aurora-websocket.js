@@ -1,59 +1,36 @@
-(function ()
-{
-	var __hasProp = {}.hasOwnProperty, __extends = function (child, parent) 
-	{
-		for (var key in parent)
-		{
-			if (__hasProp.call(parent, key))
-				child[key] = parent[key];
-		}
+// based on aurora-websocket.js https://github.com/fsbdev/aurora-websocket
+// MIT licensed
 
-		function ctor()
-		{
-			this.constructor = child;
-		}
+(function () {
 
-		ctor.prototype = parent.prototype;
-		child.prototype = new ctor();
-		child.__super__ = parent.prototype;
+	var __hasProp = {}.hasOwnProperty,
+		__extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-		return child;
-	};
-
-	AV.WebSocketSource = (function (_super)
-	{
+	AV.WebSocketSource = (function(_super) {
 		__extends(WebSocketSource, _super);
 
-		function WebSocketSource(socket)
-		{
-			this.socket = socket;
-
-			if (typeof WebSocket === "undefined" || WebSocket === null)
-				return this.emit('error', 'This browser does not have WebSocket support.');
-
-			if (this.socket.binaryType == null)
-			{
-				this.socket.close();
-				return this.emit('error', 'This browser does not have binary WebSocket support.');
-			}
-
-			this.bytesLoaded = 0;
+		function WebSocketSource() { 
+			// ctor
 		}
 
-		WebSocketSource.prototype.start = function ()
-		{
+		WebSocketSource.prototype.start = function () { 
 			return true;
 		};
 
-		WebSocketSource.prototype.processData = function (uint8_array)
-		{
-			buf = new AV.Buffer(uint8_array);
+		WebSocketSource.prototype.start = function() {
+			return true;
+		};
 
-			this.bytesLoaded += buf.length;
+		WebSocketSource.prototype.pause = function() {
+			return true;
+		};
 
-			if (this.length)
-				this.emit('progress', this.bytesLoaded / this.length * 100);
+		WebSocketSource.prototype.reset = function() {
+			return true;
+		};
 
+		WebSocketSource.prototype._on_data = function(data) {
+			var buf = new AV.Buffer(data);
 			return this.emit('data', buf);
 		};
 
@@ -61,17 +38,15 @@
 
 	})(AV.EventEmitter);
 
-	AV.Asset.fromWebSocket = function (socket)
-	{
+	AV.Asset.fromWebSocket = function () {
 		var source;
-		source = new AV.WebSocketSource(socket);
+		source = new AV.WebSocketSource();
 		return new AV.Asset(source);
 	};
 
-	AV.Player.fromWebSocket = function (socket)
-	{
+	AV.Player.fromWebSocket = function () {
 		var asset;
-		asset = AV.Asset.fromWebSocket(socket);
+		asset = AV.Asset.fromWebSocket();
 		return new AV.Player(asset);
 	};
 

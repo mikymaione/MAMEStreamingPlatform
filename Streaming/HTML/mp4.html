@@ -32,6 +32,7 @@ copyright-holders:Michele Maione
 	<script src="aurora.js"></script>
 	<script src="aurora-websocket.js"></script>
 	<script src="aac.js"></script>
+	<script src="mp3.js"></script>
 
 	<script src="Decoder.js"></script>
 	<script src="WebGLCanvas.js"></script>
@@ -72,6 +73,9 @@ copyright-holders:Michele Maione
 		function Start()
 		{
 			const uri = "ws://localhost:8888";
+
+			//audio 
+			auroraPlayer = AV.Player.fromWebSocket();
 
 			//video
 			broadwayPlayer = new Player();
@@ -114,16 +118,12 @@ copyright-holders:Michele Maione
 					let messageData = new Uint8Array(event.data);
 
 					//video
-					broadwayPlayer.decode(messageData);
+					//broadwayPlayer.decode(messageData);
 
-					//audio					
-					auroraPlayer.asset.source.processData(messageData);
-					auroraPlayer.play();
+					//audio
+					auroraPlayer.asset.source._on_data(messageData); 
 				}
-			};
-
-			//audio			
-			auroraPlayer = AV.Player.fromWebSocket(ws);
+			}; 
 		}
 
 		window.onresize = reportWindowSize;
