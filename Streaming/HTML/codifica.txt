@@ -7,3 +7,6 @@ ffmpeg -i c:\video\d.webm -c:a aac -b:a 96k -c:v h264 -b:v 128k -s 640x360 -pres
 
 broadway
 ffmpeg -y -i c:\video\d.webm -r 30000/1001 -b:v 128k -vcodec libx264 -preset ultrafast -tune zerolatency -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -an -f mp4 http://localhost:8081/1
+
+
+ffmpeg -v info -fflags +genpts -protocol_whitelist pipe,tls,file,http,https,tcp,rtp -i c:\video\d.webm -vf realtime,scale=w=min(iw\,1280):h=-2 -map 0:v:0 -c:v libx264 -x264-params intra-refresh=1,fast-pskip=0 -threads 3 -profile:v baseline -level:v 3.1 -pix_fmt yuv420p -tune zerolatency -minrate 500K -maxrate 1.3M -bufsize 500K -af arealtime -map 0:a:0 -c:a libopus  -ab 128k -ac 2 -ar 48000 -f tee [select=a:f=rtp:ssrc=1111:payload_type=9]rtp://localhost:8888?rtcpport=9999|[select=v:f=rtp:ssrc=2222:payload_type=9]rtp://localhost:8888?rtcpport=9999
