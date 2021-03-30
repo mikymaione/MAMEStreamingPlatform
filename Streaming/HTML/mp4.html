@@ -11,6 +11,14 @@ copyright-holders:Michele Maione
 <html>
 
 <head>
+	<meta charset="UTF-8">
+
+	<meta name="date" content="2021-03-30" scheme="YYYY-MM-DD">
+	<meta name="author" content="Maione Michele">
+	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
 
 	<style>
@@ -91,7 +99,7 @@ copyright-holders:Michele Maione
 				}
 				else
 				{
-					let messageData = new Uint8Array(event.data);					
+					let messageData = new Uint8Array(event.data);
 					player.decode(messageData);
 				}
 			};

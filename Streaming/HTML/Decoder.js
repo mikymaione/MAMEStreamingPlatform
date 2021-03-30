@@ -23229,8 +23229,6 @@
 
 			}, function ($buffer, width, height)
 			{
-				debugger;
-
 				var buffer = this.pictureBuffers[$buffer];
 				if (!buffer)
 				{
@@ -23320,7 +23318,7 @@
 				};
 
 				this.streamBuffer.set(buffer);
-				debugger;
+
 				Module._broadwaySetStreamLength(buffer.length);
 				Module._broadwayPlayStream();
 			};
