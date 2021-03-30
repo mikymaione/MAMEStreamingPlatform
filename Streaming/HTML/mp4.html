@@ -18,7 +18,7 @@ copyright-holders:Michele Maione
 	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
 
 	<style>
@@ -28,15 +28,26 @@ copyright-holders:Michele Maione
 		}
 	</style>
 
-	<script type="text/javascript" src="Decoder.js"></script>
-	<script type="text/javascript" src="WebGLCanvas.js"></script>
-	<script type="text/javascript" src="Player.js"></script>
+
+	<script src="aurora.js"></script>
+	<script src="aurora-websocket.js"></script>
+	<script src="aac.js"></script>
+
+	<script src="Decoder.js"></script>
+	<script src="WebGLCanvas.js"></script>
+	<script src="Player.js"></script>
 </head>
 
 <body>
-	<script>
+	<script type="text/javascript">
 		let myCanvas;
+		let broadwayPlayer;
+		let auroraPlayer;
 		let vw, vh, cw, ch, tw, th;
+
+		//audio
+		let bytesLoaded = 0;
+		//audio
 
 		function reportWindowSize()
 		{
@@ -62,8 +73,9 @@ copyright-holders:Michele Maione
 		{
 			const uri = "ws://localhost:8888";
 
-			let player = new Player();
-			myCanvas = player.canvas;
+			//video
+			broadwayPlayer = new Player();
+			myCanvas = broadwayPlayer.canvas;
 			document.body.appendChild(myCanvas);
 
 			let webSocket = window.WebSocket || window.MozWebSocket,
@@ -100,9 +112,18 @@ copyright-holders:Michele Maione
 				else
 				{
 					let messageData = new Uint8Array(event.data);
-					player.decode(messageData);
+
+					//video
+					broadwayPlayer.decode(messageData);
+
+					//audio					
+					auroraPlayer.asset.source.processData(messageData);
+					auroraPlayer.play();
 				}
 			};
+
+			//audio			
+			auroraPlayer = AV.Player.fromWebSocket(ws);
 		}
 
 		window.onresize = reportWindowSize;
