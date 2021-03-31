@@ -45,14 +45,19 @@ namespace encoding
 			SwrContext* audio_converter_context = nullptr;
 		};
 
+		struct Encoder_pts
+		{
+			int64_t video_pts, frame_duration;
+		};
+
 	private:
 		static constexpr int memory_output_buffer_size = 1024 * 1024 * 100; //100MB
 
-		const char* CONTAINER_NAME = "mpegts";
+		const char* CONTAINER_NAME = "rawvideo";
 
 		// Video
-		static constexpr AVCodecID video_codec = AV_CODEC_ID_MPEG1VIDEO;
-		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1000;
+		static constexpr AVCodecID video_codec = AV_CODEC_ID_H264;
+		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1024;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -60,8 +65,8 @@ namespace encoding
 		static constexpr AVPixelFormat Pixel_Format_out = AV_PIX_FMT_YUV420P;
 
 		// Audio
-		static constexpr AVCodecID audio_codec = AV_CODEC_ID_MP2;
-		static constexpr int64_t AUDIO_BIT_RATE = 96 * 1000;
+		static constexpr AVCodecID audio_codec = AV_CODEC_ID_AAC;
+		static constexpr int64_t AUDIO_BIT_RATE = 96 * 1024;
 
 		static constexpr int audio_channels_in = 2;
 		static constexpr int audio_channels_out = 2; //1
@@ -70,7 +75,7 @@ namespace encoding
 
 		static constexpr int out_sample_rate = 48000; //44100;
 		static constexpr int in_sample_rate = 48000;
-		static constexpr AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_S16;
+		static constexpr AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_FLTP;
 		static constexpr AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
 
 	public:
@@ -87,6 +92,7 @@ namespace encoding
 		char error_buffer[AV_ERROR_MAX_STRING_SIZE];
 
 		StreamingContext* encoder_context = nullptr;
+		Encoder_pts* video_encoder_pts = nullptr;
 
 		uint8_t* memory_output_buffer;
 
@@ -100,12 +106,9 @@ namespace encoding
 
 		uint8_t* yuv_buffer = nullptr;
 
+		int audio_input_buffer_size = 0;
 		uint8_t* audio_input_buffer = nullptr;
 		std::queue<uint8_t> audio_input_queue;
-		int audio_converter_output_channels_buffer_size = 0;
-		uint8_t* audio_converter_output_channels_buffer = nullptr;
-		uint8_t* audio_converter_output_channels[audio_channels_out];
-		const uint8_t* audio_converter_input_channels[audio_channels_out];
 
 	private:
 		void die(const std::string& msg, const int error_code)
@@ -147,7 +150,12 @@ namespace encoding
 			encoder_context->video_codec_context->time_base = { 1,fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
-			auto ret = avcodec_open2(encoder_context->video_codec_context, encoder_context->video_codec, nullptr);
+			AVDictionary* options = nullptr;
+			av_dict_set(&options, "preset", "ultrafast", 0);
+			av_dict_set(&options, "tune", "zerolatency", 0);
+			//av_dict_set(&options, "crf", "40", 0);
+
+			auto ret = avcodec_open2(encoder_context->video_codec_context, encoder_context->video_codec, &options);
 			if (ret < 0)
 				die("Could not open the codec", ret);
 
@@ -202,7 +210,10 @@ namespace encoding
 			encoder_context->audio_codec_context->time_base = { 1,out_sample_rate };
 			encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
 
-			const auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, nullptr);
+			AVDictionary* options = nullptr;
+			av_dict_set(&options, "movflags", "+faststart", 0);
+
+			const auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, &options);
 			if (ret < 0)
 				die("could not open the codec", ret);
 
@@ -230,14 +241,14 @@ namespace encoding
 
 			swr_init(encoder_context->audio_converter_context);
 
-			audio_converter_output_channels_buffer_size = av_samples_get_buffer_size(
+			audio_input_buffer_size = av_samples_get_buffer_size(
 				nullptr,
 				encoder_context->audio_codec_context->channels,
 				aac_frame->nb_samples,
 				encoder_context->audio_codec_context->sample_fmt,
 				1);
 
-			audio_converter_output_channels_buffer = new uint8_t[audio_converter_output_channels_buffer_size];
+			audio_input_buffer = new uint8_t[audio_input_buffer_size];
 		}
 
 		void send_it()
@@ -258,6 +269,15 @@ namespace encoding
 				die("Could not write header", ret);
 		}
 
+		void write_video_pts()
+		{
+			//video_packet.pts = video_encoder_pts->video_pts; /* this is to keep next pts value, same unit as AVPacket::pts */
+			//video_encoder_pts->video_pts += video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
+			//video_packet.dts = video_packet.pts;
+			//video_packet.duration = video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
+			video_packet.stream_index = 0; /* AVStream */
+		}
+
 	public:
 		encode_to_mp4(const int in_width, const int in_height,
 					  const int out_width, const int out_height,
@@ -271,6 +291,7 @@ namespace encoding
 			av_register_all();
 			avcodec_register_all();
 
+			video_encoder_pts = new Encoder_pts();
 			encoder_context = new StreamingContext();
 
 			memory_output_buffer = static_cast<uint8_t*>(av_malloc(memory_output_buffer_size));
@@ -281,11 +302,11 @@ namespace encoding
 			encoder_context->format_context->pb = encoder_context->io_context;
 			encoder_context->format_context->flags = AVFMT_FLAG_CUSTOM_IO;
 
+			//if (encoder_context->format_context->oformat->flags & AVFMT_GLOBALHEADER)
+				//encoder_context->format_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+
 			init_video();
 			init_audio();
-
-			if (encoder_context->format_context->oformat->flags & AVFMT_GLOBALHEADER)
-				encoder_context->format_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
 			write_header();
 		}
@@ -317,30 +338,9 @@ namespace encoding
 			av_free(memory_output_buffer);
 
 			delete encoder_context;
+			delete video_encoder_pts;
 
-			delete[] audio_converter_output_channels_buffer;
-		}
-
-		/**
-		 * \brief Change input size
-		 * \param new_in_width
-		 * \param new_in_height
-		 */
-		void set_input_size(const int new_in_width, const int new_in_height)
-		{
-			in_width = new_in_width;
-			in_height = new_in_height;
-		}
-
-		/**
-		 * \brief Change output size
-		 * \param new_out_width
-		 * \param new_out_height
-		 */
-		void set_output_size(const int new_out_width, const int new_out_height)
-		{
-			out_width = new_out_width;
-			out_height = new_out_height;
+			delete[] audio_input_buffer;
 		}
 
 		/**
@@ -370,7 +370,7 @@ namespace encoding
 
 			if (got_packet_ptr)
 			{
-				video_packet.stream_index = 0;
+				write_video_pts();
 
 				const auto ret = av_interleaved_write_frame(encoder_context->format_context, &video_packet);
 				if (ret < 0)
@@ -397,15 +397,12 @@ namespace encoding
 		 */
 		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq)
 		{
-			if (audio_input_buffer == nullptr)
-				audio_input_buffer = new uint8_t[audio_converter_output_channels_buffer_size];
-
 			for (auto i = 0; i < audio_stream_size; ++i)
 				audio_input_queue.push(audio_stream[i]);
 
-			while (audio_input_queue.size() >= audio_converter_output_channels_buffer_size)
+			while (audio_input_queue.size() >= audio_input_buffer_size)
 			{
-				for (auto i = 0; i < audio_converter_output_channels_buffer_size; ++i)
+				for (auto i = 0; i < audio_input_buffer_size; ++i)
 				{
 					audio_input_buffer[i] = audio_input_queue.front();
 					audio_input_queue.pop();
@@ -416,7 +413,7 @@ namespace encoding
 					encoder_context->audio_codec_context->channels,
 					encoder_context->audio_codec_context->sample_fmt,
 					audio_input_buffer,
-					audio_converter_output_channels_buffer_size,
+					audio_input_buffer_size,
 					1); //no-alignment
 				if (ret < 0)
 					die("Cannot fill audio frame", ret);

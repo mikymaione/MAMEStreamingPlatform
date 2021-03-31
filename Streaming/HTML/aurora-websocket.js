@@ -29,8 +29,9 @@
 			return true;
 		};
 
-		WebSocketSource.prototype._on_data = function(data) {
-			var buf = new AV.Buffer(data);
+		WebSocketSource.prototype._on_data = function(uint_8_Array) {
+			let buf = new AV.Buffer(uint_8_Array);
+
 			return this.emit('data', buf);
 		};
 
@@ -39,13 +40,13 @@
 	})(AV.EventEmitter);
 
 	AV.Asset.fromWebSocket = function () {
-		var source;
+		let source;
 		source = new AV.WebSocketSource();
 		return new AV.Asset(source);
 	};
 
 	AV.Player.fromWebSocket = function () {
-		var asset;
+		let asset;
 		asset = AV.Asset.fromWebSocket();
 		return new AV.Player(asset);
 	};
