@@ -57,7 +57,7 @@ namespace encoding
 
 		// Video
 		static constexpr AVCodecID VIDEO_CODEC = AV_CODEC_ID_H264;
-		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1024 * 1024; // 1 Mbps
+		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1024;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -66,7 +66,7 @@ namespace encoding
 
 		// Audio
 		static constexpr AVCodecID AUDIO_CODEC = AV_CODEC_ID_AAC;
-		static constexpr int64_t AUDIO_BIT_RATE = 128 * 1024; // 128 kbps
+		static constexpr int64_t AUDIO_BIT_RATE = 96 * 1024;
 
 		static constexpr int AUDIO_CHANNELS_IN = 2;
 		static constexpr int AUDIO_CHANNELS_OUT = 2; //1
@@ -105,6 +105,9 @@ namespace encoding
 		AVFrame* rgb_frame = nullptr;
 		AVFrame* yuv_frame = nullptr;
 		uint8_t* yuv_buffer = nullptr;
+
+		std::queue<uint8_t> audio_input_buffer_queue;
+		uint8_t* audio_input_buffer = nullptr;
 
 	private:
 		void die(const std::string& msg, const int error_code)
@@ -210,7 +213,7 @@ namespace encoding
 			AVDictionary* options = nullptr;
 			av_dict_set(&options, "movflags", "+faststart", 0);
 
-			const auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, &options);
+			auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, &options);
 			if (ret < 0)
 				die("Could not open the codec", ret);
 
@@ -237,14 +240,8 @@ namespace encoding
 			);
 
 			swr_init(encoder_context->audio_converter_context);
-		}
 
-		uint8_t* audio_input_buffer = nullptr;
-		std::queue<uint8_t> audio_streamQ;
-
-		void convert_audio(const uint8_t* audio_stream, const int in_num_samples)
-		{
-			auto ret = av_samples_alloc(
+			ret = av_samples_alloc(
 				&aac_buffer,
 				nullptr,
 				encoder_context->audio_codec_context->channels,
@@ -253,13 +250,6 @@ namespace encoding
 				1);
 			if (ret < 0)
 				die("Cannot alloc audio conversion buffer", ret);
-
-			ret = swr_convert(
-				encoder_context->audio_converter_context,
-				&aac_buffer, aac_frame->nb_samples,		// output
-				&audio_stream, in_num_samples);	// input
-			if (ret < 0)
-				die("Cannot convert audio", ret);
 		}
 
 		void send_it()
@@ -416,19 +406,26 @@ namespace encoding
 				audio_input_buffer = new uint8_t[aac_buffer_size];
 
 			for (auto i = 0; i < audio_stream_size; ++i)
-				audio_streamQ.push(audio_stream[i]);
+				audio_input_buffer_queue.push(audio_stream[i]);
 
-			while (audio_streamQ.size() >= aac_buffer_size)
+			while (audio_input_buffer_queue.size() >= aac_buffer_size)
 			{
 				for (auto i = 0; i < aac_buffer_size; ++i)
 				{
-					audio_input_buffer[i] = audio_streamQ.front();
-					audio_streamQ.pop();
+					audio_input_buffer[i] = audio_input_buffer_queue.front();
+					audio_input_buffer_queue.pop();
 				}
 
-				convert_audio(audio_input_buffer, in_num_samples);
+				auto ret = swr_convert(
+					encoder_context->audio_converter_context,
+					// output
+					&aac_buffer, aac_frame->nb_samples,
+					// input
+					const_cast<const uint8_t**>(&audio_input_buffer), in_num_samples);
+				if (ret < 0)
+					die("Cannot convert audio", ret);
 
-				auto ret = avcodec_fill_audio_frame(
+				ret = avcodec_fill_audio_frame(
 					aac_frame,
 					encoder_context->audio_codec_context->channels,
 					encoder_context->audio_codec_context->sample_fmt,
