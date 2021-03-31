@@ -27,33 +27,29 @@ copyright-holders:Michele Maione
 			background-color: black;
 		}
 	</style>
+
+	<script src="aurora.js"></script>	
+	<script src="aurora-websocket.js"></script>
+	<script src="aac.js"></script>
+	<!-- 
+	<script src="ogg.js"></script>
+	<script src="vorbis.js"></script>
+	<script src="mp3.js"></script>
+	<script src="aac.js"></script>
+	<script src="flac.js"></script> 
+	-->
+
+	<script src="Decoder.js"></script>
+	<script src="WebGLCanvas.js"></script>
+	<script src="Player.js"></script>
 </head>
 
 <body>
-	<canvas id="myCanvas">
-		Your browser does not support the HTML canvas tag.
-	</canvas>
-
-	<script src="jsmpeg.js"></script>
-
-	<script>
+	<script type="text/javascript">
 		let myCanvas;
-		let player;
+		let broadwayPlayer;
+		let auroraPlayer;
 		let vw, vh, cw, ch, tw, th;
-
-		let X = 0;
-
-		function onUnlocked()
-		{
-			player.volume = 1;
-			document.removeEventListener('touchstart', onTouchStart);
-		}
-
-		function onTouchStart()
-		{
-			player.audioOut.unlock(onUnlocked);
-			document.removeEventListener('touchstart', onTouchStart);
-		}
 
 		function reportWindowSize()
 		{
@@ -79,30 +75,78 @@ copyright-holders:Michele Maione
 		{
 			const uri = "ws://192.168.1.8:8888";
 
-			myCanvas = document.getElementById("myCanvas");
+			// Audio 
+			auroraPlayer = AV.Player.fromWebSocket(); 
 
-			player = new JSMpeg.Player(uri, {
-				canvas: myCanvas,
-				autoplay: true,
-				chunkSize: 1024 * 300, //300 KB
-				videoBufferSize: 1024 * 1024 * 4, //4 MB
-				audioBufferSize: 1024 * 1024 * 4, //4 MB
-				loop: false,
-				pauseWhenHidden: false
-			});
+			// Video
+			broadwayPlayer = new Player();
+			myCanvas = broadwayPlayer.canvas;
+			document.body.appendChild(myCanvas);
 
-			player.source.onStringMessageCallback = function (event)
+			// WS
+			let webSocket = window.WebSocket || window.MozWebSocket,
+				ws = new webSocket(uri);
+
+			ws.binaryType = 'arraybuffer';
+
+			ws.onerror = function (event)
 			{
-				let values = event.data.split(":");
-
-				vw = values[1];
-				vh = values[2];
-
-				reportWindowSize();
+				console.log('Connection error.');
 			};
 
-			player.audioOut.unlock(onUnlocked);
-			document.addEventListener('touchstart', onTouchStart, false);
+			ws.onopen = function (event)
+			{
+				console.log('Connection opened.');
+			};
+
+			ws.onclose = function (event)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				if (typeof event.data === 'string')
+				{
+					let values = event.data.split(":");
+
+					vw = values[1];
+					vh = values[2];
+
+					reportWindowSize();
+				}
+				else
+				{
+					let messageData = new Uint8Array(event.data);
+
+					// Video
+					broadwayPlayer.decode(messageData);
+
+					// Audio
+					auroraPlayer.asset.source._on_data(messageData);
+
+					/*
+					console.info(
+						"audio", "playing=", auroraPlayer.playing,
+						"buffered=", auroraPlayer.buffered,
+						"currentTime=", auroraPlayer.currentTime,
+						"duration=", auroraPlayer.duration);
+
+					if (auroraPlayer.format)
+					{
+						console.info(
+							"audio", "formatID=", auroraPlayer.format.formatID,
+							"sampleRate=", auroraPlayer.format.sampleRate);
+					}
+
+					console.info(
+						"audio", "active=", auroraPlayer.asset.active,
+						"decoder=", auroraPlayer.asset.decoder,
+						"demuxer=", auroraPlayer.demuxer);
+					*/
+					auroraPlayer.play(); 
+				}
+			};
 		}
 
 		window.onresize = reportWindowSize;
