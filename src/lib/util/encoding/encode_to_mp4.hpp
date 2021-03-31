@@ -51,7 +51,7 @@ namespace encoding
 		};
 
 	private:
-		static constexpr int memory_output_buffer_size = 1024 * 1024 * 100; //100MB
+		static constexpr size_t memory_output_buffer_size = 1024 * 1024 * 100; //100MB
 
 		const char* CONTAINER_NAME = "rawvideo";
 
@@ -106,14 +106,14 @@ namespace encoding
 
 		uint8_t* yuv_buffer = nullptr;
 
-		int audio_input_buffer_size = 0;
+		size_t audio_input_buffer_size = 0;
 		uint8_t* audio_input_buffer = nullptr;
 		std::queue<uint8_t> audio_input_queue;
 
 	private:
 		void die(const std::string& msg, const int error_code)
 		{
-			std::cerr << msg << std::endl;
+			std::cerr << msg << " [" << error_code << "]" << std::endl;
 
 			if (error_code < 0)
 				if (av_strerror(error_code, error_buffer, AV_ERROR_MAX_STRING_SIZE) == 0)
@@ -147,6 +147,7 @@ namespace encoding
 			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
 
 			encoder_context->video_codec_context->pix_fmt = Pixel_Format_out;
+			encoder_context->video_codec_context->framerate = { fps ,1 };
 			encoder_context->video_codec_context->time_base = { 1,fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
@@ -194,11 +195,11 @@ namespace encoding
 
 			encoder_context->audio_codec = avcodec_find_encoder(audio_codec);
 			if (!encoder_context->audio_codec)
-				die("could not find the proper codec", 0);
+				die("Could not find the proper codec", 0);
 
 			encoder_context->audio_codec_context = avcodec_alloc_context3(encoder_context->audio_codec);
 			if (!encoder_context->audio_codec_context)
-				die("could not allocated memory for codec context", 0);
+				die("Could not allocated memory for codec context", 0);
 
 			encoder_context->audio_codec_context->channels = audio_channels_out;
 			encoder_context->audio_codec_context->channel_layout = av_get_default_channel_layout(encoder_context->audio_codec_context->channels);
@@ -215,7 +216,7 @@ namespace encoding
 
 			const auto ret = avcodec_open2(encoder_context->audio_codec_context, encoder_context->audio_codec, &options);
 			if (ret < 0)
-				die("could not open the codec", ret);
+				die("Could not open the codec", ret);
 
 			avcodec_parameters_from_context(encoder_context->audio_stream->codecpar, encoder_context->audio_codec_context);
 
@@ -271,10 +272,10 @@ namespace encoding
 
 		void write_video_pts()
 		{
-			//video_packet.pts = video_encoder_pts->video_pts; /* this is to keep next pts value, same unit as AVPacket::pts */
-			//video_encoder_pts->video_pts += video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
-			//video_packet.dts = video_packet.pts;
-			//video_packet.duration = video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
+			video_packet.pts = video_encoder_pts->video_pts; /* this is to keep next pts value, same unit as AVPacket::pts */
+			video_encoder_pts->video_pts += video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
+			video_packet.dts = video_packet.pts;
+			video_packet.duration = video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
 			video_packet.stream_index = 0; /* AVStream */
 		}
 
@@ -346,7 +347,6 @@ namespace encoding
 		/**
 		 * \brief Add video frame
 		 * \param pixels
-		 * \return success
 		 */
 		void add_frame(const uint8_t* pixels)
 		{
@@ -393,7 +393,6 @@ namespace encoding
 		 * \param audio_stream_size
 		 * \param samples
 		 * \param freq
-		 * \return success
 		 */
 		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq)
 		{
@@ -402,7 +401,7 @@ namespace encoding
 
 			while (audio_input_queue.size() >= audio_input_buffer_size)
 			{
-				for (auto i = 0; i < audio_input_buffer_size; ++i)
+				for (size_t i = 0; i < audio_input_buffer_size; ++i)
 				{
 					audio_input_buffer[i] = audio_input_queue.front();
 					audio_input_queue.pop();
@@ -413,7 +412,7 @@ namespace encoding
 					encoder_context->audio_codec_context->channels,
 					encoder_context->audio_codec_context->sample_fmt,
 					audio_input_buffer,
-					audio_input_buffer_size,
+					static_cast<int>(audio_input_buffer_size),
 					1); //no-alignment
 				if (ret < 0)
 					die("Cannot fill audio frame", ret);
