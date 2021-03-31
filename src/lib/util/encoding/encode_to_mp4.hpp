@@ -51,32 +51,32 @@ namespace encoding
 		};
 
 	private:
-		static constexpr size_t memory_output_buffer_size = 1024 * 1024 * 100; //100MB
+		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 100; //100MB
 
 		const char* CONTAINER_NAME = "rawvideo";
 
 		// Video
-		static constexpr AVCodecID video_codec = AV_CODEC_ID_H264;
-		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1024;
+		static constexpr AVCodecID VIDEO_CODEC = AV_CODEC_ID_H264;
+		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1024 * 1024; // 1 Mbps
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
-		static constexpr AVPixelFormat Pixel_Format_in = AV_PIX_FMT_BGR32;
-		static constexpr AVPixelFormat Pixel_Format_out = AV_PIX_FMT_YUV420P;
+		static constexpr AVPixelFormat PIXEL_FORMAT_IN = AV_PIX_FMT_BGR32;
+		static constexpr AVPixelFormat PIXEL_FORMAT_OUT = AV_PIX_FMT_YUV420P;
 
 		// Audio
-		static constexpr AVCodecID audio_codec = AV_CODEC_ID_AAC;
-		static constexpr int64_t AUDIO_BIT_RATE = 96 * 1024;
+		static constexpr AVCodecID AUDIO_CODEC = AV_CODEC_ID_AAC;
+		static constexpr int64_t AUDIO_BIT_RATE = 128 * 1024; // 128 kbps
 
-		static constexpr int audio_channels_in = 2;
-		static constexpr int audio_channels_out = 2; //1
-		static constexpr uint64_t audio_channel_layout_in = AV_CH_LAYOUT_STEREO;
-		static constexpr uint64_t audio_channel_layout_out = AV_CH_LAYOUT_STEREO; //AV_CH_LAYOUT_MONO
+		static constexpr int AUDIO_CHANNELS_IN = 2;
+		static constexpr int AUDIO_CHANNELS_OUT = 2; //1
+		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_IN = AV_CH_LAYOUT_STEREO;
+		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_OUT = AV_CH_LAYOUT_STEREO; //AV_CH_LAYOUT_MONO
 
-		static constexpr int out_sample_rate = 48000; //44100;
-		static constexpr int in_sample_rate = 48000;
-		static constexpr AVSampleFormat audio_sample_format_out = AV_SAMPLE_FMT_FLTP;
-		static constexpr AVSampleFormat audio_sample_format_in = AV_SAMPLE_FMT_S16;
+		static constexpr int SAMPLE_RATE_OUT = 48000; //44100;
+		static constexpr int SAMPLE_RATE_IN = 48000;
+		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_OUT = AV_SAMPLE_FMT_FLTP;
+		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS
 
 	public:
 		std::function<int(uint8_t* buf, int buf_size)> on_write;
@@ -100,15 +100,11 @@ namespace encoding
 		AVPacket video_packet, audio_packet;
 
 		AVFrame* aac_frame = nullptr;
+		uint8_t* aac_buffer = nullptr;
 
 		AVFrame* rgb_frame = nullptr;
 		AVFrame* yuv_frame = nullptr;
-
 		uint8_t* yuv_buffer = nullptr;
-
-		size_t audio_input_buffer_size = 0;
-		uint8_t* audio_input_buffer = nullptr;
-		std::queue<uint8_t> audio_input_queue;
 
 	private:
 		void die(const std::string& msg, const int error_code)
@@ -124,7 +120,7 @@ namespace encoding
 
 		static int write_buffer(void* opaque, uint8_t* buf, int buf_size)
 		{
-			const auto this_ = static_cast<encode_to_mp4*>(opaque);
+			auto* const this_ = static_cast<encode_to_mp4*>(opaque);
 
 			return this_->on_write(buf, buf_size);
 		}
@@ -133,7 +129,7 @@ namespace encoding
 		{
 			encoder_context->video_stream = avformat_new_stream(encoder_context->format_context, nullptr);
 
-			encoder_context->video_codec = avcodec_find_encoder(video_codec);
+			encoder_context->video_codec = avcodec_find_encoder(VIDEO_CODEC);
 			if (!encoder_context->video_codec)
 				die("could not find the proper codec", 0);
 
@@ -146,7 +142,7 @@ namespace encoding
 
 			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
 
-			encoder_context->video_codec_context->pix_fmt = Pixel_Format_out;
+			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
 			encoder_context->video_codec_context->framerate = { fps ,1 };
 			encoder_context->video_codec_context->time_base = { 1,fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
@@ -165,27 +161,27 @@ namespace encoding
 				die("Could not retrieve parameters from context", ret);
 
 			encoder_context->video_converter_context = sws_getContext(
-				in_width, in_height, Pixel_Format_in,
-				out_width, out_height, Pixel_Format_out,
+				in_width, in_height, PIXEL_FORMAT_IN,
+				out_width, out_height, PIXEL_FORMAT_OUT,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
 			rgb_frame->width = in_width;
 			rgb_frame->height = in_height;
-			rgb_frame->format = Pixel_Format_in;
+			rgb_frame->format = PIXEL_FORMAT_IN;
 
 			yuv_frame = av_frame_alloc();
 			yuv_frame->width = out_width;
 			yuv_frame->height = out_height;
-			yuv_frame->format = Pixel_Format_out;
+			yuv_frame->format = PIXEL_FORMAT_OUT;
 
 			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
-				Pixel_Format_out,
+				PIXEL_FORMAT_OUT,
 				out_width, out_height);
 		}
 
@@ -193,7 +189,7 @@ namespace encoding
 		{
 			encoder_context->audio_stream = avformat_new_stream(encoder_context->format_context, nullptr);
 
-			encoder_context->audio_codec = avcodec_find_encoder(audio_codec);
+			encoder_context->audio_codec = avcodec_find_encoder(AUDIO_CODEC);
 			if (!encoder_context->audio_codec)
 				die("Could not find the proper codec", 0);
 
@@ -201,14 +197,14 @@ namespace encoding
 			if (!encoder_context->audio_codec_context)
 				die("Could not allocated memory for codec context", 0);
 
-			encoder_context->audio_codec_context->channels = audio_channels_out;
+			encoder_context->audio_codec_context->channels = AUDIO_CHANNELS_OUT;
 			encoder_context->audio_codec_context->channel_layout = av_get_default_channel_layout(encoder_context->audio_codec_context->channels);
-			encoder_context->audio_codec_context->sample_rate = out_sample_rate;
-			encoder_context->audio_codec_context->sample_fmt = audio_sample_format_out;
+			encoder_context->audio_codec_context->sample_rate = SAMPLE_RATE_OUT;
+			encoder_context->audio_codec_context->sample_fmt = AUDIO_SAMPLE_FORMAT_OUT;
 
 			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
-			encoder_context->audio_codec_context->time_base = { 1,out_sample_rate };
+			encoder_context->audio_codec_context->time_base = { 1,SAMPLE_RATE_OUT };
 			encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
@@ -230,26 +226,37 @@ namespace encoding
 			// Resampler
 			encoder_context->audio_converter_context = swr_alloc_set_opts(
 				nullptr,
-				audio_channel_layout_out,
-				audio_sample_format_out,
-				out_sample_rate,
-				audio_channel_layout_in,
-				audio_sample_format_in,
-				in_sample_rate,
+				AUDIO_CHANNEL_LAYOUT_OUT,
+				AUDIO_SAMPLE_FORMAT_OUT,
+				SAMPLE_RATE_OUT,
+				AUDIO_CHANNEL_LAYOUT_IN,
+				AUDIO_SAMPLE_FORMAT_IN,
+				SAMPLE_RATE_IN,
 				0,
 				nullptr
 			);
 
 			swr_init(encoder_context->audio_converter_context);
+		}
 
-			audio_input_buffer_size = av_samples_get_buffer_size(
+		void convert_audio(const uint8_t* audio_stream, const int in_num_samples)
+		{
+			auto ret = av_samples_alloc(
+				&aac_buffer,
 				nullptr,
 				encoder_context->audio_codec_context->channels,
 				aac_frame->nb_samples,
 				encoder_context->audio_codec_context->sample_fmt,
 				1);
+			if (ret < 0)
+				die("Cannot alloc audio conversion buffer", ret);
 
-			audio_input_buffer = new uint8_t[audio_input_buffer_size];
+			ret = swr_convert(
+				encoder_context->audio_converter_context,
+				&aac_buffer, aac_frame->nb_samples,		// output
+				&audio_stream, in_num_samples);	// input
+			if (ret < 0)
+				die("Cannot convert audio", ret);
 		}
 
 		void send_it()
@@ -272,11 +279,11 @@ namespace encoding
 
 		void write_video_pts()
 		{
-			video_packet.pts = video_encoder_pts->video_pts; /* this is to keep next pts value, same unit as AVPacket::pts */
-			video_encoder_pts->video_pts += video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
+			video_packet.pts = video_encoder_pts->video_pts;
+			video_encoder_pts->video_pts += video_encoder_pts->frame_duration;
 			video_packet.dts = video_packet.pts;
-			video_packet.duration = video_encoder_pts->frame_duration; /* check above table for ectx->frame_duration value */
-			video_packet.stream_index = 0; /* AVStream */
+			video_packet.duration = video_encoder_pts->frame_duration;
+			video_packet.stream_index = 0;
 		}
 
 	public:
@@ -295,8 +302,8 @@ namespace encoding
 			video_encoder_pts = new Encoder_pts();
 			encoder_context = new StreamingContext();
 
-			memory_output_buffer = static_cast<uint8_t*>(av_malloc(memory_output_buffer_size));
-			encoder_context->io_context = avio_alloc_context(memory_output_buffer, memory_output_buffer_size, 1, this, nullptr, write_buffer, nullptr);
+			memory_output_buffer = static_cast<uint8_t*>(av_malloc(MEMORY_OUTPUT_BUFFER_SIZE));
+			encoder_context->io_context = avio_alloc_context(memory_output_buffer, MEMORY_OUTPUT_BUFFER_SIZE, 1, this, nullptr, write_buffer, nullptr);
 
 			avformat_alloc_output_context2(&encoder_context->format_context, nullptr, CONTAINER_NAME, nullptr);
 
@@ -338,10 +345,10 @@ namespace encoding
 
 			av_free(memory_output_buffer);
 
+			av_freep(&aac_buffer);
+
 			delete encoder_context;
 			delete video_encoder_pts;
-
-			delete[] audio_input_buffer;
 		}
 
 		/**
@@ -353,7 +360,7 @@ namespace encoding
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
-				Pixel_Format_in,
+				PIXEL_FORMAT_IN,
 				in_width, in_height);
 
 			//RGB to YUV
@@ -390,52 +397,47 @@ namespace encoding
 		/**
 		 * \brief Add audio instant
 		 * \param audio_stream
-		 * \param audio_stream_size
-		 * \param samples
-		 * \param freq
+		 * \param in_num_samples
 		 */
-		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int samples, const int freq)
+		void add_instant(const uint8_t* audio_stream, const int in_num_samples)
 		{
-			for (auto i = 0; i < audio_stream_size; ++i)
-				audio_input_queue.push(audio_stream[i]);
+			convert_audio(audio_stream, in_num_samples);
 
-			while (audio_input_queue.size() >= audio_input_buffer_size)
+			const auto aac_buffer_size = av_samples_get_buffer_size(
+				nullptr,
+				encoder_context->audio_codec_context->channels,
+				aac_frame->nb_samples,
+				encoder_context->audio_codec_context->sample_fmt,
+				1);
+
+			auto ret = avcodec_fill_audio_frame(
+				aac_frame,
+				encoder_context->audio_codec_context->channels,
+				encoder_context->audio_codec_context->sample_fmt,
+				aac_buffer,
+				aac_buffer_size,
+				1); //no-alignment
+			if (ret < 0)
+				die("Cannot fill audio frame", ret);
+
+			av_init_packet(&audio_packet);
+
+			ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
+			if (ret < 0)
+				die("Cannot encode audio frame", ret);
+
+			got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
+
+			if (got_packet_ptr)
 			{
-				for (size_t i = 0; i < audio_input_buffer_size; ++i)
-				{
-					audio_input_buffer[i] = audio_input_queue.front();
-					audio_input_queue.pop();
-				}
+				audio_packet.stream_index = 1;
 
-				auto ret = avcodec_fill_audio_frame(
-					aac_frame,
-					encoder_context->audio_codec_context->channels,
-					encoder_context->audio_codec_context->sample_fmt,
-					audio_input_buffer,
-					static_cast<int>(audio_input_buffer_size),
-					1); //no-alignment
+				ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
 				if (ret < 0)
-					die("Cannot fill audio frame", ret);
-
-				av_init_packet(&audio_packet);
-
-				ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
-				if (ret < 0)
-					die("Cannot encode audio frame", ret);
-
-				got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
-
-				if (got_packet_ptr)
-				{
-					audio_packet.stream_index = 1;
-
-					ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
-					if (ret < 0)
-						die("Error while writing audio frame", ret);
-				}
-
-				av_packet_unref(&audio_packet);
+					die("Error while writing audio frame", ret);
 			}
+
+			av_packet_unref(&audio_packet);
 		}
 
 	};
