@@ -239,6 +239,9 @@ namespace encoding
 			swr_init(encoder_context->audio_converter_context);
 		}
 
+		uint8_t* audio_input_buffer = nullptr;
+		std::queue<uint8_t> audio_streamQ;
+
 		void convert_audio(const uint8_t* audio_stream, const int in_num_samples)
 		{
 			auto ret = av_samples_alloc(
@@ -397,12 +400,11 @@ namespace encoding
 		/**
 		 * \brief Add audio instant
 		 * \param audio_stream
+		 * \param audio_stream_size
 		 * \param in_num_samples
 		 */
-		void add_instant(const uint8_t* audio_stream, const int in_num_samples)
+		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int in_num_samples)
 		{
-			convert_audio(audio_stream, in_num_samples);
-
 			const auto aac_buffer_size = av_samples_get_buffer_size(
 				nullptr,
 				encoder_context->audio_codec_context->channels,
@@ -410,34 +412,51 @@ namespace encoding
 				encoder_context->audio_codec_context->sample_fmt,
 				1);
 
-			auto ret = avcodec_fill_audio_frame(
-				aac_frame,
-				encoder_context->audio_codec_context->channels,
-				encoder_context->audio_codec_context->sample_fmt,
-				aac_buffer,
-				aac_buffer_size,
-				1); //no-alignment
-			if (ret < 0)
-				die("Cannot fill audio frame", ret);
+			if (audio_input_buffer == nullptr)
+				audio_input_buffer = new uint8_t[aac_buffer_size];
 
-			av_init_packet(&audio_packet);
+			for (auto i = 0; i < audio_stream_size; ++i)
+				audio_streamQ.push(audio_stream[i]);
 
-			ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
-			if (ret < 0)
-				die("Cannot encode audio frame", ret);
-
-			got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
-
-			if (got_packet_ptr)
+			while (audio_streamQ.size() >= aac_buffer_size)
 			{
-				audio_packet.stream_index = 1;
+				for (auto i = 0; i < aac_buffer_size; ++i)
+				{
+					audio_input_buffer[i] = audio_streamQ.front();
+					audio_streamQ.pop();
+				}
 
-				ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
+				convert_audio(audio_input_buffer, in_num_samples);
+
+				auto ret = avcodec_fill_audio_frame(
+					aac_frame,
+					encoder_context->audio_codec_context->channels,
+					encoder_context->audio_codec_context->sample_fmt,
+					aac_buffer,
+					aac_buffer_size,
+					1); //no-alignment
 				if (ret < 0)
-					die("Error while writing audio frame", ret);
-			}
+					die("Cannot fill audio frame", ret);
 
-			av_packet_unref(&audio_packet);
+				av_init_packet(&audio_packet);
+
+				ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
+				if (ret < 0)
+					die("Cannot encode audio frame", ret);
+
+				got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
+
+				if (got_packet_ptr)
+				{
+					audio_packet.stream_index = 1;
+
+					ret = av_interleaved_write_frame(encoder_context->format_context, &audio_packet);
+					if (ret < 0)
+						die("Error while writing audio frame", ret);
+				}
+
+				av_packet_unref(&audio_packet);
+			}
 		}
 
 	};
