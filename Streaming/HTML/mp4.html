@@ -28,11 +28,16 @@ copyright-holders:Michele Maione
 		}
 	</style>
 
-
-	<script src="aurora.js"></script>
+	<script src="aurora.js"></script>	
 	<script src="aurora-websocket.js"></script>
 	<script src="aac.js"></script>
+	<!-- 
+	<script src="ogg.js"></script>
+	<script src="vorbis.js"></script>
 	<script src="mp3.js"></script>
+	<script src="aac.js"></script>
+	<script src="flac.js"></script> 
+	-->
 
 	<script src="Decoder.js"></script>
 	<script src="WebGLCanvas.js"></script>
@@ -45,10 +50,6 @@ copyright-holders:Michele Maione
 		let broadwayPlayer;
 		let auroraPlayer;
 		let vw, vh, cw, ch, tw, th;
-
-		//audio
-		let bytesLoaded = 0;
-		//audio
 
 		function reportWindowSize()
 		{
@@ -74,14 +75,15 @@ copyright-holders:Michele Maione
 		{
 			const uri = "ws://localhost:8888";
 
-			//audio 
-			auroraPlayer = AV.Player.fromWebSocket();
+			// Audio 
+			auroraPlayer = AV.Player.fromWebSocket(); 
 
-			//video
+			// Video
 			broadwayPlayer = new Player();
 			myCanvas = broadwayPlayer.canvas;
 			document.body.appendChild(myCanvas);
 
+			// WS
 			let webSocket = window.WebSocket || window.MozWebSocket,
 				ws = new webSocket(uri);
 
@@ -117,13 +119,34 @@ copyright-holders:Michele Maione
 				{
 					let messageData = new Uint8Array(event.data);
 
-					//video
-					//broadwayPlayer.decode(messageData);
+					// Video
+					broadwayPlayer.decode(messageData);
 
-					//audio
-					auroraPlayer.asset.source._on_data(messageData); 
+					// Audio
+					auroraPlayer.asset.source._on_data(messageData);
+
+					/*
+					console.info(
+						"audio", "playing=", auroraPlayer.playing,
+						"buffered=", auroraPlayer.buffered,
+						"currentTime=", auroraPlayer.currentTime,
+						"duration=", auroraPlayer.duration);
+
+					if (auroraPlayer.format)
+					{
+						console.info(
+							"audio", "formatID=", auroraPlayer.format.formatID,
+							"sampleRate=", auroraPlayer.format.sampleRate);
+					}
+
+					console.info(
+						"audio", "active=", auroraPlayer.asset.active,
+						"decoder=", auroraPlayer.asset.decoder,
+						"demuxer=", auroraPlayer.demuxer);
+					*/
+					auroraPlayer.play(); 
 				}
-			}; 
+			};
 		}
 
 		window.onresize = reportWindowSize;
