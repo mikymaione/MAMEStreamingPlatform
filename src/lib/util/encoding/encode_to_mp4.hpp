@@ -102,12 +102,12 @@ namespace encoding
 		AVFrame* aac_frame = nullptr;
 		uint8_t* aac_buffer = nullptr;
 
+		uint8_t* audio_stream_temp = nullptr;
+		uint8_t audio_stream_temp_shift = 0;
+
 		AVFrame* rgb_frame = nullptr;
 		AVFrame* yuv_frame = nullptr;
 		uint8_t* yuv_buffer = nullptr;
-
-		std::queue<uint8_t> audio_input_buffer_queue;
-		uint8_t* audio_input_buffer = nullptr;
 
 	private:
 		void die(const std::string& msg, const int error_code)
@@ -220,7 +220,7 @@ namespace encoding
 			avcodec_parameters_from_context(encoder_context->audio_stream->codecpar, encoder_context->audio_codec_context);
 
 			aac_frame = av_frame_alloc();
-			aac_frame->nb_samples = encoder_context->audio_codec_context->frame_size; //1152;
+			aac_frame->nb_samples = encoder_context->audio_codec_context->frame_size; //1024;
 			aac_frame->channels = encoder_context->audio_codec_context->channels;
 			aac_frame->channel_layout = encoder_context->audio_codec_context->channel_layout;
 			aac_frame->format = encoder_context->audio_codec_context->sample_fmt;
@@ -340,7 +340,7 @@ namespace encoding
 
 			av_freep(&aac_buffer);
 
-			delete[] audio_input_buffer;
+			delete[] audio_stream_temp;
 
 			delete encoder_context;
 			delete video_encoder_pts;
@@ -397,35 +397,33 @@ namespace encoding
 		 */
 		void add_instant(const uint8_t* audio_stream, const int audio_stream_size, const int audio_stream_num_samples)
 		{
-			const auto aac_buffer_size = av_samples_get_buffer_size(
-				nullptr,
-				encoder_context->audio_codec_context->channels,
-				aac_frame->nb_samples,
-				encoder_context->audio_codec_context->sample_fmt,
-				1);
-
-			if (audio_input_buffer == nullptr)
-				audio_input_buffer = new uint8_t[aac_buffer_size];
+			if (audio_stream_temp == nullptr)
+				audio_stream_temp = new uint8_t[audio_stream_size * 2];
 
 			for (auto i = 0; i < audio_stream_size; i++)
-				audio_input_buffer_queue.push(audio_stream[i]);
+				audio_stream_temp[i + audio_stream_temp_shift] = audio_stream[i];
 
-			while (audio_input_buffer_queue.size() >= aac_buffer_size)
+			audio_stream_temp_shift += audio_stream_size;
+
+			if (audio_stream_temp_shift == audio_stream_size * 2)
 			{
-				for (auto i = 0; i < aac_buffer_size; i++)
-				{
-					audio_input_buffer[i] = audio_input_buffer_queue.front();
-					audio_input_buffer_queue.pop();
-				}
+				audio_stream_temp_shift = 0;
 
 				auto ret = swr_convert(
 					encoder_context->audio_converter_context,
 					// output
 					&aac_buffer, aac_frame->nb_samples,
 					// input
-					const_cast<const uint8_t**>(&audio_input_buffer), audio_stream_num_samples);
+					const_cast<const uint8_t**>(&audio_stream_temp), aac_frame->nb_samples);
 				if (ret < 0)
 					die("Cannot convert audio", ret);
+
+				const auto aac_buffer_size = av_samples_get_buffer_size(
+					nullptr,
+					encoder_context->audio_codec_context->channels,
+					aac_frame->nb_samples,
+					encoder_context->audio_codec_context->sample_fmt,
+					1);
 
 				ret = avcodec_fill_audio_frame(
 					aac_frame,
@@ -442,8 +440,6 @@ namespace encoding
 				ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
 				if (ret < 0)
 					die("Cannot encode audio frame", ret);
-
-				std::cout << "Encoded:  bits " << aac_buffer_size << std::endl;
 
 				got_packet_ptr = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet) == 0;
 
