@@ -31,7 +31,9 @@ namespace encoding
 	{
 	public:
 		enum CODEC { MP4, WEBM, MPEGTS };
+
 		std::shared_ptr<std::ostream> socket;
+		std::function<void()> on_write;
 
 	private:
 		struct StreamingContext
@@ -83,14 +85,12 @@ namespace encoding
 
 		static constexpr int SAMPLE_RATE_OUT = 48000; //44100;
 		static constexpr int SAMPLE_RATE_IN = 48000;
-		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_OUT = AV_SAMPLE_FMT_FLTP;
+		AVSampleFormat AUDIO_SAMPLE_FORMAT_OUT;
 		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS
 
 	private:
 		int in_width, in_height, out_width, out_height;
 		const int fps;
-
-		std::function<void()> on_write;
 
 	private:
 		std::chrono::time_point<std::chrono::system_clock> start_time =
@@ -356,15 +356,13 @@ namespace encoding
 		encode_to_mp4(CODEC codec,
 					  const int in_width, const int in_height,
 					  const int out_width, const int out_height,
-					  const int fps,
-					  const std::function<void()>& on_write) :
+					  const int fps) :
 			codec(codec),
 			in_width(in_width),
 			in_height(in_height),
 			out_width(out_width),
 			out_height(out_height),
-			fps(fps),
-			on_write(on_write)
+			fps(fps)
 		{
 			av_log_set_level(AV_LOG_DEBUG);
 
@@ -377,16 +375,19 @@ namespace encoding
 					CONTAINER_NAME = "mp4";
 					VIDEO_CODEC = AV_CODEC_ID_H264;
 					AUDIO_CODEC = AV_CODEC_ID_AAC;
+					AUDIO_SAMPLE_FORMAT_OUT = AV_SAMPLE_FMT_FLTP;
 					break;
 				case WEBM:
 					CONTAINER_NAME = "webm";
 					VIDEO_CODEC = AV_CODEC_ID_VP9;
 					AUDIO_CODEC = AV_CODEC_ID_VORBIS;
+					AUDIO_SAMPLE_FORMAT_OUT = AV_SAMPLE_FMT_FLTP;
 					break;
 				case MPEGTS:
 					CONTAINER_NAME = "mpegts";
 					VIDEO_CODEC = AV_CODEC_ID_MPEG1VIDEO;
 					AUDIO_CODEC = AV_CODEC_ID_MP2;
+					AUDIO_SAMPLE_FORMAT_OUT = AV_SAMPLE_FMT_S16;
 					break;
 			}
 

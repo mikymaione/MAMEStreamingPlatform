@@ -325,7 +325,7 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 		{
 			//webpp::streaming_server::get().send_audio_interval(stream, len, thiz->sdl_xfer_samples);
 
-			//memset(stream, 0, len); // silence local outputs
+			memset(stream, 0, len); // silence local outputs
 		}
 
 		if (LOG_SOUND)
