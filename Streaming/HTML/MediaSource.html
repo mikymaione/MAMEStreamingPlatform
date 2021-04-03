@@ -18,7 +18,7 @@ copyright-holders:Michele Maione
 	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
 
 	<style>
@@ -35,12 +35,14 @@ copyright-holders:Michele Maione
 
 	<script>
 		let monitor;
-		let sourceBuffer;
-		let mediaSource;
-		let queue = [];
+		let media_source;
+		let video_source_buffer;
+		let video_buffers = [];
+		let video_buffers_count = 0;
+		let video_source_ready = false;
+		let video_state = '';
 
 		let vw, vh, cw, ch, tw, th;
-		let vuoto = true;
 
 		function FullScreen()
 		{
@@ -62,37 +64,71 @@ copyright-holders:Michele Maione
 				tw = ch * vw / vh;
 		}
 
+		function push_video_buffer(buf)
+		{
+			video_source_buffer.appendBuffer(buf);
+			
+			const b = video_source_buffer.buffered;
+			if (b && b.length >= 1)
+			{
+				const p = monitor.played;
+				const e = b.end(0);
+				const buf_size = Math.round(1000 * (e - monitor.currentTime));
+
+				console.info("buffer size=" + buf_size + "ms, currentTime=" + monitor.currentTime);
+			}
+
+			if (video_state == "playing" || video_state == "waiting")
+				return;
+
+			let play = monitor.play();
+			if (play == undefined)
+				throw 'Play undef!';			
+
+			play.then(value => {
+				console.log(value);
+			}, reason => {
+				console.error(reason); // Error!
+			});
+		}
+
+		function is_video_ready()
+		{
+			const asb = video_source_buffer;
+			return (asb != null) && (!asb.updating);
+		}
+
 		function Start()
 		{
+			document.onclick = null;
+			
+			const uri = "ws://192.168.1.8:8888";
+
 			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
-			//const mimeCodec = 'video/mp4; codecs="av01, mp3"';
-			const mimeCodec = 'video/mp4';
+			//const mimeCodec = 'video/mp4; codecs="avc1.4d002a, mp4a.40"';			
+			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'; //ok chrome firefox
+			const mimeCodec = 'video/webm; codecs="vp8, vorbis"';
+			//const mimeCodec = 'video/webm';
 
 			if (MediaSource.isTypeSupported(mimeCodec))
-			{
-				const uri = "ws://127.0.0.1:8888";
+			{				
+				media_source = new MediaSource();
 
-				monitor = document.getElementById('monitor');
-
-				mediaSource = new MediaSource();
-
-				mediaSource.onsourceopen = function ()
+				media_source.onsourceopen = function ()
 				{
-					monitor.play();
+					if (video_source_ready)
+						return;
 
-					sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-					sourceBuffer.mode = 'sequence';
+					//Create a SourceBuffer:
+					let asb = media_source.addSourceBuffer(mimeCodec);
+					asb.mode = "sequence";
 
-					sourceBuffer.onupdate = function ()
-					{					
-						if (queue.length > 0)
-							sourceBuffer.appendBuffer(queue.shift());
-
-						vuoto = (queue.length == 0);
-					};
+					video_source_buffer = asb;
+					video_source_ready = true;
 				};
 
-				monitor.src = URL.createObjectURL(mediaSource);
+				monitor = document.getElementById('monitor');
+				monitor.src = URL.createObjectURL(media_source);
 
 				let webSocket = window.WebSocket || window.MozWebSocket,
 					ws = new webSocket(uri);
@@ -121,17 +157,48 @@ copyright-holders:Michele Maione
 						reportWindowSize();
 					}
 					else
-					{
-						let messageData = new Uint8Array(event.data);
-						//let messageData = event.data;
+					{						
+						let buf = new Uint8Array(event.data);
+						video_buffers.push(buf);
 						
-						if (vuoto)
+						console.info('Received packet of ' + buf.length);
+
+						const ab = video_buffers;
+						
+						if (is_video_ready() && (video_buffers_count > 0 || ab.length > 0))
 						{
-							vuoto = false;
-							sourceBuffer.appendBuffer(messageData);
+							if (ab.length == 1)
+							{
+								//shortcut
+								buf = ab[0];
+							}
+							else
+							{
+								//concatenate all pending buffers into one:
+								let size = 0;
+								for (let i = 0, j = ab.length; i < j; ++i)
+									size += ab[i].length;
+
+								buf = new Uint8Array(size);
+								size = 0;
+
+								for (let i = 0, j = ab.length; i < j; ++i)
+								{
+									const v = ab[i];
+
+									if (v.length > 0)
+									{
+										buf.set(v, size);
+										size += v.length;
+									}
+								}
+							}
+
+							video_buffers_count += 1;
+							push_video_buffer(buf);
+
+							video_buffers = [];
 						}
-						else
-							queue.push(messageData);
 					}
 				};
 			}
@@ -140,9 +207,9 @@ copyright-holders:Michele Maione
 				alert("Unsupported media format");
 			}
 		}
-
+		
 		window.onresize = reportWindowSize;
-		Start();
+		document.onclick = Start;
 	</script>
 </body>
 
