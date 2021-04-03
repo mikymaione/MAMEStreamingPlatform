@@ -153,6 +153,7 @@ namespace encoding
 
 			if (VIDEO_CODEC != AV_CODEC_ID_MPEG1VIDEO)
 			{
+				std::cout << "AV_CODEC_FLAG_GLOBAL_HEADER" << std::endl;
 				encoder_context->video_codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 				encoder_context->video_codec_context->flags2 |= AV_CODEC_FLAG2_FAST;
 			}
@@ -171,7 +172,7 @@ namespace encoding
 
 			encoder_context->video_codec_context->framerate = { fps ,1 };
 			encoder_context->video_codec_context->time_base = { 1,fps };
-			//encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
+			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
 			if (VIDEO_CODEC == AV_CODEC_ID_VP8)
@@ -298,6 +299,8 @@ namespace encoding
 
 		void write_video_pts()
 		{
+			video_packet.flags = AV_PKT_FLAG_KEY;
+
 			video_packet.pts = video_encoder_pts->video_pts;
 			video_packet.dts = video_packet.pts;
 			video_packet.duration = video_encoder_pts->frame_duration;
@@ -396,6 +399,7 @@ namespace encoding
 
 			memory_output_buffer = static_cast<uint8_t*>(av_malloc(MEMORY_OUTPUT_BUFFER_SIZE));
 
+			encoder_context->muxer_context->flags = AVFMT_FLAG_CUSTOM_IO;
 			encoder_context->muxer_context->pb = avio_alloc_context(memory_output_buffer, MEMORY_OUTPUT_BUFFER_SIZE, 1, this, nullptr, write_packet, nullptr);
 			if (encoder_context->muxer_context->pb == nullptr)
 				die("Cannot allocate context", ret);
@@ -564,8 +568,8 @@ namespace encoding
 					die("Could not fill frame", ret);
 
 				av_init_packet(&audio_packet);
-				audio_packet.data = nullptr;
-				audio_packet.size = 0;
+				//audio_packet.data = nullptr;
+				//audio_packet.size = 0;
 
 				int frameFinished;
 				ret = avcodec_encode_audio2(encoder_context->audio_codec_context, &audio_packet, aac_frame, &frameFinished);
