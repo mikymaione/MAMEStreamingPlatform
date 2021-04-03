@@ -142,16 +142,13 @@ namespace webpp
 
 			const auto socket = std::make_shared<ws_server::SendStream>();
 
-			encoder = std::make_unique<encoding::encode_to_mp4>(
-				encoding::encode_to_mp4::CODEC::WEBM,				// container
-				640, 480,											// input w:h
-				640, 480, 25,										// output w:h:fps				
-				[&]()											// write callback
-			{
-				send(socket, 130);
-			});
+			encoder = std::make_unique<encoding::encode_to_mp4>(encoding::encode_to_mp4::CODEC::MPEGTS, 640, 480, 640, 480, 25);
 
 			encoder->socket = socket;
+			encoder->on_write = [&]()
+			{
+				send(socket, 130);
+			};
 
 			std::cout
 				<< "Game streaming server listening on "

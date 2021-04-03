@@ -963,7 +963,8 @@ JSMpeg.Source.WebSocket = function ()
 		this.progress = 0;
 		this.established = false;
 
-		this.socket = new WebSocket(this.url, this.options.protocols || null);
+		this.socket = new window.WebSocket(this.url);
+		//this.socket = new window.WebSocket(this.url, this.options.protocols || null);
 		this.socket.binaryType = "arraybuffer";
 
 		this.socket.onmessage = this.onMessage.bind(this);
@@ -1000,7 +1001,7 @@ JSMpeg.Source.WebSocket = function ()
 		}
 		else
 		{
-			var isFirstChunk = !this.established;
+			let isFirstChunk = !this.established;
 			this.established = true;
 
 			if (isFirstChunk && this.onEstablishedCallback)
