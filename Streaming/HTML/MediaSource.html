@@ -81,15 +81,7 @@ copyright-holders:Michele Maione
 			if (video_state == "playing" || video_state == "waiting")
 				return;
 
-			let play = monitor.play();
-			if (play == undefined)
-				throw 'Play undef!';			
-
-			play.then(value => {
-				console.log(value);
-			}, reason => {
-				console.error(reason); // Error!
-			});
+			monitor.play();
 		}
 
 		function is_video_ready()
@@ -107,7 +99,7 @@ copyright-holders:Michele Maione
 			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 			//const mimeCodec = 'video/mp4; codecs="avc1.4d002a, mp4a.40"';			
 			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'; //ok chrome firefox
-			const mimeCodec = 'video/webm; codecs="vp8, vorbis"';
+			const mimeCodec = 'video/webm; codecs="vp9, vorbis"';
 			//const mimeCodec = 'video/webm';
 
 			if (MediaSource.isTypeSupported(mimeCodec))
@@ -126,8 +118,7 @@ copyright-holders:Michele Maione
 					video_source_buffer = asb;
 					video_source_ready = true;
 				};
-
-				monitor = document.getElementById('monitor');
+				
 				monitor.src = URL.createObjectURL(media_source);
 
 				let webSocket = window.WebSocket || window.MozWebSocket,
@@ -207,7 +198,8 @@ copyright-holders:Michele Maione
 				alert("Unsupported media format");
 			}
 		}
-		
+
+		monitor = document.getElementById('monitor');		
 		window.onresize = reportWindowSize;
 		document.onclick = Start;
 	</script>
