@@ -26,8 +26,7 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder
-			= std::make_unique<encoding::encode_to_mp4>(640, 480, 640, 480, 25);
+		std::unique_ptr<encoding::encode_to_mp4> encoder;
 
 	public:
 		/**
@@ -107,17 +106,6 @@ namespace webpp
 			server->config.client_mode = true;
 			server->config.port = port;
 
-			encoder->on_write = [&](uint8_t* buf, int buf_size)->int
-			{
-				const auto stream = std::make_shared<ws_server::SendStream>();
-
-				stream->write(reinterpret_cast<const char*>(buf), buf_size);
-
-				send(stream, 130);
-
-				return 1;
-			};
-
 			auto& endpoint = server->m_endpoint["/"];
 
 			endpoint.on_open = [&](auto connection)
@@ -151,6 +139,19 @@ namespace webpp
 
 				on_connection_closed();
 			};
+
+			const auto socket = std::make_shared<ws_server::SendStream>();
+
+			encoder = std::make_unique<encoding::encode_to_mp4>(
+				encoding::encode_to_mp4::CODEC::MP4,				// container
+				640, 480,											// input w:h
+				640, 480, 25,										// output w:h:fps				
+				[&]()											// write callback
+			{
+				send(socket, 130);
+			});
+
+			encoder->socket = socket;
 
 			std::cout
 				<< "Game streaming server listening on "

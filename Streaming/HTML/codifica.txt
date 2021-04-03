@@ -5,10 +5,7 @@ mp4
 ffmpeg -i c:\video\d.webm -c:a aac -b:a 96k -c:v h264 -b:v 128k -s 640x360 -preset ultrafast -tune zerolatency -f mp4 -movflags frag_keyframe+default_base_moof -reset_timestamps 1 -frag_duration 70000 http://localhost:8081/1
 
 broadway
-ffmpeg -y -i c:\video\d.webm -r 30000/1001 -b:v 128k -vcodec libx264 -preset ultrafast -tune zerolatency -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -an -f mp4 -movflags frag_keyframe+default_base_moof -reset_timestamps 1 -frag_duration 70000 http://localhost:8081/1
-ffmpeg -y -i c:\video\d.webm -r 30000/1001 -b:a 2M -bt 4M -vcodec h264 -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -an -f mp4 http://localhost:8081/1
-
-ffmpeg -i c:\video\d.webm -vcodec h264 -vprofile baseline -b:v 128k -bufsize 600k -s 640x480 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -r 25 -g 30 -f rawvideo http://localhost:8081/1
+ffmpeg -i c:\video\d.webm -f rawvideo -movflags frag_keyframe+empty_moov -codec:v h264 -s 640x360 -preset ultrafast -tune zerolatency -codec:a aac http://localhost:8081/1
 
 
 ffmpeg -v info -fflags +genpts -protocol_whitelist pipe,tls,file,http,https,tcp,rtp -i c:\video\d.webm -vf realtime,scale=w=min(iw\,1280):h=-2 -map 0:v:0 -c:v libx264 -x264-params intra-refresh=1,fast-pskip=0 -threads 3 -profile:v baseline -level:v 3.1 -pix_fmt yuv420p -tune zerolatency -minrate 500K -maxrate 1.3M -bufsize 500K -af arealtime -map 0:a:0 -c:a libopus  -ab 128k -ac 2 -ar 48000 -f tee [select=a:f=rtp:ssrc=1111:payload_type=9]rtp://localhost:8888?rtcpport=9999|[select=v:f=rtp:ssrc=2222:payload_type=9]rtp://localhost:8888?rtcpport=9999

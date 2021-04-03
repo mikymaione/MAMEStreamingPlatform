@@ -68,6 +68,7 @@ copyright-holders:Michele Maione
 		{
 			video_source_buffer.appendBuffer(buf);
 			
+			/*
 			const b = video_source_buffer.buffered;
 			if (b && b.length >= 1)
 			{
@@ -77,7 +78,8 @@ copyright-holders:Michele Maione
 
 				console.info("buffer size=" + buf_size + "ms, currentTime=" + monitor.currentTime);
 			}
-
+			*/
+			
 			if (video_state == "playing" || video_state == "waiting")
 				return;
 
@@ -95,12 +97,9 @@ copyright-holders:Michele Maione
 			document.onclick = null;
 			
 			const uri = "ws://192.168.1.8:8888";
-
-			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
-			//const mimeCodec = 'video/mp4; codecs="avc1.4d002a, mp4a.40"';			
-			//const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'; //ok chrome firefox
-			const mimeCodec = 'video/webm; codecs="vp9, vorbis"';
-			//const mimeCodec = 'video/webm';
+			
+			const mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'; //ok chrome firefox
+			//const mimeCodec = 'video/webm; codecs="vp8, vorbis"';			
 
 			if (MediaSource.isTypeSupported(mimeCodec))
 			{				
@@ -113,7 +112,7 @@ copyright-holders:Michele Maione
 
 					//Create a SourceBuffer:
 					let asb = media_source.addSourceBuffer(mimeCodec);
-					asb.mode = "sequence";
+					asb.mode = 'sequence';
 
 					video_source_buffer = asb;
 					video_source_ready = true;
@@ -152,7 +151,7 @@ copyright-holders:Michele Maione
 						let buf = new Uint8Array(event.data);
 						video_buffers.push(buf);
 						
-						console.info('Received packet of ' + buf.length);
+						//console.info('Received packet of ' + buf.length);
 
 						const ab = video_buffers;
 						

@@ -259,7 +259,7 @@ int main(int argc, char** argv)
 
 	std::cout << "Press enter to exit.\n";
 	std::cin.ignore();
-
+	
 	exit(r);
 }
 
