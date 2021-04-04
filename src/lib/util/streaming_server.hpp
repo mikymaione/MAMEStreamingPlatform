@@ -68,6 +68,16 @@ namespace webpp
 			return active;
 		}
 
+		void set_streaming_input_size(const int w, const int h) const
+		{
+			encoder->set_streaming_input_size(w, h);
+		}
+
+		void set_streaming_output_size(const int w, const int h) const
+		{
+			encoder->set_streaming_output_size(w, h);
+		}
+
 		/**
 		 * \brief Send a string to the client
 		 * \param msg
@@ -142,7 +152,7 @@ namespace webpp
 
 			const auto socket = std::make_shared<ws_server::SendStream>();
 
-			encoder = std::make_unique<encoding::encode_to_mp4>(encoding::encode_to_mp4::CODEC::MPEGTS, 1024, 768, 640, 480, 25);
+			encoder = std::make_unique<encoding::encode_to_mp4>();
 
 			encoder->socket = socket;
 			encoder->on_write = [&]()

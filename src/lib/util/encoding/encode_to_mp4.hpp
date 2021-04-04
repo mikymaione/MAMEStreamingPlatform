@@ -2,10 +2,23 @@
 // copyright-holders:Michele Maione
 //============================================================
 //
-//  encode_to_mp4.h - Encoding to MP4 (H.264 + AAC) (aka DinoEncoding 🦕🧡🦖)
+//  encode_to_mp4.h - (aka DinoEncoding 🦕🧡🦖)
+//  Encoding to:
+//  -mp4	(H.264 + AAC)
+//  -webm	(VP9 + Vorbis)
+//  -mpegts	(mpeg1 + mp2)
 //
 //============================================================
 #pragma once
+
+#include <chrono>
+#include <functional>
+#include <iostream>
+#include <ostream>
+#include <memory>
+#include <string>
+
+// #pragma once
 
 #include <chrono>
 #include <functional>
@@ -38,7 +51,6 @@ namespace encoding
 	private:
 		struct StreamingContext
 		{
-			//AVIOContext* io_context = nullptr;
 			AVFormatContext* muxer_context = nullptr;
 
 			AVCodec* video_codec = nullptr;
@@ -56,17 +68,20 @@ namespace encoding
 
 		struct Encoder_pts
 		{
-			int64_t video_pts, frame_duration;
+			int64_t video_pts = 0, frame_duration = 0;
 		};
 
 	private:
 		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 100; //100MB
 
-		CODEC codec;
+		CODEC codec = MPEGTS;
 		std::string CONTAINER_NAME;
 
 		// Video
 		AVCodecID VIDEO_CODEC;
+		int in_width = 0, in_height = 0, out_width = 640, out_height = 480;
+
+		static constexpr int fps = 25;
 		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
@@ -83,14 +98,10 @@ namespace encoding
 		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_IN = AV_CH_LAYOUT_STEREO;
 		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_OUT = AV_CH_LAYOUT_MONO;
 
-		static constexpr int SAMPLE_RATE_OUT = 48000; //44100;
+		static constexpr int SAMPLE_RATE_OUT = 48000;
 		static constexpr int SAMPLE_RATE_IN = 48000;
 		AVSampleFormat AUDIO_SAMPLE_FORMAT_OUT;
-		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS
-
-	private:
-		int in_width, in_height, out_width, out_height;
-		const int fps;
+		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS		
 
 	private:
 		std::chrono::time_point<std::chrono::system_clock> start_time =
@@ -170,9 +181,9 @@ namespace encoding
 
 			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
 
-			encoder_context->video_codec_context->framerate = { fps, 1 };
-			encoder_context->video_codec_context->time_base = { 1, fps };
-			encoder_context->video_stream->time_base = { 1, fps };
+			encoder_context->video_codec_context->framerate = { fps ,1 };
+			encoder_context->video_codec_context->time_base = { 1,fps };
+			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
 			if (VIDEO_CODEC == AV_CODEC_ID_VP8)
@@ -244,10 +255,9 @@ namespace encoding
 
 			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
-			//encoder_context->audio_codec_context->time_base = { 1, fps };
-			//encoder_context->audio_codec_context->time_base = { 1, SAMPLE_RATE_OUT };
-			encoder_context->audio_stream->time_base = { 1, SAMPLE_RATE_OUT };
-			//encoder_context->audio_stream->time_base = { 1, fps };
+			encoder_context->audio_codec_context->time_base = { 1,fps };
+			//encoder_context->audio_codec_context->time_base = { 1,SAMPLE_RATE_OUT };
+			//encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
 
@@ -296,6 +306,18 @@ namespace encoding
 				1);
 			if (ret < 0)
 				die("Cannot alloc audio conversion buffer", ret);
+		}
+
+		void write_video_pts()
+		{
+			video_packet.flags = AV_PKT_FLAG_KEY;
+
+			video_packet.pts = video_encoder_pts->video_pts;
+			video_packet.dts = video_packet.pts;
+			video_packet.duration = video_encoder_pts->frame_duration;
+			video_packet.stream_index = 0;
+
+			video_encoder_pts->video_pts += video_encoder_pts->frame_duration;
 		}
 
 		void set_container_options(AVDictionary* options) const
@@ -356,18 +378,9 @@ namespace encoding
 		}
 
 	public:
-		encode_to_mp4(CODEC codec,
-					  const int in_width, const int in_height,
-					  const int out_width, const int out_height,
-					  const int fps) :
-			codec(codec),
-			in_width(in_width),
-			in_height(in_height),
-			out_width(out_width),
-			out_height(out_height),
-			fps(fps)
+		encode_to_mp4()
 		{
-			//av_log_set_level(AV_LOG_DEBUG);
+			av_log_set_level(AV_LOG_DEBUG);
 
 			av_register_all();
 			avcodec_register_all();
@@ -448,7 +461,55 @@ namespace encoding
 			delete video_encoder_pts;
 		}
 
-		bool audioprint = false, videoprint = false;
+		void set_streaming_input_size(const int w, const int h)
+		{
+			in_width = w;
+			in_height = h;
+
+			if (encoder_context->video_converter_context != nullptr)
+				sws_freeContext(encoder_context->video_converter_context);
+
+			encoder_context->video_converter_context = sws_getContext(
+				in_width, in_height, PIXEL_FORMAT_IN,
+				out_width, out_height, PIXEL_FORMAT_OUT,
+				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
+			);
+
+			rgb_frame->width = in_width;
+			rgb_frame->height = in_height;
+		}
+
+		void set_streaming_output_size(const int w, const int h)
+		{
+			out_width = w;
+			out_height = h;
+
+			encoder_context->video_codec_context->width = out_width;
+			encoder_context->video_codec_context->height = out_height;
+
+			if (encoder_context->video_converter_context != nullptr)
+				sws_freeContext(encoder_context->video_converter_context);
+
+			encoder_context->video_converter_context = sws_getContext(
+				in_width, in_height, PIXEL_FORMAT_IN,
+				out_width, out_height, PIXEL_FORMAT_OUT,
+				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
+			);
+
+			yuv_frame->width = out_width;
+			yuv_frame->height = out_height;
+
+			if (yuv_buffer != nullptr)
+				delete[] yuv_buffer;
+
+			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
+			yuv_buffer = new uint8_t[yuv_buffer_size];
+
+			avpicture_fill(
+				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
+				PIXEL_FORMAT_OUT,
+				out_width, out_height);
+		}
 
 		/**
 		 * \brief Add video frame
@@ -481,18 +542,7 @@ namespace encoding
 
 			if (got_packet_ptr)
 			{
-				if (!videoprint)
-				{
-					videoprint = true;
-					std::cout
-						<< "Video " << std::endl
-						<< " Src: " << encoder_context->video_codec_context->time_base.num << "/" << encoder_context->video_codec_context->time_base.den << std::endl
-						<< " Dst: " << encoder_context->video_stream->time_base.num << "/" << encoder_context->video_stream->time_base.den << std::endl
-						<< std::endl;
-				}
-
-				av_packet_rescale_ts(&video_packet, encoder_context->video_codec_context->time_base, encoder_context->video_stream->time_base);
-				video_packet.stream_index = 0;
+				write_video_pts();
 
 				const auto ret = av_interleaved_write_frame(encoder_context->muxer_context, &video_packet);
 				if (ret < 0)
@@ -592,17 +642,6 @@ namespace encoding
 
 				if (got_packet_ptr)
 				{
-					if (!audioprint)
-					{
-						audioprint = true;
-						std::cout
-							<< "Audio " << std::endl
-							<< "Src: " << encoder_context->audio_codec_context->time_base.num << "/" << encoder_context->audio_codec_context->time_base.den << std::endl
-							<< "Dst: " << encoder_context->audio_stream->time_base.num << "/" << encoder_context->audio_stream->time_base.den << std::endl
-							<< std::endl;
-					}
-
-					av_packet_rescale_ts(&audio_packet, encoder_context->audio_codec_context->time_base, encoder_context->audio_stream->time_base);
 					audio_packet.stream_index = 1;
 
 					ret = av_interleaved_write_frame(encoder_context->muxer_context, &audio_packet);
