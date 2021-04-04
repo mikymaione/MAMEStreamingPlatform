@@ -142,7 +142,7 @@ namespace webpp
 
 			const auto socket = std::make_shared<ws_server::SendStream>();
 
-			encoder = std::make_unique<encoding::encode_to_mp4>(encoding::encode_to_mp4::CODEC::MPEGTS, 640, 480, 640, 480, 25);
+			encoder = std::make_unique<encoding::encode_to_mp4>(encoding::encode_to_mp4::CODEC::MPEGTS, 1024, 768, 640, 480, 25);
 
 			encoder->socket = socket;
 			encoder->on_write = [&]()

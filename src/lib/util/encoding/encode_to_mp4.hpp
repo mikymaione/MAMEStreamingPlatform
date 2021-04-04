@@ -170,9 +170,9 @@ namespace encoding
 
 			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
 
-			encoder_context->video_codec_context->framerate = { fps ,1 };
-			encoder_context->video_codec_context->time_base = { 1,fps };
-			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
+			encoder_context->video_codec_context->framerate = { fps, 1 };
+			encoder_context->video_codec_context->time_base = { 1, fps };
+			encoder_context->video_stream->time_base = { 1, fps };
 
 			AVDictionary* options = nullptr;
 			if (VIDEO_CODEC == AV_CODEC_ID_VP8)
@@ -244,9 +244,10 @@ namespace encoding
 
 			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
-			encoder_context->audio_codec_context->time_base = { 1,fps };
-			//encoder_context->audio_codec_context->time_base = { 1,SAMPLE_RATE_OUT };
-			//encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
+			//encoder_context->audio_codec_context->time_base = { 1, fps };
+			//encoder_context->audio_codec_context->time_base = { 1, SAMPLE_RATE_OUT };
+			encoder_context->audio_stream->time_base = { 1, SAMPLE_RATE_OUT };
+			//encoder_context->audio_stream->time_base = { 1, fps };
 
 			AVDictionary* options = nullptr;
 
@@ -295,18 +296,6 @@ namespace encoding
 				1);
 			if (ret < 0)
 				die("Cannot alloc audio conversion buffer", ret);
-		}
-
-		void write_video_pts()
-		{
-			video_packet.flags = AV_PKT_FLAG_KEY;
-
-			video_packet.pts = video_encoder_pts->video_pts;
-			video_packet.dts = video_packet.pts;
-			video_packet.duration = video_encoder_pts->frame_duration;
-			video_packet.stream_index = 0;
-
-			video_encoder_pts->video_pts += video_encoder_pts->frame_duration;
 		}
 
 		void set_container_options(AVDictionary* options) const
@@ -378,7 +367,7 @@ namespace encoding
 			out_height(out_height),
 			fps(fps)
 		{
-			av_log_set_level(AV_LOG_DEBUG);
+			//av_log_set_level(AV_LOG_DEBUG);
 
 			av_register_all();
 			avcodec_register_all();
@@ -459,6 +448,8 @@ namespace encoding
 			delete video_encoder_pts;
 		}
 
+		bool audioprint = false, videoprint = false;
+
 		/**
 		 * \brief Add video frame
 		 * \param pixels input pixels
@@ -490,7 +481,18 @@ namespace encoding
 
 			if (got_packet_ptr)
 			{
-				write_video_pts();
+				if (!videoprint)
+				{
+					videoprint = true;
+					std::cout
+						<< "Video " << std::endl
+						<< " Src: " << encoder_context->video_codec_context->time_base.num << "/" << encoder_context->video_codec_context->time_base.den << std::endl
+						<< " Dst: " << encoder_context->video_stream->time_base.num << "/" << encoder_context->video_stream->time_base.den << std::endl
+						<< std::endl;
+				}
+
+				av_packet_rescale_ts(&video_packet, encoder_context->video_codec_context->time_base, encoder_context->video_stream->time_base);
+				video_packet.stream_index = 0;
 
 				const auto ret = av_interleaved_write_frame(encoder_context->muxer_context, &video_packet);
 				if (ret < 0)
@@ -590,6 +592,17 @@ namespace encoding
 
 				if (got_packet_ptr)
 				{
+					if (!audioprint)
+					{
+						audioprint = true;
+						std::cout
+							<< "Audio " << std::endl
+							<< "Src: " << encoder_context->audio_codec_context->time_base.num << "/" << encoder_context->audio_codec_context->time_base.den << std::endl
+							<< "Dst: " << encoder_context->audio_stream->time_base.num << "/" << encoder_context->audio_stream->time_base.den << std::endl
+							<< std::endl;
+					}
+
+					av_packet_rescale_ts(&audio_packet, encoder_context->audio_codec_context->time_base, encoder_context->audio_stream->time_base);
 					audio_packet.stream_index = 1;
 
 					ret = av_interleaved_write_frame(encoder_context->muxer_context, &audio_packet);
