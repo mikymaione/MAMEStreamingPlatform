@@ -68,9 +68,9 @@ namespace webpp
 			return active;
 		}
 
-		void set_streaming_input_size(const int w, const int h) const
+		void set_streaming_input_size(const int w, const int h, const int fps) const
 		{
-			encoder->set_streaming_input_size(w, h);
+			encoder->set_streaming_input_size(w, h, fps);
 		}
 
 		void set_streaming_output_size(const int w, const int h) const
