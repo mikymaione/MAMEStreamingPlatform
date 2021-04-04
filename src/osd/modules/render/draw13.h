@@ -32,7 +32,7 @@ struct quad_setup_data
 	{
 	}
 
-	void compute(const render_primitive& prim, const int prescale);
+	void compute(const render_primitive& prim, int prescale);
 
 	int32_t dudx, dvdx, dudy, dvdy;
 	int32_t startu, startv;
@@ -52,14 +52,14 @@ class texture_info
 	friend class simple_list<texture_info>;
 
 public:
-	texture_info(renderer_sdl2* renderer, const render_texinfo& texsource, const quad_setup_data& setup, const uint32_t flags);
+	texture_info(renderer_sdl2* renderer, const render_texinfo& texsource, const quad_setup_data& setup, uint32_t flags);
 	~texture_info();
 
-	void set_data(const render_texinfo& texsource, const uint32_t flags);
-	void render_quad(const render_primitive& prim, const int x, const int y);
+	void set_data(const render_texinfo& texsource, uint32_t flags);
+	void render_quad(const render_primitive& prim, int x, int y);
 	bool matches(const render_primitive& prim, const quad_setup_data& setup);
 
-	copy_info_t* compute_size_type();
+	copy_info_t* compute_size_type() const;
 
 	void* m_pixels; // pixels for the texture
 	int m_pitch;
@@ -157,10 +157,10 @@ public:
 	static void init(running_machine& machine);
 	static void exit();
 
-	virtual int create() override;
-	virtual int draw(const int update) override;
-	virtual int xy_to_render_target(const int x, const int y, int* xt, int* yt) override;
-	virtual render_primitive_list* get_primitives() override;
+	int create() override;
+	int draw(int update) override;
+	int xy_to_render_target(int x, int y, int* xt, int* yt) override;
+	render_primitive_list* get_primitives() override;
 
 	int RendererSupportsFormat(Uint32 format, Uint32 access, const char* sformat);
 
@@ -175,13 +175,13 @@ public:
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];
 
 private:
-	void free_streaming_render();
-	void init_streaming_render(osd_dim& nd);
+	void free_streaming_render() const;
+	void init_streaming_render(int w, int h, int fps);
 
 	void expand_copy_info(const copy_info_t* list);
 	void add_list(copy_info_t** head, const copy_info_t* element, Uint32 bm);
 
-	void render_quad(texture_info* texture, const render_primitive& prim, const int x, const int y);
+	void render_quad(texture_info* texture, const render_primitive& prim, int x, int y) const;
 
 	texture_info* texture_find(const render_primitive& prim, const quad_setup_data& setup);
 	texture_info* texture_update(const render_primitive& prim);

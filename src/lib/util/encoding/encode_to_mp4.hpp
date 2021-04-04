@@ -66,11 +66,6 @@ namespace encoding
 			SwrContext* audio_converter_context = nullptr;
 		};
 
-		struct Encoder_pts
-		{
-			int64_t video_pts = 0, frame_duration = 0;
-		};
-
 	private:
 		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 100; //100MB
 
@@ -81,7 +76,7 @@ namespace encoding
 		AVCodecID VIDEO_CODEC;
 		int in_width = 0, in_height = 0, out_width = 640, out_height = 480;
 
-		static constexpr int fps = 25;
+		int fps = 25;
 		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
@@ -113,7 +108,6 @@ namespace encoding
 		bool sending = false;
 
 		StreamingContext* encoder_context = nullptr;
-		Encoder_pts* video_encoder_pts = nullptr;
 
 		uint8_t* memory_output_buffer;
 
@@ -308,18 +302,6 @@ namespace encoding
 				die("Cannot alloc audio conversion buffer", ret);
 		}
 
-		void write_video_pts()
-		{
-			video_packet.flags = AV_PKT_FLAG_KEY;
-
-			video_packet.pts = video_encoder_pts->video_pts;
-			video_packet.dts = video_packet.pts;
-			video_packet.duration = video_encoder_pts->frame_duration;
-			video_packet.stream_index = 0;
-
-			video_encoder_pts->video_pts += video_encoder_pts->frame_duration;
-		}
-
 		void set_container_options(AVDictionary* options) const
 		{
 			switch (codec)
@@ -407,7 +389,6 @@ namespace encoding
 					break;
 			}
 
-			video_encoder_pts = new Encoder_pts();
 			encoder_context = new StreamingContext();
 
 			auto ret = avformat_alloc_output_context2(&encoder_context->muxer_context, nullptr, CONTAINER_NAME.c_str(), nullptr);
@@ -458,13 +439,13 @@ namespace encoding
 			av_freep(&aac_buffer);
 
 			delete encoder_context;
-			delete video_encoder_pts;
 		}
 
-		void set_streaming_input_size(const int w, const int h)
+		void set_streaming_input_size(const int w, const int h, const int fps_)
 		{
 			in_width = w;
 			in_height = h;
+			fps = fps_;
 
 			if (encoder_context->video_converter_context != nullptr)
 				sws_freeContext(encoder_context->video_converter_context);
@@ -542,8 +523,6 @@ namespace encoding
 
 			if (got_packet_ptr)
 			{
-				write_video_pts();
-
 				const auto ret = av_interleaved_write_frame(encoder_context->muxer_context, &video_packet);
 				if (ret < 0)
 					die("Error while writing video frame", ret);

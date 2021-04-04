@@ -267,7 +267,7 @@ void texture_info::render_quad(const render_primitive& prim, const int x, const 
 	//SDL_RenderCopyEx(m_renderer->m_sdl_renderer,  m_texture_id, nullptr, nullptr, 0, nullptr, SDL_FLIP_NONE);
 }
 
-void renderer_sdl2::render_quad(texture_info* texture, const render_primitive& prim, const int x, const int y)
+void renderer_sdl2::render_quad(texture_info* texture, const render_primitive& prim, const int x, const int y) const
 {
 	SDL_Rect target_rect;
 
@@ -424,7 +424,7 @@ static void drawsdl_show_info(struct SDL_RendererInfo* render_info)
 			osd_printf_verbose("renderer: flag %s\n", rflist[i].name);
 }
 
-void renderer_sdl2::free_streaming_render()
+void renderer_sdl2::free_streaming_render() const
 {
 	if (m_sdl_buffer_bytes != nullptr)
 	{
@@ -437,24 +437,24 @@ void renderer_sdl2::free_streaming_render()
 	}
 }
 
-void renderer_sdl2::init_streaming_render(osd_dim& nd)
+void renderer_sdl2::init_streaming_render(const int w, const int h, const int fps)
 {
 	free_streaming_render();
 
 	//jpg or bmp24
-	//m_sdl_buffer_bytes_length = nd.height() * nd.width() * 3;
+	//m_sdl_buffer_bytes_length = w * h * 3;
 
 	//bmp32
-	m_sdl_buffer_bytes_length = nd.height() * nd.width() * 4;
+	m_sdl_buffer_bytes_length = w * h * 4;
 
 	m_sdl_buffer_bytes = new char[m_sdl_buffer_bytes_length];
 	m_sdl_buffer_bytes_previous = new char[m_sdl_buffer_bytes_length];
 
 	//jpg or bmp24
-	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 24, SDL_PIXELFORMAT_RGB24);
+	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 24, SDL_PIXELFORMAT_RGB24);
 
 	//bmp32
-	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, nd.width(), nd.height(), 32, SDL_PIXELFORMAT_RGBA32);
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
 
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(m_sdl_surface);
 
@@ -463,10 +463,10 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 	std::stringstream sstm;
 	sstm
 		<< "size:"
-		<< nd.width() << ":"
-		<< nd.height();
+		<< w << ":"
+		<< h;
 
-	webpp::streaming_server::get().set_streaming_input_size(nd.width(), nd.height());
+	webpp::streaming_server::get().set_streaming_input_size(w, h, fps);
 	webpp::streaming_server::get().send_string(sstm.str());
 }
 
@@ -491,8 +491,8 @@ int renderer_sdl2::create()
 
 	if (webpp::streaming_server::get().is_active())
 	{
-		auto nd = win->get_size();
-		init_streaming_render(nd);
+		const auto nd = win->get_size();
+		init_streaming_render(nd.width(), nd.height(), win->m_win_config.refresh);
 	}
 	else
 	{
@@ -570,9 +570,7 @@ int renderer_sdl2::draw(int update)
 	int blit_pixels = 0;
 
 	if (video_config.novideo)
-	{
 		return 0;
-	}
 
 	auto win = assert_window();
 	osd_dim wdim = win->get_size();
@@ -604,19 +602,14 @@ int renderer_sdl2::draw(int update)
 
 	if (video_config.centerv || video_config.centerh)
 	{
-		int ch, cw;
-
-		ch = wdim.height();
-		cw = wdim.width();
+		const auto ch = wdim.height();
+		const auto cw = wdim.width();
 
 		if (video_config.centerv)
-		{
 			vofs = (ch - m_blit_dim.height()) / 2.0f;
-		}
+
 		if (video_config.centerh)
-		{
 			hofs = (cw - m_blit_dim.width()) / 2.0f;
-		}
 	}
 
 	m_last_hofs = hofs;
@@ -690,7 +683,7 @@ int renderer_sdl2::draw(int update)
 //  texture_compute_size and type
 //============================================================
 
-copy_info_t* texture_info::compute_size_type()
+copy_info_t* texture_info::compute_size_type() const
 {
 	copy_info_t* result = nullptr;
 	int maxperf = 0;
@@ -1046,7 +1039,7 @@ render_primitive_list* renderer_sdl2::get_primitives()
 	if (nd != m_blit_dim)
 	{
 		m_blit_dim = nd;
-		init_streaming_render(nd);
+		init_streaming_render(nd.width(), nd.height(), win->m_win_config.refresh);
 		notify_changed();
 	}
 
