@@ -298,38 +298,38 @@ void sound_sdl::set_mastervolume(int _attenuation)
 //============================================================
 void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 {
-	sound_sdl* thiz = static_cast<sound_sdl*>(userdata);
-	size_t const free_size = thiz->stream_buffer->free_size();
-	size_t const data_size = thiz->stream_buffer->data_size();
+	auto this_ = static_cast<sound_sdl*>(userdata);
+	size_t const free_size = this_->stream_buffer->free_size();
+	size_t const data_size = this_->stream_buffer->data_size();
 
 	if (data_size < len)
 	{
-		thiz->buffer_underflows++;
+		this_->buffer_underflows++;
 
 		if (LOG_SOUND)
-			util::stream_format(*thiz->sound_log, "Underflow at sdl_callback: DS=%u FS=%u Len=%d\n", data_size, free_size, len);
+			util::stream_format(*this_->sound_log, "Underflow at sdl_callback: DS=%u FS=%u Len=%d\n", data_size, free_size, len);
 
 		// Maybe read whatever is left in the stream_buffer anyway?
 		memset(stream, 0, len); // silence local outputs
 	}
 	else
 	{
-		int err = thiz->stream_buffer->pop(static_cast<void*>(stream), len);
+		int err = this_->stream_buffer->pop(static_cast<void*>(stream), len);
 
 		if (LOG_SOUND && err)
-			*thiz->sound_log << "Late detection of underflow. This shouldn't happen.\n";
+			*this_->sound_log << "Late detection of underflow. This shouldn't happen.\n";
 
-		thiz->attenuate(reinterpret_cast<int16_t*>(stream), len);
+		this_->attenuate(reinterpret_cast<int16_t*>(stream), len);
 
 		if (webpp::streaming_server::get().is_active())
 		{
-			webpp::streaming_server::get().send_audio_interval(stream, len, thiz->sdl_xfer_samples);
+			webpp::streaming_server::get().send_audio_interval(stream, len, this_->sdl_xfer_samples);
 
 			memset(stream, 0, len); // silence local outputs
 		}
 
 		if (LOG_SOUND)
-			util::stream_format(*thiz->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
+			util::stream_format(*this_->sound_log, "callback: xfer DS=%u FS=%u Len=%d\n", data_size, free_size, len);
 	}
 }
 
