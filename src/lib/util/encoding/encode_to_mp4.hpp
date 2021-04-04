@@ -60,14 +60,14 @@ namespace encoding
 		};
 
 	private:
-		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 64; //64K
+		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 10; //10MB
 
 		CODEC codec;
 		std::string CONTAINER_NAME;
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		static constexpr int64_t VIDEO_BIT_RATE = 96 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -76,12 +76,12 @@ namespace encoding
 
 		// Audio
 		AVCodecID AUDIO_CODEC;
-		static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
+		static constexpr int64_t AUDIO_BIT_RATE = 32 * 1000;
 
 		static constexpr int AUDIO_CHANNELS_IN = 2;
-		static constexpr int AUDIO_CHANNELS_OUT = 2; //1
+		static constexpr int AUDIO_CHANNELS_OUT = 1; //1
 		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_IN = AV_CH_LAYOUT_STEREO;
-		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_OUT = AV_CH_LAYOUT_STEREO; //AV_CH_LAYOUT_MONO
+		static constexpr uint64_t AUDIO_CHANNEL_LAYOUT_OUT = AV_CH_LAYOUT_MONO;
 
 		static constexpr int SAMPLE_RATE_OUT = 48000; //44100;
 		static constexpr int SAMPLE_RATE_IN = 48000;
@@ -468,6 +468,8 @@ namespace encoding
 			);
 
 			av_init_packet(&video_packet);
+			video_packet.data = nullptr;
+			video_packet.size = 0;
 
 			avcodec_send_frame(encoder_context->video_codec_context, yuv_frame);
 			got_packet_ptr = avcodec_receive_packet(encoder_context->video_codec_context, &video_packet) == 0;
@@ -569,8 +571,8 @@ namespace encoding
 					die("Could not fill frame", ret);
 
 				av_init_packet(&audio_packet);
-				//audio_packet.data = nullptr;
-				//audio_packet.size = 0;
+				audio_packet.data = nullptr;
+				audio_packet.size = 0;
 
 				int frameFinished;
 				ret = avcodec_encode_audio2(encoder_context->audio_codec_context, &audio_packet, aac_frame, &frameFinished);
