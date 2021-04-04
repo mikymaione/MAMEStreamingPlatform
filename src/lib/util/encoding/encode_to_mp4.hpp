@@ -60,7 +60,7 @@ namespace encoding
 		};
 
 	private:
-		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 10; //10MB
+		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 100; //100MB
 
 		CODEC codec;
 		std::string CONTAINER_NAME;
@@ -76,7 +76,7 @@ namespace encoding
 
 		// Audio
 		AVCodecID AUDIO_CODEC;
-		static constexpr int64_t AUDIO_BIT_RATE = 32 * 1000;
+		static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
 
 		static constexpr int AUDIO_CHANNELS_IN = 2;
 		static constexpr int AUDIO_CHANNELS_OUT = 1; //1
@@ -99,13 +99,13 @@ namespace encoding
 		char error_buffer[AV_ERROR_MAX_STRING_SIZE];
 
 		bool header = false;
+		bool sending = false;
 
 		StreamingContext* encoder_context = nullptr;
 		Encoder_pts* video_encoder_pts = nullptr;
 
 		uint8_t* memory_output_buffer;
 
-		bool got_packet_ptr = false;
 		AVPacket video_packet, audio_packet;
 
 		AVFrame* wav_frame = nullptr;
@@ -343,13 +343,27 @@ namespace encoding
 
 		void send_it()
 		{
-			const auto ret = av_write_trailer(encoder_context->muxer_context);
-			if (ret < 0)
-				die("Error writing trailer", ret);
+			if (!sending)
+			{
+				sending = true;
 
-			on_write();
+				const auto end_time = std::chrono::system_clock::now();
+				const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
-			header = false;
+				if (milliseconds.count() > 100)
+				{
+					const auto ret = av_write_trailer(encoder_context->muxer_context);
+					if (ret < 0)
+						die("Error writing trailer", ret);
+
+					on_write();
+
+					start_time = std::chrono::system_clock::now();
+					header = false;
+				}
+
+				sending = false;
+			}
 		}
 
 	public:
@@ -472,7 +486,7 @@ namespace encoding
 			video_packet.size = 0;
 
 			avcodec_send_frame(encoder_context->video_codec_context, yuv_frame);
-			got_packet_ptr = avcodec_receive_packet(encoder_context->video_codec_context, &video_packet) == 0;
+			const auto got_packet_ptr = avcodec_receive_packet(encoder_context->video_codec_context, &video_packet) == 0;
 
 			if (got_packet_ptr)
 			{
@@ -482,15 +496,10 @@ namespace encoding
 				if (ret < 0)
 					die("Error while writing video frame", ret);
 
-				const auto end_time = std::chrono::system_clock::now();
-				const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-
-				if (milliseconds.count() > 100)
-				{
-					send_it();
-					start_time = std::chrono::system_clock::now();
-				}
+				send_it();
 			}
+
+			av_packet_unref(&video_packet);
 		}
 
 		/**
@@ -574,18 +583,20 @@ namespace encoding
 				audio_packet.data = nullptr;
 				audio_packet.size = 0;
 
-				int frameFinished;
-				ret = avcodec_encode_audio2(encoder_context->audio_codec_context, &audio_packet, aac_frame, &frameFinished);
+				int got_packet_ptr;
+				ret = avcodec_encode_audio2(encoder_context->audio_codec_context, &audio_packet, aac_frame, &got_packet_ptr);
 				if (ret < 0)
 					die("Error encoding audio frame", ret);
 
-				if (frameFinished)
+				if (got_packet_ptr)
 				{
 					audio_packet.stream_index = 1;
 
 					ret = av_interleaved_write_frame(encoder_context->muxer_context, &audio_packet);
 					if (ret < 0)
 						die("Error while writing audio frame", ret);
+
+					send_it();
 				}
 
 				av_packet_unref(&audio_packet);
