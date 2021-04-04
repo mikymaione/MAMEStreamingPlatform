@@ -466,6 +466,7 @@ void renderer_sdl2::init_streaming_render(osd_dim& nd)
 		<< nd.width() << ":"
 		<< nd.height();
 
+	webpp::streaming_server::get().set_streaming_input_size(nd.width(), nd.height());
 	webpp::streaming_server::get().send_string(sstm.str());
 }
 
