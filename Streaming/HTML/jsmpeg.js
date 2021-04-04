@@ -952,9 +952,11 @@ JSMpeg.Source.WebSocket = function ()
 
 	WSSource.prototype.destroy = function ()
 	{
+		/*
 		clearTimeout(this.reconnectTimeoutId);
 		this.shouldAttemptReconnect = false;
 		this.socket.close();
+		*/
 	};
 
 	WSSource.prototype.start = function ()
@@ -969,7 +971,7 @@ JSMpeg.Source.WebSocket = function ()
 
 		this.socket.onmessage = this.onMessage.bind(this);
 		this.socket.onopen = this.onOpen.bind(this);
-		this.socket.onerror = this.onClose.bind(this);
+		this.socket.onerror = this.onError.bind(this);
 		this.socket.onclose = this.onClose.bind(this);
 	};
 
@@ -980,17 +982,14 @@ JSMpeg.Source.WebSocket = function ()
 		this.progress = 1;
 	};
 
+	WSSource.prototype.onError = function (event)
+	{
+		console.error("WebSocket error observed:", event);
+	}
+
 	WSSource.prototype.onClose = function ()
 	{
-		if (this.shouldAttemptReconnect)
-		{
-			clearTimeout(this.reconnectTimeoutId);
-
-			this.reconnectTimeoutId = setTimeout(function ()
-			{
-				this.start();
-			}.bind(this), this.reconnectInterval * 1e3)
-		}
+		console.log('The connection has been closed successfully.');
 	};
 
 	WSSource.prototype.onMessage = function (ev)
