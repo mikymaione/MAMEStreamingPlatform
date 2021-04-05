@@ -74,10 +74,10 @@ namespace webpp
 		{
 			std::vector<std::string> result;
 
-			size_t start = 0;
-			size_t end = s.find(del);
+			int start = 0;
+			int end = s.find(del);
 
-			while (end > -1)
+			while (end != -1)
 			{
 				result.push_back(s.substr(start, end - start));
 
@@ -217,9 +217,9 @@ namespace webpp
 				}
 				else if (values[0] == "key")
 				{
-					const auto gamepad_number = values[1];
+					const auto input_number = values[1];
 					const auto key = values[2];
-					
+					std::cout << "Input from " << input_number << ": " << key << std::endl;
 				}
 			};
 

@@ -36,8 +36,13 @@ copyright-holders:Michele Maione
 
 	<script src="jsmpeg.js"></script>
 	<script src="gamecontroller.min.js"></script>
+	<script src="keypress-2.1.5.min.js"></script>
 
 	<script>
+		const uri = "ws://192.168.1.8:8888";
+
+		let listener;
+
 		let myCanvas;
 		let player;
 		let vw, vh, cw, ch, tw, th;
@@ -62,17 +67,33 @@ copyright-holders:Michele Maione
 			myCanvas.style.height = th + 'px';
 		}
 
-		function InitKeyboard()
-		{
-			document.onkeypress = function (event)
-			{
-				player.source.socket.send('key:' + 9999 + ':' + event.key);
-			};
-		}
-
-		function GamepadSend(g, t)
+		function InputSend(g, t)
 		{
 			player.source.socket.send('key:' + g + ':' + t);
+		}
+
+		function InitKeyboard()
+		{
+			const keyboard = 9999;
+			listener = new window.keypress.Listener();
+
+			listener.simple_combo("1", function () { InputSend(keyboard, 'SELECT'); });
+			listener.simple_combo("2", function () { InputSend(keyboard, 'START'); });
+
+			listener.simple_combo("left", function () { InputSend(keyboard, 'LEFT'); });
+			listener.simple_combo("right", function () { InputSend(keyboard, 'RIGHT'); });
+			listener.simple_combo("up", function () { InputSend(keyboard, 'UP'); });
+			listener.simple_combo("down", function () { InputSend(keyboard, 'DOWN'); });
+
+			listener.simple_combo("w", function () { InputSend(keyboard, 'X'); });
+			listener.simple_combo("e", function () { InputSend(keyboard, 'Y'); });
+			listener.simple_combo("s", function () { InputSend(keyboard, 'A'); });
+			listener.simple_combo("d", function () { InputSend(keyboard, 'B'); });
+
+			listener.simple_combo("q", function () { InputSend(keyboard, 'L1'); });
+			listener.simple_combo("a", function () { InputSend(keyboard, 'L2'); });
+			listener.simple_combo("r", function () { InputSend(keyboard, 'R1'); });
+			listener.simple_combo("f", function () { InputSend(keyboard, 'R2'); });
 		}
 
 		function InitGamepad()
@@ -81,27 +102,27 @@ copyright-holders:Michele Maione
 			{
 				console.log('A new gamepad was connected!');
 
-				gamepad.on('button8', () => { GamepadSend(gamepad.id, 'SELECT') });
-				gamepad.on('button9', () => { GamepadSend(gamepad.id, 'START') });
+				gamepad.on('button8', () => { InputSend(gamepad.id, 'SELECT') });
+				gamepad.on('button9', () => { InputSend(gamepad.id, 'START') });
 
-				gamepad.on('button12', () => { GamepadSend(gamepad.id, 'UP') });
-				gamepad.on('button13', () => { GamepadSend(gamepad.id, 'DOWN') });
-				gamepad.on('button15', () => { GamepadSend(gamepad.id, 'RIGHT') });
-				gamepad.on('button14', () => { GamepadSend(gamepad.id, 'LEFT') });
-				gamepad.on('up', () => { GamepadSend(gamepad.id, 'UP') });
-				gamepad.on('down', () => { GamepadSend(gamepad.id, 'DOWN') });
-				gamepad.on('right', () => { GamepadSend(gamepad.id, 'RIGHT') });
-				gamepad.on('left', () => { GamepadSend(gamepad.id, 'LEFT') });
+				gamepad.on('button12', () => { InputSend(gamepad.id, 'UP') });
+				gamepad.on('button13', () => { InputSend(gamepad.id, 'DOWN') });
+				gamepad.on('button15', () => { InputSend(gamepad.id, 'RIGHT') });
+				gamepad.on('button14', () => { InputSend(gamepad.id, 'LEFT') });
+				gamepad.on('up', () => { InputSend(gamepad.id, 'UP') });
+				gamepad.on('down', () => { InputSend(gamepad.id, 'DOWN') });
+				gamepad.on('right', () => { InputSend(gamepad.id, 'RIGHT') });
+				gamepad.on('left', () => { InputSend(gamepad.id, 'LEFT') });
 
-				gamepad.on('button2', () => { GamepadSend(gamepad.id, 'X') });
-				gamepad.on('button3', () => { GamepadSend(gamepad.id, 'Y') });
-				gamepad.on('button0', () => { GamepadSend(gamepad.id, 'A') });
-				gamepad.on('button1', () => { GamepadSend(gamepad.id, 'B') });
+				gamepad.on('button2', () => { InputSend(gamepad.id, 'X') });
+				gamepad.on('button3', () => { InputSend(gamepad.id, 'Y') });
+				gamepad.on('button0', () => { InputSend(gamepad.id, 'A') });
+				gamepad.on('button1', () => { InputSend(gamepad.id, 'B') });
 
-				gamepad.on('button4', () => { GamepadSend(gamepad.id, 'L1') });
-				gamepad.on('button6', () => { GamepadSend(gamepad.id, 'L2') });
-				gamepad.on('button5', () => { GamepadSend(gamepad.id, 'R1') });
-				gamepad.on('button7', () => { GamepadSend(gamepad.id, 'R2') });
+				gamepad.on('button4', () => { InputSend(gamepad.id, 'L1') });
+				gamepad.on('button6', () => { InputSend(gamepad.id, 'L2') });
+				gamepad.on('button5', () => { InputSend(gamepad.id, 'R1') });
+				gamepad.on('button7', () => { InputSend(gamepad.id, 'R2') });
 			});
 
 			gameControl.on('disconnect', gamepad =>
@@ -113,8 +134,6 @@ copyright-holders:Michele Maione
 		function Start()
 		{
 			document.onclick = null;
-
-			const uri = "ws://192.168.1.8:8888";
 
 			player = new JSMpeg.Player(uri, {
 				canvas: myCanvas,
