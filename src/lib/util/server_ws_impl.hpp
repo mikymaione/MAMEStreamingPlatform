@@ -588,7 +588,7 @@ namespace webpp {
 					std::shared_ptr<Message> message(new Message());
 					message->length = length;
 					message->fin_rsv_opcode = fin_rsv_opcode;
-
+					
 					std::ostream message_data_out_stream(&message->streambuf);
 					for (size_t c = 0; c < length; c++) {
 						message_data_out_stream.put(raw_message_data.get() ^ mask[c % 4]);

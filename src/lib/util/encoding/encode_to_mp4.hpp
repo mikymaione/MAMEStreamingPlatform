@@ -171,7 +171,7 @@ namespace encoding
 			encoder_context->video_codec_context->max_b_frames = 0;
 			encoder_context->video_codec_context->has_b_frames = 0;
 			encoder_context->video_codec_context->delay = 0;
-			encoder_context->video_codec_context->gop_size = 10;
+			//encoder_context->video_codec_context->gop_size = 10;
 
 			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
 

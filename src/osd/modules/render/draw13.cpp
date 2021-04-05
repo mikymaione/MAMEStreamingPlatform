@@ -14,8 +14,6 @@
 #include <cmath>
 #include <cstdio>
 
-#include <sstream>
-
 // MAME headers
 #include "emu.h"
 #include "options.h"
@@ -460,14 +458,7 @@ void renderer_sdl2::init_streaming_render(const int w, const int h, const int fp
 
 	m_sdl_buffer = SDL_RWFromMem(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 
-	std::stringstream sstm;
-	sstm
-		<< "size:"
-		<< w << ":"
-		<< h;
-
 	webpp::streaming_server::get().set_streaming_input_size(w, h, fps);
-	webpp::streaming_server::get().send_string(sstm.str());
 }
 
 int renderer_sdl2::create()
