@@ -215,6 +215,12 @@ namespace webpp
 						}
 					}
 				}
+				else if (values[0] == "key")
+				{
+					const auto gamepad_number = values[1];
+					const auto key = values[2];
+					
+				}
 			};
 
 			endpoint.on_close = [&](auto connection, auto status, auto reason)

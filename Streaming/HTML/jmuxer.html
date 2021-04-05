@@ -1,0 +1,140 @@
+<!--
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	MediaSource.html - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
+
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+
+	<meta name="date" content="2021-03-30" scheme="YYYY-MM-DD">
+	<meta name="author" content="Maione Michele">
+	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+
+	<style>
+		body {
+			overflow: hidden;
+			background-color: black;
+		}
+	</style>
+
+	<script src="jmuxer.min.js"></script>
+</head>
+
+<body>
+	<video id="myCanvas"></video>
+
+	<script>
+		let myCanvas;
+		let jmuxer;
+		let ws;
+		let vw, vh, cw, ch, tw, th;
+
+		function FullScreen()
+		{
+			//document.exitFullscreen();
+			myCanvas.requestFullscreen();
+		}
+
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			if (cw / ch < vw / vh)
+			{
+				tw = cw;
+				th = cw * vh / vw;
+			}
+			else
+			{
+				tw = ch * vw / vh;
+				th = ch;
+			}
+
+			myCanvas.style.width = tw + 'px';
+			myCanvas.style.height = th + 'px';
+		}
+
+		function parse(data)
+		{
+			let input = new Uint8Array(data),
+				dv = new DataView(input.buffer),
+				duration,
+				audioLength,
+				audio,
+				video;
+
+			duration = dv.getUint16(0, true);
+			audioLength = dv.getUint16(2, true);
+			audio = input.subarray(4, (audioLength + 4));
+			video = input.subarray(audioLength + 4);
+
+			return {
+				audio: audio,
+				video: video,
+				duration: duration
+			};
+		}
+
+		function Start()
+		{
+			const uri = "ws://192.168.1.8:8888";			
+
+			jmuxer = new JMuxer({
+				node: 'myCanvas',
+				fps: 25,
+				debug: true
+			});
+
+			ws = new WebSocket(uri);
+			ws.binaryType = 'arraybuffer';
+
+			ws.onopen = function (e)
+			{
+				console.log('Connection opened');
+			};
+
+			ws.onclose = function (e)
+			{
+				console.log('Connection closed');
+			};
+
+			ws.onmessage = function (event)
+			{
+				if (typeof event.data === 'string')
+				{
+					let values = event.data.split(":");
+
+					vw = values[1];
+					vh = values[2];
+
+					reportWindowSize();
+				}
+				else
+				{
+					let data = parse(event.data);
+					jmuxer.feed(data);
+				}
+			};
+		}
+
+		myCanvas = document.getElementById('myCanvas');
+		window.onresize = reportWindowSize;
+		Start();
+	</script>
+
+	<script src="fullscreen.js"></script>
+</body>
+
+</html>
