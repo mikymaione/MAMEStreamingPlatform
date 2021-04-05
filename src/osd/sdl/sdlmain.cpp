@@ -259,7 +259,7 @@ int main(int argc, char** argv)
 
 	std::cout << "Press enter to exit.\n";
 	std::cin.ignore();
-	
+
 	exit(r);
 }
 
@@ -441,6 +441,7 @@ void sdl_osd_interface::init(running_machine& machine)
 {
 	// call our parent
 	osd_common_t::init(machine);
+	webpp::streaming_server::get().set_running_machine(machine);
 
 	const char* stemp;
 
