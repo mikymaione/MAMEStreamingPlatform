@@ -27,7 +27,7 @@ namespace webpp
 		bool active = true;
 		unsigned long ping = 0;
 
-		std::chrono::time_point<std::chrono::system_clock> ping_sended =
+		std::chrono::time_point<std::chrono::system_clock> ping_sent =
 			std::chrono::system_clock::now();
 
 		std::unique_ptr<ws_server> server;
@@ -35,7 +35,7 @@ namespace webpp
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder;
 
-		running_machine* machine;
+		running_machine* machine = nullptr;
 		bool machine_paused_by_server = false;
 
 	public:
@@ -74,10 +74,10 @@ namespace webpp
 		{
 			std::vector<std::string> result;
 
-			auto start = 0;
-			auto end = s.find(del);
+			size_t start = 0;
+			size_t end = s.find(del);
 
-			while (end != -1)
+			while (end > -1)
 			{
 				result.push_back(s.substr(start, end - start));
 
@@ -114,12 +114,12 @@ namespace webpp
 		void send_ping()
 		{
 			const auto now = std::chrono::system_clock::now();
-			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - ping_sended);
+			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - ping_sent);
 
 			if (machine_paused_by_server && machine->paused() || milliseconds.count() > 2000)
 			{
 				ping++;
-				ping_sended = std::chrono::system_clock::now();
+				ping_sent = std::chrono::system_clock::now();
 
 				std::stringstream string_stream;
 				string_stream << "ping:" << ping;
@@ -194,7 +194,7 @@ namespace webpp
 				if (values[0] == "ping")
 				{
 					const auto ping_received = std::chrono::system_clock::now();
-					const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ping_received - ping_sended);
+					const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ping_received - ping_sent);
 
 					if (milliseconds.count() > 500)
 					{
