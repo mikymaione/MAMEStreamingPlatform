@@ -1,0 +1,159 @@
+<!--
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	mame.html - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
+
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+
+	<meta name="date" content="2021-03-30" scheme="YYYY-MM-DD">
+	<meta name="author" content="Maione Michele">
+	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+
+	<style>
+		body {
+			overflow: hidden;
+			background-color: black;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="myCanvas">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
+	<script src="jsmpeg.js"></script>
+	<script src="gamecontroller.min.js"></script>
+
+	<script>
+		let myCanvas;
+		let player;
+		let vw, vh, cw, ch, tw, th;
+
+		function reportWindowSize()
+		{
+			cw = window.innerWidth;
+			ch = window.innerHeight;
+
+			if (cw / ch < vw / vh)
+			{
+				tw = cw;
+				th = cw * vh / vw;
+			}
+			else
+			{
+				tw = ch * vw / vh;
+				th = ch;
+			}
+
+			myCanvas.style.width = tw + 'px';
+			myCanvas.style.height = th + 'px';
+		}
+
+		function InitKeyboard()
+		{
+			document.onkeypress = function (event)
+			{
+				player.source.socket.send('key:' + 9999 + ':' + event.key);
+			};
+		}
+
+		function GamepadSend(g, t)
+		{
+			player.source.socket.send('key:' + g + ':' + t);
+		}
+
+		function InitGamepad()
+		{
+			gameControl.on('connect', gamepad =>
+			{
+				console.log('A new gamepad was connected!');
+
+				gamepad.on('button8', () => { GamepadSend(gamepad.id, 'SELECT') });
+				gamepad.on('button9', () => { GamepadSend(gamepad.id, 'START') });
+
+				gamepad.on('button12', () => { GamepadSend(gamepad.id, 'UP') });
+				gamepad.on('button13', () => { GamepadSend(gamepad.id, 'DOWN') });
+				gamepad.on('button15', () => { GamepadSend(gamepad.id, 'RIGHT') });
+				gamepad.on('button14', () => { GamepadSend(gamepad.id, 'LEFT') });
+				gamepad.on('up', () => { GamepadSend(gamepad.id, 'UP') });
+				gamepad.on('down', () => { GamepadSend(gamepad.id, 'DOWN') });
+				gamepad.on('right', () => { GamepadSend(gamepad.id, 'RIGHT') });
+				gamepad.on('left', () => { GamepadSend(gamepad.id, 'LEFT') });
+
+				gamepad.on('button2', () => { GamepadSend(gamepad.id, 'X') });
+				gamepad.on('button3', () => { GamepadSend(gamepad.id, 'Y') });
+				gamepad.on('button0', () => { GamepadSend(gamepad.id, 'A') });
+				gamepad.on('button1', () => { GamepadSend(gamepad.id, 'B') });
+
+				gamepad.on('button4', () => { GamepadSend(gamepad.id, 'L1') });
+				gamepad.on('button6', () => { GamepadSend(gamepad.id, 'L2') });
+				gamepad.on('button5', () => { GamepadSend(gamepad.id, 'R1') });
+				gamepad.on('button7', () => { GamepadSend(gamepad.id, 'R2') });
+			});
+
+			gameControl.on('disconnect', gamepad =>
+			{
+				console.log('A gamepad was disconnected!');
+			});
+		}
+
+		function Start()
+		{
+			document.onclick = null;
+
+			const uri = "ws://192.168.1.8:8888";
+
+			player = new JSMpeg.Player(uri, {
+				canvas: myCanvas,
+				autoplay: true,
+				loop: false,
+				pauseWhenHidden: false,
+				videoBufferSize: 96 * 1024, // 96 KB
+				audioBufferSize: 64 * 1024, // 64 KB				
+			});
+
+			player.source.onStringMessageCallback = function (event)
+			{
+				let values = event.data.split(":");
+
+				switch (values[0])
+				{
+					case 'size':
+						vw = values[1];
+						vh = values[2];
+
+						reportWindowSize();
+						break;
+
+					case 'ping':
+						player.source.socket.send('ping:' + values[1]);
+						break;
+				}
+			};
+
+			InitKeyboard();
+			InitGamepad();
+		}
+
+		myCanvas = document.getElementById("myCanvas");
+		window.onresize = reportWindowSize;
+		document.onclick = Start;
+	</script>
+
+	<script src="fullscreen.js"></script>
+</body>
+
+</html>
