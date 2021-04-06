@@ -283,7 +283,7 @@ namespace webpp
 					else if (key == "L1")machine->ui_input().push_char_event(nullptr, 81);
 					else if (key == "L2")machine->ui_input().push_char_event(nullptr, 65);
 					else if (key == "R1")machine->ui_input().push_char_event(nullptr, 82);
-					else if (key == "R2")machine->ui_input().push_char_event(nullptr, 68);
+					else if (key == "R2")machine->ui_input().push_char_event(nullptr, 70);
 				}
 			};
 
