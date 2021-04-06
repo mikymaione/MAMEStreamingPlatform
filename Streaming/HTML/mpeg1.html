@@ -77,8 +77,8 @@ copyright-holders:Michele Maione
 			const keyboard = 9999;
 			listener = new window.keypress.Listener();
 
-			listener.simple_combo("1", function () { InputSend(keyboard, 'SELECT'); });
-			listener.simple_combo("2", function () { InputSend(keyboard, 'START'); });
+			listener.simple_combo("1", function () { InputSend(keyboard, 'START'); });
+			listener.simple_combo("2", function () { InputSend(keyboard, 'SELECT'); });
 
 			listener.simple_combo("left", function () { InputSend(keyboard, 'LEFT'); });
 			listener.simple_combo("right", function () { InputSend(keyboard, 'RIGHT'); });
