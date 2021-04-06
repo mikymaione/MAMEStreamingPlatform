@@ -18,6 +18,8 @@
 
 const options_entry osd_options::s_option_entries[] =
 {
+	{ OSD_STREAMING_SERVER,					  "0",               OPTION_BOOLEAN,   "Run game streaming server" },
+	
 	{ nullptr,                               nullptr,           OPTION_HEADER,    "OSD KEYBOARD MAPPING OPTIONS" },
 #if defined(SDLMAME_MACOSX) || defined(OSD_MAC)
 	{ OSDOPTION_UIMODEKEY,                   "DEL",             OPTION_STRING,    "key to enable/disable MAME controls when emulated system has keyboard inputs" },

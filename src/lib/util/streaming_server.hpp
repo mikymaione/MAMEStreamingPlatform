@@ -7,6 +7,7 @@
 //============================================================
 #pragma once
 
+#include <cstdlib>
 #include <chrono>
 #include <functional>
 #include <iostream>
@@ -75,8 +76,8 @@ namespace webpp
 		{
 			std::vector<std::string> result;
 
-			int start = 0;
-			int end = s.find(del);
+			size_t start = 0;
+			auto end = s.find(del);
 
 			while (end != -1)
 			{
@@ -91,6 +92,28 @@ namespace webpp
 			return result;
 		}
 
+		static bool is_streaming_server(const int argc, char** argv)
+		{
+			const std::string s = "-streamingserver";
+
+			for (auto i = 1; i < argc; i++)
+			{
+				auto ok = true;
+
+				for (size_t c = 0; c < s.size(); c++)
+					if (s[c] != tolower(argv[i][c]))
+					{
+						ok = false;
+						break;
+					}
+
+				if (ok)
+					return true;
+			}
+
+			return false;
+		}
+
 	public:
 		/**
 		 * \brief Return the singleton instance of the class
@@ -102,14 +125,35 @@ namespace webpp
 			return instance;
 		}
 
+		void set_running_machine(running_machine& machine_)
+		{
+			machine = &machine_;
+		}
+
 		bool is_active() const
 		{
 			return active;
 		}
 
-		void set_running_machine(running_machine& machine_)
+		void activate(const int argc, char** argv)
 		{
-			machine = &machine_;
+			active = is_streaming_server(argc, argv);
+		}
+
+		static void run_new_process(const int argc, char** argv)
+		{
+			std::stringstream string_stream;
+			string_stream << "start";
+
+			for (auto i = 0; i < argc; ++i)
+			{
+				string_stream << " ";
+				string_stream << argv[i];
+			}
+
+			const auto command = string_stream.str();
+
+			system(command.c_str()); //run MAME
 		}
 
 		void send_ping()
