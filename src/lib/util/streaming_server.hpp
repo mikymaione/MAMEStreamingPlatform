@@ -16,6 +16,7 @@
 #include <thread>
 #include <vector>
 
+#include "uiinput.h"
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 
@@ -24,7 +25,7 @@ namespace webpp
 	class streaming_server
 	{
 	private:
-		bool active = true;
+		bool active = false;
 		unsigned long ping = 0;
 
 		std::chrono::time_point<std::chrono::system_clock> ping_sent =
@@ -220,6 +221,25 @@ namespace webpp
 					const auto input_number = values[1];
 					const auto key = values[2];
 					std::cout << "Input from " << input_number << ": " << key << std::endl;
+
+					//https://css-tricks.com/snippets/javascript/javascript-keycodes/
+					if (key == "SELECT")machine->ui_input().push_char_event(nullptr, 53);
+					else if (key == "START")machine->ui_input().push_char_event(nullptr, 49);
+
+					else if (key == "UP")machine->ui_input().push_char_event(nullptr, 38);
+					else if (key == "DOWN")machine->ui_input().push_char_event(nullptr, 40);
+					else if (key == "RIGHT")machine->ui_input().push_char_event(nullptr, 39);
+					else if (key == "LEFT")machine->ui_input().push_char_event(nullptr, 37);
+
+					else if (key == "X")machine->ui_input().push_char_event(nullptr, 87);
+					else if (key == "Y")machine->ui_input().push_char_event(nullptr, 69);
+					else if (key == "A")machine->ui_input().push_char_event(nullptr, 83);
+					else if (key == "B")machine->ui_input().push_char_event(nullptr, 68);
+
+					else if (key == "L1")machine->ui_input().push_char_event(nullptr, 81);
+					else if (key == "L2")machine->ui_input().push_char_event(nullptr, 65);
+					else if (key == "R1")machine->ui_input().push_char_event(nullptr, 82);
+					else if (key == "R2")machine->ui_input().push_char_event(nullptr, 68);
 				}
 			};
 
