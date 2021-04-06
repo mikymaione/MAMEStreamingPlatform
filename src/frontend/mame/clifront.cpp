@@ -223,7 +223,6 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 		throw emu_fatalerror(EMU_ERR_INVALID_CONFIG, "%s", ex.message());
 	}
 
-	/* Rimettere
 	// determine the base name of the EXE
 	std::string_view exename = core_filename_extract_base(args[0], true);
 
@@ -233,7 +232,6 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 		execute_commands(exename);
 		return;
 	}
-	*/
 
 	// read INI's, if appropriate
 	if (m_options.read_config())
@@ -248,7 +246,7 @@ void cli_frontend::start_execution(mame_machine_manager* manager, const std::vec
 	manager->start_http_server();
 
 	manager->start_luaengine();
-	
+
 	if (option_errors.tellp() > 0)
 		osd_printf_error("Error in command line:\n%s\n", strtrimspace(option_errors.str()));
 

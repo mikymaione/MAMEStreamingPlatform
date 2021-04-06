@@ -458,7 +458,8 @@ void renderer_sdl2::init_streaming_render(const int w, const int h, const int fp
 
 	m_sdl_buffer = SDL_RWFromMem(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 
-	webpp::streaming_server::get().set_streaming_input_size(w, h, fps);
+	if (webpp::streaming_server::get().is_active())
+		webpp::streaming_server::get().set_streaming_input_size(w, h, fps);
 }
 
 int renderer_sdl2::create()

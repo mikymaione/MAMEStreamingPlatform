@@ -234,7 +234,7 @@ int main_sdl(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-	int r = 0;
+	auto r = 0;
 
 	// Server
 	if (webpp::streaming_server::get().is_active())
@@ -257,8 +257,8 @@ int main(int argc, char** argv)
 		r = main_sdl(argc, argv);
 	}
 
-	std::cout << "Press enter to exit.\n";
-	std::cin.ignore();
+	//std::cout << "Press enter to exit.\n";
+	//std::cin.ignore();
 
 	exit(r);
 }
