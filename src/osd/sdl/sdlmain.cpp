@@ -237,11 +237,13 @@ int main(int argc, char** argv)
 	auto r = 0;
 
 	// Server
+	webpp::streaming_server::get().activate(argc, argv);
+
 	if (webpp::streaming_server::get().is_active())
 	{
 		webpp::streaming_server::get().on_accept = [&]()
 		{
-			//system("start mame64.exe -streamingserver -window -video accel -sound sdl -resolution 640x480"); //run MAME
+			//webpp::streaming_server::get().run_new_process(argc, argv);
 			r = main_sdl(argc, argv);
 		};
 

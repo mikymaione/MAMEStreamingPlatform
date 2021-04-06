@@ -140,7 +140,7 @@ namespace encoding
 
 			this_->socket->write(reinterpret_cast<const char*>(buf), buf_size);
 
-			return 1; // 1 element
+			return 1; // 1 element wrote
 		}
 
 		void init_video()

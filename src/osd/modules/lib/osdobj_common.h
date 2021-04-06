@@ -31,6 +31,8 @@
 //  Defines
 //============================================================
 
+#define OSD_STREAMING_SERVER		    "streamingserver"
+
 #define OSDOPTION_UIMODEKEY             "uimodekey"
 
 #define OSDCOMMAND_LIST_MIDI_DEVICES    "listmidi"
