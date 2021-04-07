@@ -121,7 +121,7 @@ void sdl_event_manager::process_window_event(running_machine &machine, SDL_Event
 		break;
 
 	case SDL_WINDOWEVENT_ENTER:
-		m_mouse_over_window = 1;
+		m_mouse_over_window = true;
 		[[fallthrough]];
 	case SDL_WINDOWEVENT_FOCUS_GAINED:
 	case SDL_WINDOWEVENT_EXPOSED:

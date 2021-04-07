@@ -22,6 +22,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "window.h"
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 #include "modules/input/input_common.h"
@@ -51,7 +52,7 @@ namespace webpp
 		const std::map<unsigned, std::pair<int, int>> quality_level = {
 			{1u, std::make_pair(640, 480)},
 			{2u, std::make_pair(800, 600)},
-			{3u, std::make_pair(1024, 768)},
+			{3u, std::make_pair(800, 600)},
 		};
 
 	public:
@@ -167,8 +168,9 @@ namespace webpp
 		void set_video_quality() const
 		{
 			const auto [fst, snd] = quality_level.at(current_quality_level);
+			const auto window = osd_common_t::s_window_list.front();
 
-			encoder->set_streaming_output_size(fst, snd);
+			std::static_pointer_cast<sdl_window_info>(window)->resize(fst, snd);
 		}
 
 		void increase_video_quality()
@@ -279,12 +281,7 @@ namespace webpp
 
 			send_string(string_stream.str());
 
-			encoder->set_streaming_input_size(w, h, fps);
-		}
-
-		void set_streaming_output_size(const int w, const int h) const
-		{
-			encoder->set_streaming_output_size(w, h);
+			encoder->set_streaming_size(w, h, fps);
 		}
 
 		/**
