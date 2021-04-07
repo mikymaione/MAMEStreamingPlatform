@@ -255,7 +255,7 @@ namespace webpp
 						{
 							std::cout << "Pausing game!" << std::endl; // rimuovere
 							machine_paused_by_server = true;
-							machine->pause();
+							//machine->pause();
 						}
 					}
 					else
@@ -264,7 +264,7 @@ namespace webpp
 						{
 							std::cout << "Resuming game!" << std::endl; // rimuovere
 							machine_paused_by_server = false;
-							machine->resume();
+							//machine->resume();
 						}
 					}
 				}
