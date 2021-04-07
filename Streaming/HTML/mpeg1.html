@@ -21,13 +21,16 @@ copyright-holders:Michele Maione
 
 	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
 
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu Mono'>
+
 	<style>
 		body {
 			overflow: hidden;
 			background-color: black;
+			font-family: 'Ubuntu Mono';
 		}
 
-		#myCanvas {
+		.center {
 			position: absolute;
 			top: 0;
 			bottom: 0;
@@ -38,25 +41,29 @@ copyright-holders:Michele Maione
 
 		#instructions {
 			color: white;
+			width: 500px;
 		}
 	</style>
 </head>
 
 <body>
-	<div id="instructions">
+	<div id="instructions" class="center">
 		<h1>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</h1>
+
 		<h2>Keys:</h2>
-		<p>p - pause</p>
+		<p>P - pause</p>
 		<p>1 - start</p>
 		<p>2 - select</p>
+		<p>8 - decrease video quality</p>
+		<p>9 - increase video quality</p>
 		<p>F5 - restart</p>
 		<p>←, ↑, →, ↓ - move player</p>
-		<p>q, w, e, r, a, s, d, f - various action</p>
+		<p>Q, W, E, R, A, S, D, F - actions</p>
 
 		<h3>click to play</h3>
 	</div>
 
-	<canvas id="myCanvas">
+	<canvas id="myCanvas" class="center">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
 
@@ -120,6 +127,17 @@ copyright-holders:Michele Maione
 					"on_keydown": function () { InputSend(keyboard, 'SELECT', true); },
 					"on_keyup": function (e) { InputSend(keyboard, 'SELECT', false); },
 				},
+
+				{
+					"keys": "8",
+					"on_keydown": function () { InputSend(keyboard, 'QDOWN', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'QDOWN', false); },
+				},
+				{
+					"keys": "9",
+					"on_keydown": function () { InputSend(keyboard, 'QUP', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'QUP', false); },
+				},				
 
 				{
 					"keys": "left",

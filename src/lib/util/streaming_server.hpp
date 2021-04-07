@@ -7,14 +7,17 @@
 //============================================================
 #pragma once
 
+#include <algorithm>
 #include <cstdlib>
 #include <chrono>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include <SDL2/SDL.h>
@@ -43,6 +46,13 @@ namespace webpp
 
 		running_machine* machine = nullptr;
 		bool machine_paused_by_server = false;
+
+		unsigned current_quality_level = 1;
+		const std::map<unsigned, std::pair<int, int>> quality_level = {
+			{1u, std::make_pair(640, 480)},
+			{2u, std::make_pair(800, 600)},
+			{3u, std::make_pair(1024, 768)},
+		};
 
 	public:
 		/**
@@ -154,6 +164,25 @@ namespace webpp
 			}
 		}
 
+		void set_video_quality() const
+		{
+			const auto [fst, snd] = quality_level.at(current_quality_level);
+
+			encoder->set_streaming_output_size(fst, snd);
+		}
+
+		void increase_video_quality()
+		{
+			current_quality_level = std::min(current_quality_level + 1, 3u);
+			set_video_quality();
+		}
+
+		void decrease_video_quality()
+		{
+			current_quality_level = std::max(current_quality_level - 1, 1u);
+			set_video_quality();
+		}
+
 		void generate_key_event(const char* key, const std::string& down) const
 		{
 			SDL_Event e;
@@ -164,7 +193,7 @@ namespace webpp
 			keyboard->queue_events(&e, 1);
 		}
 
-		void process_key(const std::vector<std::string>& values) const
+		void process_key(const std::vector<std::string>& values)
 		{
 			const auto down = values[1];
 			const auto input_number = values[2];
@@ -173,6 +202,9 @@ namespace webpp
 			if (key == "PAUSE")generate_key_event("P", down);
 			else if (key == "START")generate_key_event("1", down);
 			else if (key == "SELECT")generate_key_event("5", down);
+
+			else if (key == "QUP")increase_video_quality();
+			else if (key == "QDOWN")decrease_video_quality();
 
 			else if (key == "UP")generate_key_event("Up", down);
 			else if (key == "DOWN")generate_key_event("Down", down);
@@ -297,7 +329,8 @@ namespace webpp
 
 			endpoint.on_message = [&](auto connection, auto message)
 			{
-				const auto values = split(message->string(), ":");
+				const auto msg = message->string();
+				const auto values = split(msg, ":");
 
 				if (values[0] == "ping")
 					process_pausing_mechanism();
