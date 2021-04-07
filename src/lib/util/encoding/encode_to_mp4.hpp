@@ -74,7 +74,7 @@ namespace encoding
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		int in_width = 0, in_height = 0, out_width = 640, out_height = 480;
+		int in_width = 640, in_height = 480, out_width = 640, out_height = 480;
 
 		int fps = 25;
 		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
