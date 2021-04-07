@@ -74,10 +74,10 @@ namespace encoding
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		int in_width = 640, in_height = 480, out_width = 640, out_height = 480;
+		int width = 640, height = 480;
 
 		int fps = 25;
-		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -163,8 +163,8 @@ namespace encoding
 				encoder_context->video_codec_context->flags2 |= AV_CODEC_FLAG2_FAST;
 			}
 
-			encoder_context->video_codec_context->width = out_width;
-			encoder_context->video_codec_context->height = out_height;
+			encoder_context->video_codec_context->width = width;
+			encoder_context->video_codec_context->height = height;
 
 			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
 
@@ -205,28 +205,28 @@ namespace encoding
 				die("Could not retrieve parameters from context", ret);
 
 			encoder_context->video_converter_context = sws_getContext(
-				in_width, in_height, PIXEL_FORMAT_IN,
-				out_width, out_height, PIXEL_FORMAT_OUT,
+				width, height, PIXEL_FORMAT_IN,
+				width, height, PIXEL_FORMAT_OUT,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
-			rgb_frame->width = in_width;
-			rgb_frame->height = in_height;
+			rgb_frame->width = width;
+			rgb_frame->height = height;
 			rgb_frame->format = PIXEL_FORMAT_IN;
 
 			yuv_frame = av_frame_alloc();
-			yuv_frame->width = out_width;
-			yuv_frame->height = out_height;
+			yuv_frame->width = width;
+			yuv_frame->height = height;
 			yuv_frame->format = PIXEL_FORMAT_OUT;
 
-			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
+			const auto yuv_buffer_size = width * height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
 				PIXEL_FORMAT_OUT,
-				out_width, out_height);
+				width, height);
 		}
 
 		void init_audio()
@@ -441,57 +441,45 @@ namespace encoding
 			delete encoder_context;
 		}
 
-		void set_streaming_input_size(const int w, const int h, const int fps_)
+		void set_streaming_size(const int w, const int h, const int fps_)
 		{
-			in_width = w;
-			in_height = h;
+			std::cout << "Setting streaming output size to: " << w << "x" << h << std::endl;
+
+			width = w;
+			height = h;
 			fps = fps_;
 
 			if (encoder_context->video_converter_context != nullptr)
 				sws_freeContext(encoder_context->video_converter_context);
 
 			encoder_context->video_converter_context = sws_getContext(
-				in_width, in_height, PIXEL_FORMAT_IN,
-				out_width, out_height, PIXEL_FORMAT_OUT,
+				width, height, PIXEL_FORMAT_IN,
+				width, height, PIXEL_FORMAT_OUT,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
-			rgb_frame->width = in_width;
-			rgb_frame->height = in_height;
-		}
+			encoder_context->video_codec_context->width = width;
+			encoder_context->video_codec_context->height = height;
 
-		void set_streaming_output_size(const int w, const int h)
-		{
-			std::cout << "Setting streaming output size to: " << w << "x" << h << std::endl;
+			const auto ret = avcodec_parameters_from_context(encoder_context->video_stream->codecpar, encoder_context->video_codec_context);
+			if (ret < 0)
+				die("Could not retrieve parameters from context", ret);
 
-			out_width = w;
-			out_height = h;
+			delete[] yuv_buffer;
 
-			encoder_context->video_codec_context->width = out_width;
-			encoder_context->video_codec_context->height = out_height;
-
-			if (encoder_context->video_converter_context != nullptr)
-				sws_freeContext(encoder_context->video_converter_context);
-
-			encoder_context->video_converter_context = sws_getContext(
-				in_width, in_height, PIXEL_FORMAT_IN,
-				out_width, out_height, PIXEL_FORMAT_OUT,
-				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
-			);
-
-			yuv_frame->width = out_width;
-			yuv_frame->height = out_height;
-
-			if (yuv_buffer != nullptr)
-				delete[] yuv_buffer;
-
-			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
+			const auto yuv_buffer_size = width * height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
+
+			yuv_frame->width = width;
+			yuv_frame->height = height;
+
+			rgb_frame->width = width;
+			rgb_frame->height = height;
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
 				PIXEL_FORMAT_OUT,
-				out_width, out_height);
+				width, height);
 		}
 
 		/**
@@ -507,12 +495,12 @@ namespace encoding
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
 				PIXEL_FORMAT_IN,
-				in_width, in_height);
+				width, height);
 
 			//RGB to YUV
 			sws_scale(
 				encoder_context->video_converter_context,
-				rgb_frame->data, rgb_frame->linesize, 0, in_height,
+				rgb_frame->data, rgb_frame->linesize, 0, height,
 				yuv_frame->data, yuv_frame->linesize
 			);
 
