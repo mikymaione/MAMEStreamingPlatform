@@ -462,6 +462,8 @@ namespace encoding
 
 		void set_streaming_output_size(const int w, const int h)
 		{
+			std::cout << "Setting streaming output size to: " << w << "x" << h << std::endl;
+
 			out_width = w;
 			out_height = h;
 
