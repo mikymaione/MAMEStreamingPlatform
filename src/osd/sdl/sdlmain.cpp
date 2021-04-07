@@ -237,22 +237,22 @@ int main(int argc, char** argv)
 	auto r = 0;
 
 	// Server
-	webpp::streaming_server::get().activate(argc, argv);
+	webpp::streaming_server::instance().activate(argc, argv);
 
-	if (webpp::streaming_server::get().is_active())
+	if (webpp::streaming_server::instance().is_active())
 	{
-		webpp::streaming_server::get().on_accept = [&]()
+		webpp::streaming_server::instance().on_accept = [&]()
 		{
 			//webpp::streaming_server::get().run_new_process(argc, argv);
 			r = main_sdl(argc, argv);
 		};
 
-		webpp::streaming_server::get().on_connection_closed = [&]()
+		webpp::streaming_server::instance().on_connection_closed = [&]()
 		{
 			exit(r);
 		};
 
-		webpp::streaming_server::get().start(8888);
+		webpp::streaming_server::instance().start(8888);
 	}
 	else
 	{
@@ -443,7 +443,7 @@ void sdl_osd_interface::init(running_machine& machine)
 {
 	// call our parent
 	osd_common_t::init(machine);
-	webpp::streaming_server::get().set_running_machine(machine);
+	webpp::streaming_server::instance().set_running_machine(machine);
 
 	const char* stemp;
 

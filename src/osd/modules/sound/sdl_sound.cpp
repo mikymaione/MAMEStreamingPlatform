@@ -321,9 +321,9 @@ void sound_sdl::sdl_callback(void* userdata, Uint8* stream, int len)
 
 		this_->attenuate(reinterpret_cast<int16_t*>(stream), len);
 
-		if (webpp::streaming_server::get().is_active())
+		if (webpp::streaming_server::instance().is_active())
 		{
-			webpp::streaming_server::get().send_audio_interval(stream, len, this_->sdl_xfer_samples);
+			webpp::streaming_server::instance().send_audio_interval(stream, len, this_->sdl_xfer_samples);
 
 			memset(stream, 0, len); // silence local outputs
 		}

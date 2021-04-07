@@ -50,12 +50,6 @@ namespace webpp
 		 */
 		std::function<void()> on_connection_closed;
 
-	public:
-		streaming_server() = default;
-		~streaming_server() = default;
-		streaming_server(const streaming_server&) = delete;
-		streaming_server& operator=(const streaming_server&) = delete;
-
 	private:
 		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
 		void send(const std::shared_ptr<ws_server::SendStream>& stream, const unsigned char fin_rsv_operation_code) const
@@ -119,7 +113,7 @@ namespace webpp
 		 * \brief Return the singleton instance of the class
 		 * \return the instance
 		 */
-		static streaming_server& get()
+		static streaming_server& instance()
 		{
 			static streaming_server instance;
 			return instance;
@@ -267,13 +261,13 @@ namespace webpp
 					std::cout << "Input from " << input_number << ": " << key << std::endl;
 
 					//https://css-tricks.com/snippets/javascript/javascript-keycodes/
-					if (key == "SELECT")machine->ui_input().push_char_event(nullptr, 53);
-					else if (key == "START")machine->ui_input().push_char_event(nullptr, 49);
+					if (key == "SELECT")machine->ui_input().push_char_event(nullptr, 34);
+					else if (key == "START")machine->ui_input().push_char_event(nullptr, 30);
 
-					else if (key == "UP")machine->ui_input().push_char_event(nullptr, 38);
-					else if (key == "DOWN")machine->ui_input().push_char_event(nullptr, 40);
-					else if (key == "RIGHT")machine->ui_input().push_char_event(nullptr, 39);
-					else if (key == "LEFT")machine->ui_input().push_char_event(nullptr, 37);
+					else if (key == "UP")machine->ui_input().push_char_event(nullptr, 82);
+					else if (key == "DOWN")machine->ui_input().push_char_event(nullptr, 81);
+					else if (key == "RIGHT")machine->ui_input().push_char_event(nullptr, 79);
+					else if (key == "LEFT")machine->ui_input().push_char_event(nullptr, 80);
 
 					else if (key == "X")machine->ui_input().push_char_event(nullptr, 87);
 					else if (key == "Y")machine->ui_input().push_char_event(nullptr, 69);

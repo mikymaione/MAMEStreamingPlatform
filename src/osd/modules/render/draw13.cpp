@@ -455,8 +455,8 @@ void renderer_sdl2::init_streaming_render(const int w, const int h, const int fp
 
 	m_sdl_buffer = SDL_RWFromMem(m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
 
-	if (webpp::streaming_server::get().is_active())
-		webpp::streaming_server::get().set_streaming_input_size(w, h, fps);
+	if (webpp::streaming_server::instance().is_active())
+		webpp::streaming_server::instance().set_streaming_input_size(w, h, fps);
 }
 
 int renderer_sdl2::create()
@@ -478,7 +478,7 @@ int renderer_sdl2::create()
 
 	auto win = assert_window();
 
-	if (webpp::streaming_server::get().is_active())
+	if (webpp::streaming_server::instance().is_active())
 	{
 		const auto nd = win->get_size();
 		init_streaming_render(nd.width(), nd.height(), win->m_win_config.refresh);
@@ -650,13 +650,13 @@ int renderer_sdl2::draw(int update)
 	SDL_RenderPresent(m_sdl_renderer);
 	m_last_blit_time += osd_ticks();
 
-	if (webpp::streaming_server::get().is_active())
+	if (webpp::streaming_server::instance().is_active())
 	{
 		if (memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) != 0)
 		{
 			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
 
-			webpp::streaming_server::get().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
+			webpp::streaming_server::instance().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
 		}
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
