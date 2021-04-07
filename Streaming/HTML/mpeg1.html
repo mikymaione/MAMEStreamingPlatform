@@ -39,7 +39,7 @@ copyright-holders:Michele Maione
 	<script src="keypress-2.1.5.min.js"></script>
 
 	<script>
-		const uri = "ws://192.168.1.8:8888";
+		const uri = "ws://82.48.166.10:8888";
 
 		let listener;
 
@@ -67,9 +67,9 @@ copyright-holders:Michele Maione
 			myCanvas.style.height = th + 'px';
 		}
 
-		function InputSend(g, t)
+		function InputSend(g, t, down)
 		{
-			player.source.socket.send('key:' + g + ':' + t);
+			player.source.socket.send('key:' + (down == true ? 'D:' : 'U:') + g + ':' + t);
 		}
 
 		function InitKeyboard()
@@ -77,23 +77,81 @@ copyright-holders:Michele Maione
 			const keyboard = 9999;
 			listener = new window.keypress.Listener();
 
-			listener.simple_combo("1", function () { InputSend(keyboard, 'START'); });
-			listener.simple_combo("2", function () { InputSend(keyboard, 'SELECT'); });
+			listener.register_many([
+				{
+					"keys": "1",
+					"on_keydown": function () { InputSend(keyboard, 'START', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'START', false); },
+				},
+				{
+					"keys": "2",
+					"on_keydown": function () { InputSend(keyboard, 'SELECT', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'SELECT', false); },
+				},
 
-			listener.simple_combo("left", function () { InputSend(keyboard, 'LEFT'); });
-			listener.simple_combo("right", function () { InputSend(keyboard, 'RIGHT'); });
-			listener.simple_combo("up", function () { InputSend(keyboard, 'UP'); });
-			listener.simple_combo("down", function () { InputSend(keyboard, 'DOWN'); });
+				{
+					"keys": "left",
+					"on_keydown": function () { InputSend(keyboard, 'LEFT', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'LEFT', false); },
+				},
+				{
+					"keys": "right",
+					"on_keydown": function () { InputSend(keyboard, 'RIGHT', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'RIGHT', false); },
+				},
+				{
+					"keys": "up",
+					"on_keydown": function () { InputSend(keyboard, 'UP', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'UP', false); },
+				},
+				{
+					"keys": "down",
+					"on_keydown": function () { InputSend(keyboard, 'DOWN', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'DOWN', false); },
+				},
 
-			listener.simple_combo("w", function () { InputSend(keyboard, 'X'); });
-			listener.simple_combo("e", function () { InputSend(keyboard, 'Y'); });
-			listener.simple_combo("s", function () { InputSend(keyboard, 'A'); });
-			listener.simple_combo("d", function () { InputSend(keyboard, 'B'); });
+				{
+					"keys": "w",
+					"on_keydown": function () { InputSend(keyboard, 'X', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'X', false); },
+				},
+				{
+					"keys": "e",
+					"on_keydown": function () { InputSend(keyboard, 'Y', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'Y', false); },
+				},
+				{
+					"keys": "s",
+					"on_keydown": function () { InputSend(keyboard, 'A', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'A', false); },
+				},
+				{
+					"keys": "d",
+					"on_keydown": function () { InputSend(keyboard, 'B', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'B', false); },
+				},
 
-			listener.simple_combo("q", function () { InputSend(keyboard, 'L1'); });
-			listener.simple_combo("a", function () { InputSend(keyboard, 'L2'); });
-			listener.simple_combo("r", function () { InputSend(keyboard, 'R1'); });
-			listener.simple_combo("f", function () { InputSend(keyboard, 'R2'); });
+				{
+					"keys": "q",
+					"on_keydown": function () { InputSend(keyboard, 'L1', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'L1', false); },
+				},
+				{
+					"keys": "a",
+					"on_keydown": function () { InputSend(keyboard, 'L2', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'L2', false); },
+				},
+				{
+					"keys": "r",
+					"on_keydown": function () { InputSend(keyboard, 'R1', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'R1', false); },
+				},
+				{
+					"keys": "f",
+					"on_keydown": function () { InputSend(keyboard, 'R2', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'R2', false); },
+				},
+			]);
 		}
 
 		function InitGamepad()

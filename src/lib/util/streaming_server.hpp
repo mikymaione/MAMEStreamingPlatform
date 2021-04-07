@@ -17,9 +17,11 @@
 #include <thread>
 #include <vector>
 
-#include "uiinput.h"
+#include <SDL2/SDL.h>
+
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
+#include "modules/input/input_common.h"
 
 namespace webpp
 {
@@ -49,6 +51,8 @@ namespace webpp
 		 * \brief Connection closed callback
 		 */
 		std::function<void()> on_connection_closed;
+
+		event_based_device<SDL_Event>* keyboard;
 
 	private:
 		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
@@ -205,6 +209,16 @@ namespace webpp
 			encoder->add_instant(audio_stream, audio_stream_size, audio_stream_num_samples);
 		}
 
+		void process_key(const char* key, const std::string& down) const
+		{
+			SDL_Event e;
+			e.type = down == "D" ? SDL_KEYDOWN : SDL_KEYUP;
+			e.key.keysym.scancode = SDL_GetScancodeFromName(key);
+			e.key.keysym.sym = SDL_GetKeyFromScancode(e.key.keysym.scancode);
+
+			keyboard->queue_events(&e, 1);
+		}
+
 		void start(const unsigned short port)
 		{
 			server = std::make_unique<ws_server>();
@@ -256,28 +270,28 @@ namespace webpp
 				}
 				else if (values[0] == "key")
 				{
-					const auto input_number = values[1];
-					const auto key = values[2];
-					std::cout << "Input from " << input_number << ": " << key << std::endl;
+					const auto down = values[1];
+					const auto input_number = values[2];
+					const auto key = values[3];
 
 					//https://css-tricks.com/snippets/javascript/javascript-keycodes/
-					if (key == "SELECT")machine->ui_input().push_char_event(nullptr, 34);
-					else if (key == "START")machine->ui_input().push_char_event(nullptr, 30);
+					if (key == "SELECT")process_key("5", down);
+					else if (key == "START")process_key("1", down);
 
-					else if (key == "UP")machine->ui_input().push_char_event(nullptr, 82);
-					else if (key == "DOWN")machine->ui_input().push_char_event(nullptr, 81);
-					else if (key == "RIGHT")machine->ui_input().push_char_event(nullptr, 79);
-					else if (key == "LEFT")machine->ui_input().push_char_event(nullptr, 80);
+					else if (key == "UP")process_key("Up", down);
+					else if (key == "DOWN")process_key("Down", down);
+					else if (key == "RIGHT")process_key("Right", down);
+					else if (key == "LEFT")process_key("Left", down);
 
-					else if (key == "X")machine->ui_input().push_char_event(nullptr, 87);
-					else if (key == "Y")machine->ui_input().push_char_event(nullptr, 69);
-					else if (key == "A")machine->ui_input().push_char_event(nullptr, 83);
-					else if (key == "B")machine->ui_input().push_char_event(nullptr, 68);
+					else if (key == "X")process_key("W", down);
+					else if (key == "Y")process_key("E", down);
+					else if (key == "A")process_key("S", down);
+					else if (key == "B")process_key("D", down);
 
-					else if (key == "L1")machine->ui_input().push_char_event(nullptr, 81);
-					else if (key == "L2")machine->ui_input().push_char_event(nullptr, 65);
-					else if (key == "R1")machine->ui_input().push_char_event(nullptr, 82);
-					else if (key == "R2")machine->ui_input().push_char_event(nullptr, 70);
+					else if (key == "L1")process_key("Q", down);
+					else if (key == "L2")process_key("A", down);
+					else if (key == "R1")process_key("R", down);
+					else if (key == "R2")process_key("F", down);
 				}
 			};
 
