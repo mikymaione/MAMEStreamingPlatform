@@ -13,7 +13,7 @@ copyright-holders:Michele Maione
 <head>
 	<meta charset="UTF-8">
 
-	<meta name="date" content="2021-03-30" scheme="YYYY-MM-DD">
+	<meta name="date" content="2021-04-07" scheme="YYYY-MM-DD">
 	<meta name="author" content="Maione Michele">
 	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
 
@@ -26,10 +26,36 @@ copyright-holders:Michele Maione
 			overflow: hidden;
 			background-color: black;
 		}
+
+		#myCanvas {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
+
+		#instructions {
+			color: white;
+		}
 	</style>
 </head>
 
 <body>
+	<div id="instructions">
+		<h1>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</h1>
+		<h2>Keys:</h2>
+		<p>p - pause</p>
+		<p>1 - start</p>
+		<p>2 - select</p>
+		<p>F5 - restart</p>
+		<p>←, ↑, →, ↓ - move player</p>
+		<p>q, w, e, r, a, s, d, f - various action</p>
+
+		<h3>click to play</h3>
+	</div>
+
 	<canvas id="myCanvas">
 		Your browser does not support the HTML canvas tag.
 	</canvas>
@@ -39,7 +65,8 @@ copyright-holders:Michele Maione
 	<script src="keypress-2.1.5.min.js"></script>
 
 	<script>
-		const uri = "ws://82.48.166.10:8888";
+		//const uri = "ws://82.48.166.10:8888";
+		const uri = "ws://localhost:8888";
 
 		let listener;
 
@@ -78,6 +105,11 @@ copyright-holders:Michele Maione
 			listener = new window.keypress.Listener();
 
 			listener.register_many([
+				{
+					"keys": "p",
+					"on_keydown": function () { InputSend(keyboard, 'PAUSE', true); },
+					"on_keyup": function (e) { InputSend(keyboard, 'PAUSE', false); },
+				},
 				{
 					"keys": "1",
 					"on_keydown": function () { InputSend(keyboard, 'START', true); },
@@ -156,6 +188,7 @@ copyright-holders:Michele Maione
 
 		function InitGamepad()
 		{
+			/*
 			gameControl.on('connect', gamepad =>
 			{
 				console.log('A new gamepad was connected!');
@@ -187,11 +220,14 @@ copyright-holders:Michele Maione
 			{
 				console.log('A gamepad was disconnected!');
 			});
+			*/
 		}
 
 		function Start()
 		{
 			document.onclick = null;
+
+			document.getElementById("instructions").style.display = "none";
 
 			player = new JSMpeg.Player(uri, {
 				canvas: myCanvas,

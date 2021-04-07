@@ -443,7 +443,7 @@ void sdl_osd_interface::init(running_machine& machine)
 {
 	// call our parent
 	osd_common_t::init(machine);
-	webpp::streaming_server::instance().set_running_machine(machine);
+	webpp::streaming_server::instance().set_running_machine(&machine);
 
 	const char* stemp;
 

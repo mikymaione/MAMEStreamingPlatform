@@ -39,6 +39,8 @@ namespace webpp
 
 		std::unique_ptr<encoding::encode_to_mp4> encoder;
 
+		event_based_device<SDL_Event>* keyboard = nullptr;
+
 		running_machine* machine = nullptr;
 		bool machine_paused_by_server = false;
 
@@ -51,8 +53,6 @@ namespace webpp
 		 * \brief Connection closed callback
 		 */
 		std::function<void()> on_connection_closed;
-
-		event_based_device<SDL_Event>* keyboard;
 
 	private:
 		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
@@ -112,6 +112,84 @@ namespace webpp
 			return false;
 		}
 
+		void process_pausing_mechanism()
+		{
+			const auto ping_received = std::chrono::system_clock::now();
+			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ping_received - ping_sent);
+
+			if (milliseconds.count() > 500)
+			{
+				if (!machine->paused())
+				{
+					std::cout << "Pausing game!" << std::endl; // rimuovere
+					machine_paused_by_server = true;
+					machine->pause();
+				}
+			}
+			else
+			{
+				if (machine_paused_by_server && machine->paused())
+				{
+					std::cout << "Resuming game!" << std::endl; // rimuovere
+					machine_paused_by_server = false;
+					machine->resume();
+				}
+			}
+		}
+
+		void send_pausing_ping()
+		{
+			const auto now = std::chrono::system_clock::now();
+			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - ping_sent);
+
+			if (machine_paused_by_server && machine->paused() || milliseconds.count() > 2000)
+			{
+				ping++;
+				ping_sent = std::chrono::system_clock::now();
+
+				std::stringstream string_stream;
+				string_stream << "ping:" << ping;
+
+				send_string(string_stream.str());
+			}
+		}
+
+		void generate_key_event(const char* key, const std::string& down) const
+		{
+			SDL_Event e;
+			e.type = down == "D" ? SDL_KEYDOWN : SDL_KEYUP;
+			e.key.keysym.scancode = SDL_GetScancodeFromName(key);
+			e.key.keysym.sym = SDL_GetKeyFromScancode(e.key.keysym.scancode);
+
+			keyboard->queue_events(&e, 1);
+		}
+
+		void process_key(const std::vector<std::string>& values) const
+		{
+			const auto down = values[1];
+			const auto input_number = values[2];
+			const auto key = values[3];
+
+			if (key == "PAUSE")generate_key_event("P", down);
+			else if (key == "START")generate_key_event("1", down);
+			else if (key == "SELECT")generate_key_event("5", down);
+
+			else if (key == "UP")generate_key_event("Up", down);
+			else if (key == "DOWN")generate_key_event("Down", down);
+			else if (key == "RIGHT")generate_key_event("Right", down);
+			else if (key == "LEFT")generate_key_event("Left", down);
+
+			else if (key == "X")generate_key_event("W", down);
+			else if (key == "Y")generate_key_event("E", down);
+			else if (key == "A")generate_key_event("S", down);
+			else if (key == "B")generate_key_event("D", down);
+
+			else if (key == "L1")generate_key_event("Q", down);
+			else if (key == "L2")generate_key_event("A", down);
+			else if (key == "R1")generate_key_event("R", down);
+			else if (key == "R2")generate_key_event("F", down);
+		}
+
 	public:
 		/**
 		 * \brief Return the singleton instance of the class
@@ -123,9 +201,14 @@ namespace webpp
 			return instance;
 		}
 
-		void set_running_machine(running_machine& machine_)
+		void set_keyboard(event_based_device<SDL_Event>* keyboard_)
 		{
-			machine = &machine_;
+			keyboard = keyboard_;
+		}
+
+		void set_running_machine(running_machine* machine_)
+		{
+			machine = machine_;
 		}
 
 		bool is_active() const
@@ -152,23 +235,6 @@ namespace webpp
 			const auto command = string_stream.str();
 
 			system(command.c_str()); //run MAME
-		}
-
-		void send_ping()
-		{
-			const auto now = std::chrono::system_clock::now();
-			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - ping_sent);
-
-			if (machine_paused_by_server && machine->paused() || milliseconds.count() > 2000)
-			{
-				ping++;
-				ping_sent = std::chrono::system_clock::now();
-
-				std::stringstream string_stream;
-				string_stream << "ping:" << ping;
-
-				send_string(string_stream.str());
-			}
 		}
 
 		void set_streaming_input_size(const int w, const int h, const int fps) const
@@ -209,16 +275,6 @@ namespace webpp
 			encoder->add_instant(audio_stream, audio_stream_size, audio_stream_num_samples);
 		}
 
-		void process_key(const char* key, const std::string& down) const
-		{
-			SDL_Event e;
-			e.type = down == "D" ? SDL_KEYDOWN : SDL_KEYUP;
-			e.key.keysym.scancode = SDL_GetScancodeFromName(key);
-			e.key.keysym.sym = SDL_GetKeyFromScancode(e.key.keysym.scancode);
-
-			keyboard->queue_events(&e, 1);
-		}
-
 		void start(const unsigned short port)
 		{
 			server = std::make_unique<ws_server>();
@@ -241,58 +297,12 @@ namespace webpp
 
 			endpoint.on_message = [&](auto connection, auto message)
 			{
-				const auto msg = message->string();
-				const auto values = split(msg, ":");
+				const auto values = split(message->string(), ":");
 
 				if (values[0] == "ping")
-				{
-					const auto ping_received = std::chrono::system_clock::now();
-					const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ping_received - ping_sent);
-
-					if (milliseconds.count() > 500)
-					{
-						if (!machine->paused())
-						{
-							std::cout << "Pausing game!" << std::endl; // rimuovere
-							machine_paused_by_server = true;
-							//machine->pause();
-						}
-					}
-					else
-					{
-						if (machine_paused_by_server && machine->paused())
-						{
-							std::cout << "Resuming game!" << std::endl; // rimuovere
-							machine_paused_by_server = false;
-							//machine->resume();
-						}
-					}
-				}
+					process_pausing_mechanism();
 				else if (values[0] == "key")
-				{
-					const auto down = values[1];
-					const auto input_number = values[2];
-					const auto key = values[3];
-
-					//https://css-tricks.com/snippets/javascript/javascript-keycodes/
-					if (key == "SELECT")process_key("5", down);
-					else if (key == "START")process_key("1", down);
-
-					else if (key == "UP")process_key("Up", down);
-					else if (key == "DOWN")process_key("Down", down);
-					else if (key == "RIGHT")process_key("Right", down);
-					else if (key == "LEFT")process_key("Left", down);
-
-					else if (key == "X")process_key("W", down);
-					else if (key == "Y")process_key("E", down);
-					else if (key == "A")process_key("S", down);
-					else if (key == "B")process_key("D", down);
-
-					else if (key == "L1")process_key("Q", down);
-					else if (key == "L2")process_key("A", down);
-					else if (key == "R1")process_key("R", down);
-					else if (key == "R2")process_key("F", down);
-				}
+					process_key(values);
 			};
 
 			endpoint.on_close = [&](auto connection, auto status, auto reason)
@@ -317,7 +327,7 @@ namespace webpp
 			encoder->on_write = [&]()
 			{
 				send(socket, 130);
-				send_ping();
+				//send_pausing_ping();
 			};
 
 			std::cout

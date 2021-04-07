@@ -379,7 +379,7 @@ public:
 		: sdl_device(machine, name, id, DEVICE_CLASS_KEYBOARD, module),
 		keyboard({{0}})
 	{
-		webpp::streaming_server::instance().keyboard = this;
+		webpp::streaming_server::instance().set_keyboard(this);
 	}
 
 	void process_event(SDL_Event &sdlevent) override
