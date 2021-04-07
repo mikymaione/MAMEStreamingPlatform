@@ -40,6 +40,8 @@
 #include "../../sdl/osdsdl.h"
 #include "../../sdl/window.h"
 
+#include "streaming_server.hpp"
+
 // winnt.h defines this
 #ifdef DELETE
 #undef DELETE
@@ -377,6 +379,7 @@ public:
 		: sdl_device(machine, name, id, DEVICE_CLASS_KEYBOARD, module),
 		keyboard({{0}})
 	{
+		webpp::streaming_server::instance().keyboard = this;
 	}
 
 	void process_event(SDL_Event &sdlevent) override
