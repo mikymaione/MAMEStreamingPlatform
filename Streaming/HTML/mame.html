@@ -19,7 +19,7 @@ copyright-holders:Michele Maione
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</title>
+	<title>MAME Game Streaming Server</title>
 
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu Mono'>
 
@@ -39,27 +39,92 @@ copyright-holders:Michele Maione
 			margin: auto;
 		}
 
+		#myCanvas {
+			display: none;
+		}
+
 		#instructions {
 			color: white;
-			width: 500px;
+			width: 700px;
+		}
+
+		.game {
+			cursor: pointer;
 		}
 	</style>
 </head>
 
 <body>
 	<div id="instructions" class="center">
-		<h1>MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)</h1>
+		<h1>MAME Game Streaming Server</h1>
 
 		<h2>Keys:</h2>
-		<p>P - pause</p>
-		<p>1 - start</p>
-		<p>2 - select</p>
-		<p>F5 - restart</p>
-		<p>←, ↑, →, ↓ - move player</p>
-		<p>Q, W, E, R, A, S, D, F - actions</p>
 
-		<h3>click to play</h3>
+		<table>
+			<tr>
+				<td>
+					Restart:
+				</td>
+				<td>
+					F5
+				</td>
+				<td width="20px">
+
+				</td>
+				<td>
+					Move:
+				</td>
+				<td>
+					←, ↑, →, ↓
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Start:
+				</td>
+				<td>
+					1
+				</td>
+				<td width="20px">
+
+				</td>
+				<td>
+					Actions:
+				</td>
+				<td>
+					Q, W, E, R, A, S, D, F
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Coin:
+				</td>
+				<td>
+					2
+				</td>
+				<td width="20px">
+
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Pause:
+				</td>
+				<td>
+					P
+				</td>
+			</tr>
+		</table>
+
+		<h3>click a game to play it</h3>
+
+		<div id="games">
+			<img onclick="Start('jojoban');" class="game" src="roms/jojoban.png">
+			<img onclick="Start('sfiii3nr1');" class="game" src="roms/sfiii3nr1.png">
+			<img onclick="Start('redearth');" class="game" src="roms/redearth.png">
+		</div>
 	</div>
+
 
 	<canvas id="myCanvas" class="center">
 		Your browser does not support the HTML canvas tag.
@@ -71,7 +136,7 @@ copyright-holders:Michele Maione
 
 	<script>
 		const uri = "ws://82.48.166.10:8888";
-		//const uri = "ws://192.168.1.8:8888";
+		//const uri = "ws://localhost:8888";
 
 		let listener;
 
@@ -228,13 +293,12 @@ copyright-holders:Michele Maione
 			*/
 		}
 
-		function Start()
+		function Start(game)
 		{
-			document.onclick = null;
-
 			document.getElementById("instructions").style.display = "none";
+			myCanvas.style.display = "inherit";
 
-			player = new JSMpeg.Player(uri, {
+			player = new JSMpeg.Player(uri + '?' + game, {
 				canvas: myCanvas,
 				autoplay: true,
 				loop: false,
@@ -268,7 +332,6 @@ copyright-holders:Michele Maione
 
 		myCanvas = document.getElementById("myCanvas");
 		window.onresize = reportWindowSize;
-		document.onclick = Start;
 	</script>
 
 	<script src="fullscreen.js"></script>

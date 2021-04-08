@@ -31,7 +31,7 @@ public:
 
 namespace webpp {
 	struct Connection {
-		std::string method, path, http_version;
+		std::string method, path, http_version, parameters;
 
 		std::unordered_multimap<std::string, std::string, case_insensitive_hash, case_insensitive_equals> header;
 

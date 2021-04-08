@@ -118,14 +118,18 @@ namespace encoding
 		uint8_t* yuv_buffer = nullptr;
 
 	private:
-		void die(const std::string& msg, const int error_code)
+		void error(const std::string& msg, const int error_code)
 		{
 			std::cerr << msg << " [" << error_code << "]" << std::endl;
 
 			if (error_code < 0)
 				if (av_strerror(error_code, error_buffer, AV_ERROR_MAX_STRING_SIZE) == 0)
 					std::cerr << "--" << error_buffer << std::endl;
+		}
 
+		void die(const std::string& msg, const int error_code)
+		{
+			error(msg, error_code);
 			exit(error_code);
 		}
 
@@ -171,8 +175,8 @@ namespace encoding
 
 			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
 
-			encoder_context->video_codec_context->framerate = { fps ,1 };
-			encoder_context->video_codec_context->time_base = { 1,fps };
+			encoder_context->video_codec_context->framerate = { fps, 1 };
+			encoder_context->video_codec_context->time_base = { 1, fps };
 			encoder_context->video_stream->time_base = encoder_context->video_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
@@ -474,10 +478,11 @@ namespace encoding
 			if (got_packet_ptr)
 			{
 				const auto ret = av_interleaved_write_frame(encoder_context->muxer_context, &video_packet);
-				if (ret < 0)
-					die("Error while writing video frame", ret);
 
-				send_it();
+				if (ret == 0)
+					send_it();
+				else
+					error("Error while writing video frame", ret);
 			}
 
 			av_packet_unref(&video_packet);
@@ -574,10 +579,11 @@ namespace encoding
 					audio_packet.stream_index = 1;
 
 					ret = av_interleaved_write_frame(encoder_context->muxer_context, &audio_packet);
-					if (ret < 0)
-						die("Error while writing audio frame", ret);
 
-					send_it();
+					if (ret == 0)
+						send_it();
+					else
+						error("Error while writing audio frame", ret);
 				}
 
 				av_packet_unref(&audio_packet);

@@ -446,29 +446,50 @@ namespace webpp {
 			}
 		}
 
-		void write_handshake(const std::shared_ptr<Connection>& connection, const std::shared_ptr<asio::streambuf>& read_buffer) {
+		void write_handshake(const std::shared_ptr<Connection>& connection, const std::shared_ptr<asio::streambuf>& read_buffer)
+		{
 			//Find path- and method-match, and generate response
 			std::lock_guard<std::mutex> lock(m_endpoint_mutex);
-			for (auto& regex_endpoint : m_endpoint) {
+
+			for (auto& regex_endpoint : m_endpoint)
+			{
+				auto const parameters_index = connection->path.find("?");
+
+				if (parameters_index > 0)
+				{
+					const auto param_size = connection->path.size() - parameters_index + 1;
+
+					connection->parameters = connection->path.substr(parameters_index + 1, param_size);
+					connection->path = connection->path.erase(parameters_index, param_size);
+				}
+
 				std::smatch path_match;
-				if (std::regex_match(connection->path, path_match, regex_endpoint.first)) {
-					auto write_buffer = std::make_shared<asio::streambuf>();
+
+				if (std::regex_match(connection->path, path_match, regex_endpoint.first))
+				{
+					const auto write_buffer = std::make_shared<asio::streambuf>();
+
 					std::ostream handshake(write_buffer.get());
 
-					if (generate_handshake(connection, handshake)) {
+					if (generate_handshake(connection, handshake))
+					{
 						connection->path_match = std::move(path_match);
+
 						//Capture write_buffer in lambda so it is not destroyed before async_write is finished
-						asio::async_write(*connection->socket, *write_buffer,
-										  [this, connection, write_buffer, read_buffer, &regex_endpoint]
-						(const std::error_code& ec, size_t /*bytes_transferred*/) {
-							if (!ec) {
+						asio::async_write(*connection->socket, *write_buffer, [this, connection, write_buffer, read_buffer, &regex_endpoint](const std::error_code& ec, size_t /*bytes_transferred*/)
+						{
+							if (!ec)
+							{
 								connection_open(connection, regex_endpoint.second);
 								read_message(connection, read_buffer, regex_endpoint.second);
 							}
 							else
+							{
 								connection_error(connection, regex_endpoint.second, ec);
+							}
 						});
 					}
+
 					return;
 				}
 			}
@@ -588,7 +609,7 @@ namespace webpp {
 					std::shared_ptr<Message> message(new Message());
 					message->length = length;
 					message->fin_rsv_opcode = fin_rsv_opcode;
-					
+
 					std::ostream message_data_out_stream(&message->streambuf);
 					for (size_t c = 0; c < length; c++) {
 						message_data_out_stream.put(raw_message_data.get() ^ mask[c % 4]);
