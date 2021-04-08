@@ -185,9 +185,13 @@ sdl_options::sdl_options()
 extern "C" DECLSPEC void SDLCALL SDL_SetModuleHandle(void* hInst);
 #endif
 
-int main_sdl(int argc, char** argv)
+int main_sdl(const int argc, char** argv, const std::string& game)
 {
-	std::vector<std::string> args = osd_get_command_line(argc, argv);
+	auto args = osd_get_command_line(argc, argv);
+
+	if (game.size() > 0)
+		args.insert(args.begin() + 1, game);
+
 	int res = 0;
 
 	// disable I/O buffering
@@ -241,10 +245,10 @@ int main(int argc, char** argv)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
-		webpp::streaming_server::instance().on_accept = [&]()
+		webpp::streaming_server::instance().on_accept = [&](auto game)
 		{
 			webpp::streaming_server::instance().run_new_process(argc, argv);
-			r = main_sdl(argc, argv);
+			r = main_sdl(argc, argv, game);
 		};
 
 		webpp::streaming_server::instance().on_connection_closed = [&]()
@@ -256,7 +260,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		r = main_sdl(argc, argv);
+		r = main_sdl(argc, argv, "");
 	}
 
 	std::cout << "Press enter to exit.\n";

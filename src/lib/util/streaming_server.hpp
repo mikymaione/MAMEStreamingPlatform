@@ -7,7 +7,6 @@
 //============================================================
 #pragma once
 
-#include <algorithm>
 #include <cstdlib>
 #include <chrono>
 #include <functional>
@@ -17,12 +16,10 @@
 #include <sstream>
 #include <string>
 #include <thread>
-#include <utility>
 #include <vector>
 
 #include <SDL2/SDL.h>
 
-#include "window.h"
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 #include "modules/input/input_common.h"
@@ -55,7 +52,7 @@ namespace webpp
 		/**
 		 * \brief Accept callback
 		 */
-		std::function<void()> on_accept;
+		std::function<void(std::string)> on_accept;
 		/**
 		 * \brief Connection closed callback
 		 */
@@ -299,7 +296,7 @@ namespace webpp
 			server->config.client_mode = true;
 			server->config.port = port;
 
-			auto& endpoint = server->m_endpoint["/"];
+			auto& endpoint = server->m_endpoint["/?"];
 
 			endpoint.on_open = [&](auto connection)
 			{
@@ -310,7 +307,7 @@ namespace webpp
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				acceptThread = std::make_unique<std::thread>(on_accept);
+				acceptThread = std::make_unique<std::thread>(on_accept, connection->parameters);
 			};
 
 			endpoint.on_message = [&](auto connection, auto message)
