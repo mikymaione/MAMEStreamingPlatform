@@ -14,17 +14,8 @@
 #include <chrono>
 #include <functional>
 #include <iostream>
-#include <ostream>
 #include <memory>
-#include <string>
-
-// #pragma once
-
-#include <chrono>
-#include <functional>
-#include <iostream>
 #include <ostream>
-#include <memory>
 #include <string>
 
 // FFMPEG C headers
@@ -44,9 +35,6 @@ namespace encoding
 	{
 	public:
 		enum CODEC { MP4, WEBM, MPEGTS };
-
-		std::shared_ptr<std::ostream> socket;
-		std::function<void()> on_write;
 
 	private:
 		struct StreamingContext
@@ -74,10 +62,7 @@ namespace encoding
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		int width = 640, height = 480;
-
-		int fps = 25;
-		static constexpr int64_t VIDEO_BIT_RATE = 128 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -99,6 +84,16 @@ namespace encoding
 		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS		
 
 	private:
+		std::shared_ptr<std::ostream> socket;
+
+		int in_width, in_height;
+		int fps;
+
+		static constexpr int out_width = 640;
+		static constexpr int out_height = 480;
+
+		std::function<void()> on_write;
+
 		std::chrono::time_point<std::chrono::system_clock> start_time =
 			std::chrono::system_clock::now();
 
@@ -163,10 +158,11 @@ namespace encoding
 				encoder_context->video_codec_context->flags2 |= AV_CODEC_FLAG2_FAST;
 			}
 
-			encoder_context->video_codec_context->width = width;
-			encoder_context->video_codec_context->height = height;
+			encoder_context->video_codec_context->width = out_width;
+			encoder_context->video_codec_context->height = out_height;
 
 			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
+			encoder_context->video_codec_context->bit_rate_tolerance = 0;
 
 			encoder_context->video_codec_context->max_b_frames = 0;
 			encoder_context->video_codec_context->has_b_frames = 0;
@@ -205,28 +201,28 @@ namespace encoding
 				die("Could not retrieve parameters from context", ret);
 
 			encoder_context->video_converter_context = sws_getContext(
-				width, height, PIXEL_FORMAT_IN,
-				width, height, PIXEL_FORMAT_OUT,
+				in_width, in_height, PIXEL_FORMAT_IN,
+				out_width, out_height, PIXEL_FORMAT_OUT,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
-			rgb_frame->width = width;
-			rgb_frame->height = height;
+			rgb_frame->width = in_width;
+			rgb_frame->height = in_height;
 			rgb_frame->format = PIXEL_FORMAT_IN;
 
 			yuv_frame = av_frame_alloc();
-			yuv_frame->width = width;
-			yuv_frame->height = height;
+			yuv_frame->width = out_width;
+			yuv_frame->height = out_height;
 			yuv_frame->format = PIXEL_FORMAT_OUT;
 
-			const auto yuv_buffer_size = width * height * 3 / 2;
+			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
 				PIXEL_FORMAT_OUT,
-				width, height);
+				out_width, out_height);
 		}
 
 		void init_audio()
@@ -360,7 +356,12 @@ namespace encoding
 		}
 
 	public:
-		encode_to_mp4()
+		encode_to_mp4(const std::shared_ptr<std::ostream>& socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
+			socket(socket),
+			in_width(in_width),
+			in_height(in_height),
+			fps(fps),
+			on_write(on_write)
 		{
 			//av_log_set_level(AV_LOG_DEBUG);
 
@@ -441,47 +442,6 @@ namespace encoding
 			delete encoder_context;
 		}
 
-		void set_streaming_size(const int w, const int h, const int fps_)
-		{
-			std::cout << "Setting streaming output size to: " << w << "x" << h << std::endl;
-
-			width = w;
-			height = h;
-			fps = fps_;
-
-			if (encoder_context->video_converter_context != nullptr)
-				sws_freeContext(encoder_context->video_converter_context);
-
-			encoder_context->video_converter_context = sws_getContext(
-				width, height, PIXEL_FORMAT_IN,
-				width, height, PIXEL_FORMAT_OUT,
-				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
-			);
-
-			encoder_context->video_codec_context->width = width;
-			encoder_context->video_codec_context->height = height;
-
-			const auto ret = avcodec_parameters_from_context(encoder_context->video_stream->codecpar, encoder_context->video_codec_context);
-			if (ret < 0)
-				die("Could not retrieve parameters from context", ret);
-
-			delete[] yuv_buffer;
-
-			const auto yuv_buffer_size = width * height * 3 / 2;
-			yuv_buffer = new uint8_t[yuv_buffer_size];
-
-			yuv_frame->width = width;
-			yuv_frame->height = height;
-
-			rgb_frame->width = width;
-			rgb_frame->height = height;
-
-			avpicture_fill(
-				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
-				PIXEL_FORMAT_OUT,
-				width, height);
-		}
-
 		/**
 		 * \brief Add video frame
 		 * \param pixels input pixels
@@ -495,12 +455,12 @@ namespace encoding
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
 				PIXEL_FORMAT_IN,
-				width, height);
+				in_width, in_height);
 
 			//RGB to YUV
 			sws_scale(
 				encoder_context->video_converter_context,
-				rgb_frame->data, rgb_frame->linesize, 0, height,
+				rgb_frame->data, rgb_frame->linesize, 0, in_height,
 				yuv_frame->data, yuv_frame->linesize
 			);
 
