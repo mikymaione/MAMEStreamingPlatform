@@ -33,6 +33,7 @@ namespace webpp
 	{
 	private:
 		bool active = false;
+
 		unsigned long ping = 0;
 
 		std::chrono::time_point<std::chrono::system_clock> ping_sent =
@@ -41,19 +42,14 @@ namespace webpp
 		std::unique_ptr<ws_server> server;
 		std::unique_ptr<std::thread> acceptThread;
 
-		std::unique_ptr<encoding::encode_to_mp4> encoder;
+		bool encoding_initialized = false;
+		std::unique_ptr<encoding::encode_to_mp4> encoder = nullptr;
+		std::shared_ptr<ws_server::SendStream> encoder_socket = nullptr;
 
 		event_based_device<SDL_Event>* keyboard = nullptr;
 
 		running_machine* machine = nullptr;
 		bool machine_paused_by_server = false;
-
-		unsigned current_quality_level = 1;
-		const std::map<unsigned, std::pair<int, int>> quality_level = {
-			{1u, std::make_pair(640, 480)},
-			{2u, std::make_pair(800, 600)},
-			{3u, std::make_pair(800, 600)},
-		};
 
 	public:
 		/**
@@ -81,14 +77,14 @@ namespace webpp
 			send(stream, 129);
 		}
 
-		static std::vector<std::string> split(const std::string s, const std::string del)
+		static std::vector<std::string> split(const std::string& s, const std::string& del)
 		{
 			std::vector<std::string> result;
 
 			size_t start = 0;
 			auto end = s.find(del);
 
-			while (end != -1)
+			while (end != std::string::npos)
 			{
 				result.push_back(s.substr(start, end - start));
 
@@ -165,24 +161,15 @@ namespace webpp
 			}
 		}
 
-		void set_video_quality() const
+		void send_video_size_to_client(const int w, const int h) const
 		{
-			const auto [fst, snd] = quality_level.at(current_quality_level);
-			const auto window = osd_common_t::s_window_list.front();
+			std::stringstream string_stream;
+			string_stream
+				<< "size:"
+				<< w << ":"
+				<< h;
 
-			std::static_pointer_cast<sdl_window_info>(window)->resize(fst, snd);
-		}
-
-		void increase_video_quality()
-		{
-			current_quality_level = std::min(current_quality_level + 1, 3u);
-			set_video_quality();
-		}
-
-		void decrease_video_quality()
-		{
-			current_quality_level = std::max(current_quality_level - 1, 1u);
-			set_video_quality();
+			send_string(string_stream.str());
 		}
 
 		void generate_key_event(const char* key, const std::string& down) const
@@ -204,9 +191,6 @@ namespace webpp
 			if (key == "PAUSE")generate_key_event("P", down);
 			else if (key == "START")generate_key_event("1", down);
 			else if (key == "SELECT")generate_key_event("5", down);
-
-			else if (key == "QUP")increase_video_quality();
-			else if (key == "QDOWN")decrease_video_quality();
 
 			else if (key == "UP")generate_key_event("Up", down);
 			else if (key == "DOWN")generate_key_event("Down", down);
@@ -271,17 +255,22 @@ namespace webpp
 			system(command.c_str()); //run MAME
 		}
 
-		void set_streaming_input_size(const int w, const int h, const int fps) const
+		void init_encoding(const int w, const int h, const int fps)
 		{
-			std::stringstream string_stream;
-			string_stream
-				<< "size:"
-				<< w << ":"
-				<< h;
+			if (!encoding_initialized)
+			{
+				encoding_initialized = true;
 
-			send_string(string_stream.str());
+				encoder_socket = std::make_shared<ws_server::SendStream>();
 
-			encoder->set_streaming_size(w, h, fps);
+				send_video_size_to_client(w, h);
+
+				encoder = std::make_unique<encoding::encode_to_mp4>(encoder_socket, w, h, fps, [&]()
+				{
+					send(encoder_socket, 130);
+					//send_pausing_ping();
+				});
+			}
 		}
 
 		/**
@@ -347,17 +336,6 @@ namespace webpp
 					<< std::endl;
 
 				on_connection_closed();
-			};
-
-			const auto socket = std::make_shared<ws_server::SendStream>();
-
-			encoder = std::make_unique<encoding::encode_to_mp4>();
-
-			encoder->socket = socket;
-			encoder->on_write = [&]()
-			{
-				send(socket, 130);
-				//send_pausing_ping();
 			};
 
 			std::cout

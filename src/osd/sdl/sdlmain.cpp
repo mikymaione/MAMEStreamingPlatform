@@ -243,7 +243,7 @@ int main(int argc, char** argv)
 	{
 		webpp::streaming_server::instance().on_accept = [&]()
 		{
-			//webpp::streaming_server::instance().run_new_process(argc, argv);
+			webpp::streaming_server::instance().run_new_process(argc, argv);
 			r = main_sdl(argc, argv);
 		};
 

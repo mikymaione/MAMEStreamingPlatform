@@ -70,8 +70,8 @@ copyright-holders:Michele Maione
 	<script src="keypress-2.1.5.min.js"></script>
 
 	<script>
-		//const uri = "ws://82.48.166.10:8888";
-		const uri = "ws://192.168.1.8:8888";
+		const uri = "ws://82.48.166.10:8888";
+		//const uri = "ws://192.168.1.8:8888";
 
 		let listener;
 
@@ -239,8 +239,8 @@ copyright-holders:Michele Maione
 				autoplay: true,
 				loop: false,
 				pauseWhenHidden: false,
-				videoBufferSize: 96 * 1024, // 96 KB
-				audioBufferSize: 64 * 1024, // 64 KB				
+				videoBufferSize: 96 * 1024,
+				audioBufferSize: 64 * 1024,
 			});
 
 			player.source.onStringMessageCallback = function (event)
