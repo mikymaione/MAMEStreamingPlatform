@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E6FA15E4-A354-4526-ACEF-13C8E80FCACF}</ProjectGuid>
+    <RootNamespace>emu</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <Keyword>Win32Proj</Keyword>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\..\..\vs2019\bin\x32\Debug\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x32\Debug\emu\</IntDir>
+    <TargetName>emu</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\..\..\vs2019\bin\x64\Debug\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x64\Debug\emu\</IntDir>
+    <TargetName>emu</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\..\..\vs2019\bin\x32\Release\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x32\Release\emu\</IntDir>
+    <TargetName>emu</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\..\..\vs2019\bin\x64\Release\</OutDir>
+    <IntDir>..\..\..\..\vs2019\obj\x64\Release\emu\</IntDir>
+    <TargetName>emu</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)emu.pdb</ProgramDataBaseFileName>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)emu.lib</OutputFile>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)emu.pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)emu.pdb</ProgramDataBaseFileName>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;MAME_DEBUG;MAME_PROFILER;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)emu.lib</OutputFile>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)emu.pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x86;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)emu.lib</OutputFile>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /WX /w45038 /wd4003 /wd4005 /wd4018 /wd4060 /wd4065 /wd4100 /wd4127 /wd4146 /wd4201 /wd4244 /wd4245 /wd4250 /wd4267 /wd4310 /wd4319 /wd4324 /wd4334 /wd4389 /wd4456 /wd4457 /wd4458 /wd4459 /wd4702 /wd4706 /wd4804 /wd4805 /wd4996 /std:c++17  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>emu.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>X64_WINDOWS_ABI;PTR64=1;NDEBUG;CRLF=3;LSB_FIRST;FLAC__NO_DLL;PUGIXML_HEADER_ONLY;NATIVE_DRC=drcbe_x64;LUA_COMPAT_ALL;LUA_COMPAT_5_1;LUA_COMPAT_5_2;_WIN64;XML_STATIC;WIN32;_WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\3rdparty\dxsdk\Include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\generated\includes;..\..\..\..\..\src\osd;..\..\..\..\..\src\emu;..\..\..\..\..\src\lib;..\..\..\..\..\src\lib\util;..\..\..\..\..\3rdparty;..\..\..\..\..\3rdparty\sol2;..\..\..\..\generated\emu;..\..\..\..\generated\emu\layout;..\..\..\..\..\3rdparty\asio\include;..\..\..\..\..\3rdparty\expat\lib;..\..\..\..\..\3rdparty\zlib;..\..\..\..\..\3rdparty\libflac\include;..\..\..\..\..\3rdparty\libjpeg;..\..\..\..\..\3rdparty\rapidjson\include;..\..\..\..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)emu.lib</OutputFile>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\emu\emu.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emufwd.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\main.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\gamedrv.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\hashfile.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\addrmap.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\attotime.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\bookkeeping.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\config.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\crsshair.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debugger.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\devdelegate.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\devcb.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\devcpu.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\devfind.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\device.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\didisasm.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\diexec.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\digfx.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\diimage.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dimemory.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dinetwork.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dinvram.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dipalette.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dipty.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dirom.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dirtc.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\diserial.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\dislot.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\disound.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\distate.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\divideo.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\divtlb.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\drawgfx.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\driver.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\drivenum.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emualloc.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emucore.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_mud.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hea.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hem.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedp.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_heun.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_heu.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedr.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hedw.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_hep.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emumem_het.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emuopts.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\emupal.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\fileio.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\http.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\image.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\input.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\inputdev.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\ioport.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\logmacro.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\machine.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\mconfig.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\memarray.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\natkeyboard.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\network.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\parameters.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\profiler.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\output.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\recording.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\render.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\rendertypes.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\rendfont.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\rendlay.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\rendutil.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\romload.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\romentry.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\save.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\schedule.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\screen.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\softlist.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\softlist_dev.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\sound.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\speaker.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\tilemap.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\uiinput.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\validity.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\xtal.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\rendersw.hxx" />
+    <ClInclude Include="..\..\..\..\..\src\emu\ui\uimain.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\ui\cmddata.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugbuf.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcmd.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcon.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugcpu.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debughlp.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\debugvw.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvdisasm.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvmemory.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvbpoints.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvwpoints.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvstate.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\dvtext.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\express.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\points.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\debug\textbuf.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\drivers\xtal.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\layout\generic.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\generic.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\resnet.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbutil.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbgen.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbsse.h" />
+    <ClInclude Include="..\..\..\..\..\src\emu\video\rgbvmx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\emu\main.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\hashfile.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\addrmap.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\attotime.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\bookkeeping.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\config.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\crsshair.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debugger.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devdelegate.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devcb.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devcpu.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\devfind.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\device.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\didisasm.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diexec.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\digfx.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diimage.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dimemory.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dinetwork.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dinvram.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dipalette.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dipty.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dirtc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\diserial.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\dislot.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\disound.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\distate.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\divideo.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\divtlb.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drawgfx.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\driver.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drivenum.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emualloc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emucore.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_aspace.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_mview.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_mud.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hem.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedp.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_heun.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_heu.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr0.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr1.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr2.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedr3.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw0.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw1.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw2.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hedw3.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_hep.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emumem_het.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emuopts.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\emupal.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\fileio.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\http.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\image.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\input.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\inputdev.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\ioport.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\machine.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\mconfig.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\memarray.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\natkeyboard.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\network.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\parameters.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\profiler.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\output.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\recording.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\render.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendfont.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendlay.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\rendutil.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\romload.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\romentry.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\save.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\schedule.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\screen.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\softlist.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\softlist_dev.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\sound.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\speaker.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\tilemap.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\uiinput.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\validity.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\xtal.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugbuf.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcmd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcon.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugcpu.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debughlp.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\debugvw.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvdisasm.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvmemory.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvbpoints.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvwpoints.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvstate.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\dvtext.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\express.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\points.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\debug\textbuf.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\drivers\empty.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\generic.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\resnet.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbgen.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbsse.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\emu\video\rgbvmx.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\src\emu\device.ipp" />
+    <None Include="..\..\..\..\..\src\emu\dirom.ipp" />
+    <None Include="..\..\..\..\..\src\emu\drawgfxt.ipp" />
+    <None Include="..\..\..\..\..\src\emu\emumem_hedr.ipp" />
+    <None Include="..\..\..\..\..\src\emu\emumem_hedw.ipp" />
+    <None Include="..\..\..\..\..\src\emu\inpttype.ipp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\..\scripts\font\NotoSans-Bold.bdc">
+      <FileType>Text</FileType>
+      <Command>@echo Converting NotoSans-Bold.bdc...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/file2str.py  ../../../../../scripts/font/NotoSans-Bold.bdc  ../../../../generated/emu/uismall.fh  font_uismall uint8_t
+</Command>
+      <Outputs>../../../../generated/emu/uismall.fh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\frontend\mame\ui\uicmd14.png">
+      <FileType>Text</FileType>
+      <Command>@echo Converting uicmd14.png...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/png2bdc.py  ../../../../../src/frontend/mame/ui/uicmd14.png  temp_cmd.bdc
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/file2str.py  temp_cmd.bdc ../../../../generated/emu/ui/uicmd14.fh  font_uicmd14 uint8_t
+</Command>
+      <Outputs>../../../../generated/emu/ui/uicmd14.fh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhovu.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/dualhovu.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/dualhovu.lay  ../../../../generated/emu/layout/dualhovu.lh  layout_dualhovu
+</Command>
+      <Outputs>../../../../generated/emu/layout/dualhovu.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhsxs.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/dualhsxs.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/dualhsxs.lay  ../../../../generated/emu/layout/dualhsxs.lh  layout_dualhsxs
+</Command>
+      <Outputs>../../../../generated/emu/layout/dualhsxs.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\dualhuov.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/dualhuov.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/dualhuov.lay  ../../../../generated/emu/layout/dualhuov.lh  layout_dualhuov
+</Command>
+      <Outputs>../../../../generated/emu/layout/dualhuov.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\triphsxs.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/triphsxs.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/triphsxs.lay  ../../../../generated/emu/layout/triphsxs.lh  layout_triphsxs
+</Command>
+      <Outputs>../../../../generated/emu/layout/triphsxs.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\quadhsxs.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/quadhsxs.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/quadhsxs.lay  ../../../../generated/emu/layout/quadhsxs.lh  layout_quadhsxs
+</Command>
+      <Outputs>../../../../generated/emu/layout/quadhsxs.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\src\emu\layout\noscreens.lay">
+      <FileType>Text</FileType>
+      <Command>@echo Compressing src/emu/layout/noscreens.lay...
+C:/Users/Public/msys64/mingw64/bin/python.exe ../../../../../scripts/build/complay.py  ../../../../../src/emu/layout/noscreens.lay  ../../../../generated/emu/layout/noscreens.lh  layout_noscreens
+</Command>
+      <Outputs>../../../../generated/emu/layout/noscreens.lh;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
+      <Message>
+      </Message>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
