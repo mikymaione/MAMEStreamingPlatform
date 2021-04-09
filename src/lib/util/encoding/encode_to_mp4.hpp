@@ -84,15 +84,15 @@ namespace encoding
 		static constexpr AVSampleFormat AUDIO_SAMPLE_FORMAT_IN = AV_SAMPLE_FMT_S16; //AUDIO_S16SYS		
 
 	private:
-		std::shared_ptr<std::ostream> socket;
+		const std::shared_ptr<std::ostream> socket;
 
-		int in_width, in_height;
-		int fps;
+		const int in_width, in_height;
+		const int fps;
 
 		static constexpr int out_width = 640;
 		static constexpr int out_height = 480;
 
-		std::function<void()> on_write;
+		const std::function<void()> on_write;
 
 		std::chrono::time_point<std::chrono::system_clock> start_time =
 			std::chrono::system_clock::now();

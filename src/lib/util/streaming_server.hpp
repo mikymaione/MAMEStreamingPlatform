@@ -18,8 +18,6 @@
 #include <thread>
 #include <vector>
 
-//#include <SDL2/SDL.h>
-
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
 #include "modules/input/input_common.h"
@@ -128,7 +126,7 @@ namespace webpp
 				{
 					std::cout << "Pausing game!" << std::endl; // rimuovere
 					machine_paused_by_server = true;
-					machine->pause();
+					//machine->pause();
 				}
 			}
 			else
@@ -137,7 +135,7 @@ namespace webpp
 				{
 					std::cout << "Resuming game!" << std::endl; // rimuovere
 					machine_paused_by_server = false;
-					machine->resume();
+					//machine->resume();
 				}
 			}
 		}

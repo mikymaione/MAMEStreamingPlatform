@@ -652,10 +652,12 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
-		const auto is_same_frame = memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) == 0;
-		const auto need_to_send = webpp::streaming_server::instance().is_elapsed_enough_time_from_last_packet_sent();
+		auto need_to_send = webpp::streaming_server::instance().is_elapsed_enough_time_from_last_packet_sent();
 
-		if (is_same_frame || need_to_send)
+		if (!need_to_send)
+			need_to_send = memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) == 0;
+
+		if (need_to_send)
 		{
 			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
 
