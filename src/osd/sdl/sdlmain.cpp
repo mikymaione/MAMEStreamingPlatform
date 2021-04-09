@@ -257,14 +257,14 @@ int main(int argc, char** argv)
 		};
 
 		webpp::streaming_server::instance().start(8888);
+
+		std::cout << "Press enter to exit.\n";
+		std::cin.ignore();
 	}
 	else
 	{
 		r = main_sdl(argc, argv, "");
 	}
-
-	std::cout << "Press enter to exit.\n";
-	std::cin.ignore();
 
 	exit(r);
 }
