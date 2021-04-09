@@ -139,8 +139,8 @@ copyright-holders:Michele Maione
 	<script src="keypress-2.1.5.min.js"></script>
 
 	<script>
-		const uri = "ws://82.48.166.10:8888";
-		//const uri = "ws://localhost:8888";
+		//const uri = "ws://82.48.166.10:8888";
+		const uri = "ws://localhost:8888";
 
 		let listener;
 
@@ -308,8 +308,8 @@ copyright-holders:Michele Maione
 				autoplay: true,
 				loop: false,
 				pauseWhenHidden: false,
-				//videoBufferSize: 256 * 1024,
-				//audioBufferSize: 128 * 1024,
+				videoBufferSize: 64 * 1000,
+				audioBufferSize: 64 * 1000,
 			});
 
 			player.source.onStringMessageCallback = function (event)
