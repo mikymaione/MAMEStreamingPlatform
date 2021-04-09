@@ -1,0 +1,142 @@
+\documentclass[12pt,british]{report}
+\usepackage{tesi}
+\usepackage{csharp_algorithms}
+
+\def\myCDL{Master's degree program in Computer Science}
+\def\myTitle{Game streaming platform\\for arcade games}
+
+\def\myName{Michele Maione}
+\def\myMat{Matr. No. 931468}
+
+\def\myRefereeA{Prof. Dario Maggiorini}
+\def\myRefereeB{Prof. Davide Gadia}
+
+\def\myYY{2020-2021}
+
+% Il seguente comando introduce un elenco delle figure dopo l'indice (facoltativo)
+%\figurespagetrue
+
+% Il seguente comando introduce un elenco delle tabelle dopo l'indice (facoltativo)
+%\tablespagetrue
+
+%
+%			PREAMBOLO
+%			Inserire qui eventuali package da includere o definizioni di comandi personalizzati
+%
+
+% Package di formato
+\usepackage[
+%    top    = 2.75cm,
+%    bottom = 2.50cm,
+%    left   = 3.00cm,
+%    right  = 3.00cm,
+    a4paper]{geometry}		% Formato del foglio
+\usepackage[british]{babel}			% Supporto per l'inglese
+\usepackage[utf8]{inputenc}			% Supporto per UTF-8
+%\usepackage[a-1b]{pdfx}			% File conforme allo standard PDF-A (obbligatorio per la consegna)
+\usepackage{float}
+
+% Package per la grafica
+\usepackage{graphicx}				% Funzioni avanzate per le immagini
+\usepackage{hologo}					% Bibtex logo with \hologo{BibTeX}
+%\usepackage{epsfig}				% Permette immagini in EPS
+%\usepackage{xcolor}				% Gestione avanzata dei colori
+
+% Package tipografici
+\usepackage{amssymb,amsmath,amsthm} % Simboli matematici
+\usepackage{listings}				% Scrittura di codice
+
+% Package ipertesto
+\usepackage{url}					% Visualizza e rendere interattii gli URL
+\usepackage{hyperref}				% Rende interattivi i collegamenti interni
+\usepackage{cleveref}
+
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+
+\usepackage{verbatim}
+\usepackage{commath}
+\usepackage{minted}
+
+
+\begin{document}
+\renewcommand\contentsname{Index}
+% Creazione automatica del frontespizio
+\frontespizio
+\beforepreface
+
+% PAGINA DI DEDICA E/O CITAZIONE
+{
+\raggedleft \large \sl To future generations.\\
+	
+	\vspace{2cm}
+	
+	``Se non così, come?\\E se non ora, quando?''
+	
+	\bigskip
+	
+	\--- Primo Levi\\
+}
+         
+% 
+%			PREFAZIONE (facoltativa)
+%
+
+%\prefacesection{Prefazione}
+%Le prefazioni non sono molto comuni, tuttavia a volte capita che qualcuno voglia dire qualcosa che esuli dal lavoro in s\'e (come un meta-commento sull'elaborato), o voglia fornire informazioni riguardanti l'eventuale progetto entro cui la tesi si colloca (in questo caso \`e probabile che sia il relatore a scrivere questa parte).
+
+%
+%			RINGRAZIAMENTI (facoltativi)
+%
+
+\prefacesection{Acknowledgements}
+I would like to thank my supervisor Prof. Dario Maggiorini for his continuous support and Prof. Davide Gadia for his helpful guidance throughout my efforts towards the completion of the present thesis.
+
+%
+%			Creazione automatica dell'indice
+%
+
+\afterpreface
+
+%			CAPITOLO 1: Introduzione 
+\input{capitolo1_intro.tex}
+
+%			CAPITOLO 2: 
+\input{capitolo2_testi e notazioni.tex}
+
+%			CAPITOLO 3: 
+\input{capitolo3_elenchi.tex}
+
+%			CAPITOLO 4: 
+\input{capitolo4_immagini.tex}
+
+
+%			CAPITOLO 5: 
+\input{capitolo5_algoritmi.tex}
+
+
+%			CAPITOLO 6:
+\input{capitolo6_conclusion}
+
+%			Ringraziamenti:
+\input{ringraziamenti}
+
+% 
+%			APENDICE: materiali aggiuntivi e dimostrazioni
+% 
+
+\appendix
+
+\chapter{A}
+
+
+%
+%			BIBLIOGRAFIA
+%
+
+\bibliographystyle{unsrt}
+\bibliography{bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+
+\end{document}

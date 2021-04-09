@@ -1,0 +1,32 @@
+\chapter{Algorithm}
+
+Algoritmi: cercare su overleaf per ulteriori istruzioni, esempio:
+
+\begin{algorithm}
+	\caption{PPO} 
+	\begin{algorithmic}[1]
+		\For {$iteration=1,2,\ldots$}
+			\For {$actor=1,2,\ldots,N$}
+				\State Run policy $\pi_{\theta_{old}}$ in environment for $T$ time steps
+				\State Compute advantage estimates $\hat{A}_{1},\ldots,\hat{A}_{T}$
+			\EndFor
+			\State Optimize surrogate $L$ wrt. $\theta$, with $K$ epochs and minibatch size $M\leq NT$
+			\State $\theta_{old}\leftarrow\theta$
+		\EndFor
+	\end{algorithmic} 
+\end{algorithm}
+
+
+
+Formula in C\# usando lstlisting, usa il file csharp\_algorithms.tex, ci sono due liste per fare l'highlight delle parole:
+\\
+\begin{minipage}{1\linewidth}
+\begin{lstlisting}
+//commento
+public float Funzione(Vector3 p1, Vector3 p2)
+{
+    float v3 = p1+p2;
+    return (1.0f / 6.0f) * v3;
+}
+\end{lstlisting}
+\end{minipage}
