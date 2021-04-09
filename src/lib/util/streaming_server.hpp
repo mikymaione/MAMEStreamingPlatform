@@ -179,7 +179,7 @@ namespace webpp
 			keyboard->queue_events(&e, 1);
 		}
 
-		void process_key(const std::vector<std::string>& values)
+		void process_key(const std::vector<std::string>& values) const
 		{
 			const auto down = values[1];
 			const auto input_number = values[2];
