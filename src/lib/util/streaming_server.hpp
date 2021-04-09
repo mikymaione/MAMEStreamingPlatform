@@ -18,7 +18,7 @@
 #include <thread>
 #include <vector>
 
-#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
 
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
