@@ -55,14 +55,14 @@ namespace encoding
 		};
 
 	private:
-		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 100; //100MB
+		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 200; //200MB
 
 		CODEC codec = MPEGTS;
 		std::string CONTAINER_NAME;
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		static constexpr int64_t VIDEO_BIT_RATE = 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 64 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
