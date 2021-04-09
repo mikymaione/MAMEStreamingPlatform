@@ -42,6 +42,7 @@ namespace webpp
 		bool encoding_initialized = false;
 		std::unique_ptr<encoding::encode_to_mp4> encoder = nullptr;
 		std::shared_ptr<ws_server::SendStream> encoder_socket = nullptr;
+		std::chrono::time_point<std::chrono::system_clock> last_packet_sent;
 
 		event_based_device<SDL_Event>* keyboard = nullptr;
 
@@ -231,6 +232,14 @@ namespace webpp
 			return active;
 		}
 
+		bool is_elapsed_enough_time_from_last_packet_sent() const
+		{
+			const auto end_time = std::chrono::system_clock::now();
+			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - last_packet_sent);
+
+			return milliseconds.count() > 90;
+		}
+
 		void activate(const int argc, char** argv)
 		{
 			active = is_streaming_server(argc, argv);
@@ -265,6 +274,9 @@ namespace webpp
 				encoder = std::make_unique<encoding::encode_to_mp4>(encoder_socket, w, h, fps, [&]()
 				{
 					send(encoder_socket, 130);
+
+					last_packet_sent = std::chrono::system_clock::now();
+
 					//send_pausing_ping();
 				});
 			}
