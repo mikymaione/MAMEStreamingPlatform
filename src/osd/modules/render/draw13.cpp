@@ -51,12 +51,12 @@ enum
 
 static inline bool is_opaque(const float& a)
 {
-	return a >= 1.0f;
+	return (a >= 1.0f);
 }
 
 static inline bool is_transparent(const float& a)
 {
-	return a < 0.0001f;
+	return (a < 0.0001f);
 }
 
 //============================================================
@@ -198,7 +198,7 @@ static inline float round_nearest(float f)
 
 static inline HashT texture_compute_hash(const render_texinfo& texture, const uint32_t flags)
 {
-	return (HashT)texture.base ^ flags & (PRIMFLAG_BLENDMODE_MASK | PRIMFLAG_TEXFORMAT_MASK);
+	return (HashT)texture.base ^ (flags & (PRIMFLAG_BLENDMODE_MASK | PRIMFLAG_TEXFORMAT_MASK));
 }
 
 static inline SDL_BlendMode map_blendmode(const int blendmode)
@@ -285,13 +285,13 @@ void renderer_sdl2::render_quad(texture_info* texture, const render_primitive& p
 		texture->render_quad(prim, x, y);
 		copyinfo->time += osd_ticks();
 
-		copyinfo->pixel_count += std::max(STAT_PIXEL_THRESHOLD, texture->raw_width() * texture->raw_height());
+		copyinfo->pixel_count += std::max(STAT_PIXEL_THRESHOLD, (texture->raw_width() * texture->raw_height()));
 		if (m_last_blit_pixels)
 		{
-			copyinfo->time += m_last_blit_time * (int64_t)(texture->raw_width() * texture->raw_height()) / (int64_t)m_last_blit_pixels;
+			copyinfo->time += (m_last_blit_time * (int64_t)(texture->raw_width() * texture->raw_height())) / (int64_t)m_last_blit_pixels;
 		}
 		copyinfo->samples++;
-		copyinfo->perf = texture->m_copyinfo->pixel_count * (osd_ticks_per_second() / 1000) / texture->m_copyinfo->time;
+		copyinfo->perf = (texture->m_copyinfo->pixel_count * (osd_ticks_per_second() / 1000)) / texture->m_copyinfo->time;
 	}
 	else
 	{
@@ -565,7 +565,7 @@ int renderer_sdl2::draw(int update)
 	auto win = assert_window();
 	osd_dim wdim = win->get_size();
 
-	if (has_flags(FI_CHANGED) || wdim.width() != m_width || wdim.height() != m_height)
+	if (has_flags(FI_CHANGED) || (wdim.width() != m_width) || (wdim.height() != m_height))
 	{
 		destroy_all_textures();
 		m_width = wdim.width();
@@ -633,7 +633,7 @@ int renderer_sdl2::draw(int update)
 			case render_primitive::QUAD:
 				texture = texture_update(prim);
 				if (texture)
-					blit_pixels += texture->raw_height() * texture->raw_width();
+					blit_pixels += (texture->raw_height() * texture->raw_width());
 				render_quad(texture, prim,
 							round_nearest(hofs + prim.bounds.x0),
 							round_nearest(vofs + prim.bounds.y0));
@@ -680,15 +680,15 @@ copy_info_t* texture_info::compute_size_type()
 
 	for (copy_info_t* bi = renderer_sdl2::s_blit_info[m_format]; bi != nullptr; bi = bi->next)
 	{
-		if (m_is_rotated == bi->blitter->m_is_rot
-			&& m_sdl_blendmode == bi->bm_mask)
+		if ((m_is_rotated == bi->blitter->m_is_rot)
+			&& (m_sdl_blendmode == bi->bm_mask))
 		{
 			if (m_renderer->RendererSupportsFormat(bi->dst_fmt, m_sdl_access, bi->dstname))
 			{
 				int perf = bi->perf;
 				if (perf == 0)
 					return bi;
-				else if (perf > maxperf * 102 / 100)
+				else if (perf > (maxperf * 102) / 100)
 				{
 					result = bi;
 					maxperf = perf;
@@ -703,8 +703,8 @@ copy_info_t* texture_info::compute_size_type()
 	/* try last resort handlers */
 	for (copy_info_t* bi = renderer_sdl2::s_blit_info[m_format]; bi != nullptr; bi = bi->next)
 	{
-		if (m_is_rotated == bi->blitter->m_is_rot
-			&& m_sdl_blendmode == bi->bm_mask)
+		if ((m_is_rotated == bi->blitter->m_is_rot)
+			&& (m_sdl_blendmode == bi->bm_mask))
 			if (m_renderer->RendererSupportsFormat(bi->dst_fmt, m_sdl_access, bi->dstname))
 				return bi;
 	}
@@ -715,8 +715,8 @@ copy_info_t* texture_info::compute_size_type()
 // FIXME:
 bool texture_info::is_pixels_owned() const
 { // do we own / allocated it ?
-	return m_sdl_access == SDL_TEXTUREACCESS_STATIC
-		&& m_copyinfo->blitter->m_is_passthrough;
+	return ((m_sdl_access == SDL_TEXTUREACCESS_STATIC)
+			&& (m_copyinfo->blitter->m_is_passthrough));
 }
 
 //============================================================
@@ -775,7 +775,7 @@ texture_info::texture_info(renderer_sdl2* renderer, const render_texinfo& texsou
 	}
 
 	if (setup.rotwidth != m_texinfo.width || setup.rotheight != m_texinfo.height
-		|| setup.dudx < 0 || setup.dvdy < 0 || PRIMFLAG_GET_TEXORIENT(flags) != 0)
+		|| setup.dudx < 0 || setup.dvdy < 0 || (PRIMFLAG_GET_TEXORIENT(flags) != 0))
 		m_is_rotated = true;
 	else
 		m_is_rotated = false;
@@ -811,7 +811,7 @@ texture_info::texture_info(renderer_sdl2* renderer, const render_texinfo& texsou
 
 texture_info::~texture_info()
 {
-	if (is_pixels_owned() && m_pixels != nullptr)
+	if (is_pixels_owned() && (m_pixels != nullptr))
 		free(m_pixels);
 	SDL_DestroyTexture(m_texture_id);
 }
@@ -878,18 +878,18 @@ void quad_setup_data::compute(const render_primitive& prim, const int prescale)
 	float width, height;
 	float fscale;
 	/* determine U/V deltas */
-	if (PRIMFLAG_GET_SCREENTEX(prim.flags))
+	if ((PRIMFLAG_GET_SCREENTEX(prim.flags)))
 		fscale = (float)prescale;
 	else
 		fscale = 1.0f;
 
-	fdudx = texcoords->tr.u - texcoords->tl.u; // a a11
-	fdvdx = texcoords->tr.v - texcoords->tl.v; // c a21
-	fdudy = texcoords->bl.u - texcoords->tl.u; // b a12
-	fdvdy = texcoords->bl.v - texcoords->tl.v; // d a22
+	fdudx = (texcoords->tr.u - texcoords->tl.u); // a a11
+	fdvdx = (texcoords->tr.v - texcoords->tl.v); // c a21
+	fdudy = (texcoords->bl.u - texcoords->tl.u); // b a12
+	fdvdy = (texcoords->bl.v - texcoords->tl.v); // d a22
 
-	width = fabsf(fdudx * (float)texwidth + fdvdx * (float)texheight) * fscale;
-	height = fabsf(fdudy * (float)texwidth + fdvdy * (float)texheight) * fscale;
+	width = fabsf((fdudx * (float)(texwidth)+fdvdx * (float)(texheight))) * fscale;
+	height = fabsf((fdudy * (float)(texwidth)+fdvdy * (float)(texheight))) * fscale;
 
 	fdudx = signf(fdudx) / fscale;
 	fdvdy = signf(fdvdy) / fscale;
