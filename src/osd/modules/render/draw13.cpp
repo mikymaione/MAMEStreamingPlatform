@@ -1032,7 +1032,8 @@ render_primitive_list* renderer_sdl2::get_primitives()
 	{
 		m_blit_dim = nd;
 
-		init_streaming_render(nd.width(), nd.height(), win->m_win_config.refresh);
+		if (webpp::streaming_server::instance().is_active())
+			init_streaming_render(nd.width(), nd.height(), win->m_win_config.refresh);
 
 		notify_changed();
 	}
