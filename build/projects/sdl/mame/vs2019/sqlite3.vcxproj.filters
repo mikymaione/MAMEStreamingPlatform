@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{3E7DA5C5-2A4A-00D1-5363-EE783F8F355F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\sqlite3">
+      <UniqueIdentifier>{BF7A7C1F-AB73-9B71-D4A5-80F6C0FD7A7D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\3rdparty\sqlite3\sqlite3.c">
+      <Filter>3rdparty\sqlite3</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lib">
+      <UniqueIdentifier>{E0C548A9-4CA5-C744-55BD-521BC11B2EA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lib\util">
+      <UniqueIdentifier>{FA63D24F-E6C6-61F4-8F4C-9AAA7B8E2D77}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\bitstream.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\coretmpl.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\avhuff.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\aviio.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\base64.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\bitmap.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\cdrom.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\chd.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\chdcd.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\chdcodec.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\client_http.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\client_https.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\client_ws.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\client_wss.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\corealloc.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\corefile.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\corestr.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\coreutil.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\crypto.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\delegate.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\disasmintf.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\flac.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\harddisk.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\hash.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\hashing.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\huffman.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\jedparse.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\md5.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\msdib.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\nanosvg.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\opresolv.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\options.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\palette.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\path_to_regex.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\plaparse.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\png.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\pool.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\server_http.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\server_https.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\server_ws.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\server_wss.hpp">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\strformat.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\timeconv.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\unicode.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\unzip.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\vbiparse.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\vecstream.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\wavwrite.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\xmlfile.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\lib\util\zippath.h">
+      <Filter>src\lib\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\avhuff.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\aviio.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\bitmap.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\cdrom.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\chd.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\chdcd.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\chdcodec.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\corealloc.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\corefile.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\corestr.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\coreutil.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\delegate.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\disasmintf.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\flac.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\harddisk.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\hash.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\hashing.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\huffman.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\jedparse.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\md5.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\msdib.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\nanosvg.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\opresolv.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\options.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\palette.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\path_to_regex.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\plaparse.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\png.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\pool.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\strformat.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\timeconv.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\unicode.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\unzip.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\un7z.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\vbiparse.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\vecstream.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\wavwrite.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\xmlfile.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\lib\util\zippath.cpp">
+      <Filter>src\lib\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

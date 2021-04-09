@@ -111,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -146,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -155,8 +155,6 @@
       <ProgramDataBaseFileName>$(OutDir)osd_sdl.pdb</ProgramDataBaseFileName>
       <ForcedIncludeFiles>c:\Users\Public\msys64\src\MAMEStreamingPlatform\src\osd\sdl\sdlprefix.h</ForcedIncludeFiles>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <SDLCheck>false</SDLCheck>
     </ClCompile>
     <ResourceCompile>
@@ -221,7 +219,7 @@
       <StringPooling>true</StringPooling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
@@ -230,8 +228,6 @@
       </DebugInformationFormat>
       <ForcedIncludeFiles>c:\Users\Public\msys64\src\MAMEStreamingPlatform\src\osd\sdl\sdlprefix.h</ForcedIncludeFiles>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
       <SDLCheck>false</SDLCheck>
     </ClCompile>
     <ResourceCompile>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{3E7DA5C5-2A4A-00D1-5363-EE783F8F355F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portmidi">
+      <UniqueIdentifier>{E21C14BF-4E33-1255-97AA-9D760300E3DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portmidi\pm_common">
+      <UniqueIdentifier>{03E1E509-6FEE-13F0-F8D4-0FDB64E1DFA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portmidi\porttime">
+      <UniqueIdentifier>{D26C2E5B-BE7C-DA2B-2736-3F4A1365C9C4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portmidi\pm_win">
+      <UniqueIdentifier>{88B514FD-74DA-637D-9D25-490D89A9629B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portmidi\pm_common\portmidi.c">
+      <Filter>3rdparty\portmidi\pm_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portmidi\pm_common\pmutil.c">
+      <Filter>3rdparty\portmidi\pm_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portmidi\porttime\ptwinmm.c">
+      <Filter>3rdparty\portmidi\porttime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portmidi\pm_win\pmwin.c">
+      <Filter>3rdparty\portmidi\pm_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portmidi\pm_win\pmwinmm.c">
+      <Filter>3rdparty\portmidi\pm_win</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

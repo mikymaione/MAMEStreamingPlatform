@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd">
+      <UniqueIdentifier>{EFD348A9-5BB3-C744-64CB-521BD0292EA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules">
+      <UniqueIdentifier>{64E30D7B-D06E-7B3F-D97F-FE33458AD73F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\osd\modules\debugger">
+      <UniqueIdentifier>{85AFC09E-71D4-0F1F-9A1F-F5AE86A30E3D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\osd\modules\debugger\debugqt.cpp">
+      <Filter>src\osd\modules\debugger</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
