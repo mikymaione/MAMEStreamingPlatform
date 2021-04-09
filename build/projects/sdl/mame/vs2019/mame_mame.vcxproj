@@ -107,7 +107,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <PrecompiledHeader></PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <PrecompiledHeader></PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -231,12 +231,262 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\src\mame\audio\cps3.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\audio\namco52.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\audio\namco54.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\bosco.h" />
     <ClInclude Include="..\..\..\..\..\src\mame\includes\cps3.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\dc.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\digdug.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\galaga.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\konamipt.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\megadriv.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\megadriv_rad.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\mitchell.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\naomi.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\neogeo.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\segaipt.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\segaorun.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\tmnt.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\vsnes.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\includes\xevious.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\315-5881_crypt.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\315-6154.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\315_5195.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\awboard.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\dc-ctrl.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\fd1089.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\fd1094.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\gdrom.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\gunsense.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\jvs13551.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\kabuki.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\m3comm.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\maple-dc.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\mapledev.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\mega32x.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\megacd.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\megacdcd.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\mie.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\namco06.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\namco50.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\namco51.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\namco53.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\namco_settings.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomibd.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomig1.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomigd.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomim1.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomim2.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomim4.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\naomirom.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\ng_memcard.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\machine\segaic16.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k051960.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k052109.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k053244_k053245.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k053251.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k053936.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\k054000.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\konami_helper.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\neogeo_spr.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\powervr2.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\sega16sp.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\segaic16.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\segaic16_road.h" />
+    <ClInclude Include="..\..\..\..\..\src\mame\video\starfield_05xx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\src\mame\audio\cps3.cpp">
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\audio\galaga.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\audio\namco52.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\audio\namco54.cpp">
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\src\mame\drivers\cps3.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\galaga.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\megadriv.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\megadriv_rad.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\mitchell.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\namcos12.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\naomi.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\neogeo.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\segaorun.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\spg110.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\tmnt.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\drivers\vsnes.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\315-5881_crypt.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\315-6154.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\315_5195.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\awboard.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\dc-ctrl.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\dc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\fd1089.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\fd1094.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\gdrom.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\gunsense.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\jvs13551.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\kabuki.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\m3comm.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\maple-dc.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\mapledev.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\mega32x.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\megacd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\megacdcd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\megadriv.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\mie.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\namco06.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\namco50.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\namco51.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\namco53.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\namco_settings.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomi.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomibd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomig1.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomigd.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomim1.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomim2.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomim4.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\naomirom.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\ng_memcard.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\segaic16.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\vsnes.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\machine\xevious.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\bosco.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\digdug.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\galaga.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)2\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)2\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)2\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k051960.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k052109.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k053244_k053245.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k053251.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k053936.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\k054000.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\konami_helper.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\mitchell.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\neogeo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\neogeo_spr.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\powervr2.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\sega16sp.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\segaic16.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\segaic16_road.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\segaorun.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\starfield_05xx.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\tmnt.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)1\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\mame\video\xevious.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)1\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)1\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)1\</ObjectFileName>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{3E7DA5C5-2A4A-00D1-5363-EE783F8F355F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio">
+      <UniqueIdentifier>{1128C5A0-FD0B-86F6-666C-8049526F7078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src">
+      <UniqueIdentifier>{B5338150-A12D-AAA2-8A9A-40B37633100F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\common">
+      <UniqueIdentifier>{5A254856-C63D-2F80-8FEA-BE19FBC1C319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi">
+      <UniqueIdentifier>{292FA0A0-1555-6A07-FE9A-EFD2EA5F8FD3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi\skeleton">
+      <UniqueIdentifier>{CAAB4D09-363B-0FF4-3F37-F00BAB454A00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\os">
+      <UniqueIdentifier>{B3293D29-1FEC-70B3-689C-FF3FD49D4991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\os\win">
+      <UniqueIdentifier>{3D468572-A95E-6C9C-720B-FC35DEE20036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi\dsound">
+      <UniqueIdentifier>{92FBD134-FEBF-D024-C725-01EF33A96C5A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi\wasapi">
+      <UniqueIdentifier>{2A23E05F-96E7-DE4F-5F4D-0F1ACBD07A85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi\wdmks">
+      <UniqueIdentifier>{8BDB17BD-77C2-D9B4-2013-40D20CD9521B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\portaudio\src\hostapi\wmme">
+      <UniqueIdentifier>{5BFE7C0D-C7B7-E7B7-5017-0292BCCF9D27}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_allocation.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_converters.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_cpuload.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_dither.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_debugprint.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_front.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_process.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_stream.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_trace.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\skeleton\pa_hostapi_skeleton.c">
+      <Filter>3rdparty\portaudio\src\hostapi\skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\os\win\pa_win_util.c">
+      <Filter>3rdparty\portaudio\src\os\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\os\win\pa_win_waveformat.c">
+      <Filter>3rdparty\portaudio\src\os\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\os\win\pa_win_hostapis.c">
+      <Filter>3rdparty\portaudio\src\os\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\os\win\pa_win_coinitialize.c">
+      <Filter>3rdparty\portaudio\src\os\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\dsound\pa_win_ds.c">
+      <Filter>3rdparty\portaudio\src\hostapi\dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\dsound\pa_win_ds_dynlink.c">
+      <Filter>3rdparty\portaudio\src\hostapi\dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\wasapi\pa_win_wasapi.c">
+      <Filter>3rdparty\portaudio\src\hostapi\wasapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\wdmks\pa_win_wdmks.c">
+      <Filter>3rdparty\portaudio\src\hostapi\wdmks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\hostapi\wmme\pa_win_wmme.c">
+      <Filter>3rdparty\portaudio\src\hostapi\wmme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\3rdparty\portaudio\src\common\pa_ringbuffer.c">
+      <Filter>3rdparty\portaudio\src\common</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

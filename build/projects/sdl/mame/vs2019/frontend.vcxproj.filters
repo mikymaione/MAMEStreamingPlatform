@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend">
+      <UniqueIdentifier>{2987AB9A-15EA-3A3F-BE6F-73F5AAB106C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend\mame">
+      <UniqueIdentifier>{85A7594C-F1BD-57E2-3A35-E303A68A286A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frontend\mame\ui">
+      <UniqueIdentifier>{3FCC96F5-2B5B-20BF-D479-34BAC0E73065}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\src\frontend\mame\luaengine.ipp">
+      <Filter>src\frontend\mame</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\frontend\mame\ui\defimg.ipp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\frontend\mame\ui\starimg.ipp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </None>
+    <None Include="..\..\..\..\..\src\frontend\mame\ui\toolbar.ipp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\audit.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\cheat.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\clifront.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\infoxml.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\iptseqpoll.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\language.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\luaengine.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\mame.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\mameopts.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\media_ident.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\pluginopts.h">
+      <Filter>src\frontend\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\about.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\auditmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\barcode.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\cheatopt.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\confswitch.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\custui.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\datmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\devctrl.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\devopt.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\dirmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\filecreate.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\filemngr.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\filesel.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\floppycntrl.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\icorender.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\imgcntrl.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\info.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\info_pty.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\inifile.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\inputmap.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\keyboard.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\mainmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\menu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\miscmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\moptions.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\optsmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\pluginopt.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\selector.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\selgame.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\selmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\selsoft.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\simpleselgame.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\sliders.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\slotopt.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\sndmenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\state.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\submenu.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\swlist.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\tapectrl.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\text.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\ui.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\utils.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\videoopt.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\viewgfx.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\src\frontend\mame\ui\widgets.h">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\audit.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\cheat.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\clifront.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\infoxml.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\iptseqpoll.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\language.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\luaengine.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\luaengine_debug.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\luaengine_input.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\luaengine_mem.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\luaengine_render.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\mame.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\mameopts.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\media_ident.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\pluginopts.cpp">
+      <Filter>src\frontend\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\about.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\analogipt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\auditmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\barcode.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\cheatopt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\confswitch.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\custui.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\datmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\devopt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\dirmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\filecreate.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\filemngr.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\filesel.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\floppycntrl.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\icorender.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\imgcntrl.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\info.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\info_pty.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\inifile.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\inputmap.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\keyboard.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\mainmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\menu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\miscmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\moptions.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\optsmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\pluginopt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\selector.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\selgame.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\selmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\selsoft.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\simpleselgame.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\sliders.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\slotopt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\sndmenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\state.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\submenu.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\swlist.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\tapectrl.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\text.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\ui.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\utils.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\videoopt.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\viewgfx.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\src\frontend\mame\ui\widgets.cpp">
+      <Filter>src\frontend\mame\ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\..\COPYING" />
+  </ItemGroup>
+</Project>
