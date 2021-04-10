@@ -167,8 +167,11 @@ copyright-holders:Michele Maione
 				th = ch;
 			}
 
-			//myCanvas.style.width = tw + 'px';
-			//myCanvas.style.height = th + 'px';
+			if (cw < vw)
+			{
+				myCanvas.style.width = tw + 'px';
+				myCanvas.style.height = th + 'px';
+			}			
 		}
 
 		function InputSend(g, t, down)
