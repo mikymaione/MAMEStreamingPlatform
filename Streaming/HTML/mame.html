@@ -171,7 +171,7 @@ copyright-holders:Michele Maione
 			{
 				myCanvas.style.width = tw + 'px';
 				myCanvas.style.height = th + 'px';
-			}			
+			}
 		}
 
 		function InputSend(g, t, down)
@@ -305,46 +305,72 @@ copyright-holders:Michele Maione
 
 		function Start(game)
 		{
-			document.body.style.backgroundColor = "black";
-			document.body.style.overflow = "hidden";
-			document.getElementById("reload").className = "aBlack";
-			document.getElementById("instructions").style.display = "none";
-			myCanvas.style.display = "inherit";
+			let there_is_some_inputs = false;
 
-			player = new JSMpeg.Player(uri + '?' + game, {
-				canvas: myCanvas,
-				autoplay: true,
-				loop: false,
-				pauseWhenHidden: false,
-				//videoBufferSize: 128 * 1024,
-				//audioBufferSize: 64 * 1024,
-			});
-
-			player.source.onStringMessageCallback = function (event)
+			try 
 			{
-				let values = event.data.split(":");
+				InitKeyboard();
+				there_is_some_inputs = true;
+			}
+			catch (error) 
+			{
+				alert("No keyboard found: " + error.message);
+			}
 
-				switch (values[0])
+			try 
+			{
+				InitGamepad();
+				there_is_some_inputs = true;
+			}
+			catch (error) 
+			{
+				alert("No gamepad found: " + error.message);
+			}
+
+			if (there_is_some_inputs)
+			{
+				document.body.style.backgroundColor = "black";
+				document.body.style.overflow = "hidden";
+				document.getElementById("reload").className = "aBlack";
+				document.getElementById("instructions").style.display = "none";
+				myCanvas.style.display = "inherit";
+
+				player = new JSMpeg.Player(uri + '?' + game, {
+					canvas: myCanvas,
+					autoplay: true,
+					loop: false,
+					pauseWhenHidden: false,
+					//videoBufferSize: 128 * 1024,
+					//audioBufferSize: 64 * 1024,
+				});
+
+				player.source.onStringMessageCallback = function (event)
 				{
-					case 'size':
-						vw = values[1];
-						vh = values[2];
+					let values = event.data.split(":");
 
-						reportWindowSize();
-						break;
+					switch (values[0])
+					{
+						case 'size':
+							vw = values[1];
+							vh = values[2];
 
-					case 'ping':
-						player.source.socket.send('ping:' + values[1]);
-						break;
-				}
-			};
+							reportWindowSize();
+							break;
 
-			InitKeyboard();
-			InitGamepad();
+						case 'ping':
+							player.source.socket.send('ping:' + values[1]);
+							break;
+					}
+				};
+			}
+			else
+			{
+				alert('It seems you have neither a keyboard nor a joystick to play!');
+			}
 		}
 
 		myCanvas = document.getElementById("myCanvas");
-		window.onresize = reportWindowSize;
+		window.onresize = reportWindowSize;	
 	</script>
 
 	<script src="fullscreen.js"></script>
