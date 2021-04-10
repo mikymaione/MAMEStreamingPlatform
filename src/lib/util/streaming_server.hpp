@@ -235,7 +235,7 @@ namespace webpp
 			const auto end_time = std::chrono::system_clock::now();
 			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - last_packet_sent);
 
-			return milliseconds.count() > 90;
+			return milliseconds.count() > 50;
 		}
 
 		void activate(const int argc, char** argv)
