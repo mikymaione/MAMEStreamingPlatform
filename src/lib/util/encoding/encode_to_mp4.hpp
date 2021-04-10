@@ -343,7 +343,7 @@ namespace encoding
 				const auto end_time = std::chrono::system_clock::now();
 				const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
-				if (milliseconds.count() > 100)
+				if (milliseconds.count() > 70)
 				{
 					const auto ret = av_write_trailer(encoder_context->muxer_context);
 					if (ret < 0)

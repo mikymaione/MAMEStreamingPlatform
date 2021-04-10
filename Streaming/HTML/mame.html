@@ -11,52 +11,28 @@ copyright-holders:Michele Maione
 <html>
 
 <head>
+	<link rel="icon" href="favicon.ico">
+
+	<link rel="stylesheet" type="text/css" href="css/F79E10.css">
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu Mono'>
+
 	<meta charset="UTF-8">
 
-	<meta name="date" content="2021-04-08" scheme="YYYY-MM-DD">
+	<meta name="date" content="2021-04-10" scheme="YYYY-MM-DD">
 	<meta name="author" content="Maione Michele">
 	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>MAME Game Streaming Server</title>
-
-	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu Mono'>
-
-	<style>
-		body {
-			background-color: black;
-			font-family: 'Ubuntu Mono';
-		}
-
-		.center {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			margin: auto;
-		}
-
-		#myCanvas {
-			display: none;
-		}
-
-		#instructions {
-			color: white;
-			width: 700px;
-		}
-
-		.game {
-			cursor: pointer;
-		}
-	</style>
 </head>
 
 <body>
-	<div id="instructions" class="center">
+	<a id="reload" href="mame.html" class="aWhite">
 		<h1>MAME Game Streaming Server</h1>
+	</a>
 
+	<div id="instructions">
 		<h2>Keys:</h2>
 
 		<table>
@@ -118,15 +94,42 @@ copyright-holders:Michele Maione
 		<h3>click a game to play it</h3>
 
 		<div id="games">
-			<img onclick="Start('galaga');" class="game" src="roms/galaga.png">
-			<img onclick="Start('jojoban');" class="game" src="roms/jojoban.png">
-			<img onclick="Start('mslug3');" class="game" src="roms/mslug3.png">
-			<img onclick="Start('outrun');" class="game" src="roms/outrun.png">			
-			<img onclick="Start('sfiii3nr1');" class="game" src="roms/sfiii3nr1.png">
-			<img onclick="Start('soulclbr');" class="game" src="roms/soulclbr.png">			
-			<img onclick="Start('ssriders');" class="game" src="roms/ssriders.png">
-			<img onclick="Start('suprmrio');" class="game" src="roms/suprmrio.png">
-			<img onclick="Start('spang');" class="game" src="roms/spang.png">
+			<figure>
+				<img onclick="Start('galaga');" class="game" src="roms/galaga.png">
+				<figcaption>Galaga, Namco - 1981</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('jojoban');" class="game" src="roms/jojoban.png">
+				<figcaption>JoJo's Bizarre Adventure, Capcom - 1998</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('mslug3');" class="game" src="roms/mslug3.png">
+				<figcaption>Metal Slug 3, SNK - 2000</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('outrun');" class="game" src="roms/outrun.png">
+				<figcaption>Out Run, Sega - 1986</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('sfiii3nr1');" class="game" src="roms/sfiii3nr1.png">
+				<figcaption>Street Fighter III: 3rd Strike, Capcom - 1999</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('soulclbr');" class="game" src="roms/soulclbr.png">
+				<figcaption>Soulcalibur, Project Soul - 1998</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('ssriders');" class="game" src="roms/ssriders.png">
+				<figcaption>Sunset Riders, Konami - 1991</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('suprmrio');" class="game" src="roms/suprmrio.png">
+				<figcaption>Super Mario Bros., Nintendo - 1985</figcaption>
+			</figure>
+			<figure>
+				<img onclick="Start('spang');" class="game" src="roms/spang.png">
+				<figcaption>Super Pang, Mitchell Corporation - 1990</figcaption>
+			</figure>
 		</div>
 	</div>
 
@@ -164,8 +167,8 @@ copyright-holders:Michele Maione
 				th = ch;
 			}
 
-			myCanvas.style.width = tw + 'px';
-			myCanvas.style.height = th + 'px';
+			//myCanvas.style.width = tw + 'px';
+			//myCanvas.style.height = th + 'px';
 		}
 
 		function InputSend(g, t, down)
@@ -299,7 +302,9 @@ copyright-holders:Michele Maione
 
 		function Start(game)
 		{
+			document.body.style.backgroundColor = "black";
 			document.body.style.overflow = "hidden";
+			document.getElementById("reload").className = "aBlack";
 			document.getElementById("instructions").style.display = "none";
 			myCanvas.style.display = "inherit";
 
@@ -340,6 +345,9 @@ copyright-holders:Michele Maione
 	</script>
 
 	<script src="fullscreen.js"></script>
+
+	<hr>
+	<ruby>© 2021, [MAIONE MIKY]</ruby>
 </body>
 
 </html>
