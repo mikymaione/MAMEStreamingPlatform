@@ -305,6 +305,7 @@ namespace webpp
 			server = std::make_unique<ws_server>();
 			server->config.client_mode = true;
 			server->config.port = port;
+			server->config.timeout_request = 15; //15 s
 
 			auto& endpoint = server->m_endpoint["/?"];
 
