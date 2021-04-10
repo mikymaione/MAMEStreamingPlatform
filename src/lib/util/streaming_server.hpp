@@ -305,11 +305,11 @@ namespace webpp
 			server = std::make_unique<ws_server>();
 			server->config.client_mode = true;
 			server->config.port = port;
-			server->config.timeout_request = 15; //15 s
+			server->config.timeout_request = 0; //no timeout
 
 			auto& endpoint = server->m_endpoint["/?"];
 
-			endpoint.on_open = [&](auto connection)
+			endpoint.on_open = [this](auto connection)
 			{
 				std::cout
 					<< "-Opened connection from "
@@ -321,7 +321,7 @@ namespace webpp
 				acceptThread = std::make_unique<std::thread>(on_accept, connection->parameters);
 			};
 
-			endpoint.on_message = [&](auto connection, auto message)
+			endpoint.on_message = [this](auto connection, auto message)
 			{
 				const auto msg = message->string();
 				const auto values = split(msg, ":");
@@ -332,7 +332,19 @@ namespace webpp
 					process_key(values);
 			};
 
-			endpoint.on_close = [&](auto connection, auto status, auto reason)
+			endpoint.on_error = [](auto connection, auto code)
+			{
+				std::cout
+					<< "-Error on connection from "
+					<< connection->remote_endpoint_address
+					<< ":"
+					<< connection->remote_endpoint_port
+					<< std::endl
+					<< ": " << code.message()
+					<< std::endl;
+			};
+
+			endpoint.on_close = [this](auto connection, auto status, auto reason)
 			{
 				std::cout
 					<< "-Closed connection from "
