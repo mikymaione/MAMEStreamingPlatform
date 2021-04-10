@@ -984,14 +984,14 @@ JSMpeg.Source.WebSocket = function ()
 
 	WSSource.prototype.onError = function (event)
 	{
-		console.error("WebSocket error observed:", event);		
-		alert("La connessione è andata in errore!");
+		console.error("WebSocket error observed:", event);
+		alert("The connection failed!");
 	}
 
 	WSSource.prototype.onClose = function ()
 	{
 		console.log('The connection has been closed successfully.');
-		alert("Il tuo browser ha interrotto la connessione!");
+		alert("Your browser has lost the connection!");
 	};
 
 	WSSource.prototype.onMessage = function (ev)
