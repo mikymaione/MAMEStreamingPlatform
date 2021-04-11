@@ -28,11 +28,17 @@ copyright-holders:Michele Maione
 </head>
 
 <body>
-	<a id="reload" href="mame.html" class="aWhite">
-		<h1>MAME Cloud Gaming</h1>
-	</a>
+	<h1>MAME Cloud Gaming</h1>
+
+	<nav id="navigation_menu">
+		<a id="nav_games" href="mame.html">Game list</a>
+	</nav>
 	<hr>
-	
+
+	<canvas id="myCanvas" class="center">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
 	<div id="instructions">
 		<h2>Keys:</h2>
 
@@ -91,318 +97,73 @@ copyright-holders:Michele Maione
 				</td>
 			</tr>
 		</table>
-
-		<h3>click a game to play it</h3>
-
-		<div id="games">
-			<figure>
-				<img onclick="Start('cstlevna');" class="game" src="roms/cstlevna.png">
-				<figcaption>Castelvania, Konami - 1986</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('drmario');" class="game" src="roms/drmario.png">
-				<figcaption>Dr. Mario, Nintendo - 1990</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('galaga');" class="game" src="roms/galaga.png">
-				<figcaption>Galaga, Namco - 1981</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('jojoban');" class="game" src="roms/jojoban.png">
-				<figcaption>JoJo's Bizarre Adventure, Capcom - 1998</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('mslug3');" class="game" src="roms/mslug3.png">
-				<figcaption>Metal Slug 3, SNK - 2000</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('outrun');" class="game" src="roms/outrun.png">
-				<figcaption>Out Run, Sega - 1986</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('pbobbl2n');" class="game" src="roms/pbobbl2n.png">
-				<figcaption>Puzzle Bobble 2, Taito - 1995</figcaption>
-			</figure>			
-			<figure>
-				<img onclick="Start('sfiii3nr1');" class="game" src="roms/sfiii3nr1.png">
-				<figcaption>Street Fighter III: 3rd Strike, Capcom - 1999</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('strhoop');" class="game" src="roms/strhoop.png">
-				<figcaption>Street Slam, Data East - 1994</figcaption>
-			</figure>			
-			<figure>
-				<img onclick="Start('soulclbr');" class="game" src="roms/soulclbr.png">
-				<figcaption>Soulcalibur, Project Soul - 1998</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('ssriders');" class="game" src="roms/ssriders.png">
-				<figcaption>Sunset Riders, Konami - 1991</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('suprmrio');" class="game" src="roms/suprmrio.png">
-				<figcaption>Super Mario Bros., Nintendo - 1985</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('spang');" class="game" src="roms/spang.png">
-				<figcaption>Super Pang, Mitchell Corporation - 1990</figcaption>
-			</figure>
-			<figure>
-				<img onclick="Start('tekken3');" class="game" src="roms/tekken3.png">
-				<figcaption>Tekken 3, Namco - 1997</figcaption>
-			</figure>			
-		</div>
 	</div>
 
-	<canvas id="myCanvas" class="center">
-		Your browser does not support the HTML canvas tag.
-	</canvas>
+	<div id="games">
+		<h3>click a game to play it</h3>
 
-	<script src="socket.io/socket.io.js"></script>
+		<figure>
+			<img onclick="Start('cstlevna', 'Castelvania');" class="game" src="roms/cstlevna.png">
+			<figcaption>Castelvania, Konami - 1986</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('drmario', 'Dr. Mario');" class="game" src="roms/drmario.png">
+			<figcaption>Dr. Mario, Nintendo - 1990</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('galaga', 'Galaga');" class="game" src="roms/galaga.png">
+			<figcaption>Galaga, Namco - 1981</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('jojoban', 'JoJo’s Bizarre Adventure');" class="game" src="roms/jojoban.png">
+			<figcaption>JoJo’s Bizarre Adventure, Capcom - 1998</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('mslug3', 'Metal Slug 3');" class="game" src="roms/mslug3.png">
+			<figcaption>Metal Slug 3, SNK - 2000</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('outrun', 'Out Run');" class="game" src="roms/outrun.png">
+			<figcaption>Out Run, Sega - 1986</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('pbobbl2n', 'Puzzle Bobble 2');" class="game" src="roms/pbobbl2n.png">
+			<figcaption>Puzzle Bobble 2, Taito - 1995</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('sfiii3nr1', 'Street Fighter III: 3rd Strike');" class="game" src="roms/sfiii3nr1.png">
+			<figcaption>Street Fighter III: 3rd Strike, Capcom - 1999</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('strhoop', 'Street Slam');" class="game" src="roms/strhoop.png">
+			<figcaption>Street Slam, Data East - 1994</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('soulclbr', 'Soulcalibur');" class="game" src="roms/soulclbr.png">
+			<figcaption>Soulcalibur, Project Soul - 1998</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('ssriders', 'Sunset Riders');" class="game" src="roms/ssriders.png">
+			<figcaption>Sunset Riders, Konami - 1991</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('suprmrio', 'Super Mario Bros.');" class="game" src="roms/suprmrio.png">
+			<figcaption>Super Mario Bros., Nintendo - 1985</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('spang', 'Super Pang');" class="game" src="roms/spang.png">
+			<figcaption>Super Pang, Mitchell Corporation - 1990</figcaption>
+		</figure>
+		<figure>
+			<img onclick="Start('tekken3', 'Tekken 3');" class="game" src="roms/tekken3.png">
+			<figcaption>Tekken 3, Namco - 1997</figcaption>
+		</figure>
+	</div>
+
 	<script src="jsmpeg.js"></script>
 	<script src="gamecontroller.min.js"></script>
 	<script src="keypress-2.1.5.min.js"></script>
-
-	<script>
-		const uri = "ws://82.48.166.10:8888";
-		//const uri = "ws://localhost:8888";
-
-		let listener;
-
-		let myCanvas;
-		let player;
-		let vw, vh, cw, ch, tw, th;
-
-		function reportWindowSize()
-		{
-			cw = window.innerWidth;
-			ch = window.innerHeight;
-
-			if (cw / ch < vw / vh)
-			{
-				tw = cw;
-				th = cw * vh / vw;
-			}
-			else
-			{
-				tw = ch * vw / vh;
-				th = ch;
-			}
-
-			if (cw < vw)
-			{
-				myCanvas.style.width = tw + 'px';
-				myCanvas.style.height = th + 'px';
-			}
-		}
-
-		function InputSend(g, t, down)
-		{
-			player.source.socket.send('key:' + (down == true ? 'D:' : 'U:') + g + ':' + t);
-		}
-
-		function InitKeyboard()
-		{
-			const keyboard = 9999;
-			listener = new window.keypress.Listener();
-
-			listener.register_many([
-				{
-					"keys": "p",
-					"on_keydown": function () { InputSend(keyboard, 'PAUSE', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'PAUSE', false); },
-				},
-				{
-					"keys": "1",
-					"on_keydown": function () { InputSend(keyboard, 'START', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'START', false); },
-				},
-				{
-					"keys": "2",
-					"on_keydown": function () { InputSend(keyboard, 'SELECT', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'SELECT', false); },
-				},
-
-				{
-					"keys": "left",
-					"on_keydown": function () { InputSend(keyboard, 'LEFT', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'LEFT', false); },
-				},
-				{
-					"keys": "right",
-					"on_keydown": function () { InputSend(keyboard, 'RIGHT', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'RIGHT', false); },
-				},
-				{
-					"keys": "up",
-					"on_keydown": function () { InputSend(keyboard, 'UP', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'UP', false); },
-				},
-				{
-					"keys": "down",
-					"on_keydown": function () { InputSend(keyboard, 'DOWN', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'DOWN', false); },
-				},
-
-				{
-					"keys": "w",
-					"on_keydown": function () { InputSend(keyboard, 'X', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'X', false); },
-				},
-				{
-					"keys": "e",
-					"on_keydown": function () { InputSend(keyboard, 'Y', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'Y', false); },
-				},
-				{
-					"keys": "s",
-					"on_keydown": function () { InputSend(keyboard, 'A', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'A', false); },
-				},
-				{
-					"keys": "d",
-					"on_keydown": function () { InputSend(keyboard, 'B', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'B', false); },
-				},
-
-				{
-					"keys": "q",
-					"on_keydown": function () { InputSend(keyboard, 'L1', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'L1', false); },
-				},
-				{
-					"keys": "a",
-					"on_keydown": function () { InputSend(keyboard, 'L2', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'L2', false); },
-				},
-				{
-					"keys": "r",
-					"on_keydown": function () { InputSend(keyboard, 'R1', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'R1', false); },
-				},
-				{
-					"keys": "f",
-					"on_keydown": function () { InputSend(keyboard, 'R2', true); },
-					"on_keyup": function (e) { InputSend(keyboard, 'R2', false); },
-				},
-			]);
-		}
-
-		function InitGamepad()
-		{
-			/*
-			gameControl.on('connect', gamepad =>
-			{
-				console.log('A new gamepad was connected!');
-
-				gamepad.on('button8', () => { InputSend(gamepad.id, 'SELECT') });
-				gamepad.on('button9', () => { InputSend(gamepad.id, 'START') });
-
-				gamepad.on('button12', () => { InputSend(gamepad.id, 'UP') });
-				gamepad.on('button13', () => { InputSend(gamepad.id, 'DOWN') });
-				gamepad.on('button15', () => { InputSend(gamepad.id, 'RIGHT') });
-				gamepad.on('button14', () => { InputSend(gamepad.id, 'LEFT') });
-				gamepad.on('up', () => { InputSend(gamepad.id, 'UP') });
-				gamepad.on('down', () => { InputSend(gamepad.id, 'DOWN') });
-				gamepad.on('right', () => { InputSend(gamepad.id, 'RIGHT') });
-				gamepad.on('left', () => { InputSend(gamepad.id, 'LEFT') });
-
-				gamepad.on('button2', () => { InputSend(gamepad.id, 'X') });
-				gamepad.on('button3', () => { InputSend(gamepad.id, 'Y') });
-				gamepad.on('button0', () => { InputSend(gamepad.id, 'A') });
-				gamepad.on('button1', () => { InputSend(gamepad.id, 'B') });
-
-				gamepad.on('button4', () => { InputSend(gamepad.id, 'L1') });
-				gamepad.on('button6', () => { InputSend(gamepad.id, 'L2') });
-				gamepad.on('button5', () => { InputSend(gamepad.id, 'R1') });
-				gamepad.on('button7', () => { InputSend(gamepad.id, 'R2') });
-			});
-
-			gameControl.on('disconnect', gamepad =>
-			{
-				console.log('A gamepad was disconnected!');
-			});
-			*/
-		}
-
-		function uuidv4()
-		{
-			return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
-		}
-
-		function Start(game)
-		{
-			let there_is_some_inputs = false;
-
-			try 
-			{
-				InitKeyboard();
-				there_is_some_inputs = true;
-			}
-			catch (error) 
-			{
-				alert("No keyboard found: " + error.message);
-			}
-
-			try 
-			{
-				InitGamepad();
-				there_is_some_inputs = true;
-			}
-			catch (error) 
-			{
-				alert("No gamepad found: " + error.message);
-			}
-
-			if (there_is_some_inputs)
-			{
-				const uuid = uuidv4();
-				const complete_uri = uri + '?game=' + game + '&id=' + uuid;
-				
-				document.body.style.backgroundColor = "black";
-				document.body.style.overflow = "hidden";
-				document.getElementById("reload").className = "aBlack";
-				document.getElementById("instructions").style.display = "none";
-				myCanvas.style.display = "inherit";
-
-				player = new JSMpeg.Player(complete_uri, {
-					canvas: myCanvas,
-					autoplay: true,
-					loop: false,
-					pauseWhenHidden: false,
-					//videoBufferSize: 128 * 1024,
-					//audioBufferSize: 64 * 1024,
-				});
-
-				player.source.onStringMessageCallback = function (event)
-				{
-					let values = event.data.split(":");
-
-					switch (values[0])
-					{
-						case 'size':
-							vw = values[1];
-							vh = values[2];
-
-							reportWindowSize();
-							break;
-
-						case 'ping':
-							player.source.socket.send('ping:' + values[1]);
-							break;
-					}
-				};
-			}
-			else
-			{
-				alert('It seems you have neither a keyboard nor a joystick to play!');
-			}
-		}
-
-		myCanvas = document.getElementById("myCanvas");
-		window.onresize = reportWindowSize;		
-	</script>	
+	<script src="MAME.js"></script>
 
 	<hr>
 	<ruby>© 2021, [MAIONE MIKY]</ruby>

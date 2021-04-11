@@ -46,22 +46,13 @@ figcaption, h2, h3, ruby {
 	color: #464453;
 }
 
-.aWhite:link, .aWhite:visited {
+em, a:link, a:visited {
+	color: #F79E10;
+}
+
+a:active, a:hover {
 	color: black;
-	text-decoration: none;
-}
-
-.aWhite:hover {
-	color: #F79E10;
-}
-
-.aBlack:link, .aBlack:visited {
-	color: white;
-	text-decoration: none;
-}
-
-.aBlack:hover {
-	color: #F79E10;
+	background-color: #F79E10;
 }
 
 .not-active {
