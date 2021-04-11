@@ -27,10 +27,10 @@ body {
 }
 
 figure {
-	display: inline-block;
-	width: 222px;
+	display: inline-block;	
 	vertical-align: top;
 	margin: 10px;
+	width: 100%;
 }
 
 .giustificato {
@@ -63,7 +63,12 @@ a:active, a:hover {
 	font-weight: bold;
 }
 
-.img-max-size {
+img {
 	max-width: 100%;
 	height: auto;
+}
+
+.td33 {
+	width: 33%;
+	vertical-align: top;
 }
