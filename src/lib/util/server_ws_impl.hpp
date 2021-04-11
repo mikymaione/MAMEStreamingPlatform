@@ -2,6 +2,7 @@
 // copyright-holders:Ole Christian Eidheim, Miodrag Milanovic
 #ifndef MAME_LIB_UTIL_SERVER_WS_IMPL_HPP
 #define MAME_LIB_UTIL_SERVER_WS_IMPL_HPP
+
 #include "path_to_regex.hpp"
 #include "base64.hpp"
 #include "crypto.hpp"
@@ -15,6 +16,7 @@
 #include <mutex>
 #include <unordered_set>
 #include <list>
+#include <vector>
 #include <memory>
 #include <atomic>
 #include <iostream>
@@ -360,9 +362,28 @@ namespace webpp {
 			write_handshake(connection, read_buffer);
 		}
 
+		static std::vector<std::string> split(const std::string& s, const std::string& delimiter)
+		{
+			const auto delimiter_length = delimiter.length();
+			std::vector<std::string> res;
+			size_t pos_start = 0, pos_end;
+
+			while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+			{
+				const auto token = s.substr(pos_start, pos_end - pos_start);
+				pos_start = pos_end + delimiter_length;
+				res.push_back(token);
+			}
+
+			res.push_back(s.substr(pos_start));
+
+			return res;
+		}
+
 		/// If you have your own asio::io_context, store its pointer here before running start().
 		/// You might also want to set config.num_threads to 0.
 		std::shared_ptr<asio::io_context> io_context;
+
 	protected:
 		const std::string ws_magic_string = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
@@ -453,13 +474,24 @@ namespace webpp {
 
 			for (auto& regex_endpoint : m_endpoint)
 			{
-				auto const parameters_index = connection->path.find("?");
+				const auto parameters_index = connection->path.find("?");
 
 				if (parameters_index > 0)
 				{
 					const auto param_size = connection->path.size() - parameters_index + 1;
 
-					connection->parameters = connection->path.substr(parameters_index + 1, param_size);
+					// "game=outrun&id=122132143423"
+					const auto parameters_string = connection->path.substr(parameters_index + 1, param_size);
+
+					// ["game=outrun", "id=122132143423"]
+					const auto parameters_vector = split(parameters_string, "&");
+
+					for (const auto p : parameters_vector)
+					{
+						const auto duo = split(p, "=");
+						connection->parameters[duo[0]] = duo[1];
+					}
+
 					connection->path = connection->path.erase(parameters_index, param_size);
 				}
 

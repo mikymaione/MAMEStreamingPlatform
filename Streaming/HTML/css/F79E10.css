@@ -1,5 +1,5 @@
 body {
-	max-width: 925px;
+	max-width: 745px;
 	margin: auto;
 	padding-top: 0px;
 	padding-bottom: 10px;
@@ -30,6 +30,7 @@ figure {
 	display: inline-block;
 	width: 222px;
 	vertical-align: top;
+	margin: 10px;
 }
 
 .giustificato {

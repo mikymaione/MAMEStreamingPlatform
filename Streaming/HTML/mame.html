@@ -3,7 +3,7 @@ license:BSD-3-Clause
 copyright-holders:Michele Maione
 ============================================================
 
-	mame.html - MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)
+	mame.html - MAME Cloud Gaming (aka DinoServer 🦕🧡🦖)
 
 ============================================================
 -->
@@ -18,18 +18,18 @@ copyright-holders:Michele Maione
 
 	<meta charset="UTF-8">
 
-	<meta name="date" content="2021-04-10" scheme="YYYY-MM-DD">
+	<meta name="date" content="2021-04-11" scheme="YYYY-MM-DD">
 	<meta name="author" content="Maione Michele">
-	<meta name="description" content="MAME Game Streaming Server (aka DinoServer 🦕🧡🦖)">
+	<meta name="description" content="MAME Cloud Gaming (aka DinoServer 🦕🧡🦖)">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>MAME Game Streaming Server</title>
+	<title>MAME Cloud Gaming</title>
 </head>
 
 <body>
 	<a id="reload" href="mame.html" class="aWhite">
-		<h1>MAME Game Streaming Server</h1>
+		<h1>MAME Cloud Gaming</h1>
 	</a>
 
 	<div id="instructions">
@@ -157,6 +157,7 @@ copyright-holders:Michele Maione
 		Your browser does not support the HTML canvas tag.
 	</canvas>
 
+	<script src="socket.io/socket.io.js"></script>
 	<script src="jsmpeg.js"></script>
 	<script src="gamecontroller.min.js"></script>
 	<script src="keypress-2.1.5.min.js"></script>
@@ -323,6 +324,12 @@ copyright-holders:Michele Maione
 			*/
 		}
 
+		function uuidv4()
+		{
+			return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+		}
+
 		function Start(game)
 		{
 			let there_is_some_inputs = false;
@@ -349,13 +356,16 @@ copyright-holders:Michele Maione
 
 			if (there_is_some_inputs)
 			{
+				const uuid = uuidv4();
+				const complete_uri = uri + '?game=' + game + '&id=' + uuid;
+				
 				document.body.style.backgroundColor = "black";
 				document.body.style.overflow = "hidden";
 				document.getElementById("reload").className = "aBlack";
 				document.getElementById("instructions").style.display = "none";
 				myCanvas.style.display = "inherit";
 
-				player = new JSMpeg.Player(uri + '?' + game, {
+				player = new JSMpeg.Player(complete_uri, {
 					canvas: myCanvas,
 					autoplay: true,
 					loop: false,
@@ -391,9 +401,7 @@ copyright-holders:Michele Maione
 
 		myCanvas = document.getElementById("myCanvas");
 		window.onresize = reportWindowSize;		
-	</script>
-
-	<script src="fullscreen.js"></script>
+	</script>	
 
 	<hr>
 	<ruby>© 2021, [MAIONE MIKY]</ruby>
