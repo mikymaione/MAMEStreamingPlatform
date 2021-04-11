@@ -8,6 +8,8 @@ let myCanvas;
 let player;
 let vw, vh, cw, ch, tw, th;
 
+let there_is_some_inputs = false;
+
 function readRomList()
 {
 	const rom_list_url = "http://www.maionemiky.it/MAME/roms/list.txt";
@@ -40,7 +42,7 @@ function readRomList()
 					let figcaption = document.createElement('figcaption');
 
 					td.className = 'td33';
-					
+
 					img.onclick = new Function('Start("' + s[0] + '", "' + s[1] + '");');
 					img.className = 'game';
 					img.src = 'roms/' + s[0] + '.png';
@@ -104,6 +106,8 @@ function InitKeyboard()
 {
 	const keyboard = 9999;
 	listener = new window.keypress.Listener();
+
+	document.getElementById('keyboard').src = 'css/keyboard.png';
 
 	listener.register_many([
 		{
@@ -189,39 +193,64 @@ function InitKeyboard()
 
 function InitGamepad()
 {
-	/*
 	gameControl.on('connect', gamepad =>
 	{
-		console.log('A new gamepad was connected!');
+		console.log('Gamepad ' + gamepad.id + ' was connected!');
 
-		gamepad.on('button8', () => { InputSend(gamepad.id, 'SELECT') });
-		gamepad.on('button9', () => { InputSend(gamepad.id, 'START') });
+		document.getElementById('gamepad' + gamepad.id).src = 'css/gamepad.png';
 
-		gamepad.on('button12', () => { InputSend(gamepad.id, 'UP') });
-		gamepad.on('button13', () => { InputSend(gamepad.id, 'DOWN') });
-		gamepad.on('button15', () => { InputSend(gamepad.id, 'RIGHT') });
-		gamepad.on('button14', () => { InputSend(gamepad.id, 'LEFT') });
-		gamepad.on('up', () => { InputSend(gamepad.id, 'UP') });
-		gamepad.on('down', () => { InputSend(gamepad.id, 'DOWN') });
-		gamepad.on('right', () => { InputSend(gamepad.id, 'RIGHT') });
-		gamepad.on('left', () => { InputSend(gamepad.id, 'LEFT') });
+		gamepad.before('select', () => { InputSend(gamepad.id, 'SELECT', true) });
+		gamepad.before('start', () => { InputSend(gamepad.id, 'START', true) });
 
-		gamepad.on('button2', () => { InputSend(gamepad.id, 'X') });
-		gamepad.on('button3', () => { InputSend(gamepad.id, 'Y') });
-		gamepad.on('button0', () => { InputSend(gamepad.id, 'A') });
-		gamepad.on('button1', () => { InputSend(gamepad.id, 'B') });
+		gamepad.before('button12', () => { InputSend(gamepad.id, 'UP', true) });
+		gamepad.before('button13', () => { InputSend(gamepad.id, 'DOWN', true) });
+		gamepad.before('button15', () => { InputSend(gamepad.id, 'RIGHT', true) });
+		gamepad.before('button14', () => { InputSend(gamepad.id, 'LEFT', true) });
+		gamepad.before('up', () => { InputSend(gamepad.id, 'UP', true) });
+		gamepad.before('down', () => { InputSend(gamepad.id, 'DOWN', true) });
+		gamepad.before('right', () => { InputSend(gamepad.id, 'RIGHT', true) });
+		gamepad.before('left', () => { InputSend(gamepad.id, 'LEFT', true) });
 
-		gamepad.on('button4', () => { InputSend(gamepad.id, 'L1') });
-		gamepad.on('button6', () => { InputSend(gamepad.id, 'L2') });
-		gamepad.on('button5', () => { InputSend(gamepad.id, 'R1') });
-		gamepad.on('button7', () => { InputSend(gamepad.id, 'R2') });
+		gamepad.before('button2', () => { InputSend(gamepad.id, 'X', true) });
+		gamepad.before('button3', () => { InputSend(gamepad.id, 'Y', true) });
+		gamepad.before('button0', () => { InputSend(gamepad.id, 'A', true) });
+		gamepad.before('button1', () => { InputSend(gamepad.id, 'B', true) });
+
+		gamepad.before('l1', () => { InputSend(gamepad.id, 'L1', true) });
+		gamepad.before('l2', () => { InputSend(gamepad.id, 'L2', true) });
+		gamepad.before('r1', () => { InputSend(gamepad.id, 'R1', true) });
+		gamepad.before('r2', () => { InputSend(gamepad.id, 'R2', true) });
+
+
+		gamepad.after('select', () => { InputSend(gamepad.id, 'SELECT', false) });
+		gamepad.after('start', () => { InputSend(gamepad.id, 'START', false) });
+
+		gamepad.after('button12', () => { InputSend(gamepad.id, 'UP', false) });
+		gamepad.after('button13', () => { InputSend(gamepad.id, 'DOWN', false) });
+		gamepad.after('button15', () => { InputSend(gamepad.id, 'RIGHT', false) });
+		gamepad.after('button14', () => { InputSend(gamepad.id, 'LEFT', false) });
+		gamepad.after('up', () => { InputSend(gamepad.id, 'UP', false) });
+		gamepad.after('down', () => { InputSend(gamepad.id, 'DOWN', false) });
+		gamepad.after('right', () => { InputSend(gamepad.id, 'RIGHT', false) });
+		gamepad.after('left', () => { InputSend(gamepad.id, 'LEFT', false) });
+
+		gamepad.after('button2', () => { InputSend(gamepad.id, 'X', false) });
+		gamepad.after('button3', () => { InputSend(gamepad.id, 'Y', false) });
+		gamepad.after('button0', () => { InputSend(gamepad.id, 'A', false) });
+		gamepad.after('button1', () => { InputSend(gamepad.id, 'B', false) });
+
+		gamepad.after('l1', () => { InputSend(gamepad.id, 'L1', false) });
+		gamepad.after('l2', () => { InputSend(gamepad.id, 'L2', false) });
+		gamepad.after('r1', () => { InputSend(gamepad.id, 'R1', false) });
+		gamepad.after('r2', () => { InputSend(gamepad.id, 'R2', false) });
 	});
 
 	gameControl.on('disconnect', gamepad =>
 	{
-		console.log('A gamepad was disconnected!');
+		console.log('Gamepad ' + gamepad.id + ' was disconnected!');
+
+		document.getElementById('gamepad' + gamepad.id).src = 'css/gamepadD.png';
 	});
-	*/
 }
 
 function uuidv4()
@@ -232,28 +261,6 @@ function uuidv4()
 
 function Start(game, description)
 {
-	let there_is_some_inputs = false;
-
-	try 
-	{
-		InitKeyboard();
-		there_is_some_inputs = true;
-	}
-	catch (error) 
-	{
-		alert("No keyboard found: " + error.message);
-	}
-
-	try 
-	{
-		InitGamepad();
-		there_is_some_inputs = true;
-	}
-	catch (error) 
-	{
-		alert("No gamepad found: " + error.message);
-	}
-
 	if (there_is_some_inputs)
 	{
 		const uuid = uuidv4();
@@ -309,3 +316,23 @@ myCanvas = document.getElementById("myCanvas");
 readRomList();
 
 window.onresize = reportWindowSize;
+
+try 
+{
+	InitKeyboard();
+	there_is_some_inputs = true;
+}
+catch (error) 
+{
+	alert("No keyboard found: " + error.message);
+}
+
+try 
+{
+	InitGamepad();
+	there_is_some_inputs = true;
+}
+catch (error) 
+{
+	alert("No gamepad found: " + error.message);
+}
