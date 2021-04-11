@@ -215,7 +215,7 @@ JSMpeg.Player = function ()
 			options.streaming = !!this.source.streaming
 		} else if (url.match(/^wss?:\/\//))
 		{
-			this.source = new JSMpeg.Source.WebSocket(url, options);
+			this.source = new JSMpeg.Source.WebSocketI(url, options);
 			options.streaming = true
 		} else if (options.progressive !== false)
 		{
@@ -917,7 +917,7 @@ JSMpeg.Source.AjaxProgressive = function ()
 	};
 	return AjaxProgressiveSource
 }();
-JSMpeg.Source.WebSocket = function ()
+JSMpeg.Source.WebSocketI = function ()
 {
 	"use strict";
 
@@ -965,8 +965,8 @@ JSMpeg.Source.WebSocket = function ()
 		this.progress = 0;
 		this.established = false;
 
-		this.socket = new window.WebSocket(this.url);
-		//this.socket = new window.WebSocket(this.url, this.options.protocols || null);
+		this.socket = new WebSocket(this.url);
+		//this.socket = new WebSocket(this.url, this.options.protocols || null);
 		this.socket.binaryType = "arraybuffer";
 
 		this.socket.onmessage = this.onMessage.bind(this);
@@ -984,12 +984,12 @@ JSMpeg.Source.WebSocket = function ()
 
 	WSSource.prototype.onError = function (event)
 	{
-		console.error("WebSocket error observed:", event);
+		console.error("WebSocketI error observed:", event);
 	}
 
 	WSSource.prototype.onClose = function (event)
 	{
-		console.log('The connection has been closed successfully.');
+		console.error('WebSocketI connection closed:', event);
 
 		let specificStatusCodeMappings = {
 			'1000': 'Normal Closure',

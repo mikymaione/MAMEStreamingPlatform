@@ -10,6 +10,7 @@
 
 // only for oslog callback
 #include <functional>
+#include <unordered_map>
 
 #ifdef SDLMAME_UNIX
 #if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_EMSCRIPTEN)) && (!defined(SDLMAME_ANDROID))
@@ -245,10 +246,10 @@ int main(int argc, char** argv)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
-		webpp::streaming_server::instance().on_accept = [&](auto game)
+		webpp::streaming_server::instance().on_accept = [&](auto parameters)
 		{
 			webpp::streaming_server::run_new_process(argc, argv);
-			r = main_sdl(argc, argv, game);
+			r = main_sdl(argc, argv, parameters["game"]);
 		};
 
 		webpp::streaming_server::instance().on_connection_closed = [&]()

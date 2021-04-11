@@ -17,6 +17,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <unordered_map>
 
 #include "server_ws_impl.hpp"
 #include "encoding/encode_to_mp4.hpp"
@@ -51,7 +52,7 @@ namespace webpp
 		/**
 		 * \brief Accept callback
 		 */
-		std::function<void(std::string)> on_accept;
+		std::function<void(std::unordered_map<std::string, std::string>)> on_accept;
 		/**
 		 * \brief Connection closed callback
 		 */
@@ -71,26 +72,6 @@ namespace webpp
 			*stream << msg;
 
 			send(stream, 129);
-		}
-
-		static std::vector<std::string> split(const std::string& s, const std::string& del)
-		{
-			std::vector<std::string> result;
-
-			size_t start = 0;
-			auto end = s.find(del);
-
-			while (end != std::string::npos)
-			{
-				result.push_back(s.substr(start, end - start));
-
-				start = end + del.size();
-				end = s.find(del, start);
-			}
-
-			result.push_back(s.substr(start, end - start));
-
-			return result;
 		}
 
 		static bool is_streaming_server(const int argc, char** argv)
@@ -324,7 +305,7 @@ namespace webpp
 			endpoint.on_message = [this](auto connection, auto message)
 			{
 				const auto msg = message->string();
-				const auto values = split(msg, ":");
+				const auto values = ws_server::split(msg, ":");
 
 				if (values[0] == "ping")
 					process_pausing_mechanism();
