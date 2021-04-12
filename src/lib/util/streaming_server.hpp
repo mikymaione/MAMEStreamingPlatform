@@ -126,7 +126,7 @@ namespace webpp
 			const auto now = std::chrono::system_clock::now();
 			const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - ping_sent);
 
-			if (machine_paused_by_server && machine->paused() || milliseconds.count() > 2000)
+			if ((machine_paused_by_server && machine->paused()) || milliseconds.count() > 2000)
 			{
 				ping++;
 				ping_sent = std::chrono::system_clock::now();

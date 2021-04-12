@@ -725,6 +725,9 @@ else
 	links {
 		ext_lib("avcodec"),
 		ext_lib("avutil"),
+		ext_lib("avformat"),
+		ext_lib("swresample"),
+		ext_lib("swscale"),
 	}
 end
 
