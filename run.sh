@@ -1,1 +1,1 @@
-./mame64d -streamingserver -window -video accel -sound sdl
+./mame64 -streamingserver -window -video accel -sound sdl -resolution 640x480@60
