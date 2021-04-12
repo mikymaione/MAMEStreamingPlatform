@@ -1,6 +1,6 @@
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[12pt,british]{report}
+\documentclass[english]{report}
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
 \usepackage{csharp_algorithms}
@@ -28,13 +28,8 @@
 %
 
 % Package di formato
-\usepackage[
-%    top    = 2.75cm,
-%    bottom = 2.50cm,
-%    left   = 3.00cm,
-%    right  = 3.00cm,
-    a4paper]{geometry}				% Formato del foglio
-\usepackage[british]{babel}			% Supporto per l'inglese
+\usepackage[a4paper]{geometry}				% Formato del foglio
+\usepackage[english]{babel}			% Supporto per l'inglese
 \usepackage[utf8]{inputenc}			% Supporto per UTF-8
 %\usepackage[a-1b]{pdfx}			% File conforme allo standard PDF-A (obbligatorio per la consegna)
 \usepackage{float}
@@ -60,6 +55,11 @@
 \usepackage{verbatim}
 \usepackage{commath}
 \usepackage{minted}
+\usepackage{multicol}
+
+\usepackage{caption}
+\definecolor{grigio}{RGB}{100,100,100}
+\captionsetup[figure]{font={footnotesize, color=grigio}}
 
 \begin{document}
 \renewcommand\contentsname{Index}
@@ -79,24 +79,36 @@
 	
 	\--- Primo Levi\\
 }
-         
+
 % 
 %			PREFAZIONE (facoltativa)
 %
 
 %Le prefazioni non sono molto comuni, tuttavia a volte capita che qualcuno voglia 
 \prefacesection{Abstract}
-In 1952 in the laboratories of the University of Cambridge A.S. Douglas, as an example for his doctoral thesis, created OXO, the transposition of the Tic-Tac-Toe computer game. This is usually considered technically the first video game as it used a cathode screen for display [5]. Its purpose, however, was not to entertain users but to complete Douglas's thesis. In 1958 the physicist Willy Higinbotham of Brookhaven National Laboratory, noting the lack of interest that students had in the subject, created a game, Tennis for Two, which had the task of simulating the physical laws that could be found in a tennis match: the medium used was an oscilloscope. This is remembered as a university experiment rather than a game.
-In 1961, six young scientists from MIT (Massachusetts Institute of Technology) manage to give movement to luminous dots on the screen of a PDP-1: Spacewar! Was born, the first video game properly designed for recreational purposes that history remembers.
-Two months later Nolan Bushnell and Ted Dabney completed their version of Spacewar !, called Computer Space and built by Nutting Associates. Considered the first large-scale arcade video game, around 1,500 were produced; however, the game was not a great success due to the high difficulty.
-Bushnell, after the not particularly successful experiment of Computer Space, still decided to insist with video games, but producing them on his own: thus Atari was born. Atari's first arcade video game was the industry's first big hit: PONG, released on November 29, 1972, which roughly reproduces the mechanics of ping pong. Atari sold 19,000 Pong cabinets and soon many imitators followed suit. At the end of the decade the golden age of arcade video games began.
-Having now become a mass cultural phenomenon, the video game is a unique medium: in fact, as James Paul Gee [6] suggests, video games are very different from other types of media (film, literature, theater ...), even if they incorporate the various languages. They have several characteristics that make them unique and operate differently from others, for example the language of gameplay is unique among traditional narrative media and it has also been authoritatively stated that it is interactivity that has distinguished video games from other forms of entertainment. mass media entertainment; precisely this characteristic allows the video game to exercise a potential of immersion and attraction that other media do not have.
-The most conspicuous age range of those who play the video game is between 16 and 29 years, although in some countries, such as the United Kingdom, the average age is higher, with half of the total gamers over 40 years old\cite{High_Score}.
 
+\begin{multicols}{2}
+	Having now become a mass cultural phenomenon, video games are a unique medium, in fact they are very different from other types of media while incorporating their various languages. It has been authoritatively affirmed that, it is interactivity that has distinguished video games from other forms of mass media entertainment; precisely this characteristic allows the video game to exercise a potential of immersion and attraction that other media do not have.
+
+	With hundreds of millions of people playing interactive games regularly today, gaming is fast becoming a dominant player in the entertainment industry.	It is certainly a continuously growing sector that has never undergone stoppages over the years.
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth]{immagini/valore_commerciale_giochi_globale.png}
+		\caption{Value of global video game market in USD billion. Source: https://www.dw.com/en/germanys-video-game-industry-seeks-help-amid-boom/a-45234549}
+		\label{fig:valore_commerciale_giochi_globale}
+	\end{figure}
+	As the speed of network connections continues to increase, we are moving towards a new digital age as part of a communications revolution that will affect every aspect of consumers' lives, not least the change it brings in terms of options in the entertainment industry. The challenge is to invent content consumption patterns of existing and new types of content and services. One of these opportunities is realized through two technologies that have now become part of everyday life: streaming and cloud computing.
+
+	This project involves the creation of a cloud gaming platform, which allows the direct and on-demand audio-video streaming of video games, from a remote server, to a web browser (computer, console, telephone, TV). The game is archived, played, and rendered on a remote server; the input (keyboard, joystick) is sent from the web browser to the server.
+
+	In this way, games can be accessed regardless of the operating system and hardware capabilities of the client used, the only prerequisite is a 1.5 Mbps network connection. In addition, the system allows the user to start playing immediately. Finally, the platform indirectly guarantees the management of digital rights (DRM) for publishers.
+
+	The system is based on the (GNU-GPL) MAME emulator, can run on Linux, Windows and macOS, supports couch multiplayer up to 4 players and a library of over 7000 games.
+
+	Since no configuration is required and the user interface is made up of web pages, it makes the system usable to all user groups which will be encouraged to play the game that made the history of video games.
+\end{multicols}
 %
 %			RINGRAZIAMENTI (facoltativi)
 %
-
 \prefacesection{Acknowledgements}
 I would like to thank my supervisor Prof. Dario Maggiorini for his continuous support and Prof. Davide Gadia for his helpful guidance throughout my efforts towards the completion of the present thesis.
 
