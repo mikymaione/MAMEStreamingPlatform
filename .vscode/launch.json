@@ -9,8 +9,9 @@
 			"args": [
 				"-streamingserver",
 				"-window",
-				"-resolution",
-				"352x288"
+				"-video", "accel",
+				"-sound", "sdl",
+				"-resolution", "640x480@60"
 			],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",

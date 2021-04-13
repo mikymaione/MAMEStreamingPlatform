@@ -9,7 +9,8 @@
 			"command": "make",
 			"args": [
 				"OSD=sdl",
-				"SOURCES=src/mame/drivers/cps3.cpp",
+				"TARGET=mame",
+				"SOURCES=src/mame/drivers/galaga.cpp,src/mame/drivers/cps3.cpp,src/mame/drivers/naomi.cpp,src/mame/drivers/neogeo.cpp,src/mame/drivers/segaorun.cpp,src/mame/drivers/megadriv_rad.cpp,src/mame/drivers/mitchell.cpp,src/mame/drivers/spg110.cpp,src/mame/drivers/tmnt.cpp,src/mame/drivers/vsnes.cpp,src/mame/drivers/namcos12.cpp",
 				"TOOLS=0",
 				"IGNORE_GIT=1",
 				"DEBUG=1",
