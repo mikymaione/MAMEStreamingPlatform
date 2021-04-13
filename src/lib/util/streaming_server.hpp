@@ -226,14 +226,21 @@ namespace webpp
 
 		static void run_new_process(const int argc, char** argv)
 		{
-			std::stringstream string_stream;
-			string_stream << "start";
+			std::stringstream string_stream;			
+
+			#ifdef WIN32
+				string_stream << "start";
+			#endif
 
 			for (auto i = 0; i < argc; ++i)
 			{
 				string_stream << " ";
 				string_stream << argv[i];
 			}
+			
+			#ifndef WIN32
+				string_stream << " &";
+			#endif
 
 			const auto command = string_stream.str();
 
