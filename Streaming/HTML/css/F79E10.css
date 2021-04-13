@@ -24,6 +24,8 @@ body {
 
 .game {
 	cursor: pointer;
+	max-width: 100%;
+	height: auto;
 }
 
 figure {
@@ -63,12 +65,11 @@ a:active, a:hover {
 	font-weight: bold;
 }
 
-img {
-	max-width: 100%;
-	height: auto;
-}
-
 .td33 {
 	width: 33%;
 	vertical-align: top;
+}
+
+#mame_logo {
+	vertical-align: bottom;
 }
