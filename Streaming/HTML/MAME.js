@@ -1,3 +1,13 @@
+/* 
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	mame.js - MAME Cloud Gaming (aka DinoServer 🦕🧡🦖)
+
+============================================================
+*/
+
 const uri = "ws://82.48.166.10:8888";
 //const uri = "ws://localhost:8888";
 
