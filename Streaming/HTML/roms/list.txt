@@ -1,7 +1,7 @@
 cstlevna;Castelvania;Konami - 1986
 drmario;Dr. Mario;Nintendo - 1990
 galaga;Galaga;Namco - 1981
-jojoban;JoJo’s Bizarre Adventure;Capcom - 1998
+jojoban;JoJoâ€™s Bizarre Adventure;Capcom - 1998
 mslug3;Metal Slug 3;SNK - 2000
 outrun;Out Run;Sega - 1986
 pbobbl2n;Puzzle Bobble 2;Taito - 1995
