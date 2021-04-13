@@ -11,7 +11,7 @@ copyright-holders:Michele Maione
 const uri = "ws://82.48.166.10:8888";
 //const uri = "ws://localhost:8888";
 
-let listener;
+let keypress_Listener;
 
 let navigation_menu;
 let myCanvas;
@@ -115,90 +115,94 @@ function InputSend(g, t, down)
 function InitKeyboard()
 {
 	const keyboard = 9999;
-	listener = new window.keypress.Listener();
+	
+	keypress_Listener = new window.keypress.Listener();
+	
+	if (keypress_Listener)
+	{
+		keypress_Listener.register_many([
+			{
+				"keys": "p",
+				"on_keydown": function () { InputSend(keyboard, 'PAUSE', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'PAUSE', false); },
+			},
+			{
+				"keys": "1",
+				"on_keydown": function () { InputSend(keyboard, 'START', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'START', false); },
+			},
+			{
+				"keys": "2",
+				"on_keydown": function () { InputSend(keyboard, 'SELECT', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'SELECT', false); },
+			},
 
-	document.getElementById('keyboard').src = 'css/keyboard.png';
+			{
+				"keys": "left",
+				"on_keydown": function () { InputSend(keyboard, 'LEFT', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'LEFT', false); },
+			},
+			{
+				"keys": "right",
+				"on_keydown": function () { InputSend(keyboard, 'RIGHT', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'RIGHT', false); },
+			},
+			{
+				"keys": "up",
+				"on_keydown": function () { InputSend(keyboard, 'UP', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'UP', false); },
+			},
+			{
+				"keys": "down",
+				"on_keydown": function () { InputSend(keyboard, 'DOWN', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'DOWN', false); },
+			},
 
-	listener.register_many([
-		{
-			"keys": "p",
-			"on_keydown": function () { InputSend(keyboard, 'PAUSE', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'PAUSE', false); },
-		},
-		{
-			"keys": "1",
-			"on_keydown": function () { InputSend(keyboard, 'START', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'START', false); },
-		},
-		{
-			"keys": "2",
-			"on_keydown": function () { InputSend(keyboard, 'SELECT', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'SELECT', false); },
-		},
+			{
+				"keys": "w",
+				"on_keydown": function () { InputSend(keyboard, 'X', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'X', false); },
+			},
+			{
+				"keys": "e",
+				"on_keydown": function () { InputSend(keyboard, 'Y', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'Y', false); },
+			},
+			{
+				"keys": "s",
+				"on_keydown": function () { InputSend(keyboard, 'A', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'A', false); },
+			},
+			{
+				"keys": "d",
+				"on_keydown": function () { InputSend(keyboard, 'B', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'B', false); },
+			},
 
-		{
-			"keys": "left",
-			"on_keydown": function () { InputSend(keyboard, 'LEFT', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'LEFT', false); },
-		},
-		{
-			"keys": "right",
-			"on_keydown": function () { InputSend(keyboard, 'RIGHT', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'RIGHT', false); },
-		},
-		{
-			"keys": "up",
-			"on_keydown": function () { InputSend(keyboard, 'UP', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'UP', false); },
-		},
-		{
-			"keys": "down",
-			"on_keydown": function () { InputSend(keyboard, 'DOWN', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'DOWN', false); },
-		},
-
-		{
-			"keys": "w",
-			"on_keydown": function () { InputSend(keyboard, 'X', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'X', false); },
-		},
-		{
-			"keys": "e",
-			"on_keydown": function () { InputSend(keyboard, 'Y', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'Y', false); },
-		},
-		{
-			"keys": "s",
-			"on_keydown": function () { InputSend(keyboard, 'A', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'A', false); },
-		},
-		{
-			"keys": "d",
-			"on_keydown": function () { InputSend(keyboard, 'B', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'B', false); },
-		},
-
-		{
-			"keys": "q",
-			"on_keydown": function () { InputSend(keyboard, 'L1', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'L1', false); },
-		},
-		{
-			"keys": "a",
-			"on_keydown": function () { InputSend(keyboard, 'L2', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'L2', false); },
-		},
-		{
-			"keys": "r",
-			"on_keydown": function () { InputSend(keyboard, 'R1', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'R1', false); },
-		},
-		{
-			"keys": "f",
-			"on_keydown": function () { InputSend(keyboard, 'R2', true); },
-			"on_keyup": function (e) { InputSend(keyboard, 'R2', false); },
-		},
-	]);
+			{
+				"keys": "q",
+				"on_keydown": function () { InputSend(keyboard, 'L1', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'L1', false); },
+			},
+			{
+				"keys": "a",
+				"on_keydown": function () { InputSend(keyboard, 'L2', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'L2', false); },
+			},
+			{
+				"keys": "r",
+				"on_keydown": function () { InputSend(keyboard, 'R1', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'R1', false); },
+			},
+			{
+				"keys": "f",
+				"on_keydown": function () { InputSend(keyboard, 'R2', true); },
+				"on_keyup": function (e) { InputSend(keyboard, 'R2', false); },
+			},
+		]);
+		
+		document.getElementById('keyboard').src = 'css/keyboard.png';
+	}
 }
 
 function InitGamepad()
@@ -332,7 +336,7 @@ try
 	InitKeyboard();
 	there_is_some_inputs = true;
 }
-catch (error) 
+catch (error)
 {
 	alert("No keyboard found: " + error.message);
 }
