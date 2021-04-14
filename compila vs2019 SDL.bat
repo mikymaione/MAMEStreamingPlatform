@@ -1,2 +1,0 @@
-cls
-make vs2019 PYTHON_EXECUTABLE=C:/Users/Public/msys64/mingw64/bin/python.exe OSD=sdl TARGET=mame SOURCES=src/mame/drivers/galaga.cpp,src/mame/drivers/cps3.cpp,src/mame/drivers/naomi.cpp,src/mame/drivers/neogeo.cpp,src/mame/drivers/segaorun.cpp,src/mame/drivers/megadriv_rad.cpp,src/mame/drivers/mitchell.cpp,src/mame/drivers/spg110.cpp,src/mame/drivers/tmnt.cpp,src/mame/drivers/vsnes.cpp,src/mame/drivers/namcos12.cpp USE_BUNDLED_LIB_SDL2=0 USE_LIBSDL=1 SDL_INSTALL_ROOT=C:/SDL2/ REGENIE=1 -j7
