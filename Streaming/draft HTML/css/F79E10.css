@@ -1,0 +1,85 @@
+/*
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	F79E10.css - F79E10 is my orange color
+
+============================================================
+*/
+
+body {
+	max-width: 745px;
+	margin: auto;
+	padding-top: 0px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	padding-left: 10px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	font-family: 'Ubuntu Mono';
+}
+
+.center {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+#myCanvas {
+	display: none;
+}
+
+.game {
+	cursor: pointer;
+	max-width: 100%;
+	height: auto;
+}
+
+figure {
+	display: inline-block;	
+	vertical-align: top;
+	margin: 10px;
+	width: 100%;
+}
+
+.giustificato {
+	text-align: justify;
+	text-justify: inter-character;
+}
+
+figcaption, h2, h3, ruby {
+	color: #464453;
+}
+
+.disab {
+	color: #464453;
+}
+
+em, a:link, a:visited {
+	color: #F79E10;
+}
+
+a:active, a:hover {
+	color: black;
+	background-color: #F79E10;
+}
+
+.not-active {
+	pointer-events: none;
+	cursor: default;
+	text-decoration: none;
+	color: black !important;
+	font-weight: bold;
+}
+
+.td33 {
+	width: 33%;
+	vertical-align: top;
+}
+
+#mame_logo {
+	vertical-align: bottom;
+}
