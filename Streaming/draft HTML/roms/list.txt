@@ -1,0 +1,15 @@
+cstlevna;Castelvania;Konami - 1986
+drmario;Dr. Mario;Nintendo - 1990
+galaga;Galaga;Namco - 1981
+jojoban;JoJo’s Bizarre Adventure;Capcom - 1998
+maxspeed;Maximum Speed;Atomiswave - 2003
+mslug3;Metal Slug 3;SNK - 2000
+outrun;Out Run;Sega - 1986
+pbobbl2n;Puzzle Bobble 2;Taito - 1995
+sfiii3nr1;Street Fighter III: 3rd Strike;Capcom - 1999
+strhoop;Street Slam;Data East - 1994
+soulclbr;Soulcalibur;Project Soul - 1998
+ssriders;Sunset Riders;Konami - 1991
+suprmrio;Super Mario Bros.;Nintendo - 1985
+spang;Super Pang;Mitchell Corporation - 1990
+tekken3;Tekken 3;Namco - 1997

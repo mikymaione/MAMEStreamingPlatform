@@ -29,20 +29,6 @@ or for debug:
 compileDebug.sh
 ```
 
-How to run?
-===============
-
-If you're on a *NIX or OSX system:
-```
-run.sh
-```
-
-or on Windows:
-```
-run.bat
-```
-
-
 See the [Compiling MAME](http://docs.mamedev.org/initialsetup/compilingmame.html) page on our documentation site for more information, including prerequisites for Mac OS X and popular Linux distributions.
 
 For recent versions of OSX you need to install [Xcode](https://developer.apple.com/xcode/) including command-line tools and [SDL 2.0](https://www.libsdl.org/download-2.0.php).
@@ -56,6 +42,36 @@ In order to generate solution and project files just run:
 compile_vs2019_SDL.bat
 ```
 and then open the Visual Studio 2019 solution: ./build/projects/sdl/mame/vs2019/mame.sln
+
+
+How to run?
+===============
+
+Put in the folder roms the all the games that you want use.
+
+Then if you're on a *NIX or OSX system:
+```
+run.sh
+```
+
+or on Windows:
+```
+run.bat
+```
+
+How to deploy the web page?
+===============
+
+In Streaming/HTML/roms/ put all the game posters (.png format);
+
+Edit the file Streaming/HTML/roms/list.txt with all the games that you want use in the format:
+```
+rom_name;description;other_info
+
+sfiii3nr1;Street Fighter III: 3rd Strike;Capcom - 1999
+```
+
+Put the content of Streaming/HTML on your website.
 
 
 License
