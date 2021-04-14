@@ -34,7 +34,6 @@
 #include <windows.h>
 #endif
 
-#include <chrono>
 #include <SDL2/SDL.h>
 
 // MAME headers
@@ -81,14 +80,14 @@ int sdl_entered_debugger;
 
 const options_entry sdl_options::s_option_entries[] =
 {
-	{ SDLOPTION_INIPATH,                     INI_PATH,    OPTION_STRING,     "path to ini files" },
+		{ SDLOPTION_INIPATH,                     INI_PATH,    OPTION_STRING,     "path to ini files" },
 
-	// performance options
-	{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL PERFORMANCE OPTIONS" },
-	{ SDLOPTION_SDLVIDEOFPS,                  "0",        OPTION_BOOLEAN,    "show sdl video performance" },
-	// video options
-	{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL VIDEO OPTIONS" },
-	// OS X can be trusted to have working hardware OpenGL, so default to it on for the best user experience
+		// performance options
+		{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL PERFORMANCE OPTIONS" },
+		{ SDLOPTION_SDLVIDEOFPS,                  "0",        OPTION_BOOLEAN,    "show sdl video performance" },
+		// video options
+		{ nullptr,                                nullptr,       OPTION_HEADER,     "SDL VIDEO OPTIONS" },
+		// OS X can be trusted to have working hardware OpenGL, so default to it on for the best user experience
 		{ SDLOPTION_CENTERH,                      "1",        OPTION_BOOLEAN,    "center horizontally within the view area" },
 		{ SDLOPTION_CENTERV,                      "1",        OPTION_BOOLEAN,    "center vertically within the view area" },
 		{ SDLOPTION_SCALEMODE ";sm",         OSDOPTVAL_NONE,  OPTION_STRING,     "Scale mode: none, hwblit, hwbest, yv12, yuy2, yv12x2, yuy2x2 (-video soft only)" },
@@ -247,9 +246,6 @@ int main(int argc, char** argv)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
-		std::string game;
-		auto start_time = std::chrono::system_clock::now();
-
 		webpp::streaming_server::instance().on_accept = [&](auto parameters)
 		{
 			webpp::streaming_server::run_new_process(argc, argv);
