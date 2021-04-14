@@ -1,14 +1,5 @@
 # **SDL MAME Cloud Gaming** #
 
-Build status:
-
-| OS/Compiler   | Status        | 
-| ------------- |:-------------:| 
-| Linux/GCC and Clang | ![CI (Linux)](https://github.com/mikymaione/MAMEStreamingPlatform/workflows/CI%20(Linux)/badge.svg) |
-| Windows/GCC and MSVC | ![CI (Windows)](https://github.com/mikymaione/MAMEStreamingPlatform/workflows/CI%20(Windows)/badge.svg) |
-| macOS/Clang | ![CI (macOS)](https://github.com/mikymaione/MAMEStreamingPlatform/workflows/CI%20(macOS)/badge.svg) |
-
-
 What is MAME?
 =============
 
