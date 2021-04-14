@@ -365,6 +365,9 @@ namespace webpp
 				<< std::endl;
 
 			server->start();
+
+			if (game_thread->joinable())
+				game_thread->join();
 		}
 
 	};
