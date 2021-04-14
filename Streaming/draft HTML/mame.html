@@ -1,0 +1,136 @@
+<!--
+license:BSD-3-Clause
+copyright-holders:Michele Maione
+============================================================
+
+	mame.html - MAME Cloud Gaming (aka DinoServer 🦕🧡🦖)
+
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="icon" type="image/png" href="mame.png" />
+
+	<link rel="stylesheet" type="text/css" href="css/F79E10.css">
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu Mono'>
+
+	<meta charset="UTF-8">
+
+	<meta name="date" content="2021-04-11" scheme="YYYY-MM-DD">
+	<meta name="author" content="Maione Michele">
+	<meta name="description" content="MAME Cloud Gaming (aka DinoServer 🦕🧡🦖)">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MAME Cloud Gaming</title>
+</head>
+
+<body>
+	<h1><img id="mame_logo" src="mame.png"> MAME Cloud Gaming</h1>
+
+	<nav id="navigation_menu">
+		<a id="nav_games" href="mame.html">Game list</a>
+	</nav>
+	<hr>
+
+	<canvas id="myCanvas" class="center">
+		Your browser does not support the HTML canvas tag.
+	</canvas>
+
+	<div id="instructions">
+		<table>
+			<tr>
+				<td>
+					<img id="keyboard" src="css/keyboardD.png">
+				</td>
+				<td>
+					<img id="gamepad0" src="css/gamepadD.png">
+				</td>
+				<td>
+					<img id="gamepad1" src="css/gamepadD.png">
+				</td>
+				<td>
+					<img id="gamepad2" src="css/gamepadD.png">
+				</td>
+				<td>
+					<img id="gamepad3" src="css/gamepadD.png">
+				</td>
+			</tr>
+		</table>
+
+		<h2>Keys:</h2>
+
+		<table>
+			<tr>
+				<td>
+					Restart:
+				</td>
+				<td>
+					F5
+				</td>
+				<td width="20px">
+
+				</td>
+				<td>
+					Move:
+				</td>
+				<td>
+					←, ↑, →, ↓
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Start:
+				</td>
+				<td>
+					1
+				</td>
+				<td width="20px">
+
+				</td>
+				<td>
+					Actions:
+				</td>
+				<td>
+					Q, W, E, R, A, S, D, F
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Coin:
+				</td>
+				<td>
+					2
+				</td>
+				<td width="20px">
+
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Pause:
+				</td>
+				<td>
+					P
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="games">
+		<h3>click a game to play it</h3>
+		<!-- MAME.js will populate from file roms/list.txt -->
+	</div>
+
+	<script src="jsmpeg.js"></script>
+	<script src="gamecontroller.min.js"></script>
+	<script src="keypress-2.1.5.min.js"></script>
+	<script src="MAME.js"></script>
+
+	<hr>
+	<ruby>© 2021, [MAIONE MIKY]</ruby>
+</body>
+
+</html>
