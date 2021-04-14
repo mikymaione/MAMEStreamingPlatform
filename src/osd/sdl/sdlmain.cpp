@@ -34,6 +34,7 @@
 #include <windows.h>
 #endif
 
+#include <chrono>
 #include <SDL2/SDL.h>
 
 // MAME headers
@@ -246,15 +247,14 @@ int main(int argc, char** argv)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
+		std::string game;
+		auto start_time = std::chrono::system_clock::now();
+
 		webpp::streaming_server::instance().on_accept = [&](auto parameters)
 		{
 			webpp::streaming_server::run_new_process(argc, argv);
-			r = main_sdl(argc, argv, parameters["game"]);
-		};
 
-		webpp::streaming_server::instance().on_connection_closed = [&]()
-		{
-			exit(r);
+			r = main_sdl(argc, argv, parameters["game"]);
 		};
 
 		webpp::streaming_server::instance().start(8888);
@@ -264,7 +264,10 @@ int main(int argc, char** argv)
 		r = main_sdl(argc, argv, "");
 	}
 
-	exit(r);
+	std::cout << "Press enter to exit." << std::endl;
+	std::cin.ignore();
+
+	return r;
 }
 
 //============================================================

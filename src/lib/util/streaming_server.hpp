@@ -32,11 +32,13 @@ namespace webpp
 
 		unsigned long ping = 0;
 
+		std::chrono::time_point<std::chrono::system_clock> game_start_time;
+
 		std::chrono::time_point<std::chrono::system_clock> ping_sent =
 			std::chrono::system_clock::now();
 
 		std::unique_ptr<ws_server> server;
-		std::unique_ptr<std::thread> acceptThread;
+		std::unique_ptr<std::thread> game_thread;
 
 		bool encoding_initialized = false;
 		std::unique_ptr<encoding::encode_to_mp4> encoder = nullptr;
@@ -53,10 +55,6 @@ namespace webpp
 		 * \brief Accept callback
 		 */
 		std::function<void(std::unordered_map<std::string, std::string>)> on_accept;
-		/**
-		 * \brief Connection closed callback
-		 */
-		std::function<void()> on_connection_closed;
 
 	private:
 		///fin_rsv_operation_code: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
@@ -226,21 +224,21 @@ namespace webpp
 
 		static void run_new_process(const int argc, char** argv)
 		{
-			std::stringstream string_stream;			
+			std::stringstream string_stream;
 
-			#ifdef WIN32
-				string_stream << "start";
-			#endif
+#ifdef WIN32
+			string_stream << "start";
+#endif
 
 			for (auto i = 0; i < argc; ++i)
 			{
 				string_stream << " ";
 				string_stream << argv[i];
 			}
-			
-			#ifndef WIN32
-				string_stream << " &";
-			#endif
+
+#ifndef WIN32
+			string_stream << " &";
+#endif
 
 			const auto command = string_stream.str();
 
@@ -306,7 +304,15 @@ namespace webpp
 					<< connection->remote_endpoint_port
 					<< std::endl;
 
-				acceptThread = std::make_unique<std::thread>(on_accept, connection->parameters);
+				game_thread = std::make_unique<std::thread>(on_accept, connection->parameters);
+
+				game_start_time = std::chrono::system_clock::now();
+
+				const auto game = connection->parameters["game"];
+
+				std::cout
+					<< "Starting game: " << game
+					<< std::endl;
 			};
 
 			endpoint.on_message = [this](auto connection, auto message)
@@ -334,21 +340,28 @@ namespace webpp
 
 			endpoint.on_close = [this](auto connection, auto status, auto reason)
 			{
+				const auto game_end_time = std::chrono::system_clock::now();
+				const auto game_total_minute_played = std::chrono::duration_cast<std::chrono::minutes>(game_end_time - game_start_time);
+				const auto game = connection->parameters["game"];
+
 				std::cout
 					<< "-Closed connection from "
-					<< connection->remote_endpoint_address
-					<< ":"
+					<< connection->remote_endpoint_address << ":"
 					<< connection->remote_endpoint_port
 					<< std::endl
 					<< ": " << reason
 					<< std::endl;
 
-				on_connection_closed();
+				std::cout
+					<< game
+					<< " played for: " << game_total_minute_played.count() << "min."
+					<< std::endl;
+
+				machine->schedule_exit();
 			};
 
 			std::cout
-				<< "Game streaming server listening on "
-				<< port
+				<< "Game streaming server listening on " << port
 				<< std::endl;
 
 			server->start();
