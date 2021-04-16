@@ -63,16 +63,18 @@ Luna was announced on September 24, 2020, with ‘early access’ available to s
 
 
 \section{Proposed system}
-A key feature of the system is usability and for this reason, on the client side, the web browser was the most obvious choice. Among the communication APIs implemented by modern browsers we find: XMLHttpRequest (XHR), Server-Sent Events (SSE), WebSocket, Web Real-Time Communication.
+A key feature of the system is usability and for this reason, on the client side, the web browser was the most obvious choice.
+There are some streaming technology in HTML5: HLS, DASH, Websocket and WebRTC.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/proposed_system}
-	\caption{System overview}
-	\label{fig:proposed_system}
-\end{figure}
+HLS is the most popular high-latency streaming protocol over HTTP for VOD (pre-recorded video).
 
+DASH is an adaptive bitrate streaming technique that enables high quality streaming of media content over HTTP.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\cite{High_Performance_Browser_Networking}.
+Websocket it is TCP based, but with lower latency than HLS and DASH.
+
+WebRTC is based on SRTP, therefore to get RTP stream on the browser a WebRTC server is needed.
+
+Since this project is designed for retrograming stands and to be performed on a local network within trade fairs and IT events, the transmission takes place on a WiFi LAN network, so the difference in speed between TCP and UDP becomes negligible, therefore the choice fell on WebSocket because it is a communication protocol standardized by 2011, it is fully supported by all the modern browsers, it is simple and does not require the use of additional protocols or complex configuration\cite{Audio_and_video_delivery}.
 
 
 \begin{figure}[H]
@@ -82,5 +84,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 \end{figure}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/proposed_system}
+	\caption{System overview}
+	\label{fig:proposed_system}
+\end{figure}
+
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\cite{High_Performance_Browser_Networking}.
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
