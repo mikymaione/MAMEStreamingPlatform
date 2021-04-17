@@ -64,18 +64,15 @@ Luna was announced on September 24, 2020, with ‘early access’ available to s
 
 \section{Proposed system}
 A key feature of the system is usability and for this reason, on the client side, the web browser was the most obvious choice.
-There are some streaming technology in HTML5: HLS, DASH, Websocket and WebRTC.
+There are some streaming technology for web browsers: WebSocket, HLS, DASH and WebRTC\cite{Audio_and_video_delivery}.
 
-HLS is the most popular high-latency streaming protocol over HTTP for VOD (pre-recorded video).
+WebSocket is a communications protocol, providing full-duplex communication channels over a single TCP connection, with lower latency than HLS and DASH.
 
-DASH is an adaptive bitrate streaming technique that enables high quality streaming of media content over HTTP.
+HTTP Live Streaming (HLS) is the most popular high-latency streaming protocol over HTTP for video on demand (pre-recorded video) developed by Apple.
 
-Websocket it is TCP based, but with lower latency than HLS and DASH.
+Dynamic Adaptive Streaming over HTTP (DASH) is an adaptive bitrate streaming technique by Moving Picture Experts Group (MPEG), that enables high quality streaming of media content over HTTP.
 
-WebRTC is based on SRTP, therefore to get RTP stream on the browser a WebRTC server is needed.
-
-Since this project is designed for retrograming stands and to be performed on a local network within trade fairs and IT events, the transmission takes place on a WiFi LAN network, so the difference in speed between TCP and UDP becomes negligible, therefore the choice fell on WebSocket because it is a communication protocol standardized by 2011, it is fully supported by all the modern browsers, it is simple and does not require the use of additional protocols or complex configuration\cite{Audio_and_video_delivery}.
-
+Web Real-Time Communication (WebRTC) is a project for real-time communication based on Secure Real-time Transport Protocol (SRTP). Therefore to get SRTP stream to the the browser a WebRTC server is needed\cite{High_Performance_Browser_Networking}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/webprotocols}
@@ -83,7 +80,7 @@ Since this project is designed for retrograming stands and to be performed on a 
 	\label{fig:webprotocols}
 \end{figure}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This project is meant to be used in retrogaming stand in trade events for IT and video games industry, it will run on a local network and users are connected via WiFi, so the difference in speed between TCP and UDP becomes negligible, therefore the choice fell on WebSocket because it is a communication protocol standardized by 2011, it is fully supported by all the modern browsers, it is simple and does not require the use of additional protocols or complex configuration unlike WebRTC.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/proposed_system}
@@ -91,7 +88,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 	\label{fig:proposed_system}
 \end{figure}
 
+The system, as shown in figure \ref{fig:proposed_system}, consists of a game server, which can be either Linux, Windows or macOS, running MAME, and an HTML5 page which acts as a frontend.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\cite{High_Performance_Browser_Networking}.
+The program is listening for a WebSocket connection including parameters, such as the name of the game. When the connection is established the server sends information about video size and proportion and starts the game. Rendering and audio mixing of the game are generated through SDL\footnote{SDL: Simple DirectMedia Layer, a cross-platform software development library designed to provide a hardware abstraction layer for computer multimedia hardware components.}, and encoded and packaged in MPEG-TS\footnote{MPEG-TS: MPEG transport stream, is a standard digital container format for transmission and storage of audio and video.} through FFmpeg\footnote{FFmpeg is an open-source large suite of libraries and programs for handling video, audio, and other multimedia files and streams.}. Packets are sent via WebSocket to the client.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Client side various scripts will take care of decode the received audio/video data, capture and send user input, from both keyboard and gamepad, to the server via WebSocket.
