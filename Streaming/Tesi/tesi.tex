@@ -1,6 +1,7 @@
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
 \documentclass[english]{report}
+
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
 \usepackage{csharp_algorithms}
@@ -39,11 +40,6 @@
 \usepackage{amssymb,amsmath,amsthm} % Simboli matematici
 \usepackage{listings}				% Scrittura di codice
 
-% Package ipertesto
-\usepackage{url}					% Visualizza e rendere interattii gli URL
-%\usepackage[hidelinks]{hyperref}	% Rende interattivi i collegamenti interni
-%\usepackage{cleveref}
-
 \usepackage{algorithm} 
 \usepackage{algpseudocode} 
 
@@ -54,6 +50,10 @@
 \usepackage{caption}
 \definecolor{grigio}{RGB}{100,100,100}
 \captionsetup[figure]{font={footnotesize, color=grigio}}
+
+\hypersetup{
+	hidelinks
+}
 
 \begin{document}
 \renewcommand\contentsname{Index}
