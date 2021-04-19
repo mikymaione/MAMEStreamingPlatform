@@ -31,15 +31,15 @@ In 2012, Gaikai inaugurated its cloud gaming service, the company mainly focused
 
 OnLive and Gaikai were acquired by Sony and their resources were used as the basis for a cloud gaming service known as Playstation Now.
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues_Sept-2020}
+	\caption{Global cloud gaming market cap forecast in US dollars. Source: newzoo.com/global-cloud-gaming-report}
+	\label{fig:Newzoo_Cloud_Gaming_Revenues_Sept_2020}
+\end{figure}
+
 In 2013, Nvidia introduced GeForce Now, a cloud gaming service integrated in their Shield TV\footnote{Nvidia Shield TV is an Android TV-based digital media player produced by Nvidia.} device. In 2017, the company began expanding its service to PC, including support for importing a user's Steam library.
 
 In May 2018, Electronic Arts acquired some cloud gaming assets from GameFly. EA\footnote{EA: Electronic Arts.} later announced Project Atlas, a project that explored the integration of artificial intelligence and machine learning, making the platform dynamic, social and cross platform.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues_Sept-2020}
-	\caption{Global cloud gaming market cap forecast. Source: newzoo.com/global-cloud-gaming-report}
-	\label{fig:Newzoo_Cloud_Gaming_Revenues_Sept_2020}
-\end{figure}
 
 Microsoft at E3\footnote{E3: Electronic Entertainment Expo, a trade event for the video game industry.} 2018 teased his Xbox Cloud Gaming service.
 
@@ -77,9 +77,11 @@ The platform offer some interesting feature like: share the gameplay via a live 
 Luna was announced on September 24, 2020, with "early access" available to subscribers by invitation beginning on October 20, 2020. Amazon Luna will have 100 different games at launch and will be powered by AWS. Luna will have integration with Twitch. Amazon has partnered with Ubisoft to create a gaming channel (with an additional costs) exclusive to Luna, which will give Luna subscribers access to Ubisoft's titles the same day they release\cite{Amazon_Luna}.
 
 \subsection{RemoteMyApp - Vortex}
-The service was launched in November 2018. The service is available for Android, Windows and macOS, it offer three monthly plan (10€, 19€ and 37€) that allow the user to play for a maximum of 140 hours per month, and the catalog consists of 170 games. Unfortunately, some games are only playable by purchasing the game license.
+The service was launched in November 2018. The service is available for Android, Windows and macOS, it offer three monthly plan (€10, €19 and €37) that allow the user to play for a maximum of 140 hours per month, and the catalog consists of 170 games. Unfortunately, some games are only playable by purchasing the game license.
 \cite{RemoteMyApp_Vortex}.
 
+\subsection{Playkey}
+A special mention should be made to the company Playkey, which has created a distributed cloud gaming platform. Players do not connect to a server to receive the game stream, but to a miner's computer, on which the game is run. There aren't powerful servers, because there are computers distributed around the world that act as servers, miners make \$10 a day. Players can play only from their personal game library\cite{Playkey}.
 
 \section{Proposed system}
 A key feature of the system is usability and for this reason, on the client side, the web browser was the most obvious choice.
@@ -107,7 +109,7 @@ This project is meant to be used in retro-gaming stand in trade events for IT an
 	\label{fig:proposed_system}
 \end{figure}
 
-The system, as shown in figure \ref{fig:proposed_system}, consists of a game server, which can be either Linux, Windows or macOS, running MAME, and an HTML5 page which acts as a front-end.
+The system consists of a game server, which can be either Linux, Windows or macOS, running MAME, and an HTML5 page which acts as a front-end.
 
 The program is listening for a WebSocket connection including parameters, such as the name of the game. When the connection is established the server sends information about video size and proportion and starts the game. Rendering and audio mixing of the game are generated through SDL\footnote{SDL: Simple DirectMedia Layer, a cross-platform software development library designed to provide a hardware abstraction layer for computer multimedia hardware components.}, and encoded and packaged in MPEG-TS\footnote{MPEG-TS: MPEG transport stream, is a standard digital container format for transmission and storage of audio and video.} through FFmpeg\footnote{FFmpeg is an open-source large suite of libraries and programs for handling video, audio, and other multimedia files and streams.}. Packets are sent via WebSocket to the client.
 
