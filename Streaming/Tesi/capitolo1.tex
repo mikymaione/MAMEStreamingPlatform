@@ -1,9 +1,9 @@
 \chapter{Introduction}
 \label{cap:introduction}
 
-In 1952 in the laboratories of the University of Cambridge as an example of a doctoral thesis was created OXO, the transposition of tic-tac-toe as a computer game. This is usually considered technically the first video game. In 1958 a physics professor at Brookhaven National Laboratory created the game Tennis for Two, which had the task of simulating the physical laws that could be found in a tennis match: the istrument used was an oscilloscope.
+In 1952 in the laboratories of the University of Cambridge as an example of a doctoral thesis was created OXO, the transposition of tic-tac-toe as a computer game. This is usually considered technically the first video game. In 1958 a physics professor at Brookhaven National Laboratory created the game Tennis for Two, which had the task of simulating the physical laws that could be found in a tennis match: the instrument used was an oscilloscope.
 
-In 1961, six young scientists from Massachusetts Institute of Technology programmed, on a PDP-1\footnote{PDP-1: Programmed Data Processor-1, ia computer from Digital Equipment Corporation.} computer, the first properly designed video game: Spacewar!.
+In 1961, six young scientists from Massachusetts Institute of Technology programmed, on a PDP-1\footnote{PDP-1: Programmed Data Processor-1, is computer from Digital Equipment Corporation.} computer, the first properly designed video game: Spacewar!.
 
 Two months later two electrical engineers N. Bushnell and T. Dabney finished their version of Spacewar! produced on a large scale (1,500 copies), but the game was not, however, a great success due to the high difficulty. Bushnell, after the not particularly successful experiment, however, decided to insist with video games, but producing them on his own creating the Atari company. Atari's first arcade game was the industry's first big hit: Pong, released in late 1972, which roughly reproduces the mechanics of ping pong. Atari sold 19,000 Pong cabinets and soon many imitators followed suit. At the end of the decade the golden age of arcade video games began.
 
@@ -18,7 +18,7 @@ For twenty years now, the economic importance of video games in public places ha
 \section{Cloud gaming}
 Cloud gaming, is a type of online service that operate in a similar way to remote desktop and video on demand. Video games are stored and run remotely on a provider's dedicated hardware, they are streamed as a movie to a player's device via client. The client manages the player's inputs, which are sent to the server and executed in the game.
 
-This type of approach offers many advantages, including making the game more easily accessible without having to download and install it locally, it is compatible with computers and smart phones, even on smart tv when used with a wifi gamepad. Several services may offer some additional functions to make the most of this model, a spectator can join a player's session and temporarily take control of the game, if authorized by the player himself.
+This type of approach offers many advantages, including making the game more easily accessible without having to download and install it locally, it is compatible with computers and smart phones, even on smart TV when used with a WiFi gamepad. Several services may offer some additional functions to make the most of this model, a spectator can join a player's session and temporarily take control of the game, if authorized by the player himself.
 
 It also definitively solves a problem that has existed since the days of compact cassettes and floppy disks: piracy.
 
@@ -41,7 +41,7 @@ At GDC 2019, Google officially announced its Stadia cloud gaming service, out fo
 
 On September 24, 2020, a new service called Luna was announced by Amazon\cite{Cloud_gaming_history}.
 
-But let's see the current cloud gaming landscape.
+Let's see the current cloud gaming landscape.
 
 \subsection{Utomik}
 The Utomik platform launched commercially in 2008 and has been in service since. Games to be played in a browser need the proprietary Utomik Player plugin. The platform offer an SDK\footnote{SDK: Software development kit, a collection of software development tools.}, plugin and online service to create, launch, maintain and monitor games\cite{Utomik}.
@@ -61,12 +61,12 @@ PlayStation Now is a cloud gaming subscription service based on Gaikai's cloud t
 \subsection{Google - Stadia}
 Stadia is a cloud gaming platform released in November 2019, but is only available in Europe and United States. On the platform the user can buy games or subscribe to the service in order to access to the games catalog.
 
-Google has created the Stadia controller that connects via wifi directly to the service and make possible to play on a TV (installing the app or using a Chromecast\footnote{Google Chromecast is digital media players for internet-streamed audio-visual content}). You can play with mouse and keyboard or controller using the Chrome browser on any PC. There is a mobile app that supports touch screen controls and bluetooth gamepads.
+Google has created the Stadia controller that connects via WiFi directly to the service and make possible to play on a TV (installing the app or using a Chromecast\footnote{Google Chromecast is digital media players for internet-streamed audio-visual content}). You can play with mouse and keyboard or controller using the Chrome browser on any PC. There is a mobile app that supports touch screen controls and Bluetooth gamepads.
 
-The platoform offer some interesting feauture like: share the gameplay via a live stream on YouTube; Crowd Play which allows viewers to join the multiplayer games they are watching; Stream Connect that allow the user to share the game screen to other players in the same game; State Share that allow players to share their save state\cite{Google_Stadia}.
+The platform offer some interesting feature like: share the gameplay via a live stream on YouTube; Crowd Play which allows viewers to join the multiplayer games they are watching; Stream Connect that allow the user to share the game screen to other players in the same game; State Share that allow players to share their save state\cite{Google_Stadia}.
 
 \subsection{Amazon - Luna}
-Luna was announced on September 24, 2020, with ‘early access’ available to subscribers by invitation beginning on October 20, 2020. Amazon Luna will have 100 different games at launch and will be powered by AWS. Luna will have integration with Twitch. Amazon has partnered with Ubisoft to create a gaming channel (with an additional costs) exclusive to Luna, which will give Luna subscribers access to Ubisoft's titles the same day they release\cite{Amazon_Luna}.
+Luna was announced on September 24, 2020, with "early access" available to subscribers by invitation beginning on October 20, 2020. Amazon Luna will have 100 different games at launch and will be powered by AWS. Luna will have integration with Twitch. Amazon has partnered with Ubisoft to create a gaming channel (with an additional costs) exclusive to Luna, which will give Luna subscribers access to Ubisoft's titles the same day they release\cite{Amazon_Luna}.
 
 
 \section{Proposed system}
@@ -77,7 +77,7 @@ WebSocket is a communications protocol, providing full-duplex communication chan
 
 HTTP Live Streaming (HLS) is the most popular high-latency streaming protocol over HTTP for video on demand (pre-recorded video) developed by Apple.
 
-Dynamic Adaptive Streaming over HTTP (DASH) is an adaptive bitrate streaming technique by Moving Picture Experts Group (MPEG), that enables high quality streaming of media content over HTTP.
+Dynamic Adaptive Streaming over HTTP (DASH) is an adaptive bit rate streaming technique by Moving Picture Experts Group (MPEG), that enables high quality streaming of media content over HTTP.
 
 Web Real-Time Communication (WebRTC) is a project for real-time communication based on Secure Real-time Transport Protocol (SRTP). Therefore to get SRTP stream to the the browser a WebRTC server is needed\cite{High_Performance_Browser_Networking}.
 
@@ -87,7 +87,7 @@ Web Real-Time Communication (WebRTC) is a project for real-time communication ba
 	\label{fig:webprotocols}
 \end{figure}
 
-This project is meant to be used in retrogaming stand in trade events for IT and video games industry, it will run on a local network and users are connected via WiFi, so the difference in speed between TCP and UDP becomes negligible, therefore the choice fell on WebSocket because it is a communication protocol standardized by 2011, it is fully supported by all the modern browsers, it is simple and does not require the use of additional protocols or complex configuration unlike WebRTC.
+This project is meant to be used in retro-gaming stand in trade events for IT and video games industry, it will run on a local network and users are connected via WiFi, so the difference in speed between TCP and UDP becomes negligible, therefore the choice fell on WebSocket because it is a communication protocol standardized by 2011, it is fully supported by all the modern browsers, it is simple and does not require the use of additional protocols or complex configuration unlike WebRTC.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/proposed_system}
@@ -95,7 +95,7 @@ This project is meant to be used in retrogaming stand in trade events for IT and
 	\label{fig:proposed_system}
 \end{figure}
 
-The system, as shown in figure \ref{fig:proposed_system}, consists of a game server, which can be either Linux, Windows or macOS, running MAME, and an HTML5 page which acts as a frontend.
+The system, as shown in figure \ref{fig:proposed_system}, consists of a game server, which can be either Linux, Windows or macOS, running MAME, and an HTML5 page which acts as a front-end.
 
 The program is listening for a WebSocket connection including parameters, such as the name of the game. When the connection is established the server sends information about video size and proportion and starts the game. Rendering and audio mixing of the game are generated through SDL\footnote{SDL: Simple DirectMedia Layer, a cross-platform software development library designed to provide a hardware abstraction layer for computer multimedia hardware components.}, and encoded and packaged in MPEG-TS\footnote{MPEG-TS: MPEG transport stream, is a standard digital container format for transmission and storage of audio and video.} through FFmpeg\footnote{FFmpeg is an open-source large suite of libraries and programs for handling video, audio, and other multimedia files and streams.}. Packets are sent via WebSocket to the client.
 
