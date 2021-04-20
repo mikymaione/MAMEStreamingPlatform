@@ -1,0 +1,8 @@
+\Title{Cloud gaming platform for arcade games}
+\Author{Michele Maione; mikymaione@hotmail.it}
+\Copyright{BSD-3-Clause; Copyright 2021 Michele Maione; mikymaione@hotmail.it}
+\PublicationType{book}
+\Language{en-GB}
+\Org{Università degli Studi di Milano}
+\Keywords{Cloud gaming, arcade game, MAME, WebSocket, MPEG, FFMPEG, SDL, HTML5}
+\Subject{Cloud gaming platform based on MAME. Stream MPEG over WebSocket to HTML5 page}
