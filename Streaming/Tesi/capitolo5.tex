@@ -4,8 +4,8 @@ The system is ready to use but there are many additional features and improvemen
 
 Some additional features that I find useful are:
 \begin{itemize}
-	\item Give the player the ability to enter an username in the frontend to save and load the game state. It can also be implemented without creating a complex account system because once the trade event is over the server would be shut down.
-	\item Multiplayer play from separate devices. This can be done quite simply by showing the current thread ID in the frontend, and the player can share this information with friends to let them access the game. Upon received a new connection with the thread ID parameter the server, instead of starting a new game, would add this connection to the connections pool and then send packets to the pool and receive input (with player number) from it.
+	\item Give the player the ability to enter an username in the front-end to save and load the game state. It can also be implemented without creating a complex account system because once the trade event is over the server would be shut down.
+	\item Multiplayer play from separate devices. This can be done quite simply by showing the current thread ID in the front-end, and the player can share this information with friends to let them access the game. Upon received a new connection with the thread ID parameter the server, instead of starting a new game, would add this connection to the connections pool and then send packets to the pool and receive input (with player number) from it.
 \end{itemize}
 
 On the other hand, as regards the replacement of functions already implemented:
