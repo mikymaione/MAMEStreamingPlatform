@@ -162,7 +162,7 @@ namespace encoding
 			encoder_context->video_codec_context->width = width;
 			encoder_context->video_codec_context->height = height;
 
-			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
+			//encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
 			//encoder_context->video_codec_context->bit_rate_tolerance = 0;
 
 			//encoder_context->video_codec_context->max_b_frames = 0;
@@ -244,7 +244,7 @@ namespace encoding
 			encoder_context->audio_codec_context->sample_rate = SAMPLE_RATE_OUT;
 			encoder_context->audio_codec_context->sample_fmt = AUDIO_SAMPLE_FORMAT_OUT;
 
-			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
+			//encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
 			encoder_context->audio_codec_context->time_base = { 1,fps };
 			//encoder_context->audio_codec_context->time_base = { 1,SAMPLE_RATE_OUT };
