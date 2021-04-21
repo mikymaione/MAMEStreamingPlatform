@@ -175,7 +175,6 @@ public:
 	SDL_RWops* m_sdl_buffer = nullptr;
 
 	char* m_sdl_buffer_bytes = nullptr;
-	char* m_sdl_buffer_bytes_previous = nullptr;
 	int m_sdl_buffer_bytes_length;
 
 	static copy_info_t* s_blit_info[SDL_TEXFORMAT_LAST + 1];

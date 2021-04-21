@@ -62,7 +62,7 @@ namespace encoding
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
+		//static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -71,7 +71,7 @@ namespace encoding
 
 		// Audio
 		AVCodecID AUDIO_CODEC;
-		static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
+		//static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
 
 		static constexpr int AUDIO_CHANNELS_IN = 2;
 		static constexpr int AUDIO_CHANNELS_OUT = 1; //1

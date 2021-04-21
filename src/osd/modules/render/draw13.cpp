@@ -428,7 +428,6 @@ void renderer_sdl2::free_streaming_render() const
 		SDL_DestroyRenderer(m_sdl_renderer);
 
 		delete[] m_sdl_buffer_bytes;
-		delete[] m_sdl_buffer_bytes_previous;
 	}
 }
 
@@ -443,7 +442,6 @@ void renderer_sdl2::init_streaming_render(const int w, const int h, const int fp
 	m_sdl_buffer_bytes_length = w * h * 4;
 
 	m_sdl_buffer_bytes = new char[m_sdl_buffer_bytes_length];
-	m_sdl_buffer_bytes_previous = new char[m_sdl_buffer_bytes_length];
 
 	//jpg or bmp24
 	//m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 24, SDL_PIXELFORMAT_RGB24);
@@ -652,17 +650,7 @@ int renderer_sdl2::draw(int update)
 
 	if (webpp::streaming_server::instance().is_active())
 	{
-		auto need_to_send = webpp::streaming_server::instance().is_elapsed_enough_time_from_last_packet_sent();
-
-		if (!need_to_send)
-			need_to_send = memcmp(m_sdl_surface->pixels, m_sdl_buffer_bytes_previous, m_sdl_buffer_bytes_length) == 0;
-
-		if (need_to_send)
-		{
-			memcpy(m_sdl_buffer_bytes_previous, m_sdl_surface->pixels, m_sdl_buffer_bytes_length);
-
-			webpp::streaming_server::instance().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
-		}
+		webpp::streaming_server::instance().send_video_frame(static_cast<uint8_t*>(m_sdl_surface->pixels));
 
 		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
 	}
