@@ -20,7 +20,7 @@
 #include <unordered_map>
 
 #include "server_ws_impl.hpp"
-#include "encoding/encode_to_mp4.hpp"
+#include "encoding/encode_to_streamable_movie.hpp"
 #include "modules/input/input_common.h"
 
 namespace webpp
@@ -41,7 +41,7 @@ namespace webpp
 		std::unique_ptr<std::thread> game_thread;
 
 		bool encoding_initialized = false;
-		std::unique_ptr<encoding::encode_to_mp4> encoder = nullptr;
+		std::unique_ptr<encoding::encode_to_streamable_movie> encoder = nullptr;
 		std::shared_ptr<ws_server::SendStream> encoder_socket = nullptr;
 		std::chrono::time_point<std::chrono::system_clock> last_packet_sent;
 
@@ -255,7 +255,7 @@ namespace webpp
 
 				send_video_size_to_client(w, h);
 
-				encoder = std::make_unique<encoding::encode_to_mp4>(encoder_socket, w, h, fps, [&]()
+				encoder = std::make_unique<encoding::encode_to_streamable_movie>(encoder_socket, w, h, fps, [&]()
 				{
 					send(encoder_socket, 130);
 
