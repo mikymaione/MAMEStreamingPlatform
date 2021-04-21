@@ -57,12 +57,12 @@ namespace encoding
 	private:
 		static constexpr size_t MEMORY_OUTPUT_BUFFER_SIZE = 1024 * 1024 * 200; //200MB
 
-		CODEC codec = MPEGTS;
+		static constexpr CODEC codec = MPEGTS;
 		std::string CONTAINER_NAME;
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		static constexpr int64_t VIDEO_BIT_RATE = 64 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -86,11 +86,8 @@ namespace encoding
 	private:
 		const std::shared_ptr<std::ostream> socket;
 
-		const int in_width, in_height;
+		const int width, height;
 		const int fps;
-
-		static constexpr int out_width = 640;
-		static constexpr int out_height = 480;
 
 		const std::function<void()> on_write;
 
@@ -162,15 +159,15 @@ namespace encoding
 				encoder_context->video_codec_context->flags2 |= AV_CODEC_FLAG2_FAST;
 			}
 
-			encoder_context->video_codec_context->width = out_width;
-			encoder_context->video_codec_context->height = out_height;
+			encoder_context->video_codec_context->width = width;
+			encoder_context->video_codec_context->height = height;
 
 			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
-			encoder_context->video_codec_context->bit_rate_tolerance = 0;
+			//encoder_context->video_codec_context->bit_rate_tolerance = 0;
 
-			encoder_context->video_codec_context->max_b_frames = 0;
-			encoder_context->video_codec_context->has_b_frames = 0;
-			encoder_context->video_codec_context->delay = 0;
+			//encoder_context->video_codec_context->max_b_frames = 0;
+			//encoder_context->video_codec_context->has_b_frames = 0;
+			//encoder_context->video_codec_context->delay = 0;
 			//encoder_context->video_codec_context->gop_size = 10;
 
 			encoder_context->video_codec_context->pix_fmt = PIXEL_FORMAT_OUT;
@@ -205,28 +202,28 @@ namespace encoding
 				die("Could not retrieve parameters from context", ret);
 
 			encoder_context->video_converter_context = sws_getContext(
-				in_width, in_height, PIXEL_FORMAT_IN,
-				out_width, out_height, PIXEL_FORMAT_OUT,
+				width, height, PIXEL_FORMAT_IN,
+				width, height, PIXEL_FORMAT_OUT,
 				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr
 			);
 
 			rgb_frame = av_frame_alloc();
-			rgb_frame->width = in_width;
-			rgb_frame->height = in_height;
+			rgb_frame->width = width;
+			rgb_frame->height = height;
 			rgb_frame->format = PIXEL_FORMAT_IN;
 
 			yuv_frame = av_frame_alloc();
-			yuv_frame->width = out_width;
-			yuv_frame->height = out_height;
+			yuv_frame->width = width;
+			yuv_frame->height = height;
 			yuv_frame->format = PIXEL_FORMAT_OUT;
 
-			const auto yuv_buffer_size = out_width * out_height * 3 / 2;
+			const auto yuv_buffer_size = width * height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
 			avpicture_fill(
 				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
 				PIXEL_FORMAT_OUT,
-				out_width, out_height);
+				width, height);
 		}
 
 		void init_audio()
@@ -362,8 +359,8 @@ namespace encoding
 	public:
 		encode_to_streamable_movie(const std::shared_ptr<std::ostream>& socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
 			socket(socket),
-			in_width(in_width),
-			in_height(in_height),
+			width(in_width),
+			height(in_height),
 			fps(fps),
 			on_write(on_write)
 		{
@@ -459,12 +456,12 @@ namespace encoding
 				reinterpret_cast<AVPicture*>(rgb_frame),
 				pixels,
 				PIXEL_FORMAT_IN,
-				in_width, in_height);
+				width, height);
 
 			//RGB to YUV
 			sws_scale(
 				encoder_context->video_converter_context,
-				rgb_frame->data, rgb_frame->linesize, 0, in_height,
+				rgb_frame->data, rgb_frame->linesize, 0, height,
 				yuv_frame->data, yuv_frame->linesize
 			);
 
