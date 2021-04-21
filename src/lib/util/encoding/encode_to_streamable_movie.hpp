@@ -2,7 +2,7 @@
 // copyright-holders:Michele Maione
 //============================================================
 //
-//  encode_to_mp4.h - (aka DinoEncoding 🦕🧡🦖)
+//  encode_to_streamable_movie.hpp - (aka DinoEncoding 🦕🧡🦖)
 //  Encoding to:
 //  -mp4	(H.264 + AAC)
 //  -webm	(VP9 + Vorbis)
@@ -31,7 +31,7 @@ extern "C"
 
 namespace encoding
 {
-	class encode_to_mp4
+	class encode_to_streamable_movie
 	{
 	public:
 		enum CODEC { MP4, WEBM, MPEGTS };
@@ -135,7 +135,7 @@ namespace encoding
 
 		static int write_packet(void* opaque, uint8_t* buf, int buf_size)
 		{
-			auto* const this_ = static_cast<encode_to_mp4*>(opaque);
+			auto* const this_ = static_cast<encode_to_streamable_movie*>(opaque);
 
 			this_->socket->write(reinterpret_cast<const char*>(buf), buf_size);
 
@@ -360,14 +360,14 @@ namespace encoding
 		}
 
 	public:
-		encode_to_mp4(const std::shared_ptr<std::ostream>& socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
+		encode_to_streamable_movie(const std::shared_ptr<std::ostream>& socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
 			socket(socket),
 			in_width(in_width),
 			in_height(in_height),
 			fps(fps),
 			on_write(on_write)
 		{
-			//av_log_set_level(AV_LOG_DEBUG);
+			//av_log_set_level(AV_LOG_DEBUG);			
 
 			av_register_all();
 			avcodec_register_all();
@@ -415,7 +415,7 @@ namespace encoding
 			init_audio();
 		}
 
-		~encode_to_mp4()
+		~encode_to_streamable_movie()
 		{
 			avformat_close_input(&encoder_context->muxer_context);
 			avformat_free_context(encoder_context->muxer_context);
