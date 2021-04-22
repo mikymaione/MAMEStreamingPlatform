@@ -103,8 +103,8 @@ function reportWindowSize()
 	
 	if (cw < vw)
 	{
-		//myCanvas.style.width = tw + 'px';
-		//myCanvas.style.height = th + 'px';
+		myCanvas.style.width = tw + 'px';
+		myCanvas.style.height = th + 'px';
 	}
 }
 
