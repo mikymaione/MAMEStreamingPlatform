@@ -2,7 +2,7 @@
 // copyright-holders:Michele Maione
 //============================================================
 //
-//  encode_to_streamable_movie.hpp - (aka DinoEncoding 🦕🧡🦖)
+//  encode_to_movie.hpp - (aka DinoEncoding 🦕🧡🦖)
 //  Encoding to:
 //  -mp4	(H.264 + AAC)
 //  -webm	(VP9 + Vorbis)
@@ -18,7 +18,7 @@
 #include <ostream>
 #include <string>
 
-// FFMPEG C headers
+// FFmpeg C headers
 extern "C"
 {
 #include "libavcodec/avcodec.h"
@@ -31,7 +31,7 @@ extern "C"
 
 namespace encoding
 {
-	class encode_to_streamable_movie
+	class encode_to_movie
 	{
 	public:
 		enum CODEC { MP4, WEBM, MPEGTS };
@@ -62,7 +62,8 @@ namespace encoding
 
 		// Video
 		AVCodecID VIDEO_CODEC;
-		//static constexpr int64_t VIDEO_BIT_RATE = 1 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE = 16 * 1000;
+		static constexpr int64_t VIDEO_BIT_RATE_TOLERANCE = 32 * 1000;
 
 		//SDL_PIXELFORMAT_RGBA32 = AV_PIX_FMT_BGR32
 		//SDL_PIXELFORMAT_RGB24 = AV_PIX_FMT_RGB24
@@ -71,7 +72,7 @@ namespace encoding
 
 		// Audio
 		AVCodecID AUDIO_CODEC;
-		//static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
+		static constexpr int64_t AUDIO_BIT_RATE = 64 * 1000;
 
 		static constexpr int AUDIO_CHANNELS_IN = 2;
 		static constexpr int AUDIO_CHANNELS_OUT = 1; //1
@@ -132,7 +133,7 @@ namespace encoding
 
 		static int write_packet(void* opaque, uint8_t* buf, int buf_size)
 		{
-			auto* const this_ = static_cast<encode_to_streamable_movie*>(opaque);
+			auto* const this_ = static_cast<encode_to_movie*>(opaque);
 
 			this_->socket->write(reinterpret_cast<const char*>(buf), buf_size);
 
@@ -162,8 +163,8 @@ namespace encoding
 			encoder_context->video_codec_context->width = width;
 			encoder_context->video_codec_context->height = height;
 
-			//encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
-			//encoder_context->video_codec_context->bit_rate_tolerance = 0;
+			encoder_context->video_codec_context->bit_rate = VIDEO_BIT_RATE;
+			encoder_context->video_codec_context->bit_rate_tolerance = VIDEO_BIT_RATE_TOLERANCE;
 
 			//encoder_context->video_codec_context->max_b_frames = 0;
 			//encoder_context->video_codec_context->has_b_frames = 0;
@@ -244,10 +245,10 @@ namespace encoding
 			encoder_context->audio_codec_context->sample_rate = SAMPLE_RATE_OUT;
 			encoder_context->audio_codec_context->sample_fmt = AUDIO_SAMPLE_FORMAT_OUT;
 
-			//encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
+			encoder_context->audio_codec_context->bit_rate = AUDIO_BIT_RATE;
 
-			encoder_context->audio_codec_context->time_base = { 1,fps };
-			//encoder_context->audio_codec_context->time_base = { 1,SAMPLE_RATE_OUT };
+			encoder_context->audio_codec_context->time_base = { 1, fps };
+			//encoder_context->audio_codec_context->time_base = { 1, SAMPLE_RATE_OUT };
 			//encoder_context->audio_stream->time_base = encoder_context->audio_codec_context->time_base;
 
 			AVDictionary* options = nullptr;
@@ -299,7 +300,7 @@ namespace encoding
 				die("Cannot alloc audio conversion buffer", ret);
 		}
 
-		void set_container_options(AVDictionary* options) const
+		static void set_container_options(AVDictionary* options)
 		{
 			switch (codec)
 			{
@@ -340,7 +341,7 @@ namespace encoding
 				const auto end_time = std::chrono::system_clock::now();
 				const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
-				if (milliseconds.count() > 70)
+				if (milliseconds.count() > 100)
 				{
 					const auto ret = av_write_trailer(encoder_context->muxer_context);
 					if (ret < 0)
@@ -357,12 +358,12 @@ namespace encoding
 		}
 
 	public:
-		encode_to_streamable_movie(const std::shared_ptr<std::ostream>& socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
-			socket(socket),
+		encode_to_movie(std::shared_ptr<std::ostream> socket, const int in_width, const int in_height, const int fps, std::function<void()> on_write) :
+			socket(std::move(socket)),
 			width(in_width),
 			height(in_height),
 			fps(fps),
-			on_write(on_write)
+			on_write(std::move(on_write))
 		{
 			//av_log_set_level(AV_LOG_DEBUG);			
 
@@ -410,9 +411,21 @@ namespace encoding
 
 			init_video();
 			init_audio();
+
+			std::cout
+				<< "Video" << std::endl
+				<< "-bit_rate: " << encoder_context->video_codec_context->bit_rate << std::endl
+				<< "-bit_rate_tolerance: " << encoder_context->video_codec_context->bit_rate_tolerance << std::endl
+				<< "-max_b_frames: " << encoder_context->video_codec_context->max_b_frames << std::endl
+				<< "-has_b_frames: " << encoder_context->video_codec_context->has_b_frames << std::endl
+				<< "-delay: " << encoder_context->video_codec_context->delay << std::endl
+				<< "-gop_size: " << encoder_context->video_codec_context->gop_size << std::endl
+				<< "Audio" << std::endl
+				<< "-bit_rate: " << encoder_context->audio_codec_context->bit_rate << std::endl
+				<< std::endl;
 		}
 
-		~encode_to_streamable_movie()
+		~encode_to_movie()
 		{
 			avformat_close_input(&encoder_context->muxer_context);
 			avformat_free_context(encoder_context->muxer_context);
