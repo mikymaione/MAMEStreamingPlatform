@@ -8,17 +8,17 @@
 
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[english]{report}
+\documentclass[italian]{report}
 
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
 \usepackage{csharp_algorithms}
 
-\def\myCDL{Master's degree program in Computer Science}
-\def\myTitle{Cloud gaming platform for arcade games}
+\def\myCDL{Corso di Laurea Magistrale in Informatica}
+\def\myTitle{Piattaforma di cloud gaming per giochi arcade}
 
 \def\myName{Michele Maione}
-\def\myMat{Matr. No. 931468}
+\def\myMat{Matr. Nr. 931468}
 
 \def\myRefereeA{Prof. Dario Maggiorini}
 \def\myRefereeB{Prof. Davide Gadia}
@@ -32,13 +32,13 @@
 %\tablespagetrue
 
 % Package di formato
-\usepackage[a4paper, margin=1.39in]{geometry}% Formato del foglio
-\usepackage[english]{babel}			% Supporto per l'inglese
+\usepackage[a4paper]{geometry}		% Formato del foglio
+\usepackage[italian]{babel}			% Supporto per l'inglese
 \usepackage[utf8]{inputenc}			% Supporto per UTF-8
 \usepackage[a-1b]{pdfx}				% File conforme allo standard PDF-A (obbligatorio per la consegna)
 \usepackage{float}
 
-\title{Cloud gaming platform for arcade games}
+\title{Piattaforma di cloud gaming per giochi arcade}
 \author{Michele Maione}
 
 % Package per la grafica
@@ -68,16 +68,15 @@
 
 \begin{document}
 
-\renewcommand\contentsname{Index}
+\renewcommand\contentsname{Indice}
 % Creazione automatica del frontespizio
 \frontespizio
 \beforepreface
 
 % PAGINA DI DEDICA E/O CITAZIONE
 {
-\raggedleft \large \sl To new generations.\\
+\raggedleft \large \sl 
 	
-	\vspace{2cm}
 	
 	``Se non così, come?\\E se non ora, quando?''
 	
@@ -89,8 +88,8 @@
 %			Abstract
 \input{abstract.tex}
 
-\prefacesection{Acknowledgements}
-I would like to thank my supervisor Prof. Dario Maggiorini for his continuous support and Prof. Davide Gadia for his helpful guidance throughout my efforts towards the completion of the present thesis.
+\prefacesection{Ringraziamenti}
+Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo supporto e il Prof. Davide Gadia per la sua guida utile durante i miei sforzi verso il completamento della presente tesi.
 
 %
 %			Creazione automatica dell'indice
@@ -113,10 +112,6 @@ I would like to thank my supervisor Prof. Dario Maggiorini for his continuous su
 %			CAPITOLO 5: 
 \input{capitolo5.tex}
 
-
-%			CAPITOLO 6:
-\input{capitolo6}
-
 %			Ringraziamenti:
 \input{ringraziamenti}
 
@@ -132,7 +127,7 @@ I would like to thank my supervisor Prof. Dario Maggiorini for his continuous su
 %			BIBLIOGRAFIA
 %
 \bibliographystyle{unsrt}
-\bibliography{bibliography}
-\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{Bibliografia}
+\addcontentsline{toc}{chapter}{Bibliografia}
 
 \end{document}
