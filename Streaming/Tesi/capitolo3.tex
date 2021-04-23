@@ -19,8 +19,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 \subsection{Server}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{SDL renderer}
+\subsection{SDL renderer} \label{SDL_renderer}
 Usually MAME creates a rendering context related to a window, executes the drawing cycle, and then presents the result on the window.
+
+\begin{itemize}
+	\item CreateRGBSurfaceWithFormat: Allocate a new RGB surface with a specific pixel format;
+	\item CreateRenderer: Create a 2D rendering context for a window;
+	\item CreateSoftwareRenderer: Create a 2D rendering context for a surface;
+	\item RWFromMem: Use this function to prepare a read-write memory buffer for use with RWops;	
+	\item SetRenderDrawColor: Set the color used for drawing operations;
+	\item RenderFillRect: Fill a rectangle on the current rendering target with the drawing color;
+	\item RenderDrawLine: Draw a line on the current rendering target.
+	\item RenderPresent: Update the screen with any rendering performed since the previous call.
+\end{itemize}
 
 \subsection{SDL audiomixer}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
