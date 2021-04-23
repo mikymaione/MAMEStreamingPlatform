@@ -6,18 +6,10 @@
 %
 %============================================================
 
-\chapter{Future works}
+\chapter{Conclusioni e sviluppi futuri}
 
-The system is ready to use but there are many additional features and improvements that could be done, and I trust that the huge MAME community can do it. The proposed functionalities are always based on the assumption that this system is used only within trade events and not on the web.
+Come detto precedentemente il progetto è stato pensato per essere utilizzato in uno stand per il retrogaming, ma se utilizzato come servizio web sarebbe necessario creare un sistema di account tramite cui il giocatore potrebbe salvare e caricare lo stato del gioco, pubblicare i punteggi nella leaderboard, invitare altri giocatori ad unirsi alla partita supportando così il multiplayer da devices differenti.
 
-Some additional features that I find useful are:
-\begin{itemize}
-	\item Give the player the ability to enter an username in the front-end to save and load the game state. It can also be implemented without creating a complex account system because once the trade event is over the server would be shut down.
-	\item Multiplayer play from separate devices. This can be done quite simply by showing the current thread ID in the front-end, and the player can share this information with friends to let them access the game. Upon received a new connection with the thread ID parameter the server, instead of starting a new game, would add this connection to the connections pool and then send packets to the pool and receive input (with player number) from it.
-\end{itemize}
+Per ridurre la dimensione dei pacchetti si potrebbero usare due codec open-source che in futuro saranno supportati nativamente dalla maggior parte dei browser: AOMedia Video 1 (AV1), progettato per trasmissioni video su Internet, e Opus, un codec audio lossy utilizzato per la comunicazione in tempo reale. Ambedue inseribili nel contenitore WebM.
 
-On the other hand, as regards the replacement of functions already implemented:
-\begin{itemize}
-	\item An improvement, which requires a lot of development time, would be to replace WebSocket with RTP, this would increase the amount of packets sent over time, which would result in higher rendering resolution or more users being able to play simultaneously.
-	\item Another improvement can be had when most browsers will natively support AV1\footnote{AV1: AOMedia Video 1, an open video coding format designed for video transmissions over the Internet.} for video encoding, and Opus\footnote{Opus is an open lossy audio coding format for real-time interactive communication and low-complexity enough for low-end embedded processors.} for audio (even if it is already sufficiently supported to date) and use the WebM\footnote{WebM is an open audiovisual media file format.} format.
-\end{itemize}
+Per diminuire l'overhead di comunicazione si potrebbe sostituire il protocollo WebSocket con RTP.

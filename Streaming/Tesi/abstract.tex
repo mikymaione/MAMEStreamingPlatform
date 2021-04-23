@@ -7,22 +7,21 @@
 %============================================================
 
 \prefacesection{Abstract}
-Having now become a mass cultural phenomenon, video games are a unique medium, in fact they are very different from other types of media while incorporating their various languages. It has been authoritatively affirmed that, it is interactivity that has distinguished video games from other forms of mass media entertainment; precisely this characteristic allows the video game to exercise a potential of immersion and attraction that other media do not have.
+Il videogioco è un mezzo di intrattenimento unico che combina le diverse forme d'arte, quali musica, narrativa e animazione, all'interattività. Ed è proprio questa caratteristica che gli permette di esercitare un potenziale d'immersione e attrazione che gli altri media non hanno.
 
-With hundreds of millions of people playing interactive games regularly today, gaming is fast becoming a dominant player in the entertainment industry.	It is certainly a continuously growing sector that has never undergone stoppages over the years.
+I videogiochi sono ormai diventati un fenomeno culturale di massa con centinaia di milioni di persone che giocano regolarmente ogni giorno, il che li rende un attore dominante nel settore dell'intrattenimento, settore in continua crescita che non ha mai subito interruzioni nel corso degli anni come mostrato in Fig. \ref{fig:valore_commerciale_giochi_globale}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/valore_commerciale_giochi_globale.png}
-	\caption{Global revenues of the video game industry from 1971 to 2018, not adjusted for inflation. Source: wikipedia.org}
+	\caption{Ricavi globali dell'industria dei videogiochi dal 1971 al 2018 (non adeguati all'inflazione). Fonte: wikipedia.org}
 	\label{fig:valore_commerciale_giochi_globale}
 \end{figure}
 
-As the speed of network connections continues to increase, we are moving towards a new digital age as part of a communications revolution that will affect every aspect of consumers' lives, not least the change it brings in terms of options in the entertainment industry. The challenge is to invent content consumption patterns of existing and new types of content and services. One of these opportunities is realized through two technologies that have now become part of everyday life: streaming and cloud computing.
+Con il continuo aumentare della velocità delle connessioni di rete, ci stiamo muovendo verso una nuova era digitale che influenzerà ogni aspetto della vita dei consumatori. La sfida consiste nell'inventare nuovi modelli di consumo dei contenuti e dei servizi esistenti, un'opportunità che si concretizza attraverso due tecnologie ormai entrate a far parte della vita di tutti i giorni: lo streaming e il cloud computing.
 
-This project involves the creation of a cloud gaming platform, which allows the direct and on-demand audio-video streaming of video games, from a remote server, to a web browser (computer, console, telephone, TV). The game is archived, played, and rendered on a remote server; the input (keyboard, gamepad) is sent from the web browser to the server.
+Questo progetto prevede la creazione di una piattaforma di cloud gaming, che permette lo streaming audio-video direttamente e su richiesta dei videogiochi, da un server remoto, ad un client (computer, console, telefono, tv). Il gioco è archiviato, eseguito, e renderizzato su un server remoto; l'input (tastiera, joystick) viene inviato dal client al server e lì processato.
+In questo modo si può accedere ai giochi indipendentemente dal sistema operativo e dalle capacità hardware del client utilizzato. Inoltre il cloud gaming permette di iniziare a giocare immediatamente poiché il gioco è già installato sul server. Infine la piattaforma, indirettamente, garantisce la gestione dei diritti digitali (DRM) per gli editori.
 
-In this way, games can be accessed regardless of the operating system and hardware capabilities of the client used, the only prerequisite is a 1.5 Mbps network connection. In addition, the system allows the user to start playing immediately. Finally, the platform indirectly guarantees the management of digital rights (DRM\footnote{Digital rights management, a set of access control technologies for restricting the use of proprietary hardware and copyrighted works.}) for publishers.
+Verrà ampliato il software MAME (rilasciato sotto licenza GNU-GPL), che è in grado di emulare  oltre 7.000 giochi arcade. Lo scopo di tale emulazione è quello di preservare la storia dei videogiochi e di prevenire la scomparsa di vecchie rarità una volta che le macchine originali abbiano cessato di funzionare per motivi di obsolescenza. La piattaforma sarà indipendente dal sistema operativo, rendendo più agevole l’installazione di uno stand per il retrogaming.
 
-The system is based on the MAME\footnote{Multiple Arcade Machine Emulator, is an emulator designed to recreate the hardware of arcade game systems in software on modern personal computers, released under the GNU-GPL license.} emulator that can run on Linux, Windows and macOS, supports couch multiplayer up to 4 players and a library of over 7,000 games.
-
-Thanks to the simplicity of access, will attract the new generations to the games that have made history.
+La tesi è strutturata come segue: nel Capitolo 1 viene introdotto il cloud gaming e fatta una panoramica dei servizi presenti sul mercato; si descrivono le tecnologie utilizzate nel Capitolo 2, mentre nel Capitolo 3 viene presentata l'architettura del sistema. All’interno del Capitolo 4 vengono illustrati i risultati ottenuti. Nell'ultimo capitolo sono riportate le conclusioni finali e una lista di possibili sviluppi futuri.
