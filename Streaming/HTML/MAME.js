@@ -23,7 +23,7 @@ let there_is_some_inputs = false;
 
 function readRomList()
 {
-	const rom_list_url = "http://www.maionemiky.it/MAME/roms/list.txt";
+	const rom_list_url = "roms/list.txt";
 
 	let aFile = new XMLHttpRequest();
 	aFile.open("GET", rom_list_url, true);
