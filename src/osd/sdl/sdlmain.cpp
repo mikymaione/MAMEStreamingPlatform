@@ -258,10 +258,7 @@ int main(int argc, char** argv)
 	else
 	{
 		r = main_sdl(argc, argv, "");
-	}
-
-	std::cout << "Press enter to exit." << std::endl;
-	std::cin.ignore();
+	}	
 
 	return r;
 }

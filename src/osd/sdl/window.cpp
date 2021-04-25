@@ -30,6 +30,8 @@
 #include "render.h"
 #include "ui/uimain.h"
 
+#include "streaming_server.hpp"
+
 // OSD headers
 
 #include "window.h"
@@ -113,29 +115,42 @@ bool sdl_osd_interface::window_init()
 	/* We may want to set a number of the hints SDL2 provides.
 	 * The code below will document which hints were set.
 	 */
-	const char * hints[] = { SDL_HINT_FRAMEBUFFER_ACCELERATION,
-			SDL_HINT_RENDER_DRIVER, SDL_HINT_RENDER_OPENGL_SHADERS,
-			SDL_HINT_RENDER_SCALE_QUALITY,
-			SDL_HINT_RENDER_VSYNC,
-			SDL_HINT_VIDEO_X11_XVIDMODE, SDL_HINT_VIDEO_X11_XINERAMA,
-			SDL_HINT_VIDEO_X11_XRANDR, SDL_HINT_GRAB_KEYBOARD,
-			SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, SDL_HINT_IDLE_TIMER_DISABLED,
-			SDL_HINT_ORIENTATIONS,
-			SDL_HINT_XINPUT_ENABLED, SDL_HINT_GAMECONTROLLERCONFIG,
-			SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, SDL_HINT_ALLOW_TOPMOST,
-			SDL_HINT_TIMER_RESOLUTION,
+	const char * hints[] = { 
+		SDL_HINT_FRAMEBUFFER_ACCELERATION,
+		SDL_HINT_RENDER_DRIVER, 
+		SDL_HINT_RENDER_OPENGL_SHADERS,
+		SDL_HINT_RENDER_SCALE_QUALITY,
+		SDL_HINT_RENDER_VSYNC,
+		SDL_HINT_VIDEO_X11_XVIDMODE, 
+		SDL_HINT_VIDEO_X11_XINERAMA,
+		SDL_HINT_VIDEO_X11_XRANDR, 
+		SDL_HINT_GRAB_KEYBOARD,
+		SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, 
+		SDL_HINT_IDLE_TIMER_DISABLED,
+		SDL_HINT_ORIENTATIONS,
+		SDL_HINT_XINPUT_ENABLED, 
+		SDL_HINT_GAMECONTROLLERCONFIG,
+		SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, 
+		SDL_HINT_ALLOW_TOPMOST,
+		SDL_HINT_TIMER_RESOLUTION,
 #if SDL_VERSION_ATLEAST(2, 0, 2)
-			SDL_HINT_RENDER_DIRECT3D_THREADSAFE, SDL_HINT_VIDEO_ALLOW_SCREENSAVER,
-			SDL_HINT_ACCELEROMETER_AS_JOYSTICK, SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK,
-			SDL_HINT_VIDEO_WIN_D3DCOMPILER, SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT,
-			SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, SDL_HINT_MOUSE_RELATIVE_MODE_WARP,
+		SDL_HINT_RENDER_DIRECT3D_THREADSAFE, 
+		SDL_HINT_VIDEO_ALLOW_SCREENSAVER,
+		SDL_HINT_ACCELEROMETER_AS_JOYSTICK, 
+		SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK,
+		SDL_HINT_VIDEO_WIN_D3DCOMPILER, 
+		SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT,
+		SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, 
+		SDL_HINT_MOUSE_RELATIVE_MODE_WARP,
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 3)
-			SDL_HINT_RENDER_DIRECT3D11_DEBUG, SDL_HINT_VIDEO_HIGHDPI_DISABLED,
-			SDL_HINT_WINRT_PRIVACY_POLICY_URL, SDL_HINT_WINRT_PRIVACY_POLICY_LABEL,
-			SDL_HINT_WINRT_HANDLE_BACK_BUTTON,
+		SDL_HINT_RENDER_DIRECT3D11_DEBUG, 
+		SDL_HINT_VIDEO_HIGHDPI_DISABLED,
+		SDL_HINT_WINRT_PRIVACY_POLICY_URL, 
+		SDL_HINT_WINRT_PRIVACY_POLICY_LABEL,
+		SDL_HINT_WINRT_HANDLE_BACK_BUTTON,
 #endif
-			nullptr
+		nullptr
 	};
 
 	osd_printf_verbose("\nHints:\n");
@@ -147,6 +162,7 @@ bool sdl_osd_interface::window_init()
 
 	// set up the window list
 	osd_printf_verbose("Leave sdlwindow_init\n");
+
 	return true;
 }
 
@@ -708,13 +724,17 @@ int sdl_window_info::complete_create()
 		SDL_DisplayMode mode;
 		//SDL_GetCurrentDisplayMode(window().monitor()->handle, &mode);
 		SDL_GetWindowDisplayMode(platform_window(), &mode);
+		
 		m_original_mode->mode = mode;
+		
 		mode.w = temp.width();
 		mode.h = temp.height();
+
 		if (m_win_config.refresh)
 			mode.refresh_rate = m_win_config.refresh;
 
 		SDL_SetWindowDisplayMode(platform_window(), &mode);    // Try to set mode
+
 #ifndef SDLMAME_WIN32
 		/* FIXME: Warp the mouse to 0,0 in case a virtual desktop resolution
 		 * is in place after the mode switch - which will most likely be the case
@@ -728,17 +748,23 @@ int sdl_window_info::complete_create()
 		//SDL_SetWindowDisplayMode(window().sdl_window(), nullptr); // Use desktop
 	}
 
-	// show window
-
-	SDL_ShowWindow(platform_window());
-	//SDL_SetWindowFullscreen(window->sdl_window(), 0);
-	//SDL_SetWindowFullscreen(window->sdl_window(), window->fullscreen());
-	SDL_RaiseWindow(platform_window());
+	if (webpp::streaming_server::instance().is_active())
+	{
+		SDL_HideWindow(platform_window());
+	}
+	else
+	{
+		// show window
+		SDL_ShowWindow(platform_window());
+		//SDL_SetWindowFullscreen(window->sdl_window(), 0);
+		//SDL_SetWindowFullscreen(window->sdl_window(), window->fullscreen());
+		SDL_RaiseWindow(platform_window());
 
 #ifdef SDLMAME_WIN32
 	if (fullscreen())
 		SDL_SetWindowGrab(platform_window(), SDL_TRUE);
 #endif
+	}
 
 	// set main window
 	if (index() > 0)
