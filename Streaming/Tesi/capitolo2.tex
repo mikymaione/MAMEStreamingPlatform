@@ -9,6 +9,39 @@
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+
+\section{Proposed system}
+Una caratteristica fondamentale del sistema è l'usabilità e per questo, lato client, il browser web è stata la scelta più ovvia.
+Esistono alcune tecnologie di streaming per i browser web: WebSocket, HLS, DASH e WebRTC\cite{Audio_and_video_delivery}.
+
+WebSocket è un protocollo di comunicazione che fornisce canali di comunicazione full-duplex su una singola connessione TCP, con una latenza inferiore rispetto a HLS e DASH.
+
+HTTP Live Streaming (HLS) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple.
+
+Dynamic Adaptive Streaming over HTTP (DASH) è una tecnica di streaming bit rate adattiva di Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su HTTP.
+
+Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo SRTP (Secure Real-time Transport Protocol). Pertanto, per ottenere il flusso SRTP nel browser è necessario un server WebRTC\cite{High_Performance_Browser_Networking}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/webprotocols}
+	\caption{API, protocolli e servizi di rete del browser di alto livello}
+	\label{fig:webprotocols}
+\end{figure}
+
+Questo progetto è pensato per essere utilizzato in stand di retro-gaming in eventi commerciali per l'industria IT e dei videogiochi, verrà eseguito su una rete locale e gli utenti sono connessi tramite WiFi, quindi la differenza di velocità tra TCP e UDP diventa trascurabile, quindi il la scelta è ricaduta su WebSocket perché è un protocollo di comunicazione standardizzato dal 2011, è pienamente supportato da tutti i browser moderni, è semplice e non richiede l'utilizzo di protocolli aggiuntivi o configurazioni complesse a differenza di WebRTC.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/proposed_system}
+	\caption{Panoramica del sistema}
+	\label{fig:proposed_system}
+\end{figure}
+
+Il sistema è costituito da un server di gioco, che può essere Linux, Windows o macOS, che esegue MAME e una pagina HTML5 che funge da front-end.
+
+Il programma sta ascoltando una connessione WebSocket che include parametri, come il nome del gioco. Una volta stabilita la connessione, il server invia informazioni sulla dimensione e le proporzioni del video e avvia il gioco. Il rendering e il missaggio audio del gioco vengono generati tramite SDL\footnote{SDL: Simple DirectMedia Layer, una libreria di sviluppo software multipiattaforma progettata per fornire un livello di astrazione hardware per componenti hardware multimediali del computer.}, Codificati e pacchettizzati in MPEG-TS\footnote{MPEG-TS: MPEG transport stream, è un formato contenitore digitale standard per la trasmissione e l'archiviazione di audio e video.} tramite FFmpeg\footnote{FFmpeg è una vasta suite open source di librerie e programmi per la gestione di video, audio, e altri file multimediali e stream.}. I pacchetti vengono inviati tramite WebSocket al client.
+
+Lato client vari script si occuperanno di decodificare i dati audio / video ricevuti, catturare e inviare l'input dell'utente, sia dalla tastiera che dal gamepad, al server tramite WebSocket.
+
 \section{MPEG}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
