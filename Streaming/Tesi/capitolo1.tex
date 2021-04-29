@@ -6,7 +6,7 @@
 %
 %============================================================
 
-\chapter{Introduzione}
+\chapter{Il cloud gaming}
 \label{cap:Introduzione}
 
 Il capitolo che apre questa tesi fa un'introduzione sulla nascita dei videogiochi, i ricavi globali dell'industria videoludica, il cloud gaming e i servizi presenti sul mercato.
@@ -46,26 +46,7 @@ Il più grande problema del cloud gaming era ed è ancora la latenza. Le fasi di
 	\label{fig:latenzaCloudGaming}
 \end{figure}
 
-\subsubsection{La nascita del cloud gaming}
-Una delle prime piattaforme di cloud gaming è stata OnLive di OL2, presentato alla GDC\footnote{GDC: Game Developers Conference, una conferenza annuale per gli sviluppatori di videogiochi.} 2009 e poi lanciato sul mercato a giugno 2010 negli Stati Uniti e a settembre 2011 nel Regno Unito. I giocatori, previo pagamento di un abbonamento mensile di \$15, potevano acquistare o noleggiare giochi sulla piattaforma oppure utilizzare quelli precedentemente acquistati su Steam\footnote{Steam è un servizio di distribuzione digitale di videogiochi della società Valve.}. Il servizio era ospitato su 5 data centers situati sul suolo americano che servivano gli utenti per vicinanza geografica. Era disponibile, oltre ad un client per Windows, macOS ed Android, anche una micro console da collegare alla TV. Il servizio fu chiuso ad aprile 2015 dopo essere stato acquistato da Sony.
-
-Nel febbraio 2012, Gaikai ha inaugurato il suo omonimo servizio di cloud gaming, la società si è concentrata principalmente sull'utilizzo del cloud gaming come forma di pubblicità online per i videogiochi, dove gli utenti avrebbero avuto la possibilità di accedere alle demo dei videogiochi sponsorizzati. La piattaforma era accessibile tramite browser (utilizzando come plugin di streaming Adobe Flash, Java o Google Native Client) con una velocità minima di connessione richiesta di 3 Mbps. La società fu acquisita da Sony a luglio 2012 per integrare la tecnologia di streaming di Gaikai nella piattaforma di cloud gaming PlayStation Now di Sony.
-
-Nel 2013, Nvidia ha introdotto GeForce Now, un servizio di cloud gaming integrato nel suo dispositivo Shield TV\footnote{Nvidia Shield TV è un lettore multimediale digitale basato su Android.}. Nel 2017, la società ha iniziato a espandere il proprio servizio su PC, includendo il supporto per l'importazione della libreria giochi Steam.
-
-Nel maggio 2018, Electronic Arts (EA) ha acquistato alcune risorse di cloud gaming da GameFly, e successivamente annunciò Project Atlas, un piattaforma di cloud gaming che in più esplorava l'integrazione di intelligenza artificiale e apprendimento automatico, rendendo la piattaforma dinamica, social e multipiattaforma.
-
-Microsoft all'E3\footnote{E3: Electronic Entertainment Expo, un evento commerciale per l'industria dei videogiochi.} del 2018 ha annunciato la sua piattaforma Xbox Cloud Gaming.
-
-Alla GDC 2019, Google ha annunciato ufficialmente il suo servizio di cloud gaming Stadia, in uscita per novembre dello stesso anno.
-
-A settembre 2020, un nuovo servizio chiamato Luna è stato annunciato da Amazon\cite{Cloud_gaming_history}.
-
-\subsubsection{Il caso Apple}
-Apple aveva cercato di bloccare le app di cloud gaming sull'App Store a metà del 2020, ma a settembre 2020 decise di consentire il cloud gaming con alcune restrizioni: che i giochi offerti nel servizio dovessero essere scaricati direttamente dall'App Store, non da un'app all-in-one. I produttori di app sono autorizzati a rilasciare una cosiddetta "app catalogo" che si collega ad altri giochi nel servizio, ma ogni gioco dovrà essere una singola app e tutti i giochi e le "app catalogo" devono offrire l'acquisto solo tramite il sistema di elaborazione dei pagamenti "in‑app purchases", in base al quale Apple di solito prende il 30\% delle entrate\cite{Apple_controversy}.
-
-\subsubsection{Cloud gaming market}
-Secondo la ricerca di Newzoo sull'industria dei videogiochi, nel 2020 sono stati generati quasi \$585 milioni di entrate dal mercato del cloud gaming e si prevede una crescita fino a \$4,8 miliardi entro il 2023, se non maggiore. Per questo sono entrate nel mercato anche aziende che non sono produttori di videogiochi, come Google e Amazon.
+Secondo una ricerca di Newzoo sull'industria dei videogiochi, come mostrato in Fig. \ref{fig:Newzoo_Cloud_Gaming_Revenues_Sept_2020}, nel 2020 sono stati generati quasi 585 milioni di USD di entrate dal mercato del cloud gaming e si prevede una crescita fino a 4,8 miliardi di USD entro il 2023, se non maggiore. Per questo sono entrate nel mercato anche aziende che non sono produttori di videogiochi, come Google e Amazon.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues}
@@ -73,31 +54,28 @@ Secondo la ricerca di Newzoo sull'industria dei videogiochi, nel 2020 sono stati
 	\label{fig:Newzoo_Cloud_Gaming_Revenues_Sept_2020}
 \end{figure}
 
-Vediamo l'attuale panorama del cloud gaming.
+\subsection{La nascita del cloud gaming}
+Una delle prime piattaforme di cloud gaming è stata OnLive di OL2, presentato alla GDC\footnote{GDC: Game Developers Conference, una conferenza annuale per gli sviluppatori di videogiochi.} 2009 e poi lanciato sul mercato a giugno 2010 negli Stati Uniti e a settembre 2011 nel Regno Unito. I giocatori, previo pagamento di un abbonamento mensile di 15\$, potevano acquistare o noleggiare giochi sulla piattaforma oppure utilizzare quelli precedentemente acquistati su Steam\footnote{Steam è un servizio di distribuzione digitale di videogiochi della società Valve.}. Il servizio era ospitato su 5 data centers situati sul suolo americano che servivano gli utenti per vicinanza geografica. Era disponibile, oltre ad un client per Windows, macOS ed Android, anche una micro console da collegare alla TV. Il servizio fu chiuso ad aprile 2015 dopo essere stato acquistato da Sony\cite{Cloud_gaming_history}.
 
-\subsection{Utomik}
-La piattaforma Utomik è stata lanciata commercialmente nel 2008 e da allora è in servizio. I giochi per essere riprodotti in un browser richiedono il plug-in proprietario Utomik Player. La piattaforma offre un SDK, plug-in e servizi online per creare, avviare, mantenere e monitorare i giochi pubblicati\cite{Utomik}.
+Nel febbraio 2012, Gaikai ha inaugurato il suo omonimo servizio di cloud gaming, la società si è concentrata principalmente sull'utilizzo del cloud gaming come forma di pubblicità online per i videogiochi, dove gli utenti avrebbero avuto la possibilità di accedere alle demo dei videogiochi sponsorizzati. La piattaforma era accessibile tramite browser (utilizzando come plugin di streaming Adobe Flash, Java o Google Native Client) con una velocità minima di connessione richiesta di 3 Mbps. La società fu acquisita da Sony a luglio 2012 per integrare la tecnologia di streaming di Gaikai nella piattaforma di cloud gaming PlayStation Now di Sony.
 
-\subsection{Microsoft - Xbox Cloud Gaming}
-Microsoft ha anticipato Xbox Cloud Gaming all'E3 2018. La piattaforma è disponibile per gli abbonati a Xbox Game Pass Ultimate da settembre 2020 ed offre sia la libreria esistente di giochi per Xbox che per Xbox Series X. Il servizio è progettato per funzionare con gli smartphone (attualmente solo Android), con controlli touchscreen o usando un controller Xbox tramite Bluetooth\cite{Xbox_Game_Pass_cloud_gaming}.
-
-\subsection{Electronic Arts - Project Atlas}
-A maggio 2018 Electronic Arts ha svelato la sua piattaforma di cloud gaming chiamata Project Atlas, che mira a rendere disponibili numerosi titoli e a fornire un'esperienza di gioco mai provata prima grazie al supporto dell'intelligenza artificiale. La piattaforma mira ad offrire un'esperienza di gioco composta da universi realmente viventi, che cambiano con il passare del tempo, con l'interazione con altri giocatori e sotto l'influenza del mondo esterno. In questi processi, il supporto dell'intelligenza artificiale e l'apprendimento delle abitudini e delle preferenze dei giocatori giocherebbero un ruolo fondamentale. Offre anche un client di gioco dinamico, che consente agli utenti di riprodurre in streaming un titolo mentre attendono il completamento del download sul proprio dispositivo\cite{Project_Atlas}.
-
-\subsection{Nvidia - GeForce Now}
-GeForce Now è il servizio di cloud gaming di Nvidia lanciato in beta a gennaio 2017 e ufficialmente a febbraio 2020. GeForce Now consente agli utenti di accedere da remoto (tramite streaming) a un computer virtuale, dove possono installare i giochi acquistati su Steam, Ubisoft Connect\footnote{Ubisoft Connect è un servizio di distribuzione digitale della società Ubisoft.} o Epic Games Store\footnote{Epic Games Store è un negozio di videogiochi digitali gestito da Epic Games.}. Il servizio può essere utilizzato su Windows, macOS, iOS, Android o Nvidia Shield TV\cite{GeForce_Now}.
-
-\subsection{Sony - PlayStation Now}
 PlayStation Now è un servizio di cloud gaming basato sulla tecnologia cloud di Gaikai utilizzando Microsoft Azure. È stato presentato durante il CES\footnote{CES: Consumer Electronics Show, un evento annuale che ospita presentazioni di nuovi prodotti e tecnologie nel settore dell'elettronica di consumo.} 2014. È disponibile da gennaio 2015 in Nord America, da settembre in Giappone e Regno Unito ed ha iniziato ad operare in Europa gradualmente da agosto 2017 a marzo 2019. La piattaforma consente all'utente di giocare ai titoli PlayStation (attualmente dal catalogo giochi della PS2, PS3 e PS4) su PS4, PS5 e Windows\cite{PlayStation_Now}.
 
-\subsection{Google - Stadia}
+La piattaforma Utomik è stata lanciata in beta a giugno 2015 e commercialmente nel maggio 2018 e da allora è in servizio. I giochi per essere riprodotti in un browser richiedono del plug-in Utomik Player. La piattaforma offre un SDK, plug-in e servizi online per creare, avviare, mantenere e monitorare i giochi pubblicati\cite{Utomik}.
+
+GeForce Now è il servizio di cloud gaming di Nvidia lanciato in beta a gennaio 2017 e ufficialmente a febbraio 2020. GeForce Now consente agli utenti di accedere da remoto (tramite streaming) a un computer virtuale, dove possono installare giochi acquistati su Steam, Ubisoft Connect\footnote{Ubisoft Connect è un servizio di distribuzione digitale della società Ubisoft.} o Epic Games Store\footnote{Epic Games Store è un negozio di videogiochi digitali gestito da Epic Games.}. Il servizio può essere utilizzato su Windows, macOS, iOS, Android o Nvidia Shield TV\footnote{Nvidia Shield TV è un lettore multimediale digitale basato su Android.}\cite{GeForce_Now}.
+
+A maggio 2018 Electronic Arts ha svelato la sua piattaforma di cloud gaming chiamata Project Atlas, che mira a rendere disponibili numerosi titoli e a fornire un'esperienza di gioco mai provata prima grazie al supporto dell'intelligenza artificiale. La piattaforma mira ad offrire un'esperienza di gioco composta da universi realmente viventi, che cambiano con il passare del tempo, con l'interazione con altri giocatori e sotto l'influenza del mondo esterno. In questi processi, il supporto dell'intelligenza artificiale e l'apprendimento delle abitudini e delle preferenze dei giocatori giocherebbero un ruolo fondamentale. Offre anche un client di gioco dinamico, che consente agli utenti di riprodurre in streaming un titolo mentre attendono il completamento del download sul proprio dispositivo\cite{Project_Atlas}.
+
+RemoteMyApp della Vortex è servizio di cloud gaming lanciato a novembre 2018, è disponibile per Android, Windows e macOS e offre tre piani mensili (12\$, 23\$ e 33\$) che consentono all'utente di giocare per un massimo di 140 ore al mese ad un catalogo di 170 giochi. Sfortunatamente, alcuni giochi possono essere riprodotti solo acquistando la licenza del gioco\cite{RemoteMyApp_Vortex}.
+
+Microsoft ha anticipato Xbox Cloud Gaming all'E3\footnote{E3: Electronic Entertainment Expo, un evento commerciale per l'industria dei videogiochi.} 2018. La piattaforma è disponibile per gli abbonati a Xbox Game Pass Ultimate da settembre 2020 ed offre sia la libreria esistente di giochi per Xbox che per Xbox Series X. Il servizio è progettato per funzionare con gli smartphone (attualmente solo Android), con controlli touchscreen o usando un controller Xbox tramite Bluetooth\cite{Xbox_Game_Pass_cloud_gaming}.
+
 Stadia è una piattaforma di cloud gaming rilasciata a novembre 2019, ma è disponibile solo in Europa e negli Stati Uniti. Sulla piattaforma l'utente può acquistare giochi o iscriversi al servizio per accedere al catalogo giochi. Google ha creato il controller Stadia che si connette tramite WiFi direttamente al servizio e rende possibile giocare su una TV (installando l'app o utilizzando un Chromecast\footnote{Google Chromecast è un lettore multimediale digitale per contenuti audiovisivi in streaming su Internet}). Invece sul computer tramite il browser Chrome si può giocare con mouse e tastiera o controller. Per quanto riguarda il mobile è disponibile un'app che supporta i controlli touch screen e i gamepad Bluetooth. La piattaforma offre alcune funzionalità interessanti come: live streaming su YouTube del proprio gameplay; Crowd Play che consente agli spettatori di unirsi ai giochi multiplayer che stanno guardando; Stream Connect che consente all'utente di condividere la schermata di gioco con altri giocatori nello stesso gioco; "Condivisione dello stato" che consente ai giocatori di condividere il proprio stato di salvataggio\cite{Google_Stadia}.
 
-\subsection{Amazon - Luna}
 Luna è stata annunciata a settembre 2020, con "accesso anticipato" disponibile per gli abbonati su invito a partire da ottobre 2020. Il catalogo giochi proposto consta di 100 giochi. La piattaforma è ovviamente ospitata su AWS\footnote{AWS: Amazon Web Services è la piattaforma di cloug computing di Amazon.}. Il servizio offre l'integrazione con Twitch e una partnership con Ubisoft che da l'accesso ai titoli al momento del rilascio\cite{Amazon_Luna}.
 
-\subsection{RemoteMyApp - Vortex}
-Il servizio è stato lanciato a novembre 2018,  è disponibile per Android, Windows e macOS e offre tre piani mensili (\$12, \$23 e \$33) che consentono all'utente di giocare per un massimo di 140 ore al mese ad un catalogo di 170 giochi. Sfortunatamente, alcuni giochi possono essere riprodotti solo acquistando la licenza del gioco\cite{RemoteMyApp_Vortex}.
+Una menzione speciale va fatta alla società Playkey, che ha realizzato una piattaforma di cloud gaming distribuita, che dovrebbe uscire in beta a fine 2021. Il sistema distribuito è formato da un server centrale che gestisce l'infrastruttura e dai computer dei cosidetti "minatori", coloro che mettono a disposizione il proprio computer come unità di calcolo del sistema distribuito. In pratica i giocatori non si connettono ad un server per ricevere lo streaming del gioco, ma al computer di un minatore, su cui viene eseguito il gioco. I minatori guadagnano 10\$ al giorno mentre l'utente paga 23\$ il piano mensile illimitato. I giocatori possono giocare solo dalla loro libreria di giochi personale Steam, Ubisoft Connect, Origin, Battle.net\cite{Playkey}.
 
-\subsection{Playkey}
-Una menzione speciale va fatta alla società Playkey, che ha realizzato una piattaforma di cloud gaming distribuita. Il sistema distribuito è formato da un server centrale che gestisce l'infrastruttura e dai computer dei cosidetti "minatori", coloro che mettono a disposizione il proprio computer come unità di calcolo del sistema distribuito. In pratica i giocatori non si connettono ad un server per ricevere lo streaming del gioco, ma al computer di un minatore, su cui viene eseguito il gioco. I minatori guadagnano \$10 al giorno mentre l'utente paga \$23 il piano mensile illimitato. I giocatori possono giocare solo dalla loro libreria di giochi personale Steam, Ubisoft Connect, Origin, Battle.net\cite{Playkey}.
+\subsubsection{Il caso Apple}
+Apple aveva cercato di bloccare le app di cloud gaming sull'App Store a metà del 2020, ma a settembre 2020 decise di consentire il cloud gaming con alcune restrizioni: che i giochi offerti nel servizio dovessero essere scaricati direttamente dall'App Store, non da un'app all-in-one. I produttori di app sono autorizzati a rilasciare una cosiddetta "app catalogo" che si collega ad altri giochi nel servizio, ma ogni gioco dovrà essere una singola app e tutti i giochi e le "app catalogo" devono offrire l'acquisto solo tramite il sistema di elaborazione dei pagamenti "in‑app purchases", in base al quale Apple di solito prende il 30\% delle entrate\cite{Apple_controversy}.
