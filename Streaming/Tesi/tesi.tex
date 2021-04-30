@@ -8,7 +8,7 @@
 
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[italian, twoside]{report}
+\documentclass[italian]{book}
 
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
@@ -71,7 +71,6 @@
 \renewcommand\contentsname{Indice}
 % Creazione automatica del frontespizio
 \frontespizio
-\cleardoublepage
 \beforepreface
 
 % PAGINA DI DEDICA E/O CITAZIONE
@@ -96,27 +95,21 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 %			Creazione automatica dell'indice
 %
 \afterpreface
-\cleardoublepage
 
 %			CAPITOLO 1: Introduzione 
 \input{capitolo1.tex}
-\cleardoublepage
 
 %			CAPITOLO 2: 
 \input{capitolo2.tex}
-\cleardoublepage
 
 %			CAPITOLO 3: 
 \input{capitolo3.tex}
-\cleardoublepage
 
 %			CAPITOLO 4: 
 \input{capitolo4.tex}
-\cleardoublepage
 
 %			CAPITOLO 5: 
 \input{capitolo5.tex}
-\cleardoublepage
 
 %			Ringraziamenti:
 \input{ringraziamenti}
