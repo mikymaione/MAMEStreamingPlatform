@@ -68,10 +68,11 @@
 
 \begin{document}
 
-\renewcommand\contentsname{Indice}
+%\renewcommand\contentsname{Indice}
 % Creazione automatica del frontespizio
 \frontespizio
-\beforepreface
+
+\frontmatter
 
 % PAGINA DI DEDICA E/O CITAZIONE
 {
@@ -88,13 +89,16 @@
 %			Abstract
 \input{abstract.tex}
 
-\prefacesection{Ringraziamenti}
+\chapter*{Ringraziamenti}
 Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo supporto e il Prof. Davide Gadia per la sua guida utile durante i miei sforzi verso il completamento della presente tesi.
 
 %
 %			Creazione automatica dell'indice
 %
-\afterpreface
+
+{\let\cleardoublepage\clearpage\tableofcontents}
+
+\mainmatter
 
 %			CAPITOLO 1: Introduzione 
 \input{capitolo1.tex}
