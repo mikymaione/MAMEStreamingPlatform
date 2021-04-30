@@ -1,10 +1,10 @@
 % Stanford University PhD thesis style, basato sul modello:
 % Report style
 
-\oddsidemargin 0.5in \evensidemargin 0in
-\marginparwidth 40pt \marginparsep 10pt
-\topmargin 0pt \headsep .5in
-\textheight 8in \textwidth 6in
+%\oddsidemargin 0.5in \evensidemargin 0in
+%\marginparwidth 40pt \marginparsep 10pt
+%\topmargin 0pt \headsep .5in
+%\textheight 8in \textwidth 6in
 
 % Disallow page breaks at hyphens (this will give some underfull vbox's,
 % so an alternative is to use \brokenpenalty=100 and manually search
@@ -85,11 +85,10 @@
 	\chapter*{#1}
 	\addcontentsline{toc}{chapter}{#1}}
 
-
-\def\afterpreface{\newpage
+\def\afterpreface{
 	\addcontentsline{toc}{chapter}{Indice}
 	\tableofcontents
-	\newpage
+	
 	\iftablespage
 		{\addvspace{10pt}
 		\let\saveaddvspace=\addvspace
@@ -112,4 +111,3 @@
 	\pagestyle{headings}}
 
 \pagestyle{headings}
-
