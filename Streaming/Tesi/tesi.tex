@@ -8,7 +8,7 @@
 
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[italian]{book}
+\documentclass[italian, openany]{book}
 
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
@@ -67,13 +67,9 @@
 }
 
 \begin{document}
-
-%\renewcommand\contentsname{Indice}
-% Creazione automatica del frontespizio
 \frontespizio
 
 \frontmatter
-
 % PAGINA DI DEDICA E/O CITAZIONE
 {
 \raggedleft \large \sl 
@@ -86,36 +82,21 @@
 	\--- Primo Levi\\
 }
 
-%			Abstract
-\input{abstract.tex}
-
 \chapter*{Ringraziamenti}
 Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo supporto e il Prof. Davide Gadia per la sua guida utile durante i miei sforzi verso il completamento della presente tesi.
 
-%
-%			Creazione automatica dell'indice
-%
+\setcounter{tocdepth}{1}
+%{\let\cleardoublepage\clearpage\tableofcontents}
+\tableofcontents
 
-{\let\cleardoublepage\clearpage\tableofcontents}
+\input{abstract.tex}
 
 \mainmatter
-
-%			CAPITOLO 1: Introduzione 
 \input{capitolo1.tex}
-
-%			CAPITOLO 2: 
 \input{capitolo2.tex}
-
-%			CAPITOLO 3: 
 \input{capitolo3.tex}
-
-%			CAPITOLO 4: 
 \input{capitolo4.tex}
-
-%			CAPITOLO 5: 
 \input{capitolo5.tex}
-
-%			Ringraziamenti:
 \input{ringraziamenti}
 
 % 
@@ -126,9 +107,8 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 
 \chapter{A}
 
-%
+\backmatter
 %			BIBLIOGRAFIA
-%
 \bibliographystyle{unsrt}
 \bibliography{Bibliografia}
 \addcontentsline{toc}{chapter}{Bibliografia}
