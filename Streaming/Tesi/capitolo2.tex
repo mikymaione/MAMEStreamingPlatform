@@ -44,11 +44,13 @@ Lato client vari script si occupano di decodificare i dati audio-video ricevuti,
 \section{MAME}
 Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) del programmatore italiano Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++ inizialmente usando principalmente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS, ma con il passare del tempo e l'ingrandirsi della comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like\cite{MAME}.
 
+Per quanto riguarda la portabilità ci sono solo 3 compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP - Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, c'è anche una speciale compilazione che deriva da un port del MAME il progetto SDLMAME in grado di funzionare su Windows, Linux, macOS ed altri sistemi operativi supportati dalla libreria SDL.
+
 MAME è un software vastissimo, basti pensare che alla versione attuale (v. 0.228) è formato da 14.904 file sorgenti (e nel conteggio non ci sono i file di definizione della UI, gli script per la compilazione e le librerie esterne che sono incluse nel progetto sottoforma di sorgenti). Il progetto è suddiviso in tre macro categorie, come mostrato in Fig. \ref{fig:mame_arch}, che sono:
 \begin{itemize}
 	\item Core in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato, ed i sorgenti delle librerie esterne;
-	\item OSD contenente le funzionalità sia dipendenti dal sistema operativo come Windows, UWP\footnote{UWP - Universal Windows Platform è architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Windows 10 Mobile, Xbox One e Hololens.} ed SDLMAME\footnote{SDLMAME è un port di MAME, ora integrato nel progetto MAME, che utilizza la libreria SDL in grado di funzionare su Windows, Linux, macOS ed altri sistemi operativi supportati dalla libreria SDL.}, sia i moduli di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
-	\item La macro area Devices contiene per ogni device emulato le classi che gestiscono cpu, bus, video e audio.
+	\item OSD contenente le funzionalità sia dipendenti dal sistema operativo come macOS, Windows, UWP ed SDLMAME, sia i moduli di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
+	\item Devices che contiene per ogni device emulato le classi che gestiscono le informazioni della macchina ed emulano cpu, bus, video e audio.
 \end{itemize} 
 
 \begin{figure}[H]
