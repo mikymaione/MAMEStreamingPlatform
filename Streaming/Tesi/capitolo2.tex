@@ -9,6 +9,8 @@
 \chapter{Architettura del sistema}
 In questo capitolo verrà fatta\dots
 
+
+
 \section{Sistema proposto}
 L'esigenza per la quale nasce questo progetto è far conoscere alle nuove generazioni i videogiochi che hanno fatto la storia e dare la possibilità di poter giocare ancora a macchine che ormai hanno cessato di funzionare per motivi di obsolescenza, sfruttando due tecnologie entrate a far parte della quotidianità, lo streaming e il cloud computing. In questo lavoro si propone la creazione di una piattaforma di cloud gaming, che permette lo streaming audio-video direttamente e su richiesta dei videogiochi, da un server remoto, ad un client (computer, console, telefono). Per far ciò verrà ampliato il software MAME (rilasciato sotto licenza GNU-GPL) che è in grado di emulare oltre 7.000 giochi arcade. Le caratteristiche principali del progetto, che sono state vincolanti nella scelta delle tecnologie da utilizzare, sono la portabilità e la possibilità di utilizzare il sistema senza dover installare software aggiuntivi, e per questi vincoli, lato client, la scelta è ricaduta sul browser web. In Fig. \ref{fig:webprotocols} sono schematizzati i protocolli, i servizi e le API relativi alle tecnologie di streaming per i browser web ad oggi disponibili\cite{Audio_and_video_delivery}, che sono:
 
@@ -37,36 +39,36 @@ Come mostrato in Fig. \ref{fig:proposed_system} il sistema è costituito dal ser
 
 Lato client vari script si occupano di decodificare i dati audio-video ricevuti, catturare e inviare l'input dell'utente, sia dalla tastiera che dal gamepad, al server tramite WebSocket.
 
-\section{MAME}
+
+
+\section{Come funziona il MAME}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{Libs.}
+\subsection{Simple DirectMedia Layer (SDL)}
+SDL è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:sdl} SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), librerie di rendering 3D (in verde) e librerie che si interfacciano alla scheda audio (in rosso)\cite{SDL_Wiki}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/sdl}
+	\caption{SDL: livelli di astrazione su diverse piattaforme}
+	\label{fig:sdl}
+\end{figure}
+
+\subsection{Video}
+Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), ma poiché emula fisicamente il monitor del cabinato ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/rendering_pipeline}
+	\caption{Pipeline di rendering 2D}
+	\label{fig:rendering_pipeline}
+\end{figure}
+
+\subsubsection{SDL renderer} \label{SDL_renderer}
+Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra.
+
+\subsection{Audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{Server}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsection{SDL renderer} \label{SDL_renderer}
-La fase di rendering del MAME inizia creando un contesto di rendering relativo ad una finestra, continua eseguendo la fase di disegno e finisce visualizzado il frame sulla finestra. Le funzioni della libreria SDL utilizzate sono:
-
-\begin{itemize}
-	\item CreateRGBSurfaceWithFormat: Crea una superficie RGB specificando il formato pixel da utilizzare;
-	\item CreateRenderer: Crea un contesto di rendering 2D per una finestra;
-	\item CreateSoftwareRenderer: Crea un contesto di rendering 2D per una superficie;
-	\item RWFromMem: Prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati RWops (read-write opaque pointer structure);
-	\item SetRenderDrawColor: Imposta il colore utilizzato per le operazioni di disegno;
-	\item RenderFillRect: Riempe un rettangolo con il colore di disegno corrente;
-	\item RenderDrawLine: Disegna una linea con il colore di disegno corrente;
-	\item RenderPresent: Aggiorna il contesto di rendering con il frame generato dalle funzioni di disegno.
-\end{itemize}
-
-\subsection{SDL audiomixer}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsection{WebSocket implementation}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsection{Encoder}
+\subsubsection{SDL audio mixer}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \cite{CPP_Primer}
