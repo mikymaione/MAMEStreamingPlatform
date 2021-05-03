@@ -1,6 +1,7 @@
 % GENERAZIONE DEL FRONTESPIZIO
 \def\frontespizio{
-	\pagenumbering{gobble}
+	\pagenumbering{gobble}	
+
 	\begin{center}
 		{\LARGE \uppercase{Università degli Studi di Milano}}\\
 		\uppercase{Facoltà di Scienze e Tecnologie}\\
@@ -20,27 +21,31 @@
 	
 	\vfill
 	\vskip 3 cm
-	
+			
 	\begin{tabular}{ll}
 		{\large Relatore:} & \myRefereeA\\
 		{\large Correlatore:} & \myRefereeB\\
-	\end{tabular}
-	
+	\end{tabular}	
+
 	\vfill
 	\vskip 0.5 cm
 	
-	\begin{tabular}{l}
-		\hspace{9cm}{\large Tesi di Laurea di:}\\
-		\hspace{9cm}{\large \myName}\\
-		\hspace{9cm}{\large \myMat}\\
-	\end{tabular}
-	
+	\begin{flushright}
+		\begin{tabular}{l}
+			{\large Tesi di Laurea di:}\\
+			{\large \myName}\\
+			{\large \myMat}\\
+		\end{tabular}	
+	\end{flushright}
+		
 	\vfill
 	\vskip 2 cm
 	
 	\begin{center}
 		%inserire l'anno accademico
 		\sc anno accademico \myYY
-	\end{center}\vskip.5in
+	\end{center}
+	
+	\vskip.5in
 	\newpage
 }
