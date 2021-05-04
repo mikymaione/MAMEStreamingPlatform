@@ -44,9 +44,17 @@ Lato client vari script si occupano di decodificare i dati audio-video ricevuti,
 \section{MAME}
 Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) del programmatore italiano Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++ inizialmente usando principalmente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS, ma con il passare del tempo e l'ingrandirsi della comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like\cite{MAME}.
 
-Per quanto riguarda la portabilità ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP - Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione che deriva da un port del MAME, il progetto SDLMAME in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo quella che si è scelta di utilizzare per un server di cloud gaming.
+Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP - Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione che deriva da un port del MAME, il progetto SDLMAME in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
 
-MAME, alla versione attuale (v. 0.228), è formato da 14.904 file sorgenti (e nel conteggio non ci sono i file di definizione della UI, gli script per la compilazione e le librerie esterne che sono incluse nel progetto sottoforma di sorgenti) ed è suddiviso in tre macro categorie, come mostrato in Fig. \ref{fig:mame_arch}, che sono:
+Simple DirectMedia Layer (SDL) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), librerie di rendering 3D (in verde) e librerie che si interfacciano alla scheda audio (in rosso)\cite{SDL_Wiki}. 
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
+	\caption{MAME livelli di astrazione su diverse piattaforme}
+	\label{fig:mame_architettura_full}
+\end{figure}
+
+MAME, alla versione attuale (v. 0.228), è formato da 14.904 file sorgenti (e nel conteggio non ci sono i file di definizione della UI, gli script per la compilazione e le librerie esterne che sono incluse nel progetto sotto forma di sorgenti) ed è suddiviso in tre macro categorie, come mostrato in Fig. \ref{fig:mame_arch}, che sono:
 \begin{itemize}
 	\item Core in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma main a linea di comando (progetto main), il front-end grafico, il motore di emulazione (progetto emu), alcune librerie comuni a tutto il software (lib) ed i sorgenti delle librerie esterne (3rdparty);
 	\item OSD contenente le funzionalità sia dipendenti dal sistema operativo come macOS, Windows, UWP ed SDLMAME, sia i moduli (progetto modules) di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
@@ -59,27 +67,7 @@ MAME, alla versione attuale (v. 0.228), è formato da 14.904 file sorgenti (e ne
 	\label{fig:mame_arch}
 \end{figure}
 
-
-In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo solo alla funzionalità di rendering (la controparte del missaggio audio funziona in maniera simile).
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/mame_render_class_diagram}
-	\caption{MAME, diagramma delle classi relativo al rendering}
-	\label{fig:mame_render_class_diagram}
-\end{figure}
-
-\subsection{SDL}
-Simple DirectMedia Layer (SDL) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:sdl} SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), librerie di rendering 3D (in verde) e librerie che si interfacciano alla scheda audio (in rosso)\cite{SDL_Wiki}.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/sdl}
-	\caption{SDL: livelli di astrazione su diverse piattaforme}
-	\label{fig:sdl}
-\end{figure}
-
-\subsection{Video}
+\subsection{Rendering}
 Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), ma poiché emula fisicamente il monitor del cabinato ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare.
 
 \begin{figure}[H]
@@ -88,8 +76,16 @@ Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), m
 	\label{fig:rendering_pipeline}
 \end{figure}
 
-\subsubsection{SDL renderer} \label{SDL_renderer}
 Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra.
+
+In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering (la controparte del missaggio audio funziona in maniera simile). È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mame_render_class_diagram}
+	\caption{MAME, diagramma delle classi relativo al rendering}
+	\label{fig:mame_render_class_diagram}
+\end{figure}
+
 
 \subsection{Audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
