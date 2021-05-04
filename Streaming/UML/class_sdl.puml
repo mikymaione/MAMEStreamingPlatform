@@ -1,0 +1,123 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+class SDL_main #Linen 
+
+class SDL_osd_interface extends osd_common_t 
+
+SDL_main -- SDL_osd_interface
+
+class emulator_info 
+
+SDL_main -- emulator_info
+emulator_info -- running_machine
+
+class cli_frontend 
+
+class mame_ui_manager 
+
+class render_container 
+
+mame_ui_manager -- render_container
+mame_machine_manager -- mame_ui_manager
+
+emulator_info -- mame_machine_manager
+emulator_info -- cli_frontend
+mame_machine_manager -- cli_frontend
+
+class running_machine 
+
+mame_machine_manager -- running_machine
+running_machine -- video_manager
+render_container -- render_manager
+running_machine -- render_manager
+render_container -- screen_device
+
+class render_manager
+
+class screen_device 
+
+class video_manager 
+
+class machine_manager
+
+machine_manager -- osd_interface
+machine_manager -- running_machine
+
+class mame_machine_manager extends machine_manager 
+
+running_machine -- osd_interface
+video_manager -- osd_interface
+video_manager -- emulator_info
+
+class osd_renderer 
+
+class renderer_sdl2 extends osd_renderer 
+
+class SDL2 
+
+renderer_sdl2 -- SDL2
+SDL_window_info -- SDL2
+
+osd_window -- osd_renderer
+renderer_sdl2 -- osd_renderer
+renderer_sdl2 -- SDL_osd_interface
+
+class osd_window_t<TWindowHandle> extends osd_window 
+
+class osd_window 
+
+class SDL_window_info<TWindowHandle> extends osd_window_t 
+
+osd_renderer -- SDL_window_info
+osd_common_t -- SDL_osd_interface
+SDL_window_info -- SDL_osd_interface
+
+osd_window -- osd_common_t
+
+class osd_interface 
+
+class osd_common_t extends osd_interface 
+
+' 'note bottom of SDL_window_info
+' note as nTWindowHandle
+' TWindowHandle:
+'     -SDL_Window (SDLMame = All O.S.)
+'     -CoreWindow (UWP)
+'     -HWND (Windows)
+'     -std::any (macOS)
+' end note
+
+' 'note bottom of renderer_sdl2
+' note as nrenderer_sdl2
+' Renderer:
+'     -bgfx {macOS, SDLMame, UWP, Windows}
+'     -OpenGL {macOS, SDLMame, Windows}
+'     -SDL 1 {SDLMame}
+'     -SDL 2 {SDLMame}
+'     -DirectX 9 {Win32}
+'     -GDI+ {Win32}
+' end note
+
+' note as nSDL
+' O.S.:
+'     -macOS 
+'     -Windows
+'     -UWP
+'     -SDLMame = All O.S.
+' end note
+
+' nrenderer_sdl2 .. renderer_sdl2
+' nrenderer_sdl2 .. SDL2
+' nTWindowHandle .. SDL_window_info
+' nSDL .. SDL_main
+' nSDL .. SDL_osd_interface
+' nSDL .. SDL_window_info
+@enduml
