@@ -1,3 +1,6 @@
+1f=34ms
+10f=334ms
+
 1)
 XXX_osd_interface::init(machine):
 	osd_common_t::init_subsystems()
