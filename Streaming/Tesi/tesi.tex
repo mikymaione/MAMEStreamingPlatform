@@ -58,13 +58,17 @@
 \usepackage{commath}
 \usepackage{minted}
 
+%style scritta nella bibliografia
+%citestyle scritta nel testo
+\usepackage[sorting=nty,maxbibnames=15]{biblatex}
+
 \usepackage{caption}
 \definecolor{grigio}{RGB}{100,100,100}
 \captionsetup[figure]{font={footnotesize, color=grigio}}
 
-\hypersetup{
-	hidelinks
-}
+\hypersetup{hidelinks}
+
+\addbibresource{Bibliografia.bib}
 
 \begin{document}
 \frontespizio
@@ -106,9 +110,9 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 
 \backmatter
 %			BIBLIOGRAFIA
-\bibliographystyle{unsrt}
-\bibliography{Bibliografia}
-\addcontentsline{toc}{chapter}{Bibliografia}
+\printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
+\printbibliography[type=misc,title={Sitografia},heading=bibintoc]
+
 
 \input{ringraziamenti}
 
