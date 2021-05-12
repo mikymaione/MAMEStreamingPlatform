@@ -8,14 +8,14 @@
 
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[italian, openany]{book}
+\documentclass[italian, openany]{memoir}
 
 \usepackage[T1]{fontenc}
 \usepackage{tesi}
 \usepackage{csharp_algorithms}
 
 \def\myCDL{Corso di Laurea Magistrale in Informatica}
-\def\myTitle{Piattaforma di cloud gaming\\per giochi arcade}
+\def\myTitle{Piattaforma di cloud gaming per giochi arcade}
 
 \def\myName{Michele Maione}
 \def\myMat{Matr. Nr. 931468}
@@ -76,7 +76,7 @@
 \frontmatter
 % PAGINA DI DEDICA E/O CITAZIONE
 {
-\raggedleft \large \sl 
+\raggedleft \large %\sl 
 	``Se non così, come? E se non ora, quando?''
 	
 	\bigskip
@@ -86,8 +86,9 @@
 
 \chapter*{Ringraziamenti}
 Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo supporto e il Prof. Davide Gadia per la sua guida utile durante i miei sforzi verso il completamento della presente tesi.
+\newpage
 
-\setcounter{tocdepth}{1}
+%\setcounter{tocdepth}{1}
 %{\let\cleardoublepage\clearpage\tableofcontents}
 \tableofcontents
 
