@@ -8,11 +8,9 @@
 
 % !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 
-\documentclass[italian, openany]{memoir}
+\documentclass[a4paper, italian, openany]{memoir}
 
 \usepackage[T1]{fontenc}
-\usepackage{tesi}
-\usepackage{csharp_algorithms}
 
 \def\myCDL{Corso di Laurea Magistrale in Informatica}
 \def\myTitle{Piattaforma di cloud gaming per giochi arcade}
@@ -71,7 +69,7 @@
 \addbibresource{Bibliografia.bib}
 
 \begin{document}
-\frontespizio
+\input{copertina.tex}
 
 \frontmatter
 % PAGINA DI DEDICA E/O CITAZIONE
