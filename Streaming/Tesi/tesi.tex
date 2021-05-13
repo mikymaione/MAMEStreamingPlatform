@@ -60,11 +60,14 @@
 %citestyle scritta nel testo
 \usepackage[sorting=nty,maxbibnames=15]{biblatex}
 
+\usepackage{csquotes}
+
 \usepackage{caption}
 \definecolor{grigio}{RGB}{100,100,100}
 \captionsetup[figure]{font={footnotesize, color=grigio}}
 
 \hypersetup{hidelinks}
+
 
 \addbibresource{Bibliografia.bib}
 
@@ -72,7 +75,6 @@
 \input{copertina.tex}
 
 \frontmatter
-% PAGINA DI DEDICA E/O CITAZIONE
 {
 \raggedleft \large %\sl 
 	``Se non così, come? E se non ora, quando?''
@@ -87,7 +89,6 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 \newpage
 
 %\setcounter{tocdepth}{1}
-%{\let\cleardoublepage\clearpage\tableofcontents}
 \tableofcontents
 
 \input{abstract.tex}
@@ -100,19 +101,13 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 \input{capitolo4.tex}
 \input{capitolo5.tex}
 
-% 
-%			APENDICE: materiali aggiuntivi e dimostrazioni
-% 
-
 \appendix
-
 \chapter{A}
 
+
 \backmatter
-%			BIBLIOGRAFIA
 \printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
 \printbibliography[type=misc,title={Sitografia},heading=bibintoc]
-
 
 \input{ringraziamenti}
 
