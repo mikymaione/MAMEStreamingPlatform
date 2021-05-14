@@ -37,7 +37,7 @@ I videogiochi sono un mezzo di intrattenimento unico che combina le diverse form
 
 
 \section{Cloud gaming}
-Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile videogiocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica i videogiochi vengono archiviati ed eseguiti su un server remoto e l'output audio-video viene trasmesso in streaming (come un filmato) ad un client sul dispositivo dell'utente. Il client gestisce l'input del giocatore che viene inviato al server ed eseguito nel gioco. Come mostrato in Fig. \ref{fig:cloud_gaming_general_scheme} le fasi di elaborazione input, esecuzione del gioco, rendering e missaggio audio, che solitamente vengono eseguite sul dispositivo del giocatore, nel paradigma del cloud gaming vengono eseguite sul server. Sempre sul server c'è una fase di codifica sotto forma di filmato dell'output audio-video del gioco ed invio tramite rete. Sul dispositivo dell'utente ci sono solo due fasi: cattura e trasmissione al server dell'input utente e ricezione e decodifica del filmato dal server. In questo modo il dispositivo dell'utente è indipendente sia dall'hardware che dal sistema operativo (purché il client possa essere eseguito sul dispositivo dell'utente).
+Negli ultimi anni sono apparsi molti tipi di servizi che sfruttano il paradigma del cloud computing: archiviazione (Dropbox, Drive, OneDrive), musica (Spotify, Amazon Music), cinematografia (Prime Video, Netflix), documenti (Google Workspace, Office 365) e più recentemente il cloud gaming. Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile videogiocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica consente di archiviare ed eseguire i videogiochi su un server remoto e trasmettere l'output audio-video all'utente sul proprio dispositivo. Come mostrato in Fig. \ref{fig:cloud_gaming_general_scheme} le fasi di elaborazione input, esecuzione del gioco, rendering e missaggio audio, che solitamente vengono eseguite sul dispositivo del giocatore, nel paradigma del cloud gaming vengono eseguite sul server. Sul server ci sono le fase aggiuntive di codifica sotto forma di filmato dell'output audio-video del gioco ed invio tramite rete. Sul dispositivo dell'utente ci sono solo due fasi: cattura e trasmissione al server dell'input utente e ricezione e decodifica del filmato dal server. In questo modo il dispositivo dell'utente è indipendente sia dall'hardware che dal sistema operativo (purché il client possa essere eseguito sul dispositivo dell'utente).
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/cloud_gaming_general_scheme}
@@ -55,10 +55,24 @@ Secondo una ricerca di Newzoo\footnote{Società di analisi statistica del settor
 
 
 \subsection{Cloud computing}
-Le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Come detto precedentemente le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. Il cloud computing è un paradigma in cui un provider offre a pagamento risorse fisiche e software accessibili in remoto. I modelli di servizio\footnote{La sigla aaS sta per "as a Service".} offerti sono: infrastruttura (IaaS), piattaforma (PaaS) e software (SaaS). Il cloud gaming è l'unione del modello PaaS e del modello SaaS, perché i videogiochi sono offerti come un servizio dal punto di vista del giocatore, ma da quello dello sviluppatore il modello offerto è il PaaS, secondo \citeauthor{Cloud_for_Gaming} \cite{Cloud_for_Gaming} il paradigma implementato dal cloud gaming è il gioco come servizio (GaaS). GaaS si divide in differenti instanze, come mostrato in Fig. \ref{fig:GaaS}, che sono:
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/GaaS}
+	\caption{Instanze di GaaS}
+	\label{fig:GaaS}
+\end{figure}
+
+\begin{itemize}
+    \item Rendering remoto (RR-GaaS): il gioco viene eseguito, codificato ed inviato all'utente sotto forma di filmato;
+    \item Rendering locale (LR-GaaS): il gioco viene eseguito, codificato ed inviato all'utente sotto forma di istruzioni di rendering. Il client di inviare le istruzioni alla scheda grafica dell'utente;
+    \item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve parti dell'eseguibile del gioco che vengono eseguite sul dispositivo dell'utente.
+\end{itemize}
+
+
 
 \subsection{Protocolli di comunicazione}
-Le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. I protocolli di comunicazione a livello di trasporto che sono stati maggiormente utilizzati per lo streaming sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
+I protocolli di comunicazione a livello di trasporto che sono stati maggiormente utilizzati per lo streaming sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
 
 \begin{table}[H]
 	\centering
@@ -92,18 +106,18 @@ Le due tecnologie alla base del cloud gaming sono il cloud computing e lo stream
 
 Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per la creazione di pagine web che per lo streaming\cite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, che sono:
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/webprotocols}
-	\caption{API, protocolli e servizi di rete del browser di alto livello}
-	\label{fig:webprotocols}
-\end{figure}
-
 \begin{itemize}
 	\item WebSocket è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
 	\item HTTP Live Streaming (HLS) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple;
 	\item Dynamic Adaptive Streaming over HTTP (DASH) è una tecnica di streaming con bit-rate adattivo del Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su protocollo HTTP;
 	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol)\cite{High_Performance_Browser_Networking}.
 \end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/webprotocols}
+	\caption{API, protocolli e servizi di rete del browser di alto livello}
+	\label{fig:webprotocols}
+\end{figure}
 
 
 
