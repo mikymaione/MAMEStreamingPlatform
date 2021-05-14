@@ -55,7 +55,18 @@ Secondo una ricerca di Newzoo\footnote{Società di analisi statistica del settor
 
 
 \subsection{Cloud computing}
-Le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. Il cloud computing è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su spazio utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots). I modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".} offerti sono: infrastruttura (IaaS), piattaforma (PaaS) e software (SaaS). Il cloud gaming è l'unione del modello SaaS, poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore, e del modello PaaS che dal punto di vista dello sviluppatore ha bisogno del sistema operativo e dei vari SDK. Secondo \citeauthor{Cloud_for_Gaming}\cite{Cloud_for_Gaming} il paradigma implementato dal cloud gaming è il "gioco come servizio" (GaaS) che si divide in tre instanze, come mostrato in Fig. \ref{fig:GaaS}, che sono:
+Le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. Il cloud computing è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su spazio utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots). 
+Le caratteristiche essenziali del cloud computing sono:
+
+\begin{itemize}
+	\item La capacità di fornire risorse hardware (processori, memoria, spazio di archiviazione, ecc\dots) automaticamente in base alle necessità software;
+	\item L'accesso alle risorse attraverso la rete tramite protocolli standard;
+	\item Le risorse fisiche e virtuale possono essere distribuite dinamicamente agli utenti in base alle loro richieste;
+	\item Dal punto di vista dell'utente le risorse sono illimitate e possono essere comprate in qualsiasi quantità in qualunque momento.
+	\item L'uso delle risorse e dei servizi è ottimizzato tramite il modello "pay-per-use" ed è monitorato e controllato in modo trasparente sia dal provider che dall'utente; Alcune società offrono anche abbonamenti mensili e annuali, che invece limitano le risorse ad un tetto massimo.
+\end{itemize}
+
+I modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".} offerti sono: infrastruttura (IaaS), piattaforma (PaaS) e software (SaaS). Il cloud gaming è l'unione del modello SaaS, poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore, e del modello PaaS che dal punto di vista dello sviluppatore ha bisogno del sistema operativo e dei vari SDK. Il paradigma implementato dal cloud gaming è il "gioco come servizio" (GaaS) che si divide in tre instanze\cite{Cloud_for_Gaming}, come mostrato in Fig. \ref{fig:GaaS}, che sono:
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/GaaS}
@@ -69,8 +80,11 @@ Le due tecnologie alla base del cloud gaming sono il cloud computing e lo stream
     \item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
 \end{itemize}
 
+Il rendering remoto è attualmente l'istanza più utilizzata nelle soluzioni di cloud gaming sul mercato essendo la soluzione che ha tutta la computazione a carico del server ed offre all'utente la possibilità di usare videogiochi computazionalmente esosi su qualsiasi tipo di device. Dei tre protocolli è però quello che richiede un bit-rate maggiore.
 
+Alcune società propongono una versione dell'allocazione delle risorse cognitive mista al rendering remoto, che viene chiamata commercialmente come "progressive download", in cui il gioco viene inizialmente servito come rendering remoto ed in contemporanea viene eseguito il download dei moduli eseguibili; al completamento del download dei moduli che riguardano l'attuale stato del gioco, lo streaming si interrompe e il gioco riprende dal device dell'utente.
 
+Il rendering locale è l'istanza che utilizza meno larghezza di banda delle altre ma, come nel caso dell'allocazione delle risorse, il rendering è eseguito sul device dell'utente, richiedendo così particolari caratteristiche hardware. Attualmente non ci sono piattaforme sul mercato che offrono questo tipo d'istanza.
 
 \subsection{Protocolli di comunicazione}
 I protocolli di comunicazione a livello di trasporto che sono stati maggiormente utilizzati per lo streaming sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
@@ -105,7 +119,13 @@ I protocolli di comunicazione a livello di trasporto che sono stati maggiormente
 	\label{table:TransportLayerComp}
 \end{table}
 
-Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per la creazione di pagine web che per lo streaming\cite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, che sono:
+Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per lo sviluppo web sia per lo streaming\cite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, che sono:
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/webprotocols}
+	\caption{API, protocolli e servizi di rete del browser}
+	\label{fig:webprotocols}
+\end{figure}
 
 \begin{itemize}
 	\item WebSocket è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
@@ -114,11 +134,6 @@ Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e
 	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol)\cite{High_Performance_Browser_Networking}.
 \end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/webprotocols}
-	\caption{API, protocolli e servizi di rete del browser di alto livello}
-	\label{fig:webprotocols}
-\end{figure}
 
 
 
