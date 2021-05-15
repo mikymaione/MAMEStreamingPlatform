@@ -7,9 +7,8 @@
 %============================================================
 
 \chapter{Stato dell'arte}
-Nella seconda sezione si riporta lo stato dell’arte del settore, un inquadramento dell’area di ricerca orientato a portare il lettore all’interno della problematica affrontata. Bisogna dimostrare di conoscere le cose fatte fino ad ora in questo campo e il perché si sia reso necessario lo svolgimento di questo lavoro. Questa sezione deve essere grondante di citazioni bibliografiche.
-
-Il capitolo che apre questa tesi fa un'introduzione sulla nascita dei videogiochi, i ricavi globali dell'industria videoludica, il cloud gaming e i servizi presenti sul mercato.
+%Nella seconda sezione si riporta lo stato dell’arte del settore, un inquadramento dell’area di ricerca orientato a portare il lettore all’interno della problematica affrontata. Bisogna dimostrare di conoscere le cose fatte fino ad ora in questo campo e il perché si sia reso necessario lo svolgimento di questo lavoro. Questa sezione deve essere grondante di citazioni bibliografiche.
+Il capitolo che apre questa tesi fornisce un'introduzione sulla nascita dei videogiochi e dei ricavi globali dell'industria videoludica, da una definizione di cloud computing e di cloud gaming, fa una panoramica delle piattaforme di gioco che si sono susseguite nel tempo e delle proiezioni di mercato del settore del cloud gaming.
 
 
 
@@ -106,18 +105,19 @@ I protocolli di comunicazione a livello di trasporto che sono stati maggiormente
 
 Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per lo sviluppo web sia per lo streaming\cite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, che sono:
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/webprotocols}
-	\caption{API, protocolli e servizi di rete del browser}
-	\label{fig:webprotocols}
-\end{figure}
-
 \begin{itemize}
 	\item WebSocket è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
 	\item HTTP Live Streaming (HLS) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple;
 	\item Dynamic Adaptive Streaming over HTTP (DASH) è una tecnica di streaming con bit-rate adattivo del Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su protocollo HTTP;
 	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol)\cite{High_Performance_Browser_Networking}.
 \end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/webprotocols}
+	\caption{API, protocolli e servizi di rete del browser}
+	\label{fig:webprotocols}
+\end{figure}
+
 
 
 
@@ -156,19 +156,19 @@ In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle 
 		\hline\hline
 		Amazon Luna & Cloud gaming & 1080 & 10 Mbps & RTP \\
 		\hline
+		GeForce Now & Computer virtuale & 1080 & 25 Mbps & RTP \\
+		\hline
 		Google Stadia & Cloud gaming & 2160 & 35 Mbps & RTP \\
 		\hline
 		MAME CGP & Cloud gaming & 480 & 2 Mbps & WebSocket \\
+		\hline
+		Playkey & Computer virtuale & 720 & 10 Mbps & UDP \\
 		\hline
 		PlayStation Now & Cloud gaming & 720 & 5 Mbps & UDP \\
 		\hline
 		Vortex & Cloud gaming & 720 & 10 Mbps & UDP \\
 		\hline		
-		Xbox Cloud Gaming & Cloud gaming & 720 & 10 Mbps & UDP \\
-		\hline
-		GeForce Now & Computer virtuale & 1080 & 25 Mbps & RTP \\
-		\hline
-		Playkey & Computer virtuale & 720 & 10 Mbps & UDP \\
+		Xbox Cloud Gaming & Cloud gaming & 720 & 10 Mbps & UDP \\		
 		\hline
 	\end{tabular}
 
