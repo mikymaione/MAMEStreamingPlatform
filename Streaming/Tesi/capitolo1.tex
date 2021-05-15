@@ -7,6 +7,8 @@
 %============================================================
 
 \chapter{Stato dell'arte}
+Nella seconda sezione si riporta lo stato dell’arte del settore, un inquadramento dell’area di ricerca orientato a portare il lettore all’interno della problematica affrontata. Bisogna dimostrare di conoscere le cose fatte fino ad ora in questo campo e il perché si sia reso necessario lo svolgimento di questo lavoro. Questa sezione deve essere grondante di citazioni bibliografiche.
+
 Il capitolo che apre questa tesi fa un'introduzione sulla nascita dei videogiochi, i ricavi globali dell'industria videoludica, il cloud gaming e i servizi presenti sul mercato.
 
 
@@ -35,27 +37,10 @@ I videogiochi sono un mezzo di intrattenimento unico che combina le diverse form
 
 
 
-
 \section{Cloud gaming}
-Negli ultimi anni sono apparsi molti tipi di servizi che sfruttano il paradigma del cloud computing: archiviazione (Dropbox, Drive, OneDrive), musica (Spotify, Amazon Music), cinematografia (Prime Video, Netflix), documenti (Google Workspace, Office 365) e più recentemente il cloud gaming. Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile videogiocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica consente di archiviare ed eseguire i videogiochi su un server remoto e trasmettere l'output audio-video all'utente sul proprio dispositivo. Come mostrato in Fig. \ref{fig:cloud_gaming_general_scheme} le fasi di elaborazione input, esecuzione del gioco, rendering e missaggio audio, che solitamente vengono eseguite sul dispositivo del giocatore, nel paradigma del cloud gaming vengono eseguite sul server. Sul server ci sono le fase aggiuntive di codifica sotto forma di filmato dell'output audio-video del gioco ed invio tramite rete. Sul dispositivo dell'utente ci sono solo due fasi: cattura e trasmissione al server dell'input utente e ricezione e decodifica del filmato dal server. In questo modo il dispositivo dell'utente è indipendente sia dall'hardware che dal sistema operativo (purché il client possa essere eseguito sul dispositivo dell'utente).
+Negli ultimi anni sono apparsi molti tipi di servizi che sfruttano il paradigma del cloud computing: archiviazione (Dropbox, Drive, OneDrive), musica (Spotify, Amazon Music), cinematografia (Prime Video, Netflix), documenti (Google Workspace, Office 365) e più recentemente il cloud gaming. Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile videogiocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica consente di archiviare ed eseguire i videogiochi su un server remoto e trasmettere l'output audio-video all'utente sul proprio dispositivo.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/cloud_gaming_general_scheme}
-	\caption{Architettura del cloud gaming}
-	\label{fig:cloud_gaming_general_scheme}
-\end{figure}
-
-Secondo una ricerca di Newzoo\footnote{Società di analisi statistica del settore videoludico.} sull'industria dei videogiochi\cite{Global_Cloud_Gaming_Report}, come mostrato in Fig. \ref{fig:Newzoo_Cloud_Gaming_Revenues}, nel 2020 il mercato del cloud gaming ha generato quasi 584,7 milioni di USD di entrate, di cui il 39\% e il 29\% in Nord America e in Europa, e si prevede una crescita fino a 4,8 miliardi di USD entro il 2023, se non maggiore. Per questo sono entrate nel mercato del cloud gaming anche aziende che non sono editrici o produttrici di videogiochi come Google e Amazon, come vedremo nel paragrafo \ref{StoriaDelCloudGaming}. Queste previsioni sono conseguenza sia di connessioni di rete, domestiche e mobili, sempre più veloci sia del paradigma del live streaming a cui oggi (sopratutto le nuove generazioni) siamo abituati. Tutto ciò ci consente di accedere instantaneamente a canzoni, video clip, serie tv, film e perché no? videogiochi! Dal punto di vista del giocatore il cloud gaming offre molti vantaggi tra cui: rendere il gioco facilmente accessibile senza la necessità di scaricarlo e installarlo localmente; compatibilità con computer, smartphone e anche con smart TV (se utilizzato con un gamepad WiFi) senza dover badare ai requisiti hardware; diverse modalità di pagamento tra cui l'acquisto di un gioco su richiesta e l'abbonamento mensile/annuale per l'utilizzo di tutta (o una parte) della libreria videoludica; funzionalità aggiuntive per sfruttare al meglio questo modello, come lo streaming della sessione di gioco, che siamo già abituati a vedere, con la possibilità di far entrare uno spettatore nella propria partita, funzionalità avanzate per il multiplayer come la condivisione della visuale di gioco e dei salvataggi di gioco, ecc\dots. Ci sono vantaggi anche per gli sviluppatori perché il cloud gaming riduce i costi di produzione limitando lo sviluppo e il testing ad una sola piattaforma ed inoltre risolve definitivamente un problema che esiste dai tempi delle audiocassette e dei floppy disk, la pirateria. Infine per i fornitori di servizi si viene a creare un nuovo modello di business su contenuti già esistenti. Tuttavia ci sono anche degli svantaggi, di cui parleremo nel capitolo \ref{Capitolo4}: perdita della qualità audio-video a causa della compressione, bit-rate richiesto non soddisfabile dall'utente e l'ineliminabile latenza.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues}
-	\caption{Previsioni per il mercato globale del cloud gaming (in dollari americani). Fonte: newzoo.com/global-cloud-gaming-report}
-	\label{fig:Newzoo_Cloud_Gaming_Revenues}
-\end{figure}
-
-
-\subsection{Cloud computing}
-Le due tecnologie alla base del cloud gaming sono il cloud computing e lo streaming. Il cloud computing è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su spazio utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots). 
+Il cloud computing è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su spazio utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots). 
 Le caratteristiche essenziali del cloud computing sono:
 
 \begin{itemize}
@@ -75,16 +60,16 @@ I modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".} offerti s
 \end{figure}
 
 \begin{itemize}
-    \item Rendering remoto (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente sotto forma di filmato;
-    \item Rendering locale (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
-    \item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
+	\item Rendering remoto (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente sotto forma di filmato;
+	\item Rendering locale (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
+	\item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
 \end{itemize}
 
 Il rendering remoto è attualmente l'istanza più utilizzata nelle soluzioni di cloud gaming sul mercato essendo la soluzione che ha tutta la computazione a carico del server ed offre all'utente la possibilità di usare videogiochi computazionalmente esosi su qualsiasi tipo di device. Dei tre protocolli è però quello che richiede un bit-rate maggiore.
 
-Alcune società propongono una versione dell'allocazione delle risorse cognitive mista al rendering remoto, che viene chiamata commercialmente come "progressive download", in cui il gioco viene inizialmente servito come rendering remoto ed in contemporanea viene eseguito il download dei moduli eseguibili; al completamento del download dei moduli che riguardano l'attuale stato del gioco, lo streaming si interrompe e il gioco riprende dal device dell'utente.
-
 Il rendering locale è l'istanza che utilizza meno larghezza di banda delle altre ma, come nel caso dell'allocazione delle risorse, il rendering è eseguito sul device dell'utente, richiedendo così particolari caratteristiche hardware. Attualmente non ci sono piattaforme sul mercato che offrono questo tipo d'istanza.
+
+Alcune società propongono una versione dell'allocazione delle risorse cognitive mista al rendering remoto, che viene chiamata commercialmente come "progressive download", in cui il gioco viene inizialmente servito come rendering remoto ed in contemporanea viene eseguito il download dei moduli eseguibili; al completamento del download dei moduli che riguardano l'attuale stato del gioco, lo streaming si interrompe e il gioco riprende dal device dell'utente.
 
 \subsection{Protocolli di comunicazione}
 I protocolli di comunicazione a livello di trasporto che sono stati maggiormente utilizzati per lo streaming sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
@@ -161,7 +146,7 @@ Amazon Luna è stata annunciata a settembre 2020, con "accesso anticipato" a par
 
 La società Playkey ha realizzato un omonima piattaforma di cloud gaming distribuito, attualmente in alpha testing. Il sistema distribuito è formato da un server centrale che gestisce l'infrastruttura e dai computer dei cosidetti "minatori", coloro che mettono a disposizione il proprio computer come unità di calcolo del sistema distribuito, su cui viene eseguito il gioco, la codifica e lo stream tramite protocollo UDP. La piattaforma offre la Standard HD come risoluzione ed è richiesto un bit-rate di 10 Mbps. L'abbonamento è di 23\$ mensili mentre i "minatori" guadagnano 10\$ al giorno. Playkey da la possibilità di giocare solo i titoli precedentemente acquistati da Steam, Ubisoft Connect, Origin\footnote{Origin è una piattaforma di distribuzione digitale di videogiochi sviluppata da Electronic Arts.} e Battle.net\footnote{Battle.net è una piattaforma di distribuzione digitale e di gestione dei diritti digitali sviluppata da Blizzard Entertainment.}\cite{Playkey}.
 
-In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle piattaforme disponibili ad oggi con caratteristiche, requisiti e costo dell'abbonamento.
+In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle piattaforme disponibili ad oggi con caratteristiche, requisiti e protocollo di streaming utilizzato.
 
 \begin{table}[H]
 	\centering
@@ -192,5 +177,17 @@ In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle 
 \end{table}
 
 
+
 \subsubsection{Il caso Apple}
 A metà del 2020 Apple aveva cercato di bloccare le app di cloud gaming sull'App Store, ma a settembre 2020 decise di consentire il cloud gaming con alcune restrizioni: che i giochi offerti nel servizio dovessero essere scaricati direttamente dall'App Store e non da un'app all-in-one. I produttori di app sono autorizzati a rilasciare una cosiddetta "app catalogo" che si collega ad altri giochi nel servizio, ma ogni gioco dovrà essere una singola app e tutti i giochi e le "app catalogo" devono offrire l'acquisto solo tramite il sistema di elaborazione dei pagamenti "in‑app purchases" di Apple, in base al quale la Apple ha un guadagno del 30\% sugli acquisti fatti dall'utente\cite{Apple_controversy}.
+
+
+
+\subsubsection{Proiezioni di mercato}
+Secondo una ricerca di Newzoo\footnote{Società di analisi statistica del settore videoludico.} sull'industria dei videogiochi\cite{Global_Cloud_Gaming_Report}, come mostrato in Fig. \ref{fig:Newzoo_Cloud_Gaming_Revenues}, nel 2020 il mercato del cloud gaming ha generato quasi 584,7 milioni di USD di entrate, di cui il 39\% e il 29\% in Nord America e in Europa, e si prevede una crescita fino a 4,8 miliardi di USD entro il 2023, se non maggiore. Per questo sono entrate nel mercato del cloud gaming anche aziende che non sono editrici o produttrici di videogiochi come Google e Amazon, come vedremo nel paragrafo \ref{StoriaDelCloudGaming}. Queste previsioni sono conseguenza sia di connessioni di rete, domestiche e mobili, sempre più veloci sia del paradigma del live streaming a cui oggi (sopratutto le nuove generazioni) siamo abituati. Tutto ciò ci consente di accedere instantaneamente a canzoni, video clip, serie tv, film e perché no? videogiochi! Dal punto di vista del giocatore il cloud gaming offre molti vantaggi tra cui: rendere il gioco facilmente accessibile senza la necessità di scaricarlo e installarlo localmente; compatibilità con computer, smartphone e anche con smart TV (se utilizzato con un gamepad WiFi) senza dover badare ai requisiti hardware; diverse modalità di pagamento tra cui l'acquisto di un gioco su richiesta e l'abbonamento mensile/annuale per l'utilizzo di tutta (o una parte) della libreria videoludica; funzionalità aggiuntive per sfruttare al meglio questo modello, come lo streaming della sessione di gioco, che siamo già abituati a vedere, con la possibilità di far entrare uno spettatore nella propria partita, funzionalità avanzate per il multiplayer come la condivisione della visuale di gioco e dei salvataggi di gioco, ecc\dots. Ci sono vantaggi anche per gli sviluppatori perché il cloud gaming riduce i costi di produzione limitando lo sviluppo e il testing ad una sola piattaforma ed inoltre risolve definitivamente un problema che esiste dai tempi delle audiocassette e dei floppy disk, la pirateria. Infine per i fornitori di servizi si viene a creare un nuovo modello di business su contenuti già esistenti. Tuttavia ci sono anche degli svantaggi, di cui parleremo nel capitolo \ref{Capitolo4}: perdita della qualità audio-video a causa della compressione, bit-rate richiesto non soddisfabile dall'utente e l'ineliminabile latenza.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues}
+	\caption{Previsioni per il mercato globale del cloud gaming (in dollari americani). Fonte: newzoo.com/global-cloud-gaming-report}
+	\label{fig:Newzoo_Cloud_Gaming_Revenues}
+\end{figure}
