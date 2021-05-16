@@ -86,6 +86,7 @@
 \newpage
 
 \setcounter{tocdepth}{2}
+
 \tableofcontents
 
 \chapter*{Ringraziamenti}
@@ -93,10 +94,9 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 \addcontentsline{toc}{chapter}{Ringraziamenti}
 
 \input{abstract.tex}
-\addcontentsline{toc}{chapter}{Sommario}
+\input{capitolo0.tex}
 
 \mainmatter
-\input{capitolo0.tex}
 \input{capitolo1.tex}
 \input{capitolo2.tex}
 \input{capitolo3.tex}
@@ -121,8 +121,6 @@ Un esempio di impiego del sistema realizzato.
 
 \chapter{Datasheet}
 Eventuali Datasheet di riferimento.
-
-
 
 \backmatter
 \printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
