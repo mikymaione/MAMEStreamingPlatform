@@ -71,6 +71,7 @@
 
 \addbibresource{Bibliografia.bib}
 
+\newcounter{savepage}
 \begin{document}
 \input{altro/copertina.tex}
 
@@ -96,6 +97,9 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 
 \input{capitoli/capitolo0.tex}
 
+\newpage
+\setcounter{savepage}{\arabic{page}}
+
 \mainmatter
 \input{capitoli/capitolo1.tex}
 \input{capitoli/capitolo2.tex}
@@ -104,6 +108,10 @@ Vorrei ringraziare il mio relatore Prof. Dario Maggiorini per il suo continuo su
 \input{capitoli/capitolo5.tex}
 
 \appendix
+\newpage
+\pagenumbering{roman}
+\setcounter{page}{\thesavepage}
+
 \chapter{Documentazione del progetto logico}
 Documentazione del progetto logico dove si documenta il progetto logico del sistema e se è il caso si mostra la progettazione in grande del SW e dell’HW. Quest’appendice mostra l’architettura logica implementativa (nella Sezione 4 c’era la descrizione, qui ci vanno gli schemi a blocchi e i diagrammi).
 
@@ -126,6 +134,8 @@ Eventuali Datasheet di riferimento.
 \printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
 \printbibliography[type=misc,title={Sitografia},heading=bibintoc]
 
+\newpage
+\pagenumbering{gobble}
 \input{capitoli/ringraziamenti}
 
 \end{document}
