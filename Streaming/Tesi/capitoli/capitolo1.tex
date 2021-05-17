@@ -52,17 +52,17 @@ Le caratteristiche essenziali del cloud computing sono:
 
 I modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".} offerti sono: infrastruttura (IaaS), piattaforma (PaaS) e software (SaaS). Il cloud gaming è l'unione del modello SaaS, poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore, e del modello PaaS che dal punto di vista dello sviluppatore ha bisogno del sistema operativo e dei vari SDK. Il paradigma implementato dal cloud gaming è il "gioco come servizio" (GaaS) che si divide in tre instanze\cite{Cloud_for_Gaming}, come mostrato in Fig. \ref{fig:GaaS}, che sono:
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/GaaS}
-	\caption{Instanze di GaaS}
-	\label{fig:GaaS}
-\end{figure}
-
 \begin{itemize}
 	\item Rendering remoto (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente sotto forma di filmato;
 	\item Rendering locale (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
 	\item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
 \end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/GaaS}
+	\caption{Instanze di GaaS}
+	\label{fig:GaaS}
+\end{figure}
 
 Il rendering remoto è attualmente l'istanza più utilizzata nelle soluzioni di cloud gaming sul mercato essendo la soluzione che ha tutta la computazione a carico del server ed offre all'utente la possibilità di usare videogiochi computazionalmente esosi su qualsiasi tipo di device. Dei tre protocolli è però quello che richiede un bit-rate maggiore.
 
