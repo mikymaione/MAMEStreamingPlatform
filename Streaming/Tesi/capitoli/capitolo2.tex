@@ -29,7 +29,7 @@ Come mostrato in Fig. \ref{fig:proposed_system} il sistema è costituito dal ser
 Lato client vari script si occupano di: decodificare i dati audio-video ricevuti, catturare e inviare l'input dell'utente (sia dalla tastiera che dal gamepad) al server tramite WebSocket.
 
 \section{MAME}
-Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like\cite{MAME}.
+Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like \parencite{MAME}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
@@ -39,7 +39,7 @@ Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di 
 
 Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP - Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione che deriva da un port del MAME, il progetto SDLMAME\footnote{SDLMAME era un fork del MAME che utilizzava solamente la libreria SDL. Nel 2010 è stato incluso ufficialmente nel progetto MAME.} in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
 
-Simple DirectMedia Layer (SDL) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), librerie di rendering 3D (in verde) e librerie che si interfacciano alla scheda audio (in rosso)\cite{SDL_Wiki}. 
+Simple DirectMedia Layer (SDL) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), librerie di rendering 3D (in verde) e librerie che si interfacciano alla scheda audio (in rosso) \parencite{SDL_Wiki}. 
 
 MAME, alla versione attuale (v. 0.228), è formato da 14.904 file sorgenti (e nel conteggio non ci sono i file di definizione della UI, gli script per la compilazione e le librerie esterne che sono incluse nel progetto sotto forma di sorgenti) ed è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}, che sono:
 
@@ -86,8 +86,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 \subsection{Gestione input}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\cite{CPP_Primer}
-\cite{Computer_Networking_and_the_Internet}
-\cite{Ingegneria_del_software}
-\cite{Understanding_the_Linux_Kernel}
-\cite{Windows_Server_2012}
+ \parencite{CPP_Primer}
+ \parencite{Computer_Networking_and_the_Internet}
+ \parencite{Ingegneria_del_software}
+ \parencite{Understanding_the_Linux_Kernel}
+ \parencite{Windows_Server_2012}
