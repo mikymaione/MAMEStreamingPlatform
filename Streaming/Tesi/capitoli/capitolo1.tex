@@ -98,13 +98,14 @@ I protocolli di comunicazione a livello di trasporto che sono stati maggiormente
 		\hline
 		Flussi multipli & no & no & sì \\
 		\hline
-		Multihoming & no & no & sì \\
+		Multihoming\tablefootnote{Possibilità di connettere l'host a più di una rete.} & no & no & sì \\
 		\hline
 	\end{tabular}
 
 	\caption{Comparazione tra protocolli di trasporto}
 	\label{table:TransportLayerComp}
 \end{table}
+
 
 Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per lo sviluppo web sia per lo streaming \parencite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, ma solo quattro possono essere utilizzati per lo streaming:
 
@@ -169,7 +170,7 @@ In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle 
 	\centering
 	\begin{tabular}{||l l r r r||} 
 		\hline
-		Piattaforma & Tipo & Risoluzione\footnote{Risoluzione video misurata in linee verticali.} & Bit-rate\footnote{Bit-rate misurato in Mbps.} & Protocollo \\
+		Piattaforma & Tipo & Risoluzione\tablefootnote{Risoluzione video misurata in linee verticali.} & Bit-rate\tablefootnote{Bit-rate misurato in Mbps.} & Protocollo \\
 		\hline\hline
 		Amazon Luna & Cloud gaming & 1080 & 10 & RTP \\
 		\hline
