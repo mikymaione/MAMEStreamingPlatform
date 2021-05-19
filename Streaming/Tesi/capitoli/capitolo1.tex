@@ -69,12 +69,12 @@ Il rendering locale (LR-GaaS) è l'istanza che richiede il bit-rate minore ma, c
 
 Alcune società propongono una versione dell'allocazione delle risorse cognitive (CRA-GaaS) mista al rendering remoto, in cui il gioco viene inizialmente servito come rendering remoto ed in contemporanea viene eseguito il download dei moduli eseguibili; al completamento del download dei moduli che riguardano l'attuale stato del gioco, lo streaming si interrompe e il gioco riprende dal device dell'utente; questa è una delle funzionalità che Project Atlas dovrebbe offrire. Un'altra variante, che viene chiamata commercialmente come "progressive download", si basa sul concetto di scaricare inizialmente i moduli principali del gioco, solitamente il menù e il primo livello; gli store Origin e Ubisoft Connect implementano questa funzionalità.
 
-Nel prossimo paragrafo vedremo i procolli di comunicazione maggiormente usati.
+Nel prossimo paragrafo vedremo le tecnologie per lo streaming maggiormente usati.
 
 
 
-\subsection{Protocolli di comunicazione}
-I protocolli di comunicazione a livello di trasporto che sono stati maggiormente utilizzati per lo streaming sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
+\subsection{Tecnologie per lo streaming audio-video}
+I protocolli di comunicazione a livello di trasporto su cui sono costruiti servizi, tecnologie e Web API \parencite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, sono UDP, TCP e SCTP, le cui caratteristiche principali sono riassunte in Tabella \ref{table:TransportLayerComp}.
 
 \begin{table}[H]
 	\centering
@@ -106,25 +106,30 @@ I protocolli di comunicazione a livello di trasporto che sono stati maggiormente
 	\label{table:TransportLayerComp}
 \end{table}
 
-
-Su questi protocolli di comunicazione sono stati costruiti servizi, tecnologie e Web API utilizzate sia per lo sviluppo web sia per lo streaming \parencite{Audio_and_video_delivery}, schematizzati in Fig. \ref{fig:webprotocols}, ma solo quattro possono essere utilizzati per lo streaming:
+Di questi solo quattro possono essere utilizzati per lo streaming utilizzando il browser web \parencite{High_Performance_Browser_Networking}:
 
 \begin{itemize}	
 	\item Dynamic Adaptive Streaming over HTTP (DASH) è una tecnica di streaming con bit-rate adattivo del Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su protocollo HTTP;
 	\item HTTP Live Streaming (HLS) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple;
 	\item WebSocket è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
-	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol) \parencite{High_Performance_Browser_Networking}.
+	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol).
 \end{itemize}
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/webprotocols}
-	\caption{API, protocolli e servizi di rete del browser}
+	\caption{Streaming con perdita di pacchetti dell'8\%.}
 	\label{fig:webprotocols}
 \end{figure}
 
+Nel paradigma del cloud gaming la codifica audio-video avviene in real-time e il buffering non è ammesso perché aumenta la latenza, per questi motivi non tutte le tecnologie citate sono adatte. Come vedremo nelle caratteristiche delle piattaforme di streaming commerciali, descritte nel prossimo paragrafo, solo TCP, UDP ed RTP sono stati effettivamente usati. Solitamente la comunicazione tramite TCP è relegata alla parte di autenticazione e gestione dell'input utente. Infatti da test condotti in \parencite{Network_technology_for_transmission_of_visual_information} sul frame rate in caso di perdita di pacchetti durante lo streaming, in Fig. \ref{fig:fps_in_protocols} con una perdita di pacchetti dell'8\%, si nota che con RTSP\footnote{RTSP: Real Time Streaming Protocol serve a stabilire e gestire la sessione di streaming, la trasmissione dei dati avviene tramite RTP e la raccolta delle statistiche sulla qualità del servizio è affidata al Real-time Transport Control Protocol (RTCP).} (a) e (b) il frame rate è costante ma con alcune perturbazioni; invece HLS (c) risulta essere la tecnologia che risente maggiormente della perdita dei pacchetti; mentre con RTMP\footnote{RTMP: Real Time Messaging Protocol era un protocollo sviluppato da Macromedia per il Flash player, ad oggi non più supportato dai browser.} (d) la riproduzione si interrompe e il video si blocca per alcuni secondi.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/fps_in_protocols}
+	\caption{API, protocolli e servizi di rete del browser}
+	\label{fig:fps_in_protocols}
+\end{figure}
+
 Nel prossimo paragrafo viene fatta un'introduzione, in ordine cronologico, delle piattaforme di cloud gaming sul mercato.
-
-
 
 \subsection{Storia del cloud gaming} \label{StoriaDelCloudGaming}
 Una delle prime piattaforme di cloud gaming è stata OnLive di OL2, presentata alla GDC\footnote{GDC: Game Developers Conference, una conferenza annuale per gli sviluppatori di videogiochi.} 2009 e poi lanciata sul mercato a giugno 2010 negli Stati Uniti e a settembre 2011 nel Regno Unito. I giocatori, previo pagamento di un abbonamento mensile di 15\$, potevano acquistare o noleggiare giochi sulla piattaforma oppure utilizzare quelli precedentemente acquistati su Steam\footnote{Steam è un servizio di distribuzione digitale di videogiochi della società Valve.}. Il servizio era ospitato su 5 data center situati sul suolo americano che servivano gli utenti per vicinanza geografica; il bit-rate richiesto era di 1,5 Mbps per la qualità video SD\footnote{SD: Standard Definition include i formati video con rapporto 4:3 e 16:9 con 480 linee di risoluzione (in alcuni casi 576).} e 5 Mbps per la Standard HD\footnote{Standard High Definition (chiamata anche HD ready) è un formato video 16:9 (disponibile anche con rapporto 4:3) con 720 linee di risoluzione.}. I protocolli di comunicazione utilizzati erano: TCP per il test della velocità verso i 5 data center, successivamente tramite TLS su TCP veniva fatta l'autenticazione al servizio; l'input utente veniva inviato tramite UDP e lo streaming, codificato tramite H.264\footnote{H.264 è un formato di compressione video dello standard MPEG-4.}, trasmesso tramite protocollo RTP \parencite{Dissecting_the_protocol_and_network_traffic_of_the_OnLive_cloud_gaming_platform}. Era disponibile, oltre ad un client per Windows, macOS ed Android, anche una micro console da collegare alla TV. Il servizio fu acquistato ad aprile 2015 da Sony \parencite{Cloud_gaming_history}.
@@ -203,10 +208,10 @@ In Tabella \ref{table:PiattaformeDiCloudGaming} è riportato il riepilogo delle 
 \subsubsection{Proiezioni di mercato}
 Secondo una ricerca di Newzoo\footnote{Società di analisi statistica del settore videoludico.} sull'industria dei videogiochi \parencite{Global_Cloud_Gaming_Report}, come mostrato in Fig. \ref{fig:Newzoo_Cloud_Gaming_Revenues}, nel 2020 il mercato del cloud gaming ha generato quasi 584,7 milioni di USD di entrate, di cui il 39\% e il 29\% in Nord America e in Europa, e si prevede una crescita fino a 4,8 miliardi di USD entro il 2023, se non maggiore. Per questo sono entrate nel mercato del cloud gaming anche aziende che non sono editrici o produttrici di videogiochi come Google e Amazon, come vedremo nel paragrafo \ref{StoriaDelCloudGaming}. 
 
-Queste previsioni sono conseguenza sia di connessioni di rete, domestiche e mobili, sempre più veloci sia del paradigma del live streaming a cui oggi (sopratutto le nuove generazioni) siamo abituati. Tutto ciò ci consente di accedere instantaneamente a canzoni, video clip, serie tv, film e perché no? videogiochi! Dal punto di vista del giocatore il cloud gaming offre molti vantaggi tra cui: rendere il gioco facilmente accessibile senza la necessità di scaricarlo e installarlo localmente; compatibilità con computer, smartphone e anche con smart TV (se utilizzato con un gamepad WiFi) senza dover badare ai requisiti hardware; diverse modalità di pagamento tra cui l'acquisto di un gioco su richiesta e l'abbonamento mensile/annuale per l'utilizzo di tutta (o una parte) della libreria videoludica; funzionalità aggiuntive per sfruttare al meglio questo modello, come lo streaming della sessione di gioco, che siamo già abituati a vedere, con la possibilità di far entrare uno spettatore nella propria partita, funzionalità avanzate per il multiplayer come la condivisione della visuale di gioco e dei salvataggi di gioco, ecc\dots. Ci sono vantaggi anche per gli sviluppatori perché il cloud gaming riduce i costi di produzione limitando lo sviluppo e il testing ad una sola piattaforma ed inoltre risolve definitivamente un problema che esiste dai tempi delle audiocassette e dei floppy disk, la pirateria. Infine per i fornitori di servizi si viene a creare un nuovo modello di business su contenuti già esistenti. Tuttavia ci sono anche degli svantaggi, di cui parleremo nel capitolo \ref{Capitolo4}: perdita della qualità audio-video a causa della compressione, bit-rate richiesto non soddisfabile dall'utente e l'ineliminabile latenza.
-
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/Newzoo_Cloud_Gaming_Revenues}
 	\caption{Previsioni per il mercato globale del cloud gaming (in dollari americani). Fonte: newzoo.com/global-cloud-gaming-report}
 	\label{fig:Newzoo_Cloud_Gaming_Revenues}
 \end{figure}
+
+Queste previsioni sono conseguenza sia di connessioni di rete, domestiche e mobili, sempre più veloci sia del paradigma del live streaming a cui oggi (sopratutto le nuove generazioni) siamo abituati. Tutto ciò ci consente di accedere instantaneamente a canzoni, video clip, serie tv, film e perché no? videogiochi! Dal punto di vista del giocatore il cloud gaming offre molti vantaggi tra cui: rendere il gioco facilmente accessibile senza la necessità di scaricarlo e installarlo localmente; compatibilità con computer, smartphone e anche con smart TV (se utilizzato con un gamepad WiFi) senza dover badare ai requisiti hardware; diverse modalità di pagamento tra cui l'acquisto di un gioco su richiesta e l'abbonamento mensile/annuale per l'utilizzo di tutta (o una parte) della libreria videoludica; funzionalità aggiuntive per sfruttare al meglio questo modello, come lo streaming della sessione di gioco, che siamo già abituati a vedere, con la possibilità di far entrare uno spettatore nella propria partita, funzionalità avanzate per il multiplayer come la condivisione della visuale di gioco e dei salvataggi di gioco, ecc\dots. Ci sono vantaggi anche per gli sviluppatori perché il cloud gaming riduce i costi di produzione limitando lo sviluppo e il testing ad una sola piattaforma ed inoltre risolve definitivamente un problema che esiste dai tempi delle audiocassette e dei floppy disk, la pirateria. Infine per i fornitori di servizi si viene a creare un nuovo modello di business su contenuti già esistenti. Tuttavia ci sono anche degli svantaggi, di cui parleremo nel capitolo \ref{Capitolo4}: perdita della qualità audio-video a causa della compressione, bit-rate richiesto non soddisfabile dall'utente e l'ineliminabile latenza.
