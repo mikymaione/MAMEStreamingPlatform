@@ -1,0 +1,439 @@
+\chapter{Listato}
+In questa appendice sono riportate alcune parti del codice C++ a cui si fa riferimento nel testo. Per ogni listato è riportato il file da cui è stato estratto.
+
+\section{Modifiche classi SDL}
+Di seguito le modifiche che sono state apportate alle classi originali del MAME nel main e per recuperare il rendering e il missaggio audio.
+
+\subsection{Main}
+File \verb|osd/sdl/sdlmain.cpp|
+
+\begin{minted}{cpp}
+int main(int argc, char** argv)
+{
+	auto r = 0;
+
+	// Server
+	streaming_server::instance().activate(argc, argv);
+
+	if (streaming_server::instance().is_active())
+	{
+		streaming_server::instance().on_accept = [&](auto parameters)
+		{
+			streaming_server::run_new_process(argc, argv);
+
+			r = main_sdl(argc, argv, parameters["game"]);
+		};
+
+		streaming_server::instance().start(8888);
+	}
+	else
+	{
+		r = main_sdl(argc, argv, "");
+	}	
+
+	return r;
+}
+\end{minted}
+
+
+\subsection{Missaggio audio}
+File \verb|osd/modules/sound/sdl_sound.cpp|
+
+\begin{minted}{cpp}
+void sound_sdl::sdl_callback(
+	void* userdata, Uint8* stream, int len)
+{
+	// ... CODICE NON MODIFICATO ...
+
+	if (streaming_server::instance().is_active())
+	{
+		streaming_server::instance().send_audio_interval(
+			stream, len, this_->sdl_xfer_samples);
+
+		memset(stream, 0, len); // silence local outputs
+	}
+
+	// ... CODICE NON MODIFICATO ...
+}
+\end{minted}
+
+\subsection{Rendering}
+Files \verb|osd/modules/render/draw13.cpp| e \verb|osd/modules/render/draw13.h|
+
+\begin{minted}{cpp}
+void renderer_sdl2::free_streaming_render() const
+{
+	if (m_sdl_buffer_bytes != nullptr)
+	{
+		SDL_RWclose(m_sdl_buffer);
+		SDL_FreeSurface(m_sdl_surface);
+		SDL_DestroyRenderer(m_sdl_renderer);
+
+		delete[] m_sdl_buffer_bytes;
+	}
+}
+
+void renderer_sdl2::init_streaming_render(
+	const int w, const int h, const int fps)
+{
+	free_streaming_render();
+
+	m_sdl_buffer_bytes_length = w * h * 4;
+	m_sdl_buffer_bytes = new char[m_sdl_buffer_bytes_length];
+
+	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(
+		0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
+
+	// Qui viene creato il rendering sulla superfice
+	// al posto di usare il rendering su finestra
+	m_sdl_renderer = SDL_CreateSoftwareRenderer(
+		m_sdl_surface);
+
+	m_sdl_buffer = SDL_RWFromMem(
+		m_sdl_buffer_bytes, m_sdl_buffer_bytes_length);
+
+	if (streaming_server::instance().is_active())
+		streaming_server::instance().init_encoding(w, h, fps);
+}
+
+int renderer_sdl2::create()
+{
+	// ... CODICE NON MODIFICATO ...
+
+	if (streaming_server::instance().is_active())
+	{
+		const auto nd = win->get_size();
+		init_streaming_render(
+			nd.width(), nd.height(), win->m_win_config.refresh);
+	}
+	else
+	{
+		if (video_config.waitvsync)
+			m_sdl_renderer = SDL_CreateRenderer(
+				std::dynamic_pointer_cast<sdl_window_info>(
+					win)->platform_window(), 
+					-1, SDL_RENDERER_PRESENTVSYNC | 
+					SDL_RENDERER_ACCELERATED);
+		else
+			m_sdl_renderer = SDL_CreateRenderer(
+				std::dynamic_pointer_cast<sdl_window_info>(
+					win)->platform_window(), 
+					-1, SDL_RENDERER_ACCELERATED);
+	}
+
+	// ... CODICE NON MODIFICATO ...
+}
+
+int renderer_sdl2::draw(int update)
+{
+	// ... CODICE NON MODIFICATO ...
+	SDL_RenderPresent(m_sdl_renderer);	
+
+	if (streaming_server::instance().is_active())
+	{
+		streaming_server::instance().send_video_frame(
+			static_cast<uint8_t*>(m_sdl_surface->pixels));
+
+		SDL_RWseek(m_sdl_buffer, 0, RW_SEEK_SET);
+	}
+
+	return 0;
+}
+\end{minted}
+
+
+
+
+\section{Moduli nuovi}
+Di seguito alcune funzioni nei due moduli che sono stati creati: codifica e server per la comunicazione WebSocket.
+
+
+\subsection{Codifica}
+File \verb|lib/util/encoding/encode_to_movie.hpp|
+
+\begin{minted}{cpp}
+static int write_packet(
+	void* opaque, uint8_t* buf, int buf_size)
+{
+	auto* const this_ = 
+		static_cast<encode_to_movie*>(opaque);
+
+	this_->socket->write(
+		reinterpret_cast<const char*>(buf), buf_size);
+
+	return 1; // 1 element wrote
+}
+
+// Add video frame
+void add_frame(const uint8_t* pixels)
+{
+	if (!header)
+		write_header();
+
+	avpicture_fill(
+		reinterpret_cast<AVPicture*>(rgb_frame),
+		pixels,
+		PIXEL_FORMAT_IN,
+		width, height);
+
+	//RGB to YUV
+	sws_scale(
+		encoder_context->video_converter_context,
+		rgb_frame->data, rgb_frame->linesize, 0, height,
+		yuv_frame->data, yuv_frame->linesize
+	);
+
+	av_init_packet(&video_packet);
+	video_packet.data = nullptr;
+	video_packet.size = 0;
+
+	avcodec_send_frame(
+		encoder_context->video_codec_context, yuv_frame);
+
+	const auto got_packet_ptr = 
+		avcodec_receive_packet(
+			encoder_context->video_codec_context, 
+			&video_packet) == 0;
+
+	if (got_packet_ptr)
+	{
+		const auto ret = 
+			av_interleaved_write_frame(
+				encoder_context->muxer_context, 
+				&video_packet);
+
+		if (ret == 0)
+			send_it();
+		else
+			error("Error while writing video frame", ret);
+	}
+
+	av_packet_unref(&video_packet);
+}
+
+// Add audio instant
+void add_instant(
+	const uint8_t* audio_stream, 
+	const int audio_stream_size, 
+	const int audio_stream_num_samples)
+{
+	if (!header)
+		write_header();
+
+	wav_frame->nb_samples = audio_stream_num_samples;
+
+	auto ret = avcodec_fill_audio_frame(
+		wav_frame,
+		AUDIO_CHANNELS_IN,
+		AUDIO_SAMPLE_FORMAT_IN,
+		audio_stream,
+		audio_stream_size,
+		1); //no-alignment
+	if (ret < 0)
+		die("Cannot fill audio frame", ret);
+
+	if (convertedData == nullptr)
+	{
+		ret = av_samples_alloc(
+			&convertedData,
+			nullptr,
+			AUDIO_CHANNELS_OUT,
+			aac_frame->nb_samples,
+			AUDIO_SAMPLE_FORMAT_OUT,
+			0);
+		if (ret < 0)
+			die("Could not allocate samples", ret);
+	}
+
+	auto outSamples = swr_convert(
+		encoder_context->audio_converter_context,
+		// output
+		nullptr, 0,
+		// input
+		const_cast<const uint8_t**>(
+			wav_frame->data), wav_frame->nb_samples);
+
+	if (outSamples < 0)
+		die("Could not convert", outSamples);
+
+	for (;;)
+	{
+		outSamples = swr_get_out_samples(
+			encoder_context->audio_converter_context, 0);
+
+		if (outSamples < 
+			encoder_context->audio_codec_context->frame_size * 
+			encoder_context->audio_codec_context->channels)
+			break;
+
+		swr_convert(
+			encoder_context->audio_converter_context,
+			// output
+			&convertedData, aac_frame->nb_samples,
+			// input
+			nullptr, 0);
+
+		const auto buffer_size = av_samples_get_buffer_size(
+			nullptr,
+			encoder_context->audio_codec_context->channels,
+			aac_frame->nb_samples,
+			encoder_context->audio_codec_context->sample_fmt,
+			0);
+		if (buffer_size < 0)
+			die("Invalid buffer size", buffer_size);
+
+		ret = avcodec_fill_audio_frame(
+			aac_frame,
+			encoder_context->audio_codec_context->channels,
+			encoder_context->audio_codec_context->sample_fmt,
+			convertedData,
+			buffer_size,
+			0);
+		if (ret < 0)
+			die("Could not fill frame", ret);
+
+		av_init_packet(&audio_packet);
+		audio_packet.data = nullptr;
+		audio_packet.size = 0;
+
+		int got_packet_ptr;
+		ret = avcodec_encode_audio2(
+			encoder_context->audio_codec_context, 
+			&audio_packet, aac_frame, 
+			&got_packet_ptr);
+		if (ret < 0)
+			die("Error encoding audio frame", ret);
+
+		if (got_packet_ptr)
+		{
+			audio_packet.stream_index = 1;
+
+			ret = av_interleaved_write_frame(
+				encoder_context->muxer_context, &audio_packet);
+
+			if (ret == 0)
+				send_it();
+			else
+				error("Error while writing audio frame", ret);
+		}
+
+		av_packet_unref(&audio_packet);
+	}
+}
+\end{minted}
+
+
+
+\subsection{Server}
+File \verb|lib/util/streaming_server.hpp|
+
+\begin{minted}{cpp}
+// Invio input utente a SDL
+void generate_key_event(
+	const char* key, const std::string& down) const
+{
+	SDL_Event e;
+	e.type = down == "D" ? SDL_KEYDOWN : SDL_KEYUP;
+	e.key.keysym.scancode = 
+		SDL_GetScancodeFromName(key);
+	e.key.keysym.sym = S
+		DL_GetKeyFromScancode(e.key.keysym.scancode);
+
+	keyboard->queue_events(&e, 1);
+}
+
+// Singleton
+static streaming_server& instance()
+{
+	static streaming_server instance;
+	return instance;
+}
+
+void start(const unsigned short port)
+{
+	server = std::make_unique<ws_server>();
+	server->config.client_mode = true;
+	server->config.port = port;
+	server->config.timeout_request = 0; //no timeout
+
+	auto& endpoint = server->m_endpoint["/?"];
+
+	endpoint.on_open = [this](auto connection)
+	{
+		std::cout
+			<< "-Opened connection from "
+			<< connection->remote_endpoint_address
+			<< ":"
+			<< connection->remote_endpoint_port
+			<< std::endl;
+
+		game_thread = std::make_unique<std::thread>(
+			on_accept, connection->parameters);
+
+		game_start_time = std::chrono::system_clock::now();
+
+		const auto game = connection->parameters["game"];
+
+		std::cout
+			<< "Starting game: " << game
+			<< std::endl;
+	};
+
+	endpoint.on_message = [this](auto connection, auto message)
+	{
+		const auto msg = message->string();
+		const auto values = ws_server::split(msg, ":");
+
+		if (values[0] == "ping")
+			process_pausing_mechanism();
+		else if (values[0] == "key")
+			process_key(values);
+	};
+
+	endpoint.on_error = [](auto connection, auto code)
+	{
+		std::cout
+			<< "-Error on connection from "
+			<< connection->remote_endpoint_address
+			<< ":"
+			<< connection->remote_endpoint_port
+			<< std::endl
+			<< ": " << code.message()
+			<< std::endl;
+	};
+
+	endpoint.on_close = [this](auto connection, auto status, auto reason)
+	{
+		const auto game_end_time = std::chrono::system_clock::now();
+		const auto game_total_minute_played = 
+			std::chrono::duration_cast<std::chrono::minutes>(
+				game_end_time - game_start_time);
+		const auto game = connection->parameters["game"];
+
+		std::cout
+			<< "-Closed connection from "
+			<< connection->remote_endpoint_address << ":"
+			<< connection->remote_endpoint_port
+			<< std::endl
+			<< ": " << reason
+			<< std::endl;
+
+		std::cout
+			<< game
+			<< " played for: " 
+			<< game_total_minute_played.count() << "min."
+			<< std::endl;
+
+		machine->schedule_exit();
+	};
+
+	std::cout
+		<< "Game streaming server listening on " << port
+		<< std::endl;
+
+	server->start();
+
+	if (game_thread->joinable())
+		game_thread->join();
+}
+\end{minted}
