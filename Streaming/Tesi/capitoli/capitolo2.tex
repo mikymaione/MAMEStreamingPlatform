@@ -43,13 +43,13 @@ Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mam
 
 SDL (Simple DirectMedia Layer) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), le librerie di rendering 3D (in verde) e le librerie che si interfacciano alla scheda audio (in rosso) \parencite{SDL_Wiki}.
 
-Le quattro macro categorie in cui è suddiviso il MAME, come mostrato in Fig. \ref{fig:mame_arch}, sono:
+Il MAME è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
 
 \begin{itemize}
-	\item "Core" in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma main a linea di comando (progetto main), il front-end grafico, il motore di emulazione (progetto emu), alcune librerie comuni a tutto il software (lib) ed i sorgenti delle librerie esterne (3rdparty);
+	\item "Core" in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma principale (progetto main), il front-end grafico, il motore di emulazione (progetto emu), le librerie comuni (lib) ed i sorgenti delle librerie esterne (3rdparty);
 	\item "OSD" contenente le funzionalità sia dipendenti dal sistema operativo come macOS, Windows, UWP ed SDLMAME, sia i moduli (progetto modules) di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
 	\item "Devices" che contiene per ogni device emulato (ad esempio il Capcom CP System III) le classi che gestiscono le informazioni della macchina ed emulano cpu, bus, video, audio e i dischi (progetto formats);
-	\item "Tools \& Test" che contiene varie utility per la gestione delle rom e per la fase di testing (progetti benchmarks, tests, tools).
+	\item "Tools \& Test" che contiene varie utility per la gestione delle rom e per la fase di testing.
 \end{itemize}
 
 \begin{figure}[H]
@@ -58,11 +58,11 @@ Le quattro macro categorie in cui è suddiviso il MAME, come mostrato in Fig. \r
 	\label{fig:mame_arch}
 \end{figure}
 
-
+Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state apportate delle modifiche per trasformare il MAME in una piattaforma di cloud gaming.
 
 
 \subsection{Rendering}
-Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), ma poiché emula fisicamente il monitor del cabinato ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare.
+Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), ma poiché emula fisicamente il monitor del cabinato ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare, il processo dalle primitive all'immagine è mostrato in Fig. \ref{fig:rendering_pipeline}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/rendering_pipeline}
