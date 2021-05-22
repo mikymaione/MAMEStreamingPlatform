@@ -125,7 +125,7 @@ class renderer_YYY extends osd_renderer {
     +render_primitive_list get_primitives()    
     +int draw(const int update)
     {static} +void init(running_machine machine)
-	{static} +void exit()
+    {static} +void exit()
 }
 
 class Multimedia_Library {
