@@ -8,25 +8,33 @@ skinparam class {
     BorderColor black
 }
 
-class osd_renderer {
-	-osd_window  m_window
-	+osd_window assert_window()
-	{abstract} +int create()
-	{abstract} +render_primitive_list get_primitives()
-	{abstract} +int draw(const int update)
-	{static} +osd_renderer make_for_type(int mode, osd_window window, int extra_flags)
-}
-
-class renderer_sdl2 extends osd_renderer {
+class renderer_sdl2 {
 	-SDL_Renderer sdl_renderer
 	
 	+int create()
-	+render_primitive_list get_primitives()    
+	+render_primitive[] get_primitives()    
 	+int draw(const int update)
 	{static} +void init(running_machine machine)
 	{static} +void exit()
 }
 
-renderer_sdl2 -- SDL_Renderer
+enum primitive_type
+{
+	LINE
+	QUAD
+}
+
+class render_primitive {
+	+render_bounds bounds
+	+primitive_type type
+	+render_color color
+	+render_texinfo texture
+	+render_quad_texuv texcoords
+}
+
+renderer_sdl2 -l-|> osd_renderer
+renderer_sdl2 -r- render_primitive
+renderer_sdl2 -l- SDL_Renderer
+render_primitive -r- primitive_type
 
 @enduml
