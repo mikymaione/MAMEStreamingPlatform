@@ -1,0 +1,89 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+class cps3_state extends driver_device {
+	#sh2_device maincpu
+	#gfxdecode_device gfxdecode
+	#palette_device palette
+	#cps3_sound_device cps3sound
+	#timer_device dma_timer
+	#timer_device spritelist_dma_time
+	#simm[7] fujitsu_29f016a_device
+	
+	#int mainram
+	#int spriteram
+	#int colourram
+	#int ppu_gscroll
+	#int tilemap_regs
+	#int ppu_crtc_zoom
+	#int sh2cache_ram
+	#int decrypted_gamerom
+	#int sh2cache_ram_decrypted
+	
+	-renderbuffer_bitmap bitmap_rgb32
+	-rectangle renderbuffer_clip
+}
+cps3_state -- sh2_device
+cps3_state -- gfxdecode_device
+cps3_state -- palette_device
+cps3_state -- cps3_sound_device
+cps3_state -- timer_device
+cps3_state -- simm
+cps3_state -- bitmap_rgb32
+cps3_state -- rectangle
+cps3_state -- game_driver
+
+class device_t extends delegate_late_bind
+class driver_device extends device_t {
+	-system game_driver
+}
+driver_device -- game_driver
+
+class device_sound_interface extends device_interface
+
+class cps3_sound_device extends device_t, device_sound_interface
+{
+	-sound_stream stream;
+	-cps3_voice voice[16];
+}
+cps3_sound_device -- sound_stream
+cps3_sound_device -- cps3_voice
+
+class speakder_device extends device_t, device_mixer_interface
+
+class device_mixer_interface extends device_sound_interface
+
+class timer_device extends device_t
+
+class device_palette_interface extends device_interface
+class palette_device extends device_t, device_palette_interface
+class raw_to_rgb_converter
+
+class sh2_device
+class sh2_frontend
+class intelfsh_device
+
+class nscsi_device extends device_t
+class wd33c9x_base_device extends nscsi_device, nscsi_slot_card_interface
+class wd33c93_device extends wd33c9x_base_device
+
+class nscsi_slot_card_interface extends device_interface
+
+class nscsi_full_device extends nscsi_device, nscsi_slot_card_interface
+class nscsi_cdrom_device extends nscsi_full_device
+class cdrom
+class device_nvram_interface extends device_interface
+class nvram_device extends device_t, device_nvram_interface
+
+class screen_bitmap
+class screen_device extends device_t
+class render_manager
+
+@enduml
