@@ -11,6 +11,29 @@
 \documentclass[openany]{book}
 
 \usepackage[T1]{fontenc}
+\usepackage[a4paper]{geometry}		% Formato del foglio
+\usepackage[italian]{babel}			% Supporto per le lingue
+\usepackage[utf8]{inputenc}			% Supporto per UTF-8
+\usepackage[a-1b]{pdfx}				% File conforme allo standard PDF-A (obbligatorio per la consegna)
+\usepackage{imakeidx}
+\usepackage{float}
+\usepackage{emptypage}
+\usepackage{tablefootnote}
+\usepackage{graphicx}				% Funzioni avanzate per le immagini
+\usepackage{hologo}					% Bibtex logo with \hologo{BibTeX}
+\usepackage{amssymb,amsmath,amsthm} % Simboli matematici
+\usepackage{listings}				% Scrittura di codice
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+\usepackage{verbatim}
+\usepackage{commath}
+\usepackage{minted}
+\usepackage{csquotes}
+\usepackage{caption}
+
+%style scritta nella bibliografia
+%citestyle scritta nel testo
+\usepackage[style=ext-authoryear,sorting=nty,maxbibnames=15]{biblatex}
 
 \def\myCDL{Corso di Laurea Magistrale in Informatica}
 \def\myTitle{Piattaforma di cloud gaming per giochi arcade}
@@ -23,51 +46,11 @@
 
 \def\myYY{2020-2021}
 
-%\def\thesubsection{\Roman{subsection}} %numeri romani sottosezione
-
-% Il seguente comando introduce un elenco delle figure dopo l'indice (facoltativo)
-%\figurespagetrue
-
-% Il seguente comando introduce un elenco delle tabelle dopo l'indice (facoltativo)
-%\tablespagetrue
-
-% Package di formato
-\usepackage[a4paper]{geometry}		% Formato del foglio
-\usepackage[italian]{babel}			% Supporto per le lingue
-\usepackage[utf8]{inputenc}			% Supporto per UTF-8
-\usepackage[a-1b]{pdfx}				% File conforme allo standard PDF-A (obbligatorio per la consegna)
-\usepackage{float}
-\usepackage{emptypage}
-\usepackage{tablefootnote}
-
 \title{Piattaforma di cloud gaming per giochi arcade}
 \author{Michele Maione}
 
-% Package per la grafica
-\usepackage{graphicx}				% Funzioni avanzate per le immagini
-\usepackage{hologo}					% Bibtex logo with \hologo{BibTeX}
-%\usepackage{epsfig}				% Permette immagini in EPS
-%\usepackage{xcolor}				% Gestione avanzata dei colori
-
-% Package tipografici
-\usepackage{amssymb,amsmath,amsthm} % Simboli matematici
-\usepackage{listings}				% Scrittura di codice
-
-\usepackage{algorithm} 
-\usepackage{algpseudocode} 
-
-\usepackage{verbatim}
-\usepackage{commath}
-\usepackage{minted}
-
-%style scritta nella bibliografia
-%citestyle scritta nel testo
-\usepackage[style=ext-authoryear,sorting=nty,maxbibnames=15]{biblatex}
 \DeclareOuterCiteDelims{parencite}{\bibopenbracket}{\bibclosebracket}
 
-\usepackage{csquotes}
-
-\usepackage{caption}
 \definecolor{grigio}{RGB}{100,100,100}
 \captionsetup[figure]{font={footnotesize, color=grigio}}
 
@@ -76,6 +59,9 @@
 \addbibresource{Bibliografia.bib}
 
 \newcounter{savepage}
+
+\makeindex[columns=2, title=Indice analitico]
+
 \begin{document}
 \input{altro/copertina.tex}
 
@@ -134,6 +120,15 @@ Ringrazio il prof. Davide Gadia per la sua guida utile durante i miei sforzi ver
 \backmatter
 \printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
 \printbibliography[type=misc,title={Sitografia},heading=bibintoc]
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+\newpage
+\printindex
 
 \newpage
 \pagenumbering{gobble}
