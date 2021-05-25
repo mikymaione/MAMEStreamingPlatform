@@ -30,19 +30,7 @@ Lato client vari script si occupano di: decodificare i dati audio-video ricevuti
 Nel prossima sezione introdurremo il software MAME su cui si basa questo progetto.
 
 \section{MAME}
-Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like \parencite{MAME}.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
-	\caption{MAME livelli di astrazione su diverse piattaforme}
-	\label{fig:mame_architettura_full}
-\end{figure}
-
-Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP: Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione SDLMAME\footnote{SDLMAME era un port del MAME che utilizzava solamente la libreria SDL. Nel 2010 è stato incluso ufficialmente nel progetto MAME.} in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
-
-SDL (Simple DirectMedia Layer) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), le librerie di rendering 3D (in verde) e le librerie che si interfacciano alla scheda audio (in rosso) \parencite{SDL_Wiki}.
-
-Il MAME è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
+Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like \parencite{MAME}. Logicalmente è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
 
 \begin{itemize}
 	\item "Core" in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma principale (progetto main), il front-end grafico, il motore di emulazione (progetto emu), le librerie comuni (lib) ed i sorgenti delle librerie esterne (3rdparty);
@@ -56,6 +44,24 @@ Il MAME è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:
 	\caption{MAME, diagramma dei packages}
 	\label{fig:mame_arch}
 \end{figure}
+
+La sua struttura è divisa in moduli, come in Fig. \ref{fig:mame_schema_moduli_d},  \parencite{Il_progetto_MAME}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mame_schema_moduli_d}
+	\caption{Schema della struttura di MAME}
+	\label{fig:mame_schema_moduli_d}
+\end{figure}
+
+Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP: Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione SDLMAME\footnote{SDLMAME era un port del MAME che utilizzava solamente la libreria SDL. Nel 2010 è stato incluso ufficialmente nel progetto MAME.} in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
+	\caption{MAME livelli di astrazione su diverse piattaforme}
+	\label{fig:mame_architettura_full}
+\end{figure}
+
+SDL (Simple DirectMedia Layer) è una libreria multipiattaforma che fornisce accesso di basso livello ad audio, tastiera, mouse, gamepad, hardware 3D e framebuffer 2D. Come mostrato in Fig. \ref{fig:mame_architettura_full} nello schema in alto, SDL è costruito sopra le API di visualizzazione video del sistema operativo (in arancione), le librerie di rendering 3D (in verde) e le librerie che si interfacciano alla scheda audio (in rosso) \parencite{SDL_Wiki}.
 
 Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state apportate delle modifiche per trasformare il MAME in una piattaforma di cloud gaming.
 
