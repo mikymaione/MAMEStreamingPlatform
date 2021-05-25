@@ -39,7 +39,7 @@ I videogiochi sono un mezzo di intrattenimento unico che combina le diverse form
 \section{Cloud gaming}
 Negli ultimi anni sono apparsi molti tipi di servizi che sfruttano il paradigma del cloud computing: archiviazione (Dropbox, Drive, OneDrive), musica (Spotify, Amazon Music), cinematografia (Prime Video, Netflix), documenti (Google Workspace, Office 365) e più recentemente il cloud gaming. Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile videogiocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica consente di archiviare ed eseguire i videogiochi su un server remoto e trasmettere l'output audio-video all'utente sul proprio dispositivo.
 
-Il cloud computing è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su: spazio di archiviazione utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots), le cui caratteristiche essenziali sono:
+Il cloud computing\index{cloud computing} è un paradigma in cui un provider offre risorse fisiche e software accessibili da remoto, tramite la sottoscrizione di un abbonamento mensile/annuale oppure "pay-as-you go" (calcolato su: spazio di archiviazione utilizzato, tempo di utilizzo, cicli di CPU/GPU, ecc\dots), le cui caratteristiche essenziali sono:
 
 \begin{itemize}
 	\item La capacità di fornire risorse hardware (processori, memoria, spazio di archiviazione, ecc\dots) automaticamente in base alle necessità software;
@@ -49,12 +49,12 @@ Il cloud computing è un paradigma in cui un provider offre risorse fisiche e so
 	\item L'uso delle risorse e dei servizi è ottimizzato tramite il modello "pay-per-use" ed è monitorato e controllato in modo trasparente sia dal provider che dall'utente; alcune società offrono anche abbonamenti mensili e annuali, che invece limitano le risorse ad un tetto massimo.
 \end{itemize}
 
-Il cloud computing offre tre modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".}: infrastruttura (IaaS), piattaforma (PaaS) e software (SaaS). Il cloud gaming è l'unione del modello SaaS poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore e del modello PaaS dal punto di vista dello sviluppatore che necessita del sistema operativo, delle librerie e dei kit di sviluppo; per cui il paradigma implementato dal cloud gaming è definito "gioco come servizio" (GaaS) e si divide in tre instanze \parencite{Cloud_for_Gaming}, come mostrato in Fig. \ref{fig:GaaS}, che sono:
+Il cloud computing offre tre modelli di servizio\footnote{La sigla "aaS" sta per "as a Service".}: infrastruttura (IaaS\index{IaaS}), piattaforma (PaaS\index{PaaS}) e software (SaaS\index{SaaS}). Il cloud gaming\index{cloud gaming} è l'unione del modello SaaS poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore e del modello PaaS dal punto di vista dello sviluppatore che necessita del sistema operativo, delle librerie e dei kit di sviluppo; per cui il paradigma implementato dal cloud gaming è definito "gioco come servizio" (GaaS\index{GaaS}) e si divide in tre instanze \parencite{Cloud_for_Gaming}, come mostrato in Fig. \ref{fig:GaaS}, che sono:
 
 \begin{itemize}
-	\item Rendering remoto (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente come un filmato;
-	\item Rendering locale (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
-	\item Allocazione delle risorse cognitive (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
+	\item Rendering remoto (RR-GaaS\index{RR-GaaS}): il gioco viene eseguito e codificato sul server ed inviato all'utente come un filmato;
+	\item Rendering locale (LR-GaaS\index{LR-GaaS}): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
+	\item Allocazione delle risorse cognitive (CRA-GaaS\index{CRA-GaaS}): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
 \end{itemize}
 
 \begin{figure}[H]
@@ -109,10 +109,10 @@ I protocolli di comunicazione a livello di trasporto su cui sono costruiti servi
 Di questi solo quattro possono essere utilizzati per lo streaming utilizzando il browser web \parencite{High_Performance_Browser_Networking}:
 
 \begin{itemize}	
-	\item Dynamic Adaptive Streaming over HTTP (DASH) è una tecnica di streaming con bit-rate adattivo del Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su protocollo HTTP;
-	\item HTTP Live Streaming (HLS) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple;
-	\item WebSocket è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
-	\item Web Real-Time Communication (WebRTC) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol).
+	\item Dynamic Adaptive Streaming over HTTP (DASH\index{DASH}) è una tecnica di streaming con bit-rate adattivo del Moving Picture Experts Group (MPEG), che consente lo streaming di alta qualità di contenuti multimediali su protocollo HTTP;
+	\item HTTP Live Streaming (HLS\index{HLS}) è il protocollo di streaming ad alta latenza più popolare su HTTP per video on demand (video preregistrato) sviluppato da Apple;
+	\item WebSocket\index{WebSocket} è un protocollo di comunicazione che fornisce un canale full-duplex su una singola connessione TCP, con una latenza inferiore rispetto ad HLS e DASH;
+	\item Web Real-Time Communication (WebRTC\index{WebRTC}) è un progetto per la comunicazione in tempo reale basato sul protocollo RTP (Real-time Transport Protocol).
 \end{itemize}
 
 \begin{figure}[H]
