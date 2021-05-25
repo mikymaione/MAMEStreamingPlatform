@@ -15,7 +15,6 @@
 \usepackage[italian]{babel}			% Supporto per le lingue
 \usepackage[utf8]{inputenc}			% Supporto per UTF-8
 \usepackage[a-1b]{pdfx}				% File conforme allo standard PDF-A (obbligatorio per la consegna)
-\usepackage{imakeidx}
 \usepackage{float}
 \usepackage{emptypage}
 \usepackage{tablefootnote}
@@ -59,8 +58,6 @@
 \addbibresource{Bibliografia.bib}
 
 \newcounter{savepage}
-
-\makeindex[columns=2, title=Indice analitico]
 
 \begin{document}
 \input{altro/copertina.tex}
@@ -126,9 +123,6 @@ Ringrazio il prof. Davide Gadia per la sua guida utile durante i miei sforzi ver
 
 \newpage
 \listoftables
-
-\newpage
-\printindex
 
 \newpage
 \pagenumbering{gobble}
