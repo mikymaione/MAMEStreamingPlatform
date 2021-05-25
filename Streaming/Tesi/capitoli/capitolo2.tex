@@ -67,7 +67,7 @@ Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state appo
 
 
 \subsection{Rendering}
-Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), ma poiché emula fisicamente il monitor del cabinato ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare, il processo dalle primitive all'immagine è mostrato in Fig. \ref{fig:rendering_pipeline}.
+Come spiegato nella FAQ ufficiale nel capitolo sulle performance: \emph{"There are many things that are difficult to emulate without expending a large amount of CPU power. Some specific examples are: Games with 3D graphics. As of this writing, MAME does not pass polygons down to the video card of your system; instead, it renders all 3D graphics by hand in software. Although this code is generally optimized to take advantage of multiple CPUs, it is still quite taxing to do this. Some 3D games give you control of the output resolution; reducing it will reduce the CPU requirements."} \parencite{MAME_FAQ_Performance}; il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco) ma sia per la volontà di emulare fedelmente l'hardware della macchina sia perché le varie schede ed API grafiche delle macchine emulate non lavorano esattamente come quelle moderne (es.: come celle poligonali della mesh utilizzano i rettangoli al posto dei triangoli) tutta la fase di rendering viene eseguita via software, per questo motivo ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare sia nel caso di giochi 2D che 3D. Il processo dalle primitive all'immagine è mostrato in Fig. \ref{fig:rendering_pipeline}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/rendering_pipeline}
@@ -77,7 +77,7 @@ Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco), m
 
 Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra.
 
-In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering (la controparte del missaggio audio funziona in maniera simile). È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usato al posto del front-end HTML.
+In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering (la controparte del missaggio audio funziona in maniera simile) da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:render_class_original}. È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usata al posto del front-end HTML.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/render_class_original}
