@@ -32,6 +32,12 @@ Nel prossima sezione introdurremo il software MAME su cui si basa questo progett
 \section{MAME}
 Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori da tutto il mondo. Lo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto è stato realizzato in C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like \parencite{MAME}. Logicalmente è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mame_arch}
+	\caption{MAME, diagramma dei packages}
+	\label{fig:mame_arch}
+\end{figure}
+
 \begin{itemize}
 	\item "Core" in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma principale (progetto main), il front-end grafico, il motore di emulazione (progetto emu), le librerie comuni (lib) ed i sorgenti delle librerie esterne (3rdparty);
 	\item "OSD" contenente le funzionalità sia dipendenti dal sistema operativo come macOS, Windows, UWP ed SDLMAME, sia i moduli (progetto modules) di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
@@ -39,13 +45,7 @@ Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di 
 	\item "Tools \& Test" che contiene varie utility per la gestione delle rom e per la fase di testing.
 \end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/mame_arch}
-	\caption{MAME, diagramma dei packages}
-	\label{fig:mame_arch}
-\end{figure}
-
-La sua struttura è divisa in moduli, come in Fig. \ref{fig:mame_schema_moduli_d},  \parencite{Il_progetto_MAME}.
+\emph{Il progetto ha una struttura modulare}, schematizzata in Fig. \ref{fig:mame_schema_moduli_d}, \emph{formato da un nucleo centrale che dirige le operazioni, gestisce l’interfaccia utente e mette a disposizione dei driver un buon numero di funzioni d'uso comune. Il nucleo delega a moduli esterni l'emulazione dei vari tipi di CPU e di chip audio supportati. In pratica il nucleo fornisce un ambiente operativo specializzato nell'emulazione di videogiochi arcade, che i driver possono sfruttare con poco codice aggiuntivo. Spesso la maggior parte del contenuto di un driver è costituita da strutture dati, gestite direttamente dal nucleo. Il driver deve fornire codice solo per alcuni compiti specifici, ad esempio l'aggiornamento del video} \parencite{Il_progetto_MAME}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_schema_moduli_d}
