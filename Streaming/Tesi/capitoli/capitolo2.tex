@@ -57,7 +57,7 @@ Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mam
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
-	\caption{MAME livelli di astrazione su diverse piattaforme}
+	\caption{Librerie e interfacce utilizzate dal MAME sulle diverse piattaforme}
 	\label{fig:mame_architettura_full}
 \end{figure}
 
@@ -70,10 +70,10 @@ Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state appo
 Il rendering è il processo di generazione di un'immagine a partire dalla sua descrizione, che può essere sia in due dimensioni (2D) sia in tre (3D), tramite un software. Gli elementi di base del rendering 2D sono le textures\footnote{Una texture è un'immagine rappresentata come una matrice bidimensionale di pixel colorati (in inglese bitmap). Ogni pixel è rappresentato tramite una quaterna formata dai tre colori primari più un valore che ne indica la trasparenza (RGB + A); servono 4 bit per memorizzare ogni elemento della quaterna, quindi 32 in totale per un singolo pixel.} e le animazioni. Il motore grafico (il software che si occupa anche del rendering) prende gli elementi uno ad uno e li disegna nel framebuffer\footnote{Il framebuffer è uno spazio di memoria presente sulla scheda video in cui si memorizza l'immagine che verrà successivamente mostrata a video.} generando l'immagine finale \parencite{Efficient_2D_software_rendering}. Come mostrato in Fig. \ref{fig:rendering_pipeline}, questo processo è formato da quattro fasi \parencite{Computer_Vision_A_Modern_Approach}:
 
 \begin{enumerate}
-    \item Trasforma le primitive geometriche in un sistema di coordinate universali;
-    \item Ritaglia porzioni delle primitive che fuoriescono dalla finestra di visualizzazione;
-    \item Trasforma le primiteve ritagliate portandole dalle cordinate universali a quelle dello schermo;
-    \item Attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
+    \item Trasformazione di modellazione: tramite una trasformazione trasporta le primitive geometriche in un sistema di coordinate universali (\emph{world coordinate system});
+    \item Clipping: ritaglia porzioni delle primitive al di fuori della finestra di visualizzazione;
+    \item Trasformazione di vista: tramite una trasformazione ridiga detta "trasformazione di vista" trasporta le primiteve ritagliate dalle cordinate universali a quelle schermo (\emph{screen coordinate});
+    \item \emph{Scan conversion}: attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
 \end{enumerate}
 
 \begin{figure}[H]
