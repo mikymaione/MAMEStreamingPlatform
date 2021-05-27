@@ -45,7 +45,7 @@ Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di 
 	\item "Tools \& Test" che contiene varie utility per la gestione delle rom e per la fase di testing.
 \end{itemize}
 
-\emph{Il progetto ha una struttura modulare}, schematizzata in Fig. \ref{fig:mame_schema_moduli_d}, \emph{formato da un nucleo centrale che dirige le operazioni, gestisce l’interfaccia utente e mette a disposizione dei driver un buon numero di funzioni d'uso comune. Il nucleo delega a moduli esterni l'emulazione dei vari tipi di CPU e di chip audio supportati. In pratica il nucleo fornisce un ambiente operativo specializzato nell'emulazione di videogiochi arcade, che i driver possono sfruttare con poco codice aggiuntivo. Spesso la maggior parte del contenuto di un driver è costituita da strutture dati, gestite direttamente dal nucleo. Il driver deve fornire codice solo per alcuni compiti specifici, ad esempio l'aggiornamento del video} \parencite{Il_progetto_MAME}.
+\textit{Il progetto ha una struttura modulare}, schematizzata in Fig. \ref{fig:mame_schema_moduli_d}, \textit{formato da un nucleo centrale che dirige le operazioni, gestisce l’interfaccia utente e mette a disposizione dei driver un buon numero di funzioni d'uso comune. Il nucleo delega a moduli esterni l'emulazione dei vari tipi di CPU e di chip audio supportati. In pratica il nucleo fornisce un ambiente operativo specializzato nell'emulazione di videogiochi arcade, che i driver possono sfruttare con poco codice aggiuntivo. Spesso la maggior parte del contenuto di un driver è costituita da strutture dati, gestite direttamente dal nucleo. Il driver deve fornire codice solo per alcuni compiti specifici, ad esempio l'aggiornamento del video} \parencite{Il_progetto_MAME}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_schema_moduli_d}
@@ -70,10 +70,10 @@ Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state appo
 Il rendering è il processo di generazione di un'immagine a partire dalla sua descrizione, che può essere sia in due dimensioni (2D) sia in tre (3D), tramite un software. Gli elementi di base del rendering 2D sono le textures\footnote{Una texture è un'immagine rappresentata come una matrice bidimensionale di pixel colorati (in inglese bitmap). Ogni pixel è rappresentato tramite una quaterna formata dai tre colori primari più un valore che ne indica la trasparenza (RGB + A); servono 4 bit per memorizzare ogni elemento della quaterna, quindi 32 in totale per un singolo pixel.} e le animazioni. Il motore grafico (il software che si occupa anche del rendering) prende gli elementi uno ad uno e li disegna nel framebuffer\footnote{Il framebuffer è uno spazio di memoria presente sulla scheda video in cui si memorizza l'immagine che verrà successivamente mostrata a video.} generando l'immagine finale \parencite{Efficient_2D_software_rendering}. Come mostrato in Fig. \ref{fig:rendering_pipeline}, questo processo è formato da quattro fasi \parencite{Computer_Vision_A_Modern_Approach}:
 
 \begin{enumerate}
-    \item Trasformazione di modellazione: tramite una trasformazione trasporta le primitive geometriche in un sistema di coordinate universali (\emph{world coordinate system});
+    \item Trasformazione di modellazione: tramite una trasformazione trasporta le primitive geometriche in un sistema di coordinate universali (\textit{world coordinate system});
     \item Clipping: ritaglia porzioni delle primitive al di fuori della finestra di visualizzazione;
-    \item Trasformazione di vista: tramite una trasformazione ridiga detta "trasformazione di vista" trasporta le primiteve ritagliate dalle cordinate universali a quelle schermo (\emph{screen coordinate});
-    \item \emph{Scan conversion}: attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
+    \item Trasformazione di vista: tramite una trasformazione ridiga detta "trasformazione di vista" trasporta le primiteve ritagliate dalle cordinate universali a quelle schermo (\textit{screen coordinate});
+    \item \textit{Scan conversion}: attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -82,16 +82,17 @@ Il rendering è il processo di generazione di un'immagine a partire dalla sua de
 	\label{fig:rendering_pipeline}
 \end{figure}
 
-Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco) ma sia per la volontà di emulare fedelmente l'hardware della macchina sia perché le varie schede ed API grafiche delle macchine emulate non lavorano esattamente come quelle moderne (es.: i poligoni della mesh utilizzano i rettangoli al posto dei triangoli) tutta la fase di rendering viene eseguita via software, per questo motivo ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare sia nel caso di giochi 2D che 3D come spiegato nella FAQ ufficiale nel capitolo sulle performance: \emph{«There are many things that are difficult to emulate without expending a large amount of CPU power. Some specific examples are: Games with 3D graphics. As of this writing, MAME does not pass polygons down to the video card of your system; instead, it renders all 3D graphics by hand in software. Although this code is generally optimized to take advantage of multiple CPUs, it is still quite taxing to do this. Some 3D games give you control of the output resolution; reducing it will reduce the CPU requirements.»} \parencite{MAME_FAQ_Performance}.
+Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco) ma sia per la volontà di emulare fedelmente l'hardware della macchina sia perché le varie schede ed API grafiche delle macchine emulate non lavorano esattamente come quelle moderne (es.: i poligoni della mesh utilizzano i rettangoli al posto dei triangoli) tutta la fase di rendering viene eseguita via software, per questo motivo ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare sia nel caso di giochi 2D che 3D come spiegato nella FAQ ufficiale nel capitolo sulle performance: \textit{«There are many things that are difficult to emulate without expending a large amount of CPU power. Some specific examples are: Games with 3D graphics. As of this writing, MAME does not pass polygons down to the video card of your system; instead, it renders all 3D graphics by hand in software. Although this code is generally optimized to take advantage of multiple CPUs, it is still quite taxing to do this. Some 3D games give you control of the output resolution; reducing it will reduce the CPU requirements.»} \parencite{MAME_FAQ_Performance}.
 
-Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra.
+Come detto precedentemente La fase di rendering nel MAME 
+In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:render_class_generic}. 
 
-In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering (la controparte del missaggio audio funziona in maniera simile) da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:render_class_original}. È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usata al posto del front-end HTML.
+Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra. È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usata al posto del front-end HTML.
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/render_class_original}
-	\caption{Diagramma delle classi (parziale) relative al rendering}
-	\label{fig:render_class_original}
+	\includegraphics[width=\linewidth]{immagini/render_class_generic}
+	\caption{Diagramma delle classi relative al rendering}
+	\label{fig:render_class_generic}
 \end{figure}
 
 

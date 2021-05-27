@@ -32,9 +32,33 @@ class render_primitive {
 	+render_quad_texuv texcoords
 }
 
+class osd_renderer {
+    -osd_window  m_window
+    +osd_window assert_window()
+    {abstract} +int create()
+    {abstract} +render_primitive[] get_primitives()
+    {abstract} +int draw(const int update)
+    {static} +osd_renderer make_for_type(int mode, osd_window window, int extra_flags)
+}
+
+class osd_window {
+    +HDC m_dc
+    +render_primitive[] m_primlist
+    +osd_renderer renderer()        
+    {abstract} +render_target target()    
+    {abstract} +running_machine machine()
+    {abstract} +void update()    
+}
+
+package SDL {
+	class SDL_Renderer
+}
+
 renderer_sdl2 -l-|> osd_renderer
-renderer_sdl2 -r- render_primitive
-renderer_sdl2 -l- SDL_Renderer
-render_primitive -r- primitive_type
+renderer_sdl2 -r- SDL_Renderer
+
+osd_renderer -l- osd_window
+osd_window -l- render_primitive
+render_primitive -l- primitive_type
 
 @enduml
