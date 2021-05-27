@@ -94,7 +94,17 @@ Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco) ma
 
 Come detto precedentemente il MAME supporta varie librerie multimediali per la fase di rendering e di missaggio audio. In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:class_renderingSDLFull}. Dopo che è stata creata la finestra in cui verrà visualizzato il rendering, tramite la funzione \verb|osd_renderer::make_for_type| viene istanziata una delle classi per il rendering (es.: \verb|render_ogl|, \verb|render_d3d9|, \verb|renderer_sdl2|, ecc\dots) che comunica direttamente con la libreria grafica. Alla creazione di una di queste classi viene chiamato il metodo \verb|osd_renderer::create| che si occupa di inizializzare il necessario per il rendering. Per ogni frame della macchina che viene emulato c'è una fase di disegno tramite il metodo \verb|osd_renderer::draw|.
 
-Per quanto riguarda la libreria SDL viene creato il contesto di rendering \verb|SDL_Renderer| per la finestra tramite la funzione \verb|SDL_CreateRenderer|. La fase di disegno sul framebuffer è fatta tramite le funzioni \verb|SDL_SetRenderDrawColor| per settare il colore, \verb|SDL_RenderDrawLine| e \verb|SDL_RenderFillRect| per disegnare rispettivamente le primitive \verb|LINE| e \verb|QUAD|. Al termine della fase di disegno tramite la funzione \verb|SDL_RenderPresent| viene mostrato il framebuffer appena renderizzato sulla finestra.
+La classe che si occupa del rendering utilizzando la libreria SDL è \verb|renderer_sdl2| che utilizza le seguenti funzioni SDL:
+
+\begin{itemize}	
+	\item \verb|SDL_CreateRenderer|: Crea un contesto di rendering 2D per una finestra;
+	\item \verb|SDL_SetRenderDrawColor|: Imposta il colore utilizzato per le operazioni di disegno;
+	\item \verb|SDL_RenderFillRect|: Riempe un rettangolo con il colore di disegno corrente; è usato per disegnare la primitiva \verb|QUAD|;
+	\item \verb|SDL_RenderDrawLine|: Disegna una linea con il colore di disegno corrente; è usato per disegnare la primitiva \verb|LINE|;
+	\item \verb|SDL_RenderPresent|: Aggiorna il contesto di rendering con il framebuffer corrente.
+\end{itemize}
+
+Di cui la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
 
 \subsection{Missaggio audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
