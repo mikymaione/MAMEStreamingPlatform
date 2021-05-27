@@ -84,17 +84,17 @@ Il rendering è il processo di generazione di un'immagine a partire dalla sua de
 
 Il MAME è in grado di emulare giochi sia 2D che 3D (es.: Tekken della Namco) ma sia per la volontà di emulare fedelmente l'hardware della macchina sia perché le varie schede ed API grafiche delle macchine emulate non lavorano esattamente come quelle moderne (es.: i poligoni della mesh utilizzano i rettangoli al posto dei triangoli) tutta la fase di rendering viene eseguita via software, per questo motivo ciò che viene inviato alla libreria grafica è un insieme di primitive e texture da disegnare sia nel caso di giochi 2D che 3D come spiegato nella FAQ ufficiale nel capitolo sulle performance: \textit{«There are many things that are difficult to emulate without expending a large amount of CPU power. Some specific examples are: Games with 3D graphics. As of this writing, MAME does not pass polygons down to the video card of your system; instead, it renders all 3D graphics by hand in software. Although this code is generally optimized to take advantage of multiple CPUs, it is still quite taxing to do this. Some 3D games give you control of the output resolution; reducing it will reduce the CPU requirements.»} \parencite{MAME_FAQ_Performance}.
 
-Come detto precedentemente La fase di rendering nel MAME 
-In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:render_class_generic}. 
-
-Quando la finestra di gioco viene inizializzata, viene creato un contesto di rendering SDL per la finestra tramite la funzione \textit{CreateRenderer}. Per ogni frame della macchina che viene emulato c'è una fase di disegno usando \textit{SetRenderDrawColor}, \textit{RenderFillRect} e \textit{RenderDrawLine}, e poi tramite la funzione \textit{RenderPresent} viene mostrato il frame appena renderizzato sulla finestra. È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usata al posto del front-end HTML.
+È importante sottolineare che l'interfaccia grafica del MAME viene disegnata con le stesse procedure utilizzate per l'emulazione, e questo consente al nostro progetto di poter effettuare lo streaming anche dell'interfaccia grafica che può essere usata al posto del front-end HTML.
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/render_class_generic}
+	\includegraphics[width=\linewidth]{immagini/class_renderingSDLFull}
 	\caption{Diagramma delle classi relative al rendering}
-	\label{fig:render_class_generic}
+	\label{fig:class_renderingSDLFull}
 \end{figure}
 
+Come detto precedentemente il MAME supporta varie librerie multimediali per la fase di rendering e di missaggio audio. In Fig. \ref{fig:mame_render_class_diagram} è visibile un diagramma delle classi relativo alla sola funzionalità di rendering da cui è stato estrapolato il diagramma parziale di Fig. \ref{fig:class_renderingSDLFull}. Dopo che è stata creata la finestra in cui verrà visualizzato il rendering, tramite la funzione \verb|osd_renderer::make_for_type| viene istanziata una delle classi per il rendering (es.: \verb|render_ogl|, \verb|render_d3d9|, \verb|renderer_sdl2|, ecc\dots) che comunica direttamente con la libreria grafica. Alla creazione di una di queste classi viene chiamato il metodo \verb|osd_renderer::create| che si occupa di inizializzare il necessario per il rendering. Per ogni frame della macchina che viene emulato c'è una fase di disegno tramite il metodo \verb|osd_renderer::draw|.
+
+Per quanto riguarda la libreria SDL viene creato il contesto di rendering \verb|SDL_Renderer| per la finestra tramite la funzione \verb|SDL_CreateRenderer|. La fase di disegno sul framebuffer è fatta tramite le funzioni \verb|SDL_SetRenderDrawColor| per settare il colore, \verb|SDL_RenderDrawLine| e \verb|SDL_RenderFillRect| per disegnare rispettivamente le primitive \verb|LINE| e \verb|QUAD|. Al termine della fase di disegno tramite la funzione \verb|SDL_RenderPresent| viene mostrato il framebuffer appena renderizzato sulla finestra.
 
 \subsection{Missaggio audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

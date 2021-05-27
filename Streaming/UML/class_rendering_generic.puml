@@ -51,8 +51,7 @@ renderer_d3d9 -l- DirectX
 renderer_sdl2 -u-|> osd_renderer
 renderer_sdl2 -l- SDL
 
-osd_renderer -l- osd_window
+osd_renderer -u- osd_window
 osd_window -l- render_primitive
 render_primitive -d- primitive_type
-
 @enduml
