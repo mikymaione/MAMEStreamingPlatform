@@ -17,7 +17,7 @@ class renderer_sdl2 {
 	
 	+int create()
 	+render_primitive[] get_primitives()    
-	+int draw(const int update)
+	+int draw(int update)
 	{static} +void init(running_machine machine)
 	{static} +void exit()
 }
@@ -41,7 +41,7 @@ class osd_renderer {
     +osd_window assert_window()
     {abstract} +int create()
     {abstract} +render_primitive[] get_primitives()
-    {abstract} +int draw(const int update)
+    {abstract} +int draw(int update)
     {static} +osd_renderer make_for_type(int mode, osd_window window, int extra_flags)
 }
 
