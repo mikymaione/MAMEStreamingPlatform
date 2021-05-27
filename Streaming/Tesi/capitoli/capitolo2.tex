@@ -115,12 +115,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 	\label{fig:class_mixingSDLFull}
 \end{figure}
 
-\begin{itemize}
-	\item \verb|SDL_InitSubSystem|;
-	\item \verb|SDL_OpenAudio|;
-	\item \verb|SDL_PauseAudio|;
-	\item \verb|SDL_CloseAudio|;
-	\item \verb|SDL_QuitSubSystem|.
+La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
+
+\begin{itemize}	
+	\item \verb|SDL_OpenAudio|: Aprire il dispositivo audio;
+	\item \verb|SDL_PauseAudio|: Mette in pausa o ripristina la riproduzione audio;
+	\item \verb|SDL_CloseAudio|: Interrompere l'elaborazione audio e chiudere il dispositivo audio.
 \end{itemize}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  \parencite{New_Sound_Technologies_for_PCs}.
