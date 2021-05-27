@@ -8,6 +8,12 @@ skinparam class {
     BorderColor black
 }
 
+enum primitive_type
+{
+	LINE
+	QUAD
+}
+
 package SDL {
 	class SDL_Renderer
 }
@@ -20,12 +26,6 @@ class renderer_sdl2 {
 	+int draw(const int update)
 	{static} +void init(running_machine machine)
 	{static} +void exit()
-}
-
-enum primitive_type
-{
-	LINE
-	QUAD
 }
 
 class render_primitive {
@@ -54,8 +54,15 @@ class osd_window {
     {abstract} +void update()    
 }
 
+entity DirectX
+entity OpenGL
+
+renderer_ogl -u-|> osd_renderer
+renderer_ogl -d- OpenGL
+renderer_d3d9 -u-|> osd_renderer
+renderer_d3d9 -d- DirectX
 renderer_sdl2 -u-|> osd_renderer
-renderer_sdl2 -l- SDL_Renderer
+renderer_sdl2 -d- SDL_Renderer
 
 osd_renderer -u- osd_window
 osd_window -l- render_primitive
