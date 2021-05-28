@@ -107,7 +107,16 @@ La classe che si occupa del rendering utilizzando la libreria SDL è \verb|rende
 Di cui la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
 
 \subsection{Missaggio audio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
+
+\begin{itemize}	
+	\item \verb|SDL_OpenAudio|: Apre il dispositivo audio;
+	\item \verb|SDL_PauseAudio|: Mette in pausa o ripristina la riproduzione audio;
+	\item \verb|SDL_CloseAudio|: Interrompere l'elaborazione audio e chiude il dispositivo audio.
+\end{itemize}
+
+La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, e un puntatore ad una funzione di callback; questa funzione è molto importante perché è quella che effettivamente viene utilizzata per riprodurre un suono. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. 
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_mixingSDLFull}
@@ -115,22 +124,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 	\label{fig:class_mixingSDLFull}
 \end{figure}
 
-La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
-
-\begin{itemize}	
-	\item \verb|SDL_OpenAudio|: Aprire il dispositivo audio;
-	\item \verb|SDL_PauseAudio|: Mette in pausa o ripristina la riproduzione audio;
-	\item \verb|SDL_CloseAudio|: Interrompere l'elaborazione audio e chiudere il dispositivo audio.
-\end{itemize}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  \parencite{New_Sound_Technologies_for_PCs}.
-
 \subsection{Gestione input}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{SDL_game_development}.
 
-
- \parencite{CPP_Primer}
- \parencite{Computer_Networking_and_the_Internet}
- \parencite{Ingegneria_del_software}
- \parencite{Understanding_the_Linux_Kernel}
- \parencite{Windows_Server_2012}
+\parencite{CPP_Primer}
+\parencite{Computer_Networking_and_the_Internet}
+\parencite{Ingegneria_del_software}
+\parencite{Understanding_the_Linux_Kernel}
+\parencite{Windows_Server_2012}

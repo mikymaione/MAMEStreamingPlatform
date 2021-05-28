@@ -16,6 +16,9 @@ enum primitive_type
 
 package SDL {
 	class SDL_Renderer
+	class SDL_Texture
+	class SDL_Rect
+	
 }
 
 class renderer_sdl2 {
@@ -62,7 +65,9 @@ renderer_ogl -d- OpenGL
 renderer_d3d9 -u-|> osd_renderer
 renderer_d3d9 -d- DirectX
 renderer_sdl2 -u-|> osd_renderer
-renderer_sdl2 -d- SDL_Renderer
+renderer_sdl2 -- SDL_Renderer
+renderer_sdl2 -- SDL_Texture
+renderer_sdl2 -- SDL_Rect
 
 osd_renderer -u- osd_window
 osd_window -l- render_primitive
