@@ -107,8 +107,9 @@ La classe che si occupa del rendering utilizzando la libreria SDL è \verb|rende
 Di cui la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
 
 \subsection{Missaggio audio}
+Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. Attualmente il MAME emula una cinquantina di chip audio, ma per alcuni giochi antecedenti al 1982 invece di emulare i circuiti si sono semplicemente utilizzati i suoni registrati dalla scheda originale perché il sonoro era prodotto mediante circuiti analogici, la cui emulazione è più complessa. Sono supportate cinque librerie per la gestione della scheda audio che sono: SDL, DirectAudio (dalla libreria DirectX) e XAudio2 per Windows, Core Audio per macOS, PortAudio per Windows e macOS. \parencite{Il_progetto_MAME}.
 
-Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
+La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
 
 \begin{itemize}	
 	\item \verb|SDL_OpenAudio|: Apre il dispositivo audio;
@@ -116,7 +117,7 @@ Il missaggio audio è quel procedimento con cui due o più campioni audio sono f
 	\item \verb|SDL_CloseAudio|: Interrompere l'elaborazione audio e chiude il dispositivo audio.
 \end{itemize}
 
-La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, e un puntatore ad una funzione di callback; questa funzione è molto importante perché è quella che effettivamente viene utilizzata per riprodurre un suono. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. 
+La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, e un puntatore ad una funzione di callback asincrona; questa funzione è molto importante perché è quella che effettivamente viene utilizzata per riprodurre un suono. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. Il MAME utilizza un buffer ad anello (classe \verb|ring_buffer|) in cui la macchina emulata aggiunge campioni audio e da cui la funzione \verb|sdl_callback| li rimuove e li copia nel vettore \verb|stream|.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_mixingSDLFull}
