@@ -7,7 +7,7 @@ Di seguito le modifiche che sono state apportate alle classi originali del MAME 
 \subsection{Main}
 File \verb|osd/sdl/sdlmain.cpp|
 
-\begin{minted}{cpp}
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
 int main(int argc, char** argv)
 {
 	auto r = 0;	
@@ -29,34 +29,34 @@ int main(int argc, char** argv)
 
 	return r;
 }
-\end{minted}
+\end{lstlisting}
 
 
 \subsection{Missaggio audio}
 File \verb|osd/modules/sound/sdl_sound.cpp|
 
-\begin{minted}{cpp}
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
 void sound_sdl::sdl_callback(
 	void* userdata, Uint8* stream, int len)
 {
-	// ... CODICE NON MODIFICATO ...
+	//... CODICE NON MODIFICATO ...
 
 	if (streaming_server::instance().is_active())
 	{
 		streaming_server::instance().send_audio_interval(
 			stream, len, this_->sdl_xfer_samples);
 
-		memset(stream, 0, len); // silence local outputs
+		memset(stream, 0, len); //silence local outputs
 	}
 
-	// ... CODICE NON MODIFICATO ...
+	//... CODICE NON MODIFICATO ...
 }
-\end{minted}
+\end{lstlisting}
 
 \subsection{Rendering}
 Files \verb|osd/modules/render/draw13.cpp| e \verb|osd/modules/render/draw13.h|
 
-\begin{minted}{cpp}
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
 void renderer_sdl2::free_streaming_render() const
 {
 	if (m_sdl_buffer_bytes != nullptr)
@@ -80,7 +80,7 @@ void renderer_sdl2::init_streaming_render(
 	m_sdl_surface = SDL_CreateRGBSurfaceWithFormat(
 		0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
 
-	// Crea il rendering su superfice al posto di quello su finestra
+	//Crea il rendering su superfice al posto di quello su finestra
 	m_sdl_renderer = SDL_CreateSoftwareRenderer(
 		m_sdl_surface);
 
@@ -93,7 +93,7 @@ void renderer_sdl2::init_streaming_render(
 
 int renderer_sdl2::create()
 {
-	// ... CODICE NON MODIFICATO ...
+	//... CODICE NON MODIFICATO ...
 
 	if (streaming_server::instance().is_active())
 	{
@@ -105,23 +105,23 @@ int renderer_sdl2::create()
 	{
 		if (video_config.waitvsync)
 			m_sdl_renderer = SDL_CreateRenderer(
-				std::dynamic_pointer_cast<sdl_window_info>(
+				dynamic_pointer_cast<sdl_window_info>(
 					win)->platform_window(), 
 					-1, SDL_RENDERER_PRESENTVSYNC | 
 					SDL_RENDERER_ACCELERATED);
 		else
 			m_sdl_renderer = SDL_CreateRenderer(
-				std::dynamic_pointer_cast<sdl_window_info>(
+				dynamic_pointer_cast<sdl_window_info>(
 					win)->platform_window(), 
 					-1, SDL_RENDERER_ACCELERATED);
 	}
 
-	// ... CODICE NON MODIFICATO ...
+	//... CODICE NON MODIFICATO ...
 }
 
 int renderer_sdl2::draw(int update)
 {
-	// ... CODICE NON MODIFICATO ...
+	//... CODICE NON MODIFICATO ...
 	SDL_RenderPresent(m_sdl_renderer);	
 
 	if (streaming_server::instance().is_active())
@@ -132,7 +132,7 @@ int renderer_sdl2::draw(int update)
 	}
 	return 0;
 }
-\end{minted}
+\end{lstlisting}
 
 
 
@@ -144,7 +144,7 @@ Di seguito alcune funzioni nei due moduli che sono stati creati: codifica e serv
 \subsection{Codifica}
 File \verb|lib/util/encoding/encode_to_movie.hpp|
 
-\begin{minted}{cpp}
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
 static int write_packet(
 	void* opaque, uint8_t* buf, int buf_size)
 {
@@ -154,10 +154,10 @@ static int write_packet(
 	this_->socket->write(
 		reinterpret_cast<const char*>(buf), buf_size);
 
-	return 1; // 1 element wrote
+	return 1; //1 element wrote
 }
 
-// Add video frame
+//Add video frame
 void add_frame(const uint8_t* pixels)
 {
 	if (!header)
@@ -202,7 +202,7 @@ void add_frame(const uint8_t* pixels)
 	av_packet_unref(&video_packet);
 }
 
-// Add audio instant
+//Add audio instant
 void add_instant(
 	const uint8_t* audio_stream, 
 	const int audio_stream_size, 
@@ -231,16 +231,19 @@ void add_instant(
 			AUDIO_CHANNELS_OUT,
 			aac_frame->nb_samples,
 			AUDIO_SAMPLE_FORMAT_OUT,
-			0);
+			0);			
 		if (ret < 0)
 			die("Could not allocate samples", ret);
 	}
 
 	auto outSamples = swr_convert(
-		encoder_context->audio_converter_context,		
-		nullptr, 0, // output
-		const_cast<const uint8_t**>( // input
-			wav_frame->data), wav_frame->nb_samples);
+		encoder_context->audio_converter_context,
+		//output
+		nullptr, 0,
+		//input
+		const_cast<const uint8_t**>(
+			wav_frame->data), wav_frame->nb_samples
+	);
 
 	if (outSamples < 0)
 		die("Could not convert", outSamples);
@@ -257,9 +260,9 @@ void add_instant(
 
 		swr_convert(
 			encoder_context->audio_converter_context,
-			// output
+			//output
 			&convertedData, aac_frame->nb_samples,
-			// input
+			//input
 			nullptr, 0);
 
 		const auto buffer_size = av_samples_get_buffer_size(
@@ -286,6 +289,7 @@ void add_instant(
 		audio_packet.size = 0;
 
 		int got_packet_ptr;
+
 		ret = avcodec_encode_audio2(
 			encoder_context->audio_codec_context, 
 			&audio_packet, aac_frame, 
@@ -309,29 +313,31 @@ void add_instant(
 		av_packet_unref(&audio_packet);
 	}
 }
-\end{minted}
+\end{lstlisting}
 
 
 
 \subsection{Server}
 File \verb|lib/util/streaming_server.hpp|
 
-\begin{minted}{cpp}
-// Invio input utente a SDL
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+//Invio input utente a SDL
 void generate_key_event(
-	const char* key, const std::string& down) const
+	const char* key, const string& down) const
 {
 	SDL_Event e;
-	e.type = down == "D" ? SDL_KEYDOWN : SDL_KEYUP;
+	e.type = (down == "D" ? SDL_KEYDOWN : SDL_KEYUP);
+
 	e.key.keysym.scancode = 
 		SDL_GetScancodeFromName(key);
-	e.key.keysym.sym = S
-		DL_GetKeyFromScancode(e.key.keysym.scancode);
+	
+	e.key.keysym.sym = 
+		SDL_GetKeyFromScancode(e.key.keysym.scancode);
 
 	keyboard->queue_events(&e, 1);
 }
 
-// Singleton
+//Singleton
 static streaming_server& instance()
 {
 	static streaming_server instance;
@@ -340,7 +346,7 @@ static streaming_server& instance()
 
 void start(const unsigned short port)
 {
-	server = std::make_unique<ws_server>();
+	server = make_unique<ws_server>();
 	server->config.client_mode = true;
 	server->config.port = port;
 	server->config.timeout_request = 0; //no timeout
@@ -349,21 +355,21 @@ void start(const unsigned short port)
 
 	endpoint.on_open = [this](auto connection)
 	{
-		std::cout
+		cout
 			<< "-Opened connection from "
 			<< connection->remote_endpoint_address << ":"
-			<< connection->remote_endpoint_port	<< std::endl;
+			<< connection->remote_endpoint_port	<< endl;
 
-		game_thread = std::make_unique<std::thread>(
+		game_thread = make_unique<thread>(
 			on_accept, connection->parameters);
 
-		game_start_time = std::chrono::system_clock::now();
+		game_start_time = chrono::system_clock::now();
 
 		const auto game = connection->parameters["game"];
 
-		std::cout
+		cout
 			<< "Starting game: " << game
-			<< std::endl;
+			<< endl;
 	};
 
 	endpoint.on_message = [this](auto connection, auto message)
@@ -377,47 +383,49 @@ void start(const unsigned short port)
 			process_key(values);
 	};
 
+
+	
 	endpoint.on_error = [](auto connection, auto code)
 	{
-		std::cout
+		cout
 			<< "-Error on connection from "
 			<< connection->remote_endpoint_address << ":"
-			<< connection->remote_endpoint_port	<< std::endl
-			<< ": " << code.message() << std::endl;
+			<< connection->remote_endpoint_port	<< endl
+			<< ": " << code.message() << endl;
 	};
 
 	endpoint.on_close = [this](auto connection, auto status, auto reason)
 	{
-		const auto game_end_time = std::chrono::system_clock::now();
+		const auto game_end_time = chrono::system_clock::now();
+
 		const auto game_total_minute_played = 
-			std::chrono::duration_cast<std::chrono::minutes>(
+			chrono::duration_cast<chrono::minutes>(
 				game_end_time - game_start_time);
+		
 		const auto game = connection->parameters["game"];
 
-		std::cout
+		cout
 			<< "-Closed connection from "
 			<< connection->remote_endpoint_address << ":"
-			<< connection->remote_endpoint_port
-			<< std::endl
-			<< ": " << reason
-			<< std::endl;
+			<< connection->remote_endpoint_port	<< endl
+			<< ": " << reason << endl;
 
-		std::cout
+		cout
 			<< game
 			<< " played for: " 
-			<< game_total_minute_played.count() << "min."
-			<< std::endl;
+			<< game_total_minute_played.count()
+			<< "min." << endl;
 
 		machine->schedule_exit();
 	};
 
-	std::cout
-		<< "Game streaming server listening on " << port
-		<< std::endl;
+	cout
+		<< "Game streaming server listening on " 
+		<< port	<< endl;
 
 	server->start();
 
 	if (game_thread->joinable())
 		game_thread->join();
 }
-\end{minted}
+\end{lstlisting}
