@@ -134,8 +134,19 @@ int renderer_sdl2::draw(int update)
 }
 \end{lstlisting}
 
+\subsection{Gestione input}
+Files \verb|osd/modules/input/input_sdl.cpp|
 
-
+\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+sdl_keyboard_device(
+		running_machine &machine, const char *name,
+		const char *id, input_module &module): 
+	sdl_device(machine, name, id, DEVICE_CLASS_KEYBOARD, module),
+	keyboard({{0}})
+{
+	streaming_server::instance().set_keyboard(this);
+}
+\end{lstlisting}
 
 \section{Moduli nuovi}
 Di seguito alcune funzioni nei due moduli che sono stati creati: codifica e server per la comunicazione WebSocket.
@@ -271,6 +282,7 @@ void add_instant(
 			aac_frame->nb_samples,
 			encoder_context->audio_codec_context->sample_fmt,
 			0);
+
 		if (buffer_size < 0)
 			die("Invalid buffer size", buffer_size);
 
@@ -281,6 +293,7 @@ void add_instant(
 			convertedData,
 			buffer_size,
 			0);
+
 		if (ret < 0)
 			die("Could not fill frame", ret);
 
@@ -294,6 +307,7 @@ void add_instant(
 			encoder_context->audio_codec_context, 
 			&audio_packet, aac_frame, 
 			&got_packet_ptr);
+
 		if (ret < 0)
 			die("Error encoding audio frame", ret);
 
@@ -316,7 +330,7 @@ void add_instant(
 \end{lstlisting}
 
 
-
+\newpage
 \subsection{Server}
 File \verb|lib/util/streaming_server.hpp|
 
@@ -382,8 +396,6 @@ void start(const unsigned short port)
 		else if (values[0] == "key")
 			process_key(values);
 	};
-
-
 	
 	endpoint.on_error = [](auto connection, auto code)
 	{
