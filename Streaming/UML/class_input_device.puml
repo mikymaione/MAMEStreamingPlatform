@@ -1,0 +1,56 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+together {
+	entity Win32
+	entity UWP
+	entity DirectX
+	entity SDL
+	entity X11
+}
+
+together {
+	class sdl_peripheral_device
+	class dinput_peripheral_device
+	class win32_peripheral_device
+	class xinput_peripheral_device
+}
+
+together {
+	class sdl_device
+	class dinput_device
+	class uwp_input_device
+}
+
+event_based_device --|> device_info
+
+dinput_device --|> device_info
+
+dinput_peripheral_device --|> dinput_device
+
+sdl_device --|> event_based_device
+
+sdl_peripheral_device --|> sdl_device
+
+uwp_input_device --|> device_info
+
+win32_peripheral_device --|> event_based_device
+
+x11_input_device --|> event_based_device
+
+xinput_peripheral_device --|> x11_input_device
+
+X11 -d- xinput_peripheral_device
+Win32 -d- win32_peripheral_device
+UWP -d- uwp_input_device
+DirectX -d- dinput_peripheral_device
+SDL -d- sdl_peripheral_device
+
+@enduml
