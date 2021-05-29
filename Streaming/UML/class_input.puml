@@ -1,0 +1,70 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+input_module --|> osd_module
+
+event_based_device --|> device_info
+
+input_module_base --|> input_module
+
+wininput_module --|> input_module_base
+
+
+dinput_module --|> wininput_module
+
+dinput_device --|> device_info
+
+joystick_input_dinput --|> dinput_module
+keyboard_input_dinput --|> dinput_module
+mouse_input_dinput --|> dinput_module
+
+dinput_joystick_device --|> dinput_device
+dinput_keyboard_device --|> dinput_device
+dinput_mouse_device --|> dinput_device
+
+
+
+sdl_input_module --|> input_module_base
+
+sdl_device --|> event_based_device
+
+sdl_joystick_device --|> sdl_device
+sdl_keyboard_device --|> sdl_device
+sdl_mouse_device --|> sdl_device
+
+sdl_joystick_module --|> sdl_input_module
+sdl_keyboard_module --|> sdl_input_module
+sdl_mouse_module --|> sdl_input_module
+
+uwp_input_device --|> device_info
+
+uwp_input_module --|> wininput_module
+
+uwp_joystick_module --|> uwp_input_module
+uwp_keyboard_module --|> uwp_input_module
+
+
+win32_device --|> event_based_device
+
+keyboard_input_win32 --|> wininput_module
+mouse_input_win32 --|> wininput_module
+win32_keyboard_device --|> event_based_device
+win32_lightgun_device --|> event_based_device
+win32_mouse_device --|> event_based_device
+
+x11_input_device --|> event_based_device
+
+xinput_joystick_module --|> wininput_module
+
+xinput_joystick_device --|> device_info
+xinput_joystick_device --|> device_info
+
+
+@enduml
