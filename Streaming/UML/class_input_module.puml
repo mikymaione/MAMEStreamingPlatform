@@ -1,0 +1,49 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+together {
+	entity X11
+	entity Win32
+	entity UWP
+	entity DirectX
+	entity SDL
+}
+
+together {
+	class wininput_module
+	class sdl_input_module
+}
+
+wininput_module --|> input_module_base
+
+dinput_module --|> wininput_module
+
+peripheral_input_dinput --|> dinput_module
+
+sdl_input_module --|> input_module_base
+
+sdl_peripheral_module --|> sdl_input_module
+
+uwp_input_module --|> wininput_module
+
+uwp_peripheral_module --|> uwp_input_module
+
+peripheral_input_win32 --|> wininput_module
+
+xinput_peripheral_module --|> wininput_module
+
+
+xinput_peripheral_module -u- X11
+peripheral_input_win32 -u- Win32
+uwp_peripheral_module -u- UWP
+peripheral_input_dinput -u- DirectX
+sdl_peripheral_module -u- SDL
+
+@enduml
