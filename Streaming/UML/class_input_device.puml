@@ -1,4 +1,5 @@
 @startuml
+
 skinparam Shadowing false
 skinparam LineType ortho
 skinparam ArrowColor black
@@ -8,49 +9,75 @@ skinparam class {
     BorderColor black
 }
 
-together {
+
+together {	
+	package SDL {
+		class SDL_Event
+		class SDL_Joystick
+	}
+	
 	entity Win32
 	entity UWP
 	entity DirectX
-	entity SDL
 	entity X11
 }
 
 together {
 	class sdl_peripheral_device
 	class dinput_peripheral_device
-	class win32_peripheral_device
 	class xinput_peripheral_device
+		class win32_peripheral_device
 }
 
 together {
 	class sdl_device
 	class dinput_device
 	class uwp_input_device
+	class x11_input_device
 }
 
-event_based_device --|> device_info
+class event_based_device<TEvent> {
+	-queue<TEvent> event_queue
+	{abstract} #void process_event(TEvent e)
+	+void queue_events(TEvent[] events, int count)
+}
 
-dinput_device --|> device_info
+class device_info {
+	-string id
+	-string name
+	-running_machine machine
+	-input_module module
+	{abstract} +void poll()
+	{abstract} +void reset()
+}
 
-dinput_peripheral_device --|> dinput_device
+event_based_device -d-|> device_info
 
-sdl_device --|> event_based_device
+class sdl_device<SDL_Event>
 
-sdl_peripheral_device --|> sdl_device
+sdl_device -- SDL_Event
 
-uwp_input_device --|> device_info
+sdl_peripheral_device -d-|> sdl_device
+sdl_peripheral_device -- SDL_Joystick
 
-win32_peripheral_device --|> event_based_device
+uwp_input_device -d-|> device_info
 
-x11_input_device --|> event_based_device
+class win32_peripheral_device<EventArgs>
 
-xinput_peripheral_device --|> x11_input_device
+class x11_input_device<XEvent> 
+x11_input_device -d-|> event_based_device
+
+xinput_peripheral_device -d-|> x11_input_device
+
+dinput_device -d-|> device_info
+dinput_peripheral_device -d-|> dinput_device
+
+sdl_device -d-|> event_based_device
+win32_peripheral_device -d-|> event_based_device
 
 X11 -d- xinput_peripheral_device
 Win32 -d- win32_peripheral_device
 UWP -d- uwp_input_device
 DirectX -d- dinput_peripheral_device
-SDL -d- sdl_peripheral_device
 
 @enduml
