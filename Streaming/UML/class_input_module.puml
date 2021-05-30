@@ -13,7 +13,11 @@ together {
 	entity Win32
 	entity UWP
 	entity DirectX
-	entity SDL
+	
+	package SDL {
+		class SDL_Joystick
+		class SDL_Event		
+	}
 }
 
 together {
@@ -21,11 +25,46 @@ together {
 	class sdl_input_module
 }
 
-wininput_module --|> input_module_base
+class input_module {
+	{abstract} +void input_init()
+	{abstract} +void pause()
+	{abstract} +void resume()
+	{abstract} +void poll_if_necessary()
+}
 
-dinput_module --|> wininput_module
+class input_module_base {
+	-bool input_enabled
+	-bool input_paused
+	-bool mouse_enabled
+	-bool lightgun_enabled
+	-time last_poll
+	-device_info[] devicelist
+	
+	+device_info[] devicelist()	
+	+void poll()	
+}
+
+class device_info {
+	-string id
+	-string name
+	-running_machine machine
+	-input_module module
+	{abstract} +void poll()
+	{abstract} +void reset()
+}
+
+device_info -r- input_module_base
+
+input_module_base -d-|> input_module
+
+wininput_module -d-|> input_module_base
+
+dinput_module -d-|> wininput_module
 
 peripheral_input_dinput --|> dinput_module
+
+sdl_peripheral_module -u- SDL_Joystick
+sdl_input_module -u- SDL_Event
 
 sdl_input_module --|> input_module_base
 
@@ -44,6 +83,5 @@ xinput_peripheral_module -u- X11
 peripheral_input_win32 -u- Win32
 uwp_peripheral_module -u- UWP
 peripheral_input_dinput -u- DirectX
-sdl_peripheral_module -u- SDL
 
 @enduml
