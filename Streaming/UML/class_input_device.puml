@@ -51,6 +51,15 @@ class device_info {
 	{abstract} +void reset()
 }
 
+device_info -r- input_module
+
+class input_module {
+	{abstract} +void input_init()
+	{abstract} +void pause()
+	{abstract} +void resume()
+	{abstract} +void poll_if_necessary()
+}
+
 event_based_device -d-|> device_info
 
 class sdl_device<SDL_Event>
