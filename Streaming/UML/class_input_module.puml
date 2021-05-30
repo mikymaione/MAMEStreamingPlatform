@@ -8,21 +8,14 @@ skinparam class {
     BorderColor black
 }
 
-together {
-	entity X11
-	entity Win32
-	entity UWP
-	entity DirectX
-	
-	package SDL {
-		class SDL_Joystick
-		class SDL_Event		
-	}
-}
 
-together {
-	class wininput_module
-	class sdl_input_module
+entity X11
+entity Win32
+entity DirectX
+	
+package SDL {
+	class SDL_Joystick
+	class SDL_Event		
 }
 
 class input_module {
@@ -44,35 +37,20 @@ class input_module_base {
 	+void poll()	
 }
 
-class device_info {
-	-string id
-	-string name
-	-running_machine machine
-	-input_module module
-	{abstract} +void poll()
-	{abstract} +void reset()
-}
+input_module_base --|> input_module
 
-device_info -r- input_module_base
+wininput_module --|> input_module_base
 
-input_module_base -d-|> input_module
-
-wininput_module -d-|> input_module_base
-
-dinput_module -d-|> wininput_module
+dinput_module --|> wininput_module
 
 peripheral_input_dinput --|> dinput_module
 
-sdl_peripheral_module -u- SDL_Joystick
-sdl_input_module -u- SDL_Event
+sdl_peripheral_module -- SDL_Joystick
+sdl_input_module -- SDL_Event
 
-sdl_input_module --|> input_module_base
+sdl_input_module -r-|> input_module_base
 
 sdl_peripheral_module --|> sdl_input_module
-
-uwp_input_module --|> wininput_module
-
-uwp_peripheral_module --|> uwp_input_module
 
 peripheral_input_win32 --|> wininput_module
 
@@ -81,7 +59,5 @@ xinput_peripheral_module --|> wininput_module
 
 xinput_peripheral_module -u- X11
 peripheral_input_win32 -u- Win32
-uwp_peripheral_module -u- UWP
 peripheral_input_dinput -u- DirectX
-
 @enduml
