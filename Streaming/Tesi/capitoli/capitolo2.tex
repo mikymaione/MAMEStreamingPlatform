@@ -126,7 +126,32 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 \end{figure}
 
 \subsection{Gestione input}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{SDL_game_development}.
+Anyway, an event is simply something that happens, such as a key press, a key release, or mouse movement. Pretty much anything that occurs to the computer that you might want to react to is an event.
+Depending on the event, you will want to know not only what event occurred, but also some extra data about the event to help you decide what to make the program do. For example, when a key is pressed, you want to know not only that a key was pressed, but also which key was pressed.
+
+There are 16 different types of events that you can receive using SDL.
+For organization and presentation purposes, I’ve divided these 16 events into four categories—keyboard, mouse, joystick, and system.
+
+Keyboard events take two forms—key presses and key releases.
+In addition to the simple “a key has been pressed” or “a key has been released” data, a keyboard event also contains other information, such as which key has been pressed. This information includes a scan code, a special SDL key identifier, and (optionally) the ASCII or Unicode equivalent for that key. It also contains the shift state of the keyboard, such as whether Shift, Ctrl, or Alt is being held down. You will have all of the information you could possibly need to react to keyboard events.
+
+The mouse generates three different events. One is a mouse motion event, which occurs any time the mouse is moved. The other two are mouse button events—one for when a mouse button is pressed, and the other for when a mouse button is released.
+In a mouse motion event, the extra data includes the current state of the mouse buttons (which is important if you are using the mouse to drag items from one place to another), the position of the mouse, and how far the mouse has moved since the last mouse event.
+In mouse button events, the extra data includes which button has changed its state, the state of all of the buttons, and the position at which this button change occurred.
+
+Although joysticks are covered in Chapter 6, “SDL Joysticks,” the events they generate are covered here. Joysticks generate events just like any other input device. They can generate up to five different events, depending on the joystick. These events include axis events, button events (one for a press and one for a release), hat events, and trackball events. Naturally, if the joystick in question doesn’t have a hat or trackball, it won’t generate those types of events.
+Most of the joystick events are quite similar. Since there is no telling how many joysticks a user can have on their system, the extra information with the event always includes which device and which axis, button, hat, or trackball generated the event. Also, there is always a value to which the axis, button, hat, or trackball has changed, and that information is also stored with the joystick event.
+
+
+Now that you have an overview of what sort of information you can get from the event-handling subsystem, you need to know how to go about getting that information. There are essentially three ways to grab event/input information from the SDL event-handling subsystem—by waiting, polling, or directly gathering.
+
+In most non-game applications, the program typically does absolutely nothing most of the time; it just sits there and waits for an event to occur. This is the event-driven model of input gathering. Although you probably won’t want to use this in most games, it is typically the method of input gathering that you will use if you make editors for your game levels.
+With this method, most of the program’s time is spent waiting for something to happen. Once something occurs, the program reacts to it, typically redraws the screen or performs the appropriate task, and then goes back to waiting, ad infinitum.
+
+Many games use the polling method of input gathering. The program checks often to see whether an event has occurred. If one has, the program reacts to it and looks for more events. If no event has occurred, the application will do something else for a moment (move the bad guys around, do animations, and so on) and then look for another event. With polling, you won’t miss any data because you are still responding to events.
+
+The third way of gathering data is directly from the input devices themselves. At any time, you can see whether a particular key is up or down on the keyboard, where the mouse is, the state of the mouse buttons, and the various input states of joysticks. This is the totally hard-core way of gathering input; if it is done improperly, you can miss input.
+Even if you are using the direct method of gathering information about input devices, you still need to poll the event queue \parencite{FocusOnSDL}.
 
 %SDL_Event
 %SDL_Joystick
@@ -153,6 +178,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+%\parencite{SDL_game_development}
 %\parencite{CPP_Primer}
 %\parencite{Computer_Networking_and_the_Internet}
 %\parencite{Ingegneria_del_software}
