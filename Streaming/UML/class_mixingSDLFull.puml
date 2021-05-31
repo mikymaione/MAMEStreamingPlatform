@@ -1,0 +1,48 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+skinparam ArrowColor black
+
+skinparam class {
+    BackgroundColor WhiteSmoke
+    BorderColor black
+}
+
+class sound_sdl {
+	-int stream_buffer_size
+	-ring_buffer stream_buffer
+	
+	{static} -void sdl_callback(Uint8[] stream, int len)
+}
+
+class sound_module {
+	+int sample_rate
+	+int audio_latency
+	
+	{abstract} +void update_audio_stream(bool is_throttled, int16_t[] buffer, int samples_this_frame)
+	{abstract} +void set_mastervolume(int attenuation)
+	+int sample_rate()
+}
+
+package SDL {
+	class SDL_AudioSpec
+}
+
+entity DirectX
+entity XAudio2
+entity CoreAudio
+entity PortAudio
+
+sound_xaudio2 -d-|> sound_module
+sound_xaudio2 -u- XAudio2
+sound_pa -d-|> sound_module
+sound_pa -u- PortAudio
+sound_coreaudio -d-|> sound_module
+sound_coreaudio -u- CoreAudio
+sound_direct_sound -d-|> sound_module
+sound_direct_sound -u- DirectX
+sound_sdl -u-|> sound_module
+sound_sdl -- SDL_AudioSpec
+
+sound_sdl -- ring_buffer
+@enduml
