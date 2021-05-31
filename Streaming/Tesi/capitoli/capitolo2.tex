@@ -160,6 +160,21 @@ Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \ve
 %SDL_JoystickClose
 Per semplicità di rappresentazione il diagramma delle classi del MAME per la gestione dell'input è stato diviso in due figure. In Fig. \ref{fig:class_input_module} c'è la parte riguardante l'implementazione del modulo, mentre in Fig. \ref{fig:class_input_device} quella dell'implementazione del device; in entrambe è presente la classe \verb|input_module| che unisce il device al modulo.
 
+% DEVICE
+% queue_events -> queue.push
+% poll -> process_event()
+% process_event():
+% 	switch (sdlevent.type)
+% 	{
+% 		case SDL_KEYDOWN: 
+% 			keyboard.state[sdlevent.key.keysym.scancode] = 0x80;
+% 	}
+	
+% MODULE
+% mappa tastiera SDL su tastiera mame
+% tramite manager eventi sottoscrive
+% before_poll, should_poll_devices, handle_event
+
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_input_module}
 	\caption{Diagramma delle classi relative ai moduli di input}
