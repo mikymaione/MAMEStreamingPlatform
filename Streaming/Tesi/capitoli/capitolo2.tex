@@ -128,25 +128,30 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 
 
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input da: la gettoniera, i controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test dell'apparecchio, regolarne il livello di difficoltà, ecc\dots. Sono stati poi sostituiti dai menu interattivi.} e i comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input da: la gettoniera, i controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test dell'apparecchio, regolarne il livello di difficoltà, ecc\dots. Sono stati poi sostituiti dai menu interattivi.} e i comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
-La libreria SDL gestisce la tastiera, il mouse e i joystick (pistole e volante e pedali rientrano in questa categoria):
+La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria):
 
 \begin{itemize}	
-	\item la tastiera genera due tipi di eventi: pressione e rilascio dei tasti;
-	\item il mouse genera tre tipi di eventi: movimento mouse, pressione e rilascio dei tasti;
-	\item il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento leva di comando, movimento levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".}, movimento trackball.
+	\item La tastiera genera due tipi di eventi: pressione e rilascio dei tasti;
+	\item Il mouse genera tre tipi di eventi: movimento mouse, pressione e rilascio dei tasti;
+	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento leva di comando, movimento levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".}, movimento trackball.
 \end{itemize}
 
-Il sistema di gestione degli eventi di SDL offre tre modi diversi per l'acquisizione: 
+Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
 
 \begin{itemize}	
 	\item Attesa: questo è il metodo utilizzato per la gestione dell'input nei software desktop, in cui il programma è in attesa dell'input utente per poi eseguire un'azione.
 	\item Polling: è il metodo solitamente utilizzato nei videogiochi. Solitamente il ciclo di esecuzione di un videogioco è: processare l'input, aggiorare lo stato, eseguire il rendering e il missaggio audio;
-	\item Diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono.
+	\item Diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono. Lo svantaggio di questo metodo è che bisogna comunque eseguire il polling dalla coda degli eventi \parencite{FocusOnSDL}.
 \end{itemize}
 
-\parencite{FocusOnSDL}
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/input_event_mode}
+	\caption{Metodi del gestore eventi di SDL}
+	\label{fig:input_event_mode}
+\end{figure}
+
 %SDL_Event
 %SDL_Joystick
 
