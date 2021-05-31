@@ -134,11 +134,17 @@ La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e vo
 
 \begin{itemize}	
 	\item La tastiera genera due tipi di eventi: pressione e rilascio dei tasti;
-	\item Il mouse genera tre tipi di eventi: movimento mouse, pressione e rilascio dei tasti;
-	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento leva di comando, movimento levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".}, movimento trackball.
+	\item Il mouse genera tre tipi di eventi: pressione e rilascio dei tasti e movimento del mouse;
+	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
 \end{itemize}
 
 Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/input_event_mode}
+	\caption{I tre metodi del gestore eventi della libreria SDL}
+	\label{fig:input_event_mode}
+\end{figure}
 
 \begin{itemize}	
 	\item Attesa: questo è il metodo utilizzato per la gestione dell'input nei software desktop, in cui il programma è in attesa dell'input utente per poi eseguire un'azione.
@@ -146,44 +152,25 @@ Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli ev
 	\item Diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono. Lo svantaggio di questo metodo è che bisogna comunque eseguire il polling dalla coda degli eventi \parencite{FocusOnSDL}.
 \end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/input_event_mode}
-	\caption{Metodi del gestore eventi di SDL}
-	\label{fig:input_event_mode}
-\end{figure}
+Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input.
 
 %SDL_Event
 %SDL_Joystick
-
-%SDL_PollEvent
-%SDL_PumpEvents
-
 %SDL_JoystickOpen
 %SDL_JoystickClose
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_input_device}
-	\caption{Diagramma delle classi relative al missaggio audio}
-	\label{fig:class_input_device}
-\end{figure}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Per semplicità di rappresentazione il diagramma delle classi del MAME per la gestione dell'input è stato diviso in due figure. In Fig. \ref{fig:class_input_module} c'è la parte riguardante l'implementazione del modulo, mentre in Fig. \ref{fig:class_input_device} quella dell'implementazione del device; in entrambe è presente la classe \verb|input_module| che unisce il device al modulo.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_input_module}
-	\caption{Diagramma delle classi relative al missaggio audio}
+	\caption{Diagramma delle classi relative ai moduli di input}
 	\label{fig:class_input_module}
 \end{figure}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_input_device}
+	\caption{Diagramma delle classi relative ai device di input}
+	\label{fig:class_input_device}
+\end{figure}
 
 %\parencite{SDL_game_development}
 %\parencite{CPP_Primer}
