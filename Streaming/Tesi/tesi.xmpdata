@@ -2,7 +2,7 @@
 \Author{Michele Maione; mikymaione@hotmail.it}
 \Copyright{BSD-3-Clause; Copyright 2021 Michele Maione; mikymaione@hotmail.it}
 \PublicationType{book}
-\Language{en-GB}
+\Language{it-IT}
 \Org{Università degli Studi di Milano}
 \Keywords{Cloud gaming, arcade game, MAME, WebSocket, MPEG, FFMPEG, SDL, HTML5}
 \Subject{Piattaforma di cloud gaming per giochi arcade basata su MAME. Trasmette MPEG tramite WebSocket a pagine HTML5}
