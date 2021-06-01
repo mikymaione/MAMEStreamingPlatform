@@ -128,7 +128,7 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 
 
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input da: la gettoniera, i controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test dell'apparecchio, regolarne il livello di difficoltà, ecc\dots. Sono stati poi sostituiti dai menu interattivi.} e i comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input da: la gettoniera, i controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test di funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e i comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
 La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria):
 
@@ -138,13 +138,13 @@ La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e vo
 	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
 \end{itemize}
 
-Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
-
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/input_event_mode}
 	\caption{I tre metodi del gestore eventi della libreria SDL}
 	\label{fig:input_event_mode}
 \end{figure}
+
+Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
 
 \begin{itemize}	
 	\item Attesa: questo è il metodo utilizzato per la gestione dell'input nei software desktop, in cui il programma è in attesa dell'input utente per poi eseguire un'azione.
@@ -154,12 +154,30 @@ Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli ev
 
 Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input.
 
+
 %SDL_Event
 %SDL_Joystick
 %SDL_JoystickOpen
 %SDL_JoystickClose
-Per semplicità di rappresentazione il diagramma delle classi del MAME per la gestione dell'input è stato diviso in due figure. In Fig. \ref{fig:class_input_module} c'è la parte riguardante l'implementazione del modulo, mentre in Fig. \ref{fig:class_input_device} quella dell'implementazione del device; in entrambe è presente la classe \verb|input_module| che unisce il device al modulo.
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_input}
+	\caption{Diagramma delle classi relative ai moduli di input}
+	\label{fig:class_input}
+\end{figure}
+
+Come mostrato in Fig. \ref{fig:class_input} il sistema di gestione di blabalalb.
+
+\subsubsection{Modulo}
+% MODULE
+% mappa tastiera SDL su tastiera mame
+% tramite manager eventi sottoscrive
+% before_poll, should_poll_devices, handle_event
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsubsection{Device}
 % DEVICE
 % queue_events -> queue.push
 % poll -> process_event()
@@ -169,27 +187,9 @@ Per semplicità di rappresentazione il diagramma delle classi del MAME per la ge
 % 		case SDL_KEYDOWN: 
 % 			keyboard.state[sdlevent.key.keysym.scancode] = 0x80;
 % 	}
-	
-% MODULE
-% mappa tastiera SDL su tastiera mame
-% tramite manager eventi sottoscrive
-% before_poll, should_poll_devices, handle_event
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_input_module}
-	\caption{Diagramma delle classi relative ai moduli di input}
-	\label{fig:class_input_module}
-\end{figure}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_input_device}
-	\caption{Diagramma delle classi relative ai device di input}
-	\label{fig:class_input_device}
-\end{figure}
 
 %\parencite{SDL_game_development}
-%\parencite{CPP_Primer}
-%\parencite{Computer_Networking_and_the_Internet}
-%\parencite{Ingegneria_del_software}
-%\parencite{Understanding_the_Linux_Kernel}
-%\parencite{Windows_Server_2012}
