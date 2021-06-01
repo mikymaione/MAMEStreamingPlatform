@@ -138,12 +138,6 @@ La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e vo
 	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
 \end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/input_event_mode}
-	\caption{I tre metodi del gestore eventi della libreria SDL}
-	\label{fig:input_event_mode}
-\end{figure}
-
 Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
 
 \begin{itemize}	
@@ -154,17 +148,16 @@ Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli ev
 
 Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input.
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/input_event_mode}
+	\caption{I tre metodi del gestore eventi della libreria SDL}
+	\label{fig:input_event_mode}
+\end{figure}
 
 %SDL_Event
 %SDL_Joystick
 %SDL_JoystickOpen
 %SDL_JoystickClose
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_input}
-	\caption{Diagramma delle classi relative ai moduli di input}
-	\label{fig:class_input}
-\end{figure}
 
 Come mostrato in Fig. \ref{fig:class_input} il sistema di gestione di blabalalb.
 
@@ -191,5 +184,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+\newpage
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_input}
+	\caption{Diagramma delle classi relative ai moduli di input}
+	\label{fig:class_input}
+\end{figure}
 
 %\parencite{SDL_game_development}
