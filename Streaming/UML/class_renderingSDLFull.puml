@@ -1,14 +1,10 @@
 @startuml
 skinparam Shadowing false
 skinparam LineType ortho
-skinparam ArrowColor black
 skinparam nodesep 15
 skinparam ranksep 30
+skinparam monochrome true
 
-skinparam class {
-    BackgroundColor WhiteSmoke
-    BorderColor black
-}
 
 enum primitive_type
 {

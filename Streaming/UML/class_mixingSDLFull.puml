@@ -1,15 +1,12 @@
 @startuml
 
+skinparam monochrome true
+
 skinparam Shadowing false
 skinparam LineType ortho
-skinparam ArrowColor black
+
 skinparam nodesep 15
 skinparam ranksep 30
-
-skinparam class {
-    BackgroundColor WhiteSmoke
-    BorderColor black
-}
 
 class sound_sdl {
 	-int stream_buffer_size

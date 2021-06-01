@@ -1,0 +1,107 @@
+@startuml
+skinparam Shadowing false
+skinparam LineType ortho
+
+skinparam monochrome true
+
+
+skinparam nodesep 15
+skinparam ranksep 30
+
+
+together {
+	entity Win32
+	entity DirectX
+	entity X11
+}
+
+package SDL {
+	class SDL_Event
+	class SDL_Joystick
+}
+
+
+class event_based_device<TEvent> {
+	-queue<TEvent> event_queue
+	{abstract} #void process_event(TEvent e)
+	+void queue_events(TEvent[] events, int count)
+}
+
+class device_info {
+	-string id
+	-string name
+	-running_machine machine
+	-input_module module
+	{abstract} +void poll()
+	{abstract} +void reset()
+}
+
+event_based_device --|> device_info
+
+class win32_KMJ_device<EventArgs>
+
+class x11_input_device<XEvent> 
+x11_input_device --|> event_based_device
+
+xinput_KMJ_device --|> x11_input_device
+
+dinput_device --|> device_info
+dinput_KMJ_device --|> dinput_device
+
+win32_KMJ_device --|> event_based_device
+
+X11 -d- xinput_KMJ_device
+Win32 -d- win32_KMJ_device
+DirectX -d- dinput_KMJ_device
+
+class input_module {
+	{abstract} +void input_init()
+	{abstract} +void pause()
+	{abstract} +void resume()
+	{abstract} +void poll_if_necessary()
+}
+
+class input_module_base {
+	-bool input_enabled
+	-bool input_paused
+	-bool mouse_enabled
+	-bool lightgun_enabled
+	-time last_poll
+	-device_info[] devicelist
+	
+	+device_info[] devicelist()	
+	+void poll()	
+}
+
+input_module -- device_info
+input_module_base --|> input_module
+
+wininput_module --|> input_module_base
+
+dinput_module --|> wininput_module
+
+KMJ_input_dinput --|> dinput_module
+
+KMJ_input_win32 --|> wininput_module
+
+xinput_KMJ_module --|> wininput_module
+
+
+xinput_KMJ_module -u- X11
+KMJ_input_win32 -u- Win32
+KMJ_input_dinput -u- DirectX
+
+
+class sdl_device<SDL_Event>
+sdl_input_module -u-|> input_module_base
+sdl_KMJ_module -u-|> sdl_input_module
+sdl_KMJ_device -u-|> sdl_device
+sdl_device -u-|> event_based_device
+
+sdl_KMJ_device -d- SDL
+sdl_device -d- SDL
+sdl_KMJ_module -d- SDL
+sdl_input_module -d- SDL
+
+
+@enduml
