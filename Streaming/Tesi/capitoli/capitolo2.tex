@@ -128,7 +128,7 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 
 
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input dalla gettoniera, dai controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test di funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dai comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input dalla gettoniera, dai controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dai comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
 La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria) tramite un sistema ad eventi, che sono:
 
@@ -145,8 +145,6 @@ Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli ev
 	\item Polling: è il metodo solitamente utilizzato nei videogiochi. Solitamente il ciclo di esecuzione di un videogioco è: processare l'input, aggiorare lo stato, eseguire il rendering e il missaggio audio;
 	\item Diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono. Lo svantaggio di questo metodo è che bisogna comunque eseguire il polling dalla coda degli eventi \parencite{FocusOnSDL}.
 \end{itemize}
-
-Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/input_event_mode}
@@ -174,7 +172,7 @@ Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \ve
 % 			keyboard.state[sdlevent.key.keysym.scancode] = 0x80;
 % 	}
 
-Il sistema di gestione dell'input del MAME, schematizzato in Fig. \ref{fig:class_input}, è formato dai device e dai moduli. La classe \verb|input_module_base| che implementa un modulo di input dà la possibilità di sottoscrivere un device al sistema ad eventi e fornisce l'interfaccia per mapparlo con i comandi emulati dal MAME (ad es. nel caso di SDL si mappa \verb|SDLK_SPACE| con \verb|P1_BUTTON1|). Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostarne lo stato (ad es. tasto X premuto, tasto Y rilasciato).
+Il sistema di gestione dell'input del MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input. Il sistema, schematizzato in Fig. \ref{fig:class_input}, è formato dai device e dai moduli. La classe \verb|input_module_base| che implementa un modulo di input dà la possibilità di sottoscrivere un device al sistema ad eventi e fornisce l'interfaccia per mapparlo con i comandi emulati dal MAME (ad es. nel caso di SDL si mappa \verb|SDLK_SPACE| con \verb|P1_BUTTON1|). Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostarne lo stato (ad es. tasto X premuto, tasto Y rilasciato).
 
 \newpage
 \begin{figure}[H]
