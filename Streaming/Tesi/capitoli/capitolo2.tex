@@ -128,13 +128,13 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 
 
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input da: la gettoniera, i controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test di funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e i comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input dalla gettoniera, dai controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servivano per il test di funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dai comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
-La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria):
+La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria) tramite un sistema ad eventi, che sono:
 
 \begin{itemize}	
 	\item La tastiera genera due tipi di eventi: pressione e rilascio dei tasti;
-	\item Il mouse genera tre tipi di eventi: pressione e rilascio dei tasti e movimento del mouse;
+	\item Il mouse genera tre tipi di eventi: movimento del mouse, pressione e rilascio dei tasti;
 	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
 \end{itemize}
 
@@ -159,13 +159,10 @@ Il MAME utilizza il metodo di polling attraverso le funzioni della libreria: \ve
 %SDL_JoystickOpen
 %SDL_JoystickClose
 
-Come mostrato in Fig. \ref{fig:class_input} il sistema di gestione dell'input da parte del mame è formato dal device e dal modulo.
-
 % MODULE
 % mappa tastiera SDL su tastiera mame
 % tramite manager eventi sottoscrive
 % before_poll, should_poll_devices, handle_event
-La classe \verb|input_module_base| che implementa un modulo di input da la possibilità ad un device di sottoscriversi al sistema ad eventi e fornisce l'interfaccia per mappare il device virtuale del MAME al device gestito da una libreria multimediale (ad es. nel caso di SDL mappare \verb|SDLK_SPACE| con \verb|P1_BUTTON1|).
 
 % DEVICE
 % queue_events -> queue.push
@@ -176,7 +173,8 @@ La classe \verb|input_module_base| che implementa un modulo di input da la possi
 % 		case SDL_KEYDOWN: 
 % 			keyboard.state[sdlevent.key.keysym.scancode] = 0x80;
 % 	}
-Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostare lo stato del device virtuale (ad es. tasto X premuto, tasto Y rilasciato).
+
+Il sistema di gestione dell'input del MAME, schematizzato in Fig. \ref{fig:class_input}, è formato dai device e dai moduli. La classe \verb|input_module_base| che implementa un modulo di input dà la possibilità di sottoscrivere un device al sistema ad eventi e fornisce l'interfaccia per mapparlo con i comandi emulati dal MAME (ad es. nel caso di SDL si mappa \verb|SDLK_SPACE| con \verb|P1_BUTTON1|). Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostarne lo stato (ad es. tasto X premuto, tasto Y rilasciato).
 
 \newpage
 \begin{figure}[H]
