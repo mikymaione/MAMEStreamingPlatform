@@ -16,7 +16,7 @@ In questo capitolo verrà descritto il sistema proposto, il MAME e le sue funzio
 \section{Sistema proposto}
 L'esigenza per la quale nasce questo progetto è far conoscere alle nuove generazioni i videogiochi che hanno fatto la storia e dare la possibilità di poter giocare ancora a macchine che ormai hanno cessato di funzionare per motivi di obsolescenza, sfruttando due tecnologie entrate a far parte della quotidianità, lo streaming e il cloud computing. In questo lavoro si propone la creazione di una piattaforma di cloud gaming, che permette lo streaming audio-video direttamente e su richiesta dei videogiochi, da un server remoto, ad un client (computer, console, telefono). Per far ciò verrà ampliato il software MAME (rilasciato sotto licenza GNU-GPL) che è in grado di emulare oltre 7.000 giochi arcade. Le caratteristiche principali del progetto, che sono state vincolanti nella scelta delle tecnologie da utilizzare, sono la portabilità e la possibilità di utilizzare il sistema senza dover installare software aggiuntivi; per questi vincoli, lato client, la scelta è ricaduta sul browser web.
 
-Il sistema è stato progettato con un'ottica incentrata sull'utilizzo in LAN con l'utenza connessa tramite WiFi, ad esempio in stand di retro-gaming ad eventi di informatica e videogiochi, in aziende come servizio di svago per i clienti in sala d'attesa e per i dipendenti durante la pausa, nelle scuole, ecc\dots; infatti nonostante siano stati pensati come fonte d'intrattenimento, i videogiochi migliorano diversi tipi di abilità chiave: abilità sociali e intellettuali, riflessi e concentrazione \parencite{Use_of_Cloud_Gaming_in_Education}. La tecnologia di streaming scelta è stata WebSocket per i seguenti motivi: in questo contesto la differenza di velocità tra TCP e RTP può essere trascurata, è un protocollo di comunicazione standardizzato dal 2011, è pienamente supportato da tutti i browser moderni, ha una latenza inferiore rispetto ad HLS e DASH, è semplice da instanziare e non richiede l'utilizzo di protocolli aggiuntivi o configurazioni complesse a differenza di WebRTC.
+Il sistema è stato progettato con un'ottica incentrata sull'utilizzo in LAN con l'utenza connessa tramite WiFi, ad esempio in stand di retro-gaming ad eventi di informatica e videogiochi, in aziende come servizio di svago per i clienti in sala d'attesa e per i dipendenti durante la pausa, nelle scuole, ecc\dots; infatti nonostante siano stati pensati come fonte d'intrattenimento, i videogiochi migliorano diversi tipi di abilità chiave: abilità sociali e intellettuali, riflessi e concentrazione \parencite{Use_of_Cloud_Gaming_in_Education}. La tecnologia di streaming scelta è stata WebSocket poiché in questo contesto la differenza di velocità tra TCP e RTP può essere trascurata, è un protocollo di comunicazione standardizzato dal 2011, è pienamente supportato da tutti i browser moderni, ha una latenza inferiore rispetto ad HLS e DASH, è semplice da instanziare e non richiede l'utilizzo di protocolli aggiuntivi o configurazioni complesse a differenza di WebRTC.
 
 Come mostrato in Fig. \ref{fig:proposed_system} il sistema è costituito dal server di gioco (Linux, macOS o Windows), su cui è installato il MAME CGP con le rom dei giochi ed una pagina HTML5 che funge da front-end. Il programma è in ascolto per connessioni WebSocket con parametri (per es.: il nome del gioco, l'ID del player, l'ID della partita, ecc\dots). Una volta stabilita la connessione, il server invia informazioni sulla risoluzione di rendering e avvia il gioco. Il rendering e il missaggio audio del gioco vengono generati utilizzando la libreria SDL, codificati e pacchettizzati nel contenitore MPEG-TS\footnote{MPEG-TS: MPEG transport stream, è un contenitore digitale per la trasmissione e l'archiviazione audio-video.} usando la libreria FFmpeg\footnote{FFmpeg è una suite open-source di librerie e programmi per la gestione di video, audio, e altri file multimediali e stream.} e inviati tramite WebSocket al client.
 
@@ -26,7 +26,7 @@ Come mostrato in Fig. \ref{fig:proposed_system} il sistema è costituito dal ser
 	\label{fig:proposed_system}
 \end{figure}
 
-Lato client vari script si occupano di: decodificare i dati audio-video ricevuti, catturare e inviare l'input dell'utente (sia dalla tastiera che dal gamepad) al server tramite WebSocket.
+Lato client vari script si occupano di decodificare i dati audio-video ricevuti, catturare e inviare l'input dell'utente (sia dalla tastiera che dal gamepad) al server tramite WebSocket.
 
 Nel prossima sezione introdurremo il software MAME su cui si basa questo progetto.
 
@@ -34,7 +34,7 @@ Nel prossima sezione introdurremo il software MAME su cui si basa questo progett
 
 
 \section{MAME}
-Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori in tutto il mondo. Il suo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto MAME è stato realizzato in C e C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato portato per i sistemi Windows e Unix-like \parencite{MAME}. Logicalmente è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
+Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di Nicola Salmoria. La prima versione del MAME risale al febbraio 1997 ed è attualmente supportato da una vasta comunità di sviluppatori in tutto il mondo. Il suo scopo principale è quello di essere un riferimento al funzionamento interno delle macchine emulate, sia per scopi educativi che per scopi di conservazione, al fine di evitare che il software storico scompaia per motivi di obsolescenza. Il progetto MAME è stato realizzato in C e C++, inizialmente usando solamente la libreria standard e poi successivamente, negli anni, sono state aggiunte al progetto varie librerie open-source per estenderne le funzionalità. Originariamente era disponibile solo per MS-DOS ma grazie alla vasta comunità di sviluppatori è stato compilato anche per i sistemi Windows e Unix-like \parencite{MAME}. Logicalmente è suddiviso in quattro macro categorie, come mostrato in Fig. \ref{fig:mame_arch}:
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_arch}
@@ -44,7 +44,7 @@ Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di 
 
 \begin{itemize}
 	\item "Core" in cui ci sono i sotto-progetti indipendenti dal sistema e dal device emulato tra cui il programma principale (progetto main), il front-end grafico, il motore di emulazione (progetto emu), le librerie comuni (lib) ed i sorgenti delle librerie esterne (3rdparty);
-	\item "OSD" contenente le funzionalità dipendenti dal sistema operativo tra cui macOS, Windows, UWP e SDLMAME, ed i moduli (progetto modules) di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
+	\item "OSD" contenente le funzionalità dipendenti dal sistema operativo tra cui macOS, Windows, UWP\footnote{UWP: Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.} e SDLMAME, ed i moduli (progetto modules) di input, audio e video dipendenti da altre librerie come OpenGL, DirectX, SDL, CoreAudio, XAudio, XInput, ecc\dots;
 	\item "Devices" che contiene per ogni device emulato (ad esempio il Capcom CP System III) le classi che gestiscono le informazioni della macchina ed emulano cpu, bus, schede video, schede audio e i dischi (progetto formats);
 	\item "Tools \& Test" che contiene varie utility per la gestione delle rom e per la fase di testing e performance.
 \end{itemize}
@@ -57,7 +57,7 @@ Il progetto ha una struttura modulare, schematizzata in Fig. \ref{fig:mame_schem
 	\label{fig:mame_schema_moduli_d}
 \end{figure}
 
-Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP\footnote{UWP: Universal Windows Platform è un'architettura applicativa della Microsoft per sviluppare applicazioni eseguibili su Windows 10, Xbox One e Hololens.}, in aggiunta c'è la compilazione SDLMAME\footnote{SDLMAME era un port del MAME che utilizzava solamente la libreria SDL. Nel 2010 è stato incluso ufficialmente nel progetto MAME.} in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
+Per quanto riguarda la portabilità, di cui c'è uno schema in Fig. \ref{fig:mame_architettura_full}, ci sono solo tre compilazioni native differenti e sono quella per macOS, Windows ed UWP. In aggiunta c'è la compilazione SDLMAME\footnote{SDLMAME era un port del MAME che utilizzava solamente la libreria SDL. Nel 2010 è stato incluso ufficialmente nel progetto MAME.} in grado di funzionare su tutti i sistemi operativi supportati dalla libreria SDL. Quest'ultima è la compilazione obbligatoria per i sistemi Linux e per questo motivo è quella che si è scelta di utilizzare per questo server di cloud gaming.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
@@ -70,14 +70,15 @@ SDL (Simple DirectMedia Layer) è una libreria multipiattaforma che fornisce acc
 Nel prossimi tre paragrafi verrano descritti i tre moduli su cui sono state apportate le modifiche per trasformare il MAME in una piattaforma di cloud gaming.
 
 
+
 \subsection{Rendering}
 Il rendering è il processo di generazione di un'immagine a partire dalla sua descrizione, che può essere in due o tre dimensioni, tramite un software. Gli elementi di base del rendering 2D sono le textures\footnote{Una texture è un'immagine rappresentata come una matrice bidimensionale di pixel colorati (in inglese bitmap). Ogni pixel è rappresentato tramite una quaterna formata dai tre colori primari più un valore che ne indica la trasparenza (RGB + A); servono 4 bit per memorizzare ogni elemento della quaterna, quindi 32 in totale per un singolo pixel.} e le animazioni. Il motore grafico (il software che si occupa anche del rendering) prende gli elementi uno ad uno e li disegna nel framebuffer\footnote{Il framebuffer è uno spazio di memoria presente sulla scheda video in cui si memorizza l'immagine che verrà successivamente mostrata a video.} generando l'immagine finale \parencite{Efficient_2D_software_rendering}. Come mostrato in Fig. \ref{fig:rendering_pipeline}, questo processo è formato da quattro fasi \parencite{Computer_Vision_A_Modern_Approach}:
 
 \begin{enumerate}
-    \item Trasformazione di modellazione: tramite una trasformazione trasporta le primitive geometriche in un sistema di coordinate universali (\textit{world coordinate system});
-    \item Clipping: ritaglia porzioni delle primitive al di fuori della finestra di visualizzazione;
-    \item Trasformazione di vista: tramite una trasformazione ridiga detta "trasformazione di vista" trasporta le primiteve ritagliate dalle cordinate universali a quelle schermo (\textit{screen coordinate});
-    \item \textit{Scan conversion}: attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
+    \item trasformazione di modellazione: tramite una trasformazione trasporta le primitive geometriche in un sistema di coordinate universali (\textit{world coordinate system});
+    \item clipping: ritaglia porzioni delle primitive al di fuori della finestra di visualizzazione;
+    \item trasformazione di vista: tramite una trasformazione ridiga detta "trasformazione di vista" trasporta le primiteve ritagliate dalle cordinate universali a quelle schermo (\textit{screen coordinate});
+    \item \textit{scan conversion}: attraverso algoritmi di rasterizzazione\footnote{La rasterizzazione è il processo di approssimazione delle primitive geometriche in immagini bitmap.} genera l'immagine finale.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -108,7 +109,9 @@ La classe che si occupa del rendering utilizzando la libreria SDL è \verb|rende
 	\item \verb|SDL_RenderPresent|: aggiorna il contesto di rendering con il framebuffer corrente.
 \end{itemize}
 
-Di cui la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
+Di questi la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
+
+
 
 \subsection{Missaggio audio}
 Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. Attualmente il MAME emula una cinquantina di chip audio, ma per alcuni giochi degli anni '70 e '80 invece di emulare i circuiti si sono semplicemente utilizzati i suoni registrati dalla scheda originale poiché il sonoro era prodotto mediante circuiti analogici, la cui emulazione è più complessa. Sono supportate cinque librerie per la gestione della scheda audio: SDL (che è multi piattaforma), DirectAudio (dalla libreria DirectX) e XAudio2 per Windows, Core Audio per macOS, PortAudio per Windows e macOS \parencite{Il_progetto_MAME}.
@@ -118,7 +121,6 @@ Il missaggio audio è quel procedimento con cui due o più campioni audio sono f
 	\caption{Diagramma delle classi relative al missaggio audio}
 	\label{fig:class_mixingSDLFull}
 \end{figure}
-
 
 La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
 
@@ -131,8 +133,9 @@ La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb
 La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, ed un puntatore ad una funzione di callback asincrona; questa funzione viene utilizzata per riempire il buffer audio con il suono da riprodurre. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. Il MAME utilizza un buffer ad anello (classe \verb|ring_buffer|) in cui la macchina emulata aggiunge campioni audio e da cui la funzione \verb|sdl_callback| li rimuove e li copia nel vettore \verb|stream| che viene poi inviato da SDL alla scheda audio.
 
 
+
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input della gettoniera, dei controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dei comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input della gettoniera, dei controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dei comandi del giocatore. Il dispositivo più usato è il joystick, tuttavia alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
 La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica, volante e pedali rientrano in questa categoria) tramite un sistema ad eventi:
 
