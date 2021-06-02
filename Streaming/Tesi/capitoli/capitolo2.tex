@@ -111,7 +111,7 @@ La classe che si occupa del rendering utilizzando la libreria SDL è \verb|rende
 Di cui la prima viene utilizzata durante la fase di inizializzazione nella funzione \verb|create|, mentre le altre vengono utilizzate durante la fase di disegno nella funzione \verb|draw|.
 
 \subsection{Missaggio audio}
-Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. Attualmente il MAME emula una cinquantina di chip audio, ma per alcuni giochi antecedenti al 1982 invece di emulare i circuiti si sono semplicemente utilizzati i suoni registrati dalla scheda originale perché il sonoro era prodotto mediante circuiti analogici, la cui emulazione è più complessa. Sono supportate cinque librerie per la gestione della scheda audio che sono: SDL, DirectAudio (dalla libreria DirectX) e XAudio2 per Windows, Core Audio per macOS, PortAudio per Windows e macOS. \parencite{Il_progetto_MAME}.
+Il missaggio audio è quel procedimento con cui due o più campioni audio sono fusi in un unico output sonoro. Attualmente il MAME emula una cinquantina di chip audio, ma per alcuni giochi degli anni '70 e '80 invece di emulare i circuiti si sono semplicemente utilizzati i suoni registrati dalla scheda originale poiché il sonoro era prodotto mediante circuiti analogici, la cui emulazione è più complessa. Sono supportate cinque librerie per la gestione della scheda audio: SDL (che è multi piattaforma), DirectAudio (dalla libreria DirectX) e XAudio2 per Windows, Core Audio per macOS, PortAudio per Windows e macOS \parencite{Il_progetto_MAME}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_mixingSDLFull}
@@ -123,31 +123,31 @@ Il missaggio audio è quel procedimento con cui due o più campioni audio sono f
 La classe che si occupa del missaggio audio utilizzando la libreria SDL è \verb|sound_sdl2| che utilizza le seguenti funzioni SDL:
 
 \begin{itemize}	
-	\item \verb|SDL_OpenAudio|: Apre il dispositivo audio;
-	\item \verb|SDL_PauseAudio|: Mette in pausa o ripristina la riproduzione audio;
-	\item \verb|SDL_CloseAudio|: Interrompere l'elaborazione audio e chiude il dispositivo audio.
+	\item \verb|SDL_OpenAudio|: apre il dispositivo audio;
+	\item \verb|SDL_PauseAudio|: mette in pausa o ripristina la riproduzione audio;
+	\item \verb|SDL_CloseAudio|: interrompere l'elaborazione audio e chiude il dispositivo audio.
 \end{itemize}
 
-La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, e un puntatore ad una funzione di callback asincrona; questa funzione è molto importante perché è quella che effettivamente viene utilizzata per riprodurre un suono. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. Il MAME utilizza un buffer ad anello (classe \verb|ring_buffer|) in cui la macchina emulata aggiunge campioni audio e da cui la funzione \verb|sdl_callback| li rimuove e li copia nel vettore \verb|stream|.
+La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che contiene informazioni come il formato del buffer audio, il numero di canali, i bit per canale, ecc\dots, ed un puntatore ad una funzione di callback asincrona; questa funzione viene utilizzata per riempire il buffer audio con il suono da riprodurre. Come è visibile in Fig. \ref{fig:class_mixingSDLFull} la funzione \verb|sdl_callback| ha due parametri \verb|stream| e \verb|len| che sono rispettivamente il buffer da riempire con il suono e la dimensione del buffer \parencite{FocusOnSDL}. Il MAME utilizza un buffer ad anello (classe \verb|ring_buffer|) in cui la macchina emulata aggiunge campioni audio e da cui la funzione \verb|sdl_callback| li rimuove e li copia nel vettore \verb|stream| che viene poi inviato da SDL alla scheda audio.
 
 
 \subsection{Gestione input}
-Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input dalla gettoniera, dai controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dai comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
+Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input della gettoniera, dei controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dei comandi del giocatore. Il dispositivo più usato è il joystick, ma alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
-La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica e volante e pedali rientrano in questa categoria) tramite un sistema ad eventi, che sono:
+La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica, volante e pedali rientrano in questa categoria) tramite un sistema ad eventi:
 
-\begin{itemize}	
-	\item La tastiera genera due tipi di eventi: pressione e rilascio dei tasti;
-	\item Il mouse genera tre tipi di eventi: movimento del mouse, pressione e rilascio dei tasti;
-	\item Il joystick genera tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
+\begin{itemize}
+	\item per la tastiera due tipi di eventi: pressione e rilascio dei tasti;
+	\item per il mouse tre tipi di eventi: movimento del mouse, pressione e rilascio dei tasti;
+	\item per il joystick tra i tre e i cinque tipi di eventi: pressione e rilascio dei tasti, movimento della leva di comando, movimento della levetta\footnote{In inglese chiamato "hat switch" oppure "POV switch".} e movimento della trackball.
 \end{itemize}
 
-Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione:
+Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli eventi di SDL offre tre metodi diversi per l'acquisizione \parencite{FocusOnSDL}:
 
 \begin{itemize}	
-	\item Attesa: questo è il metodo utilizzato per la gestione dell'input nei software desktop, in cui il programma è in attesa dell'input utente per poi eseguire un'azione.
-	\item Polling: è il metodo solitamente utilizzato nei videogiochi. Solitamente il ciclo di esecuzione di un videogioco è: processare l'input, aggiorare lo stato, eseguire il rendering e il missaggio audio;
-	\item Diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono. Lo svantaggio di questo metodo è che bisogna comunque eseguire il polling dalla coda degli eventi \parencite{FocusOnSDL}.
+	\item attesa: questo è il metodo utilizzato per la gestione dell'input nei software desktop, in cui il programma è in attesa dell'input utente per poi eseguire un'azione;
+	\item polling: è il metodo solitamente utilizzato nei videogiochi. Solitamente il ciclo di esecuzione di un videogioco è: processare l'input, aggiorare lo stato, eseguire il rendering e il missaggio audio;
+	\item diretto: questo metodo da la possiblità di leggere lo stato dei devices in qualsiasi momento in modo asincrono. Lo svantaggio di questo metodo è che bisogna comunque eseguire il polling dalla coda degli eventi.
 \end{itemize}
 
 \begin{figure}[H]
@@ -176,7 +176,7 @@ Come mostrato in Fig. \ref{fig:input_event_mode} il sistema di gestione degli ev
 % 			keyboard.state[sdlevent.key.keysym.scancode] = 0x80;
 % 	}
 
-Il sistema di gestione dell'input del MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input. Il sistema, schematizzato in Fig. \ref{fig:class_input}, è formato dai device e dai moduli. La classe \verb|input_module_base| che implementa un modulo di input dà la possibilità di sottoscrivere un device al sistema ad eventi e fornisce l'interfaccia per mapparlo con i comandi emulati dal MAME (ad es. nel caso di SDL si mappa \verb|SDLK_SPACE| con \verb|P1_BUTTON1|). Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostarne lo stato (ad es. tasto X premuto, tasto Y rilasciato).
+Il sistema di gestione dell'input del MAME utilizza il metodo di polling attraverso le funzioni della libreria: \verb|SDL_PollEvent| e \verb|SDL_PumpEvents|; la prima esegue il controllo per gli eventi attualmente in sospeso e la seconda aggiorna la coda degli eventi e lo stato del dispositivo di input. Il sistema, schematizzato in Fig. \ref{fig:class_input}, è formato dai device e dai moduli. La classe \verb|input_module_base| che implementa un modulo di input dà la possibilità di sottoscrivere un device al sistema ad eventi e fornisce l'interfaccia per mapparlo con i comandi emulati dal MAME (ad es.: nel caso di SDL si mappa \verb|SDLK_SPACE| con \verb|P1_BUTTON1|). Il device, implementato tramite la classe \verb|device_info|, offre le funzioni per gestire la coda dell'input e di impostarne lo stato (ad es.: tasto X premuto, tasto Y rilasciato).
 
 \newpage
 \begin{figure}[H]
