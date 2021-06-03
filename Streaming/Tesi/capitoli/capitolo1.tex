@@ -52,9 +52,9 @@ Il cloud computing è un paradigma in cui un provider offre risorse fisiche e so
 Il cloud computing offre tre modelli di servizio: \textit{Infrastructure as a Service} (IaaS), \textit{Platform as a Service} (PaaS) e \textit{Software as a Service} (SaaS). Il cloud gaming è l'unione del modello SaaS poichè i videogiochi sono offerti come un servizio dal punto di vista del giocatore, e del modello PaaS dal punto di vista dello sviluppatore che necessita del sistema operativo, delle librerie e dei kit di sviluppo; per cui il paradigma implementato dal cloud gaming è definito \textit{Gaming as a Service} (GaaS) e si divide in tre instanze \parencite{Cloud_for_Gaming}, come mostrato in Fig. \ref{fig:GaaS}, che sono:
 
 \begin{itemize}
-	\item \textit{Remote rendering} (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente come un filmato;
-	\item \textit{Local rendering} (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
-	\item \textit{Cognitive resource allocation} (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
+	\item \textit{Remote Rendering} (RR-GaaS): il gioco viene eseguito e codificato sul server ed inviato all'utente come un filmato;
+	\item \textit{Local Rendering} (LR-GaaS): il gioco viene eseguito, codificato sul server ed inviato all'utente sotto forma di istruzioni di rendering. Il client invia le istruzioni di rendering alla scheda grafica dell'utente;
+	\item \textit{Cognitive Resource Allocation} (CRA-GaaS): il client riceve moduli eseguibili del gioco che vengono eseguiti sul dispositivo dell'utente.
 \end{itemize}
 
 \begin{figure}[H]
@@ -65,7 +65,7 @@ Il cloud computing offre tre modelli di servizio: \textit{Infrastructure as a Se
 
 Il rendering remoto (RR-GaaS) è attualmente l'istanza più utilizzata nelle soluzioni di cloud gaming sul mercato essendo la soluzione che ha tutta la computazione a carico del server ed offre all'utente la possibilità di usare videogiochi computazionalmente esosi su qualsiasi tipo di device. Dei tre protocolli è però quello che richiede il bit-rate maggiore. Alcuni esempi sono Stadia\footnote{Stadia è una piattaforma di cloud gaming di Google.}, PlayStation Now\footnote{PlayStation Now è il cloud gaming targato Sony.}.
 
-Il rendering locale (LR-GaaS) è l'istanza che richiede il bit-rate minore ma, come nel caso dell'allocazione delle risorse, il rendering è eseguito sul device dell'utente, richiedendo così particolari caratteristiche hardware. Attualmente non ci sono importanti piattaforme sul mercato che offrono questo tipo d'istanza.
+Il rendering locale (LR-GaaS) è l'istanza che richiede il bit-rate minore ma, come nel caso dell'allocazione delle risorse (CRA-GaaS), il rendering è eseguito sul device dell'utente, richiedendo così particolari caratteristiche hardware. Attualmente non ci sono importanti piattaforme sul mercato che offrono questo tipo d'istanza.
 
 Alcune società propongono una versione dell'allocazione delle risorse cognitive (CRA-GaaS) mista al rendering remoto, in cui il gioco viene inizialmente servito come rendering remoto ed in contemporanea viene eseguito il download dei moduli eseguibili; al completamento del download dei moduli che riguardano l'attuale stato del gioco, lo streaming si interrompe e il gioco riprende dal device dell'utente; questa è una delle funzionalità che Project Atlas\footnote{Project Atlas è un progetto di una piattaforma cloud gaming mista ad intelligenza artificiale della Electronic Arts.} dovrebbe offrire. Un'altra variante, che viene chiamata commercialmente come "progressive download", si basa sul concetto di scaricare inizialmente i moduli principali del gioco, solitamente il menù e il primo livello; gli store Origin\footnote{Origin è una piattaforma di distribuzione digitale di videogiochi sviluppata da Electronic Arts.} e Ubisoft Connect\footnote{Ubisoft Connect è un servizio di distribuzione digitale della società Ubisoft.} implementano questa funzionalità.
 
