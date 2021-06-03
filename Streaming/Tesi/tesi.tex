@@ -48,8 +48,21 @@
 
 \DeclareOuterCiteDelims{parencite}{\bibopenbracket}{\bibclosebracket}
 
+\definecolor{grigiochiaro}{RGB}{245,245,245}
+\definecolor{grigio_commento}{RGB}{120,120,120}
 \definecolor{grigio}{RGB}{100,100,100}
+
 \captionsetup[figure]{font={footnotesize, color=grigio}}
+
+\lstdefinestyle{mystyle}{	
+	commentstyle=\color{grigio_commento},	
+	stringstyle=\color{grigio},	
+	language=C++,
+	numbers=left,
+	tabsize=4,
+	captionpos=b
+}
+\lstset{style=mystyle}
 
 \hypersetup{hidelinks}
 
