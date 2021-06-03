@@ -22,14 +22,14 @@ Per la cattura video esistono tre metodi di cattura: hook sulle librerie multime
 
 Tramite hook su una libreria multimediale si modifica il normale funzionamento della procedura che invia il framebuffer della scheda video all'uscita. Ad esempio per le librerie multimediali più usate le funzioni da catturare sono: \verb|SDL_RenderPresent| per SDL, \verb|Present| per DirectX, \verb|SwapBuffer| per OpenGL \parencite{GamingAnywhere}. Questo metodo è stato usato ad esempio da OnLive, Gaikai e Vortex. Un esempio di codice per l'hook di funzioni per SDL è mostrato nel Listato \ref{lst:hookCode}.
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4, captionpos=b, caption=Codice di hook per la libreria SDL, label={lst:hookCode}]
+\begin{lstlisting}[backgroundcolor = \color{lightgray}, language=C++, numbers=left, tabsize=4, captionpos=b, caption=Codice di hook per la libreria SDL, label={lst:hookCode}]
 	HMODULE lib_handle = LoadLibrary("SDL2.dll");
 	FARPROC old_SDL_RenderPresent = 
 		GetProcAddress(lib_handle, "SDL_RenderPresent");
 	
 	HOOK_TRACE_INFO hHook = { NULL };
 	
-	NTSTATUS result = LhInstallHook(
+	NTSTATUS result = LhInstallHook(		
 		old_SDL_RenderPresent,
 		my_SDL_RenderPresent,
 		NULL, 
