@@ -14,17 +14,38 @@ In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming
 
 
 \section{Cattura}
-Nel paradigma del cloud gaming per cattura si intende la fase in cui l'output audio-visivo del videogioco viene messo da parte per essere poi inviato al codificatore. Esistono tre metodi di cattura:
-
-\begin{itemize}
-    \item hook sulle librerie multimediali: tramite code injection su una libreria multimediale (DirectX su Windows, OpenGL su Linux) si modifica il normale funzionamento di una funzione. Solitamente la funzione che invia il frame buffer della scheda (audio o video) all'uscita;
-    \item modifica delle librerie del sistema operativo: si modificano le API del sistema riguardanti l'elaborazione audio-video (ad es. Win32, X11, Cocoa) così da poter copiare il frame buffer della scheda in memoria;
-    \item modifica hardware sulla scheda: si modifica l'interfaccia sostituendo l'uscita audio-video classica (ad es. HDMI, DisplayPort, FireWire) con l'uscita Ethernet (ad es. HDBaseT).
-\end{itemize}
-
+Nel paradigma del cloud gaming per cattura si intende la fase in cui l'output audio-visivo del videogioco viene messo da parte per essere poi inviato al codificatore. Nei prossimi due paragrafi vedremo i metodi di cattura per la parte video e per quella audio.
 
 
 \subsection{Video}
+Per la cattura video esistono tre metodi di cattura:
+
+\begin{enumerate}
+	\item hook sulle librerie multimediali: tramite code injection su una libreria multimediale (DirectX, OpenGL, SDL, ecc\dots) si modifica il normale funzionamento di una funzione. Solitamente la funzione che invia il framebuffer della scheda video all'uscita;
+	\item utilizzo delle API di framebuffer virtuale (ad es. X virtual framebuffer su Linux, Desktop Duplication API su Windows e Quartz Display Services su macOS);
+	\item schede video appositamente progettate per lo streaming. La prima società a modificare una scheda video fu Sony che incluse un chip di codifica per il suo servizio di cloud gaming su GPU Nvidia ed AMD (rispettivamente PS3 e PS4) \parencite{PlayStation_Now_Chip}. Altre piattaforme che usano schede video con funzionalità di encoding incluse sono GeForce Now su schede Nvidia \parencite{GeForce_Now}, XBox Cloud Gaming su schede AMD \parencite{xCloudBlade}, Stadia su AMD \parencite{Google_Stadia_Server} e Luna su Nvidia \parencite{Amazon_Luna_GPU}. La lista delle aziende che vendono schede video con questa funzionalità è riportata in Tab. \ref{table:VideoCardEncodingFeature} \parencite{NVIDIAVideoCodecSDK} \parencite{GCNArchitecture} \parencite{IntelQuickSyncVideo} \parencite{Hexagon_DSP_SDK}.
+\end{enumerate}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||c c c||} 
+		\hline
+		Produttore & Funzionalità & Codec supportati \\
+		\hline\hline
+		Nvidia & Nvidia NVENC & H.264, H.265 \\
+		\hline
+		AMD & Video Core Next & H.264, H.265 \\
+		\hline
+		Intel & Intel Quick Sync Video & H.262, H.264, H.265, VP8, VP9 \\
+		\hline
+		Qualcomm & Hexagon & MPEG-4, H.263, H.264, H.265, VP8, VP9 \\
+		\hline
+	\end{tabular}
+
+	\caption{Schede video con funzionalità di codifica video}
+	\label{table:VideoCardEncodingFeature}
+\end{table}
+
 Le funzioni della libreria SDL utilizzate sono:
 
 \begin{itemize}
