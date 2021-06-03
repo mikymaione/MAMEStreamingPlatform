@@ -14,9 +14,14 @@ In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming
 
 
 \section{Cattura}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Nel paradigma del cloud gaming per cattura si intende la fase in cui l'output audio-visivo del videogioco viene messo da parte per essere poi inviato al codificatore. Esistono tre metodi di cattura:
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{itemize}
+    \item hook sulle librerie multimediali: tramite code injection su una libreria multimediale (DirectX su Windows, OpenGL su Linux) si modifica il normale funzionamento di una funzione. Solitamente la funzione che invia il frame buffer della scheda (audio o video) all'uscita;
+    \item modifica delle librerie del sistema operativo: si modificano le API del sistema riguardanti l'elaborazione audio-video (ad es. Win32, X11, Cocoa) così da poter copiare il frame buffer della scheda in memoria;
+    \item modifica hardware sulla scheda: si modifica l'interfaccia sostituendo l'uscita audio-video classica (ad es. HDMI, DisplayPort, FireWire) con l'uscita Ethernet (ad es. HDBaseT).
+\end{itemize}
+
 
 
 \subsection{Video}
