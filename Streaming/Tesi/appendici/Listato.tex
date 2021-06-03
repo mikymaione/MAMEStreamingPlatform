@@ -406,15 +406,15 @@ void start(const unsigned short port)
 			<< ": " << code.message() << endl;
 	};
 
-	endpoint.on_close = [this](auto connection, auto status, auto reason)
+	endpoint.on_close = [this](auto connection, 
+		auto status, auto reason)
 	{
+		const auto game = connection->parameters["game"];
 		const auto game_end_time = chrono::system_clock::now();
 
 		const auto game_total_minute_played = 
 			chrono::duration_cast<chrono::minutes>(
-				game_end_time - game_start_time);
-		
-		const auto game = connection->parameters["game"];
+				game_end_time - game_start_time);		
 
 		cout
 			<< "-Closed connection from "
