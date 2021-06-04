@@ -7,7 +7,7 @@ Di seguito le modifiche che sono state apportate alle classi originali del MAME 
 \subsection{Main}
 File \verb|osd/sdl/sdlmain.cpp|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 int main(int argc, char** argv)
 {
 	auto r = 0;	
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 \subsection{Missaggio audio}
 File \verb|osd/modules/sound/sdl_sound.cpp|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 void sound_sdl::sdl_callback(
 	void* userdata, Uint8* stream, int len)
 {
@@ -56,7 +56,7 @@ void sound_sdl::sdl_callback(
 \subsection{Rendering}
 Files \verb|osd/modules/render/draw13.cpp| e \verb|osd/modules/render/draw13.h|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 void renderer_sdl2::free_streaming_render() const
 {
 	if (m_sdl_buffer_bytes != nullptr)
@@ -137,7 +137,7 @@ int renderer_sdl2::draw(int update)
 \subsection{Gestione input}
 Files \verb|osd/modules/input/input_sdl.cpp|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 sdl_keyboard_device(
 		running_machine &machine, const char *name,
 		const char *id, input_module &module): 
@@ -155,7 +155,7 @@ Di seguito alcune funzioni nei due moduli che sono stati creati: codifica e serv
 \subsection{Codifica}
 File \verb|lib/util/encoding/encode_to_movie.hpp|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 static int write_packet(
 	void* opaque, uint8_t* buf, int buf_size)
 {
@@ -334,7 +334,7 @@ void add_instant(
 \subsection{Server}
 File \verb|lib/util/streaming_server.hpp|
 
-\begin{lstlisting}[language=C++, numbers=left, tabsize=4]
+\begin{lstlisting}
 //Invio input utente a SDL
 void generate_key_event(
 	const char* key, const string& down) const
