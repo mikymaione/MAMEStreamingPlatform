@@ -1,35 +1,26 @@
 @startuml
 skinparam Shadowing false
 skinparam LineType ortho
-skinparam ArrowColor black
-
-skinparam class {
-    BackgroundColor white
-    BorderColor black
-}
+skinparam nodesep 15
+skinparam ranksep 30
+skinparam monochrome true
 
 class renderer_sdl2 extends osd_renderer {
-	-free_streaming_render()
-	-init_streaming_render(int w, int h, int fps)
-	
 	-SDL_Renderer sdl_renderer
 	-SDL_Surface sdl_surface
 	-SDL_RWops sdl_buffer
-
 	-char[] sdl_buffer_bytes
-	-int sdl_buffer_bytes_length;
-	
-	+int create()
-	+render_primitive_list get_primitives()    
-	+int draw(const int update)
+	-int sdl_buffer_bytes_length
 	{static} +void init(running_machine machine)
 	{static} +void exit()
+	-init_streaming_render(int w, int h, int fps)
+	-free_streaming_render()
 }
 
-renderer_sdl2 -- SDL_Renderer
-renderer_sdl2 -- SDL_Surface
-renderer_sdl2 -- SDL_RWops
-renderer_sdl2 -- streaming_server
+renderer_sdl2 -r- SDL_Renderer
+renderer_sdl2 -r- SDL_Surface
+renderer_sdl2 -r- SDL_RWops
+renderer_sdl2 -d- streaming_server
 
 class streaming_server #Linen {
 	+start(ushort port)
@@ -50,5 +41,4 @@ class osd_renderer {
 
 class SDL_Surface #Linen
 class SDL_RWops #Linen
-
 @enduml
