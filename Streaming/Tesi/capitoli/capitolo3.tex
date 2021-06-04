@@ -88,7 +88,7 @@ Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato
 	streaming_server::instance()
 		.send_video_frame(sdl_surface->pixels);
 
-	// si posiziona all'inizio del framebuffer	
+	// riposizionamento all'inizio del buffer	
 	SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET);
 \end{lstlisting}
 
@@ -103,10 +103,25 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibil
 
 
 \subsection{Audio} \label{Cattura_Audio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Come per la cattura video si può ricorrere all'hook di funzioni della libreria multimediale o alle API del sistema operativo per la gestione audio \parencite{GamingAnywhere}. In quest'ultimo caso abbiamo "Windows Audio Session API" per Windows \parencite{WASAPI}, "Advanced Linux Sound Architecture" per Linux \parencite{ALSA} e "Core Audio" per macOS \parencite{Core_Audio_api}.
+
+Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{chap:Missaggio_audio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
+
+\begin{lstlisting}[caption=Codice aggiunto per la cattura audio, label={lst:sdl_sound_callback}]
+	streaming_server::instance().send_audio_interval(
+			stream, len, 512); // 512 campioni audio (per canale)
+
+	memset(stream, 0, len); // svuota buffer sonoro
+\end{lstlisting}
 
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_mixingSDL_streaming}
+	\caption{Diagramma delle classi relative alla cattura audio}
+	\label{fig:class_mixingSDL_streaming}
+\end{figure}
 
+I listati precedenti sono stati estrapolati dal Lis. \ref{lst:sdl_sound} disponibile in appendice \ref{chap:Listato}.
 
 \section{Codifica}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
