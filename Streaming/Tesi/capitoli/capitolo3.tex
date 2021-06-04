@@ -88,7 +88,7 @@ Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato
 	streaming_server::instance()
 		.send_video_frame(sdl_surface->pixels);
 
-	// riposizionamento all'inizio del buffer	
+	// posizionamento all'inizio del buffer	
 	SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET);
 \end{lstlisting}
 
@@ -103,13 +103,14 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibil
 
 
 \subsection{Audio} \label{Cattura_Audio}
-Come per la cattura video si può ricorrere all'hook di funzioni della libreria multimediale o alle API del sistema operativo per la gestione audio \parencite{GamingAnywhere}. In quest'ultimo caso abbiamo "Windows Audio Session API" per Windows \parencite{WASAPI}, "Advanced Linux Sound Architecture" per Linux \parencite{ALSA} e "Core Audio" per macOS \parencite{Core_Audio_api}.
+Come per la cattura video si può ricorrere all'hook di funzioni della libreria multimediale o alle API del sistema operativo per la gestione audio \parencite{GamingAnywhere}; ad esempio: "Windows Audio Session API" per Windows \parencite{WASAPI}, "Advanced Linux Sound Architecture" per Linux \parencite{ALSA} e "Core Audio" per macOS \parencite{Core_Audio_api}.
 
 Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{chap:Missaggio_audio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura audio, label={lst:sdl_sound_callback}]
-	streaming_server::instance().send_audio_interval(
-			stream, len, 512); // 512 campioni audio (per canale)
+	// 512 campioni audio (per canale)
+	streaming_server::instance()
+		.send_audio_interval(stream, len, 512);
 
 	memset(stream, 0, len); // svuota buffer sonoro
 \end{lstlisting}
@@ -123,12 +124,23 @@ Come nel caso della cattura video ho scelto di modificare il sorgente del progra
 
 Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponibile in appendice \ref{chap:Listato}.
 
-\section{Codifica}
-Le videocamere digitali eseguono due tipi di campionamento: campionamento nel dominio temporale dato dal numero di immagini al secondo (frame rate) e campionamento nel dominio spaziale dato dal numero di punti (pixel) in ciascuna delle immagini (risoluzione dell'immagine). La frequenza dei fotogrammi, o frequenza dei fotogrammi, è la misura della velocità con cui un dispositivo di imaging produce immagini consecutive uniche chiamate fotogrammi. Il frame rate è più spesso espresso in fotogrammi al secondo (f/s o frame/s) o, in alternativa, in Hertz (Hz). I frame rate comuni di oggi hanno le loro origini nei sistemi televisivi analogici. L'immagine RGB catturata è quindi rappresentata da tre matrici di componenti di colore N × M costituite da numeri lunghi q-bit (solitamente q = 8). Poiché il sistema visivo umano è meno sensibile al colore che alla luminanza (luminosità), la larghezza di banda può essere ottimizzata memorizzando più dettagli di luminanza che dettagli di colore. Nei sistemi video, ciò si ottiene utilizzando i componenti della differenza di colore. Il segnale è diviso in una luminanza (indicata come Y, 'lumina' in breve) e due componenti di differenza di colore (crominanza), indicati come U e V. I segnali YUV sono creati da una sorgente originale rossa, verde e blu (RGB) come segue (Richardson 2005). I valori ponderati di R, G e B vengono sommati per produrre un singolo segnale Y, che rappresenta la luminosità complessiva, o luminanza, di quel punto: Y = kr · R + kg · G + kb · B, dove kr, kg e kb sono fattori di ponderazione, kr + kg + kb = 1. La raccomandazione ITU-R BT.601 definisce kb = 0,114 e kr = 0,299. Il segnale U viene quindi creato sottraendo Y dal segnale blu dell'RGB originale e un'operazione di ridimensionamento; e V sottraendo Y dal rosso, quindi ridimensionando di un fattore diverso. Le seguenti formule specificano la conversione tra lo spazio colore RGB e YUV.
-[FORMULA]
-L'idea alla base del formato YUV è che il sistema visivo umano è meno sensibile alle informazioni sul colore ad alta frequenza (rispetto alla luminanza), quindi le informazioni sul colore possono essere codificate con una risoluzione spaziale inferiore. Il modo più comune di sottocampionamento, chiamato 4:2:0, riduce il numero di campioni in entrambe le dimensioni orizzontale e verticale di un fattore due, cioè per quattro pixel di luminanza c'è solo un pixel di crominanza blu e uno rosso \parencite{alma991017214718006031}.
 
+
+
+\section{Codifica}
 Come detto precedentemente nel paragrafo \ref{chap:CatturaVideo} sul mercato sono presenti schede video in grado di eseguire anche la codifica video.
+
+Gli attuali sistemi operativi utilizzano come output video immagini RGB a 32 bit, ma gli algoritmi di codifica video utilizzano il sistema di memorizzazione YUV, che occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando la sensibilità alla luminosità innata nel sistema visivo umano. La conversione da YUV a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB} \parencite{alma991017214718006031}:
+
+\begin{equation} \label{eq:YUV_from_RGB}
+\begin{aligned}
+& Y = k_r R + k_s G + k_b B, \\	
+& U = \frac{0.5}{1 - k_b} (B - Y), \\
+& V = \frac{0.5}{1 - k_r} (R - Y).	
+\end{aligned}
+\end{equation}
+
+Utilizzando le costanti dello standard NTSC e PAL: $k_r$, $k_s$ e $k_b$ rispettivamente $0.299$, $0.587$ e $0.114$.
 
 \subsection{MPEG}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
