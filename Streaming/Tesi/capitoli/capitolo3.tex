@@ -59,18 +59,38 @@ La prima società che modificò una scheda video adattandola per il cloud gaming
 	\label{table:VideoCardEncodingFeature}
 \end{table}
 
-Le funzioni della libreria SDL utilizzate sono:
+Poiché del progetto MAME sono disponibili i sorgenti in questo progetto ho scelto di modificare il comportamento normale del programma. Come mostrato in Fig. \ref{fig:class_renderingSDLFull_Streaming}, sono state aggiunte alla classe \verb|renderer_sdl2| le due funzioni (\verb|init_streaming_render| e \verb|free_streaming_render|) per allocare e deallocare le strutture dati per la cattura. Come mostrato nel Listato \ref{lst:init_streaming_render_init} le funzioni della libreria SDL che sono state aggiunte al codice sono:
 
 \begin{itemize}
-	\item CreateRGBSurfaceWithFormat: Crea una superficie RGB specificando il formato pixel da utilizzare;
-	\item CreateRenderer: Crea un contesto di rendering 2D per una finestra;
-	\item CreateSoftwareRenderer: Crea un contesto di rendering 2D per una superficie;
-	\item RWFromMem: Prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati RWops (read-write opaque pointer structure);
-	\item SetRenderDrawColor: Imposta il colore utilizzato per le operazioni di disegno;
-	\item RenderFillRect: Riempe un rettangolo con il colore di disegno corrente;
-	\item RenderDrawLine: Disegna una linea con il colore di disegno corrente;
-	\item RenderPresent: Aggiorna il contesto di rendering con il frame generato dalle funzioni di disegno.
+	\item CreateRGBSurfaceWithFormat: crea una superficie RGB specificando il formato pixel da utilizzare;	
+	\item CreateRenderer: crea un contesto di rendering 2D per una superficie;
+	\item RWFromMem: prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati RWops (read-write opaque pointer structure).	
 \end{itemize}
+
+\begin{lstlisting}[caption=Codice aggiunto per la cattura video: inizializzazione, label={lst:init_streaming_render_init}]
+	sdl_buffer_bytes_length = w * h * 4; // RGBA = 4 bytes
+	sdl_buffer_bytes = new char[sdl_buffer_bytes_length];
+
+	sdl_surface = SDL_CreateRGBSurfaceWithFormat(
+		0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
+	sdl_renderer = SDL_CreateRenderer(sdl_surface);
+	sdl_buffer = SDL_RWFromMem(
+		sdl_buffer_bytes, sdl_buffer_bytes_length);
+\end{lstlisting}
+
+Nel Listato \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato inserito per inviare alla classe statica che gestisce lo streaming (\verb|streaming_server|) il frame da inviare al giocatore (che verrà codificato prima dell'invio). Poiché l'attuale contesto di rendering (\verb|sdl_renderer|) è creato su una superfice RGB (\verb|sdl_surface|) quando il contesto di rendering viene aggiornato con il framebuffer corrente (tramite \verb|SDL_RenderPresent|) è la superfice a ricevere il frame attuale e non l'uscita video.
+
+\begin{lstlisting}[caption=Codice aggiunto per la cattura video: disegno, label={lst:init_streaming_render_draw}]
+	SDL_RenderPresent(sdl_renderer);
+
+	streaming_server::instance()
+		.send_video_frame(sdl_surface->pixels);
+
+	// si posiziona all'inizio del framebuffer	
+	SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET);
+\end{lstlisting}
+
+Il listato completo \ref{lst:draw13} è disponibile in appendice \ref{chap:Listato}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_renderingSDLFull_Streaming}
