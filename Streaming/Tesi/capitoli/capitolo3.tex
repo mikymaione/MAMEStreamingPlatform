@@ -20,7 +20,7 @@ Nel paradigma del cloud gaming per cattura si intende la fase in cui l'output au
 \subsection{Video}
 Per la cattura video esistono tre metodi di cattura: l'hook di funzioni della libreria multimediale, l'utilizzo delle API per il framebuffer virtuale e l'uso di schede video con funzionalità di codifica incorporata.
 
-L'hook di funzione è una tecnica di programmazione con la quale si sostituisce il comportamento di una funzione di un programma o di una libreria già compilata. Questa operazione su una libreria multimediale consiste nel modificare il normale funzionamento della procedura che invia il framebuffer della scheda video all'uscita. Ad esempio per le librerie multimediali più usate le funzioni da catturare sono: \verb|SDL_RenderPresent| per SDL, \verb|Present| per DirectX e \verb|SwapBuffer| per OpenGL \parencite{GamingAnywhere}. Questo metodo è stato usato ad esempio da OnLive, Gaikai e Vortex. Un esempio di codice per l'hook di funzioni per SDL è mostrato nel Listato \ref{lst:hookCode}.
+L'hook di funzione è una tecnica di programmazione con la quale si sostituisce il comportamento di una funzione di un programma o di una libreria già compilata. Questa operazione su una libreria multimediale consiste nel modificare il normale funzionamento della procedura che invia il framebuffer della scheda video all'uscita. Ad esempio per le librerie multimediali più usate le funzioni da catturare sono: \verb|SDL_RenderPresent| per SDL, \verb|Present| per DirectX e \verb|SwapBuffer| per OpenGL \parencite{GamingAnywhere}. Questo metodo è stato usato ad esempio da OnLive, Gaikai e Vortex. Un esempio di codice per l'hook di funzioni per SDL è mostrato nel Lis. \ref{lst:hookCode}.
 
 \begin{lstlisting}[caption=Codice di hook per la libreria SDL, label={lst:hookCode}]
 	HOOK_TRACE_INFO hHook = { NULL };
@@ -59,11 +59,11 @@ La prima società che modificò una scheda video adattandola per il cloud gaming
 	\label{table:VideoCardEncodingFeature}
 \end{table}
 
-Poiché del progetto MAME sono disponibili i sorgenti in questo progetto ho scelto di modificare il comportamento normale del programma. Come mostrato in Fig. \ref{fig:class_renderingSDLFull_Streaming}, sono state aggiunte alla classe \verb|renderer_sdl2| le due funzioni (\verb|init_streaming_render| e \verb|free_streaming_render|) per allocare e deallocare le strutture dati per la cattura. Come mostrato nel Listato \ref{lst:init_streaming_render_init} le funzioni della libreria SDL che sono state aggiunte al codice sono:
+Poiché del progetto MAME sono disponibili i sorgenti in questo progetto ho scelto di modificare il comportamento normale del programma. Come mostrato in Fig. \ref{fig:class_renderingSDLFull_Streaming}, sono state aggiunte alla classe \verb|renderer_sdl2| le due funzioni (\verb|init_streaming_render| e \verb|free_streaming_render|) per allocare e deallocare le strutture dati per la cattura. Come mostrato nel Lis. \ref{lst:init_streaming_render_init} le funzioni della libreria SDL che sono state aggiunte al codice sono:
 
 \begin{itemize}
 	\item CreateRGBSurfaceWithFormat: crea una superficie RGB specificando il formato pixel da utilizzare;	
-	\item CreateRenderer: crea un contesto di rendering 2D per una superficie;
+	\item CreateSoftwareRenderer: crea un contesto di rendering 2D per una superficie;
 	\item RWFromMem: prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati RWops (read-write opaque pointer structure).	
 \end{itemize}
 
@@ -73,12 +73,14 @@ Poiché del progetto MAME sono disponibili i sorgenti in questo progetto ho scel
 
 	sdl_surface = SDL_CreateRGBSurfaceWithFormat(
 		0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
-	sdl_renderer = SDL_CreateRenderer(sdl_surface);
+	
+		sdl_renderer = SDL_CreateSoftwareRenderer(sdl_surface);
+	
 	sdl_buffer = SDL_RWFromMem(
 		sdl_buffer_bytes, sdl_buffer_bytes_length);
 \end{lstlisting}
 
-Nel Listato \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato inserito per inviare alla classe statica che gestisce lo streaming (\verb|streaming_server|) il frame da inviare al giocatore (che verrà codificato prima dell'invio). Poiché l'attuale contesto di rendering (\verb|sdl_renderer|) è creato su una superfice RGB (\verb|sdl_surface|) quando il contesto di rendering viene aggiornato con il framebuffer corrente (tramite \verb|SDL_RenderPresent|) è la superfice a ricevere il frame attuale e non l'uscita video.
+Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato inserito per inviare alla classe statica che gestisce lo streaming (\verb|streaming_server|) il frame da inviare al giocatore (che verrà codificato prima dell'invio). Poiché l'attuale contesto di rendering (\verb|sdl_renderer|) è creato su una superfice RGB (\verb|sdl_surface|) quando il contesto di rendering viene aggiornato con il framebuffer corrente (tramite \verb|SDL_RenderPresent|) è la superfice a ricevere il frame attuale.
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura video: disegno, label={lst:init_streaming_render_draw}]
 	SDL_RenderPresent(sdl_renderer);
@@ -90,13 +92,13 @@ Nel Listato \ref{lst:init_streaming_render_draw} è mostrato il codice che è st
 	SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET);
 \end{lstlisting}
 
-Il listato completo \ref{lst:draw13} è disponibile in appendice \ref{chap:Listato}.
-
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_renderingSDLFull_Streaming}
 	\caption{Diagramma delle classi relative alla cattura video}
 	\label{fig:class_renderingSDLFull_Streaming}
 \end{figure}
+
+I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibile in appendice \ref{chap:Listato}.
 
 
 
