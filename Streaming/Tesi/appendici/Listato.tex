@@ -1,4 +1,4 @@
-\chapter{Listato}
+\chapter{Listato} \label{chap:Listato}
 In questa appendice sono riportate alcune parti del codice C++ a cui si fa riferimento nel testo. Per ogni listato è riportato il file da cui è stato estratto.
 
 \section{Modifiche classi SDL}
@@ -56,7 +56,7 @@ void sound_sdl::sdl_callback(
 \subsection{Rendering}
 Files \verb|osd/modules/render/draw13.cpp| e \verb|osd/modules/render/draw13.h|
 
-\begin{lstlisting}
+\begin{lstlisting}[label={lst:draw13}]
 void renderer_sdl2::free_streaming_render() const
 {
 	if (m_sdl_buffer_bytes != nullptr)
@@ -122,7 +122,7 @@ int renderer_sdl2::create()
 int renderer_sdl2::draw(int update)
 {
 	//... CODICE NON MODIFICATO ...
-	SDL_RenderPresent(m_sdl_renderer);	
+	SDL_RenderPresent(m_sdl_renderer);
 
 	if (streaming_server::instance().is_active())
 	{
