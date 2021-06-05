@@ -107,17 +107,17 @@ Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponib
 
 
 \section{Codifica} \label{sec:cap3_Codifica}
-Un codificatore è un dispositivo elettronico o un programma che codifica e comprime i dati audiovisivi (solitamente con perdita dell'informazione). Di seguito verranno illustrati i codificatori video e audio.
+Nel paradigma dello streaming la codifica è un processo essenziale per ridurre l'elevata quantità di dati che compone un flusso audiovisivo. La codifica avviene tramite un codificatore che è un dispositivo elettronico o un programma che descrive e comprime i dati audiovisivi (solitamente con perdita dell'informazione). Di seguito verranno illustrati i codificatori video e audio.
 
 \subsubsection{Video}
-I codificatori video si divino in due gruppi:
+I codificatori video si divino in due gruppi \parencite{alma991017214718006031}:
 
 \begin{itemize}
     \item intraframe: codificano ogni fotogramma indipendentemente dagli altri;
     \item interframe: descrivono i cambiamenti tra fotogrammi contigui; sono più efficienti su scene statiche perché i cambiamenti da descrivere sono minori.
 \end{itemize}
 
-Gli attuali sistemi operativi utilizzano come output video immagini RGB a 32 bit, ma gli algoritmi di codifica video utilizzano il sistema di memorizzazione YUV, che occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando la sensibilità alla luminosità innata nel sistema visivo umano. La conversione da YUV a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB} \parencite{alma991017214718006031}:
+Gli attuali sistemi operativi utilizzano come output video immagini RGB a 32 bit, ma gli algoritmi di codifica video utilizzano il sistema di memorizzazione YUV, che occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando la sensibilità alla luminosità innata nel sistema visivo umano. La conversione da YUV a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
 
 \begin{equation} \label{eq:YUV_from_RGB}
 	\begin{aligned}
