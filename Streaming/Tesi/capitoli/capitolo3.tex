@@ -17,7 +17,7 @@ In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming
 Nel paradigma del cloud gaming per cattura si intende la fase in cui l'output audio-visivo del videogioco viene messo da parte per essere poi inviato al codificatore. Nei prossimi due paragrafi vedremo i metodi di cattura per la parte video e per quella audio.
 
 
-\subsection{Video} \label{chap:CatturaVideo}
+\subsection{Video} \label{subsec:cap3_Video}
 Per la cattura video esistono tre metodi di cattura: l'hook di funzioni della libreria multimediale, l'utilizzo delle API per il framebuffer virtuale e l'uso di schede video con funzionalità di codifica incorporata.
 
 L'hook di funzione è una tecnica di programmazione con la quale si sostituisce il comportamento di una funzione di un programma o di una libreria già compilata. Questa operazione su una libreria multimediale consiste nel modificare il normale funzionamento della procedura che invia il framebuffer della scheda video all'uscita. Ad esempio per le librerie multimediali più usate le funzioni da catturare sono: \verb|SDL_RenderPresent| per SDL, \verb|Present| per DirectX e \verb|SwapBuffer| per OpenGL \parencite{GamingAnywhere}. Questo metodo è stato usato ad esempio da OnLive, Gaikai e Vortex. Un esempio di codice per l'hook di funzioni per SDL è mostrato nel Lis. \ref{lst:hookCode}.
@@ -37,7 +37,7 @@ L'hook di funzione è una tecnica di programmazione con la quale si sostituisce 
 
 Il framebuffer virtuale è una funzionalità offerta dalle API di sistema per accedere all'attuale framebuffer presente nella scheda video. Il loro utilizzo principale è per il remote desktop, ma alcune piattaforme come "GamingAnywhere" \parencite{GamingAnywhere} e "Parsec"\footnote{Parsec è un servizio di desktop remoto basato su Windows offerto dalla omonima società.} \parencite{TheTechnologyBehindALowLatencyCloudGamingService} utilizzano questa funzionalità per la cattura video, il primo per la piattaforma di cloud gaming, il secondo per offrire un computer virtuale. Alcuni esempi nei moderni sistemi operativi sono: "X virtual framebuffer" su Linux X11 \parencite{XVFB}, "Desktop Duplication API" su Windows \parencite{DesktopDuplicationAPI} e \verb|CGDisplayStream| della libreria "Quartz Display Services" su macOS.
 
-Le schede video con codifica incorporata non hanno una fase di cattura poiché il chip di codifica legge i dati direttamente dal framebuffer; l'argomento è trattato più avanti nel paragrafo \ref{chap:Implementazione_Codifica}.
+Le schede video con codifica incorporata non hanno una fase di cattura poiché il chip di codifica legge i dati direttamente dal framebuffer; l'argomento è trattato più avanti nel paragrafo \ref{sec:cap3_Codifica}.
 
 Poiché sono disponibili i sorgenti del progetto MAME in questo progetto ho scelto di modificare il comportamento normale del programma. Come mostrato in Fig. \ref{fig:class_renderingSDLFull_Streaming}, sono state aggiunte alla classe \verb|renderer_sdl2| le due funzioni (\verb|init_streaming_render| e \verb|free_streaming_render|) per allocare e deallocare le strutture dati per la cattura. Come mostrato nel Lis. \ref{lst:init_streaming_render_init} le funzioni della libreria SDL che sono state aggiunte al codice sono:
 
@@ -81,10 +81,10 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibil
 
 
 
-\subsection{Audio} \label{Cattura_Audio}
+\subsection{Audio} \label{subsec:cap3_Audio}
 Come per la cattura video si può ricorrere all'hook di funzioni della libreria multimediale o alle API del sistema operativo per la gestione audio \parencite{GamingAnywhere}; ad esempio: "Windows Audio Session API" per Windows \parencite{WASAPI}, "Advanced Linux Sound Architecture" per Linux \parencite{ALSA} e "Core Audio" per macOS \parencite{Core_Audio_api}.
 
-Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{chap:Missaggio_audio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
+Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{subsec:cap2_MissaggioAudio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura audio, label={lst:sdl_sound_callback}]
 	// 512 campioni audio (per canale)
@@ -106,7 +106,7 @@ Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponib
 
 
 
-\section{Codifica} \label{chap:Implementazione_Codifica}
+\section{Codifica} \label{sec:cap3_Codifica}
 Un codificatore è un dispositivo elettronico o un programma che codifica e comprime i dati audiovisivi (solitamente con perdita dell'informazione). Di seguito verranno illustrati i codificatori video e audio.
 
 \subsubsection{Video}
