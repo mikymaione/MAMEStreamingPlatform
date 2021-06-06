@@ -113,12 +113,12 @@ Nel paradigma dello streaming la codifica è un processo essenziale sia perché 
 I codificatori video si divino in due gruppi:
 
 \begin{itemize}
-    \item intraframe: codificano ogni fotogramma indipendentemente dagli altri;
-    \item interframe: descrivono i cambiamenti tra fotogrammi contigui; sono più efficienti su scene statiche poiché i cambiamenti da descrivere sono minori.
+	\item intraframe: codificano ogni fotogramma indipendentemente dagli altri;
+	\item interframe: descrivono i cambiamenti tra fotogrammi contigui; sono più efficienti su scene statiche poiché i cambiamenti da descrivere sono minori.
 \end{itemize}
 
 %YUV 4:2:0 planare da 12bpp (1 Cr & Cb campioni per 2x2 Y campioni)
-Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori (e di conseguenza gli attuali sistemi operativi), ma gli algoritmi di codifica video utilizzano il modello YCbCr\footnote{Il termine YUV è usato molto spesso come sinonimo di YCbCr. Si tratta tuttavia di formati differenti, uno analogico e l'altro digitale.}. Questo modello offre due vantaggi: occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando l'innata sensibilità alla luminosità del sistema visivo umano. Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0.299$, $0.587$ e $0.114$ \parencite{alma991017214718006031}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
+Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori (e di conseguenza gli attuali sistemi operativi), ma gli algoritmi di codifica video utilizzano il modello YCbCr\footnote{Il termine YUV è usato molto spesso come sinonimo di YCbCr. Si tratta tuttavia di formati differenti, uno analogico e l'altro digitale.}. Questo modello offre due vantaggi: occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando l'innata sensibilità alla luminosità del sistema visivo umano. Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0.299$, $0.587$ e $0.114$ \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
 
 \begin{equation} \label{eq:YUV_from_RGB}
 	\begin{aligned}
@@ -185,6 +185,15 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 
 
 \subsection{Codificatori audio}
+Un formato di codifica audio con perdita riduce la risoluzione in bit del suono oltre alla compressione e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Ci sono tre algorimi base per la compressione:
+\parencite{AudioSignalProcessingAndCoding}.
+
+\begin{itemize}
+	\item \textit{Modified discrete cosine transform} (MDCT): è una trasformata ;
+	\item \textit{Adaptive differential pulse-code modulation } (ADPCM);
+	\item \textit{Sub-band coding} (SBC)
+\end{itemize}
+
 Una lista dei codec audio più utilizzati è mostrata in Tab. \ref{table:CodecsAudio} \parencite{WebAudioCodecGuide}.
 
 \begin{table}[H]
