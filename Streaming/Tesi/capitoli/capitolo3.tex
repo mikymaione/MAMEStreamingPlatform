@@ -129,7 +129,7 @@ Gli attuali sistemi operativi utilizzano come output video immagini RGB a 32 bit
 
 Utilizzando le costanti dello standard NTSC e PAL: $k_r$, $k_s$ e $k_b$ rispettivamente $0.299$, $0.587$ e $0.114$.
 
-La prima società che modificò una scheda video adattandola per il cloud gaming fu Sony che incluse un chip di codifica sulle GPU Nvidia ed AMD (rispettivamente per il rendering PS3 e PS4) \parencite{PlayStation_Now_Chip}. Altre piattaforme di cloud gaming che usano schede video con funzionalità di encoding incluse sono "Nvidia GeForce Now" su schede Nvidia \parencite{GeForce_Now}, "Microsoft XBox Cloud Gaming" su schede AMD \parencite{xCloudBlade}, "Google Stadia" su AMD \parencite{Google_Stadia_Server} e "Amazon Luna" su Nvidia \parencite{Amazon_Luna_GPU}. La lista delle aziende che creano schede video con questa funzionalità è riportata in Tab. \ref{table:VideoCardEncodingFeature} \parencite{NVIDIAVideoCodecSDK} \parencite{GCNArchitecture} \parencite{IntelQuickSyncVideo} \parencite{Hexagon_DSP_SDK}.
+La prima società che modificò una scheda video adattandola per il cloud gaming fu Sony che incluse un chip di codifica sulle GPU Nvidia ed AMD (rispettivamente per il rendering PS3 e PS4) \parencite{PlayStation_Now_Chip}. Altre piattaforme di cloud gaming che usano schede video con funzionalità di encoding incluse sono "Nvidia GeForce Now" su schede Nvidia \parencite{GeForce_Now}, "Microsoft XBox Cloud Gaming" su schede AMD \parencite{xCloudBlade}, "Google Stadia" su AMD \parencite{Google_Stadia_Server} e "Amazon Luna" su Nvidia \parencite{Amazon_Luna_GPU}. La lista delle aziende che creano schede video con questa funzionalità è riportata in Tab. \ref{table:VideoCardEncodingFeature} \parencite{GCNArchitecture} \parencite{IntelQuickSyncVideo} \parencite{NVIDIAVideoCodecSDK} \parencite{Hexagon_DSP_SDK}.
 
 \begin{table}[H]
 	\centering
@@ -137,13 +137,13 @@ La prima società che modificò una scheda video adattandola per il cloud gaming
 		\hline
 		Produttore & Funzionalità & Codec supportati \\
 		\hline\hline
-		Nvidia & NVENC & AVC, HEVC \\
-		\hline
 		AMD & Video Core Next & AVC, HEVC \\
 		\hline
-		Intel & Quick Sync Video & MPEG-2, AVC, HEVC, VP8, VP9 \\
+		Intel & Quick Sync Video & AVC, HEVC, MPEG-2, VP8, VP9 \\
 		\hline
-		Qualcomm & Hexagon & H.263, MPEG-4, AVC, HEVC, VP8, VP9 \\
+		Nvidia & NVENC & AVC, HEVC \\
+		\hline
+		Qualcomm & Hexagon & AVC, H.263, HEVC, MPEG-4, VP8, VP9 \\
 		\hline
 	\end{tabular}
 
@@ -155,25 +155,25 @@ Quando la codifica hardware non è disponibile si ricorre alla codifica software
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{||c c c||} 
+	\begin{tabular}{||c c c c c||} 
 		\hline
-		Codec & Contenitore & Perdita dei dati \\
-		\hline\hline				
-		MPEG-1 & MPEG & sì \\
+		Codec & Contenitore & Perdita dei dati & Max bit-rate\tablefootnote{In Mbps.} & Licenza\tablefootnote{Alla scadenza dei brevetti il software può essere utilizzato liberamente.} \\
+		\hline\hline
+		AV1 & MP4, WebM & sì & 800 & libera \\
 		\hline
-		MPEG-2 & MPEG, MP4 & sì \\
+		AVC & MP4 & sì/no & arbitrario & proprietaria \\
 		\hline
-		AVC & MP4 & sì/no \\
+		HEVC & MP4 & sì & 800 & proprietaria \\
 		\hline
-		HEVC & MP4 & sì \\
-		\hline		
-		VP8 & Ogg, WebM & sì \\
+		MPEG-1 & MPEG & sì & 1,5 & scaduta \\
 		\hline
-		VP9 & Ogg, WebM & sì \\
+		MPEG-2 & MP4, MPEG & sì & 100 & scaduta \\
 		\hline
-		AV1 & WebM, MP4 & sì \\
+		Theora & Ogg & sì & 2000 & libera \\
 		\hline
-		Theora & Ogg & sì \\
+		VP8 & Ogg, WebM & sì & arbitrario & libera \\
+		\hline
+		VP9 & Ogg, WebM & sì & arbitrario & libera \\
 		\hline
 	\end{tabular}
 
@@ -181,27 +181,33 @@ Quando la codifica hardware non è disponibile si ricorre alla codifica software
 	\label{table:CodecsVideo}
 \end{table}
 
+
+
 \subsubsection{Audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{||c c c||} 
+	\begin{tabular}{||c c c c c||} 
 		\hline
-		Codec & Contenitore & Perdita dei dati \\
+		Codec & Contenitore & Perdita dei dati & Max bit-rate\tablefootnote{In Kbps.} & Licenza\tablefootnote{Alla scadenza dei brevetti il software può essere utilizzato liberamente.} \\
 		\hline\hline
-		PCM & WAV & no \\
+		AAC & ADTS, MP4 & sì & 512 & proprietaria \\
 		\hline
-		FLAC & FLAC, Ogg & no \\		
+		ALAC & MP4 & no & variabile & proprietaria \\
 		\hline
-		MP3 & MP3 & sì \\
+		FLAC & FLAC, MP4, Ogg & no & variabile & libera \\
 		\hline
-		AAC & MP4, ADTS & sì \\
-		\hline		
-		Vorbis & OGG, WebM & sì \\
-		\hline		
-		Opus & Ogg, WebM, CAF & sì \\
-		\hline		
+		MP2 & MPEG & sì & 320 & scaduta \\
+		\hline
+		MP3 & ADTS, MP4, MPEG & sì & 320 & scaduta \\
+		\hline
+		Opus & MP4, Ogg, WebM & sì & 510 & libera \\
+		\hline
+		PCM & WAV & no & 64 & scaduta \\
+		\hline
+		Vorbis & Ogg, WebM & sì & 500 & libera \\
+		\hline
 	\end{tabular}
 
 	\caption{Lista codec audio}
