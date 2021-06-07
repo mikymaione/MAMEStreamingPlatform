@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+
+skinparam Shadowing false
+skinparam LineType ortho
+
+skinparam nodesep 15
+skinparam ranksep 30
+
+class encode_to_movie {
+	+encode_to_movie(ostream socket, int in_width, int in_height, int fps)
+	+add_frame(char[] pixels)
+	+add_instant(char[] audio_stream, int audio_stream_size, int audio_stream_num_samples)
+	-{static} int write_packet(char[] buf, int buf_size)
+}
+
+streaming_server -u- encode_to_movie
+
+class streaming_server {
+	+start(ushort port)
+	+send_video_frame(char[] pixels)
+	+send_audio_interval(char[] audio_stream, int audio_stream_size, int audio_stream_num_samples)
+	+generate_key_event(char[] key, bool pressed)
+	-send(ostream socket)
+}
+
+streaming_server -- ws_server
+
+class ws_server {
+	+Endpoint[] endpoints
+	+Config config
+	+start()
+}
+
+class Endpoint {
+	+on_open(Connection c)
+	+on_close(Connection c, int status, string reason)
+	+on_message(Connection c, Message msg)
+	+on_error(Connection c, error_code e)
+}
+
+ws_server -- Endpoint
+ws_server -- Config
+
+class Config {
+	+ushort port
+	+string address
+}
+@enduml
