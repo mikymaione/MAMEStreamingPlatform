@@ -4,5 +4,5 @@
 \PublicationType{book}
 \Language{it-IT}
 \Org{Università degli Studi di Milano}
-\Keywords{Cloud gaming, arcade game, MAME, WebSocket, MPEG, FFMPEG, SDL, HTML5}
+\Keywords{Cloud gaming, arcade game, MAME, WebSocket, MPEG, FFmpeg, SDL, HTML5}
 \Subject{Piattaforma di cloud gaming per giochi arcade basata su MAME. Trasmette MPEG tramite WebSocket a pagine HTML5}
