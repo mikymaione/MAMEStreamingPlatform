@@ -201,9 +201,9 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 
 
 \subsection{Codificatori audio}
-Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa, che solitamente è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso. La compressione audio avviene solo tramite codificatori software. Anche questi hanno tre formati di codifica: con perdita, senza perdita e non compressi.
+Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa, che solitamente è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso. La compressione audio avviene solo tramite codificatori software. Anche questi hanno tre formati di codifica: con perdita, senza perdita e nessuna compressione.
 
-Il formato di codifica audio con perdita (l'unico usato per lo streaming) riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico) \parencite{AudioSignalProcessingAndCoding}.
+Il formato di codifica audio con perdita (l'unico usato per lo streaming) riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Altri fattori che influenzano la dimensione dell'audio codificato sono il numero di canali (che influisce solo sulla percezione della direzionalità e non sulla qualità) e il numero di campioni disponibili al secondo (che influiscono sulla fedeltà audio codificata) \parencite{AudioSignalProcessingAndCoding}.
 
 %Ci sono vari algorimi base per la compressione di cui due sono maggiormente usati nei codificatori audio per lo streaming: \textit{Modified discrete cosine transform} (MDCT) e \textit{Sub-band coding} (SBC). La MDCT è una trasformata lineare ortogonale lappata, basata sull'idea della cancellazione dell'aliasing nel dominio del tempo. \parencite{AudioSignalProcessingAndCoding}.
 
