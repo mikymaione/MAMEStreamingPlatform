@@ -257,11 +257,73 @@ Il progetto FFmpeg è un insieme di librerie e programmi open source per la gest
 	\label{fig:class_server_and_encoding}
 \end{figure}
 
-La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio in MP2 e video in MPEG-1 e \verb|AV Format| per l'incapsulamento in MPEG-TS.
+La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore.
 
 Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
 
 Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che lo scrive sulla \verb|socket|. 
+
+\subsubsection{Codifica video con FFmpeg}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\begin{lstlisting}[caption=Codice per la codifica video, label={lst:videoCodecFFmpeg}]
+	void add_frame(uint8_t[] pixels)
+	{
+		// Riempimento AVPicture con frame generato da SDL
+		avpicture_fill(
+			rgb_frame, // destinazione
+			pixels, // input
+			AV_PIX_FMT_BGR32, // formato input
+			width, height); // dimensione input
+
+		// conversione da RGB a YUV
+		sws_scale(
+			encoder_context->video_converter_context, // contesto di conversione
+			rgb_frame->data, // input
+			rgb_frame->linesize, 0, height, // dimesione input
+			yuv_frame->data, // destinazione
+			yuv_frame->linesize); // dimensione destinazione		
+
+		// ... continua
+	}
+\end{lstlisting}
+
+\subsubsection{Codifica audio con FFmpeg}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\begin{lstlisting}[caption=Codice per la codifica audio, label={lst:audioCodecFFmpeg}]
+	void add_instant(uint8_t[] stream, int stream_size, int stream_num_samples)
+	{
+		// Riempimento frame con audio da SDL
+		avcodec_fill_audio_frame(
+			wav_frame, // destinazione
+			2, // canali input
+			AV_SAMPLE_FMT_S16, // formato input
+			stream, // input
+			stream_size, // dimensione input
+			1); //no-alignment
+
+		// conversione audio
+		swr_convert(
+			encoder_context->audio_converter_context, // contesto conversione
+			&convertedData, // destinazione
+			output_frame->nb_samples, // campioni destinazione		
+			wav_frame->data, // input
+			wav_frame->nb_samples); // campioni input
+
+		// riempimento frame destinazione
+		avcodec_fill_audio_frame(
+			output_frame, // destinazione
+			encoder_context->audio_codec_context->channels, // canali destinazione
+			encoder_context->audio_codec_context->sample_fmt, // formato destinazione
+			convertedData, // input
+			buffer_size, // input size
+			0);
+			
+		// ... continua
+	}
+\end{lstlisting}
+
 
 
 
