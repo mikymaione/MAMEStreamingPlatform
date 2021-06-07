@@ -118,7 +118,9 @@ I codificatori video si divino in due gruppi:
 \end{itemize}
 
 %YUV 4:2:0 planare da 12bpp (1 Cr & Cb campioni per 2x2 Y campioni)
-Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori (e di conseguenza gli attuali sistemi operativi), ma gli algoritmi di codifica video utilizzano il modello YCbCr\footnote{Il termine YUV è usato molto spesso come sinonimo di YCbCr. Si tratta tuttavia di formati differenti, uno analogico e l'altro digitale.}. Questo modello offre due vantaggi: occupa meno spazio e da più importanza alla luminosità che al colore, sfruttando l'innata sensibilità alla luminosità del sistema visivo umano. Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0.299$, $0.587$ e $0.114$ \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
+Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori (e di conseguenza gli attuali sistemi operativi), ma gli algoritmi di codifica video utilizzano il modello YCbCr\footnote{Il termine YUV è usato molto spesso come sinonimo di YCbCr. Si tratta tuttavia di formati differenti, uno analogico e l'altro digitale.}. Sfruttando l'innata sensibilità alla luminosità del sistema visivo umano questo modello suddivide i dati del colore in componenti separati di luminanza e crominanza, come mostrato in Fig. \ref{fig:RGB_YCbCr}, possiamo comprimere selettivamente solo i componenti di crominanza per ottenere risparmi di spazio con una perdita minima di qualità.
+
+Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0.299$, $0.587$ e $0.114$ \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
 
 \begin{equation} \label{eq:YUV_from_RGB}
 	\begin{aligned}
@@ -127,6 +129,20 @@ Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori
 		& C_R = \frac{0.5}{1 - K_R} (R - Y).	
 	\end{aligned}
 \end{equation}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/RGB_YCbCr}
+	\caption{Componenti di RGB e YCbCr}
+	\label{fig:RGB_YCbCr}
+\end{figure}
+
+Come mostrato in Fig. \ref{fig:RGB_YCbCr_matrix}, nel modello RGB i dati per un singolo componente di colore sono intercalati tra i pixel e ciascun pixel è archiviato in memoria in modo contiguo, mentre nel modello YCbCr le componenti Cb e Cr sono intercalate e memorizzate insieme, mentre la componente Y rimane nel proprio piano, per un totale di due piani.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/RGB_YCbCr_matrix}
+	\caption{Matrice di memorizzazione di RGB e di YCbCr}
+	\label{fig:RGB_YCbCr_matrix}
+\end{figure}
 
 Come detto precedentemente la codifica può essere sia software che hardware, per quanto riguarda la codifica software nel paragrafo \ref{subsec:cap3_FFmpeg} parleremo della libreria FFmpeg che supporta la codifica e decodifica di tutti i codec presenti in Tab. \ref{table:CodecsVideo} e Tab. \ref{table:CodecsAudio}, invece per la codifica hardware è importante sottolineare quali soluzioni hardware hanno utilizzato le varie piattaforme di cloud gaming.
 
@@ -185,14 +201,9 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 
 
 \subsection{Codificatori audio}
-Un formato di codifica audio con perdita riduce la risoluzione in bit del suono oltre alla compressione e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Ci sono tre algorimi base per la compressione:
-\parencite{AudioSignalProcessingAndCoding}.
+Un formato di codifica audio con perdita riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico) \parencite{AudioSignalProcessingAndCoding}.
 
-\begin{itemize}
-	\item \textit{Modified discrete cosine transform} (MDCT): è una trasformata ;
-	\item \textit{Adaptive differential pulse-code modulation } (ADPCM);
-	\item \textit{Sub-band coding} (SBC)
-\end{itemize}
+%Ci sono vari algorimi base per la compressione di cui due sono maggiormente usati nei codificatori audio per lo streaming: \textit{Modified discrete cosine transform} (MDCT) e \textit{Sub-band coding} (SBC). La MDCT è una trasformata lineare ortogonale lappata, basata sull'idea della cancellazione dell'aliasing nel dominio del tempo. \parencite{AudioSignalProcessingAndCoding}.
 
 Una lista dei codec audio più utilizzati è mostrata in Tab. \ref{table:CodecsAudio} \parencite{WebAudioCodecGuide}.
 
