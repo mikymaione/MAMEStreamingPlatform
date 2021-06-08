@@ -1,4 +1,4 @@
-\chapter{Listato} \label{chap:Listato}
+\chapter{Listato} \label{cap:Listato}
 In questa appendice sono riportate alcune parti del codice C++ a cui si fa riferimento nel testo. Per ogni listato è riportato il file da cui è stato estratto.
 
 \section{Modifiche classi SDL}
@@ -155,7 +155,7 @@ Di seguito alcune funzioni nei due moduli che sono stati creati: codifica e serv
 \subsection{Codifica}
 File \verb|lib/util/encoding/encode_to_movie.hpp|
 
-\begin{lstlisting}
+\begin{lstlisting}[label={lst:encode_to_movie}]
 static int write_packet(
 	void* opaque, uint8_t* buf, int buf_size)
 {
