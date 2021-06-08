@@ -77,7 +77,7 @@ Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato
 	\label{fig:class_renderingSDLFull_Streaming}
 \end{figure}
 
-I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibile in appendice \ref{chap:Listato}.
+I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibile in appendice \ref{cap:Listato}.
 
 
 
@@ -101,7 +101,7 @@ Come nel caso della cattura video ho scelto di modificare il sorgente del progra
 	\label{fig:class_mixingSDL_streaming}
 \end{figure}
 
-Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponibile in appendice \ref{chap:Listato}.
+Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponibile in appendice \ref{cap:Listato}.
 
 
 
@@ -257,7 +257,7 @@ Il progetto FFmpeg è un insieme di librerie e programmi open source per la gest
 	\label{fig:class_server_and_encoding}
 \end{figure}
 
-La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (MPEG-1 + MP2):
+La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}):
 
 \begin{table}[H]
 	\centering
@@ -302,6 +302,7 @@ Con riferimento al List. \ref{lst:videoCodecFFmpeg}, la codifica video inizia tr
 			yuv_frame->data, 				// output
 			yuv_frame->linesize); 			// dimensione output
 
+
 		// inizializzazione pacchetto video
 		av_init_packet(&video_packet);		// pacchetto video
 
@@ -321,6 +322,10 @@ Con riferimento al List. \ref{lst:videoCodecFFmpeg}, la codifica video inizia tr
 			&video_packet);					// pacchetto video
 	}
 \end{lstlisting}
+
+I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} disponibile in appendice \ref{cap:Listato}.
+
+
 
 \subsubsection{Codifica audio con FFmpeg}
 Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia trasformando il frame audio da SDL (\verb|uint8_t[] stream|) al frame audio FFmpeg tramite la funzione \verb|avcodec_fill_audio_frame| (rigo 5). Tramite la funzione \verb|swr_convert| (rigo 14) si converte dal formato audio SDL (PCM rappresentato tramite interi a 16 bit con segno per ogni canale) al formato audio di destinazione (come riportato in Tab. \ref{table:PossibiliCodifiche}). La funzione \verb|avcodec_fill_audio_frame| (rigo 22) viene utilizzata nuovamente per riempire il frame audio FFmpeg con i dati appena convertiti (\verb|convertedData|). Tramite la funzione \verb|avcodec_encode_audio2| (rigo 34) si comunica alla libreria FFmpeg di voler codificare il frame audio. Tramite la funzione \verb|av_interleaved_write_frame| (rigo 40) avviene la multiplazione del pacchetto audio nel formato contenitore.
@@ -373,16 +378,13 @@ Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia tr
 
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
 
+I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} disponibile in appendice \ref{cap:Listato}.
 
 
 
 \section{Trasmissione}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
 
-\subsection{Web APIs}
-Le API Web sono un insieme di API e interfacce che comprendono la potente capacità di creazione di script del Web. A seguire quelli utilizzati in questo progetto \parencite{Web_APIs}.
-
-\subsubsection{WebSocket}
 WebSocket è un protocollo di comunicazione del computer che fornisce canali di comunicazione full-duplex su una singola connessione TCP. È compatibile con HTTP perché l'handshake WebSocket utilizza l'intestazione di aggiornamento HTTP per passare dal protocollo HTTP al protocollo WebSocket. È supportato nativamente da tutti i browser e il suo utilizzo è simile ai normali socket sia sul lato client che su quello server. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web \parencite{WebSocket_Web_APIs}.
 
 
@@ -391,22 +393,14 @@ WebSocket è un protocollo di comunicazione del computer che fornisce canali di 
 \section{Decodifica}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{Web APIs}
-Le API Web sono un insieme di API e interfacce che comprendono la potente capacità di creazione di script del Web. A seguire quelli utilizzati in questo progetto \parencite{Web_APIs}.
-
 \subsubsection{Canvas API}
 L'API Canvas fornisce un mezzo per disegnare grafica tramite JavaScript, si concentra principalmente sulla grafica 2D ma quando viene utilizzata dall'API WebGL può disegnare grafica 2D e 3D con accelerazione hardware. È completamente supportato da tutti i browser \parencite{Canvas_API}.
 
 \subsubsection{WebGL API}
 WebGL è un'API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D che consente l'utilizzo accelerato dalla GPU della fisica e dell'elaborazione e degli effetti delle immagini. WebGL 1.0 è supportato su tutti i browser, mentre WebGL 2.0 viene testato su Safari \parencite{WebGL}.
 
-
-
-\subsection{Librerie JavaScript}
-Per il front-end, sono state utilizzate una libreria JavaScript open source per la decodifica del filmato.
-
-\subsubsection{JSMpeg}
-JSMpeg è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su WebAudio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
+\subsection{Librerie JavaScript per la decodifica: JSMpeg}
+Per la decodifica del filmato lato front-end è stata utilizzata la libreria JSMpeg, una libreria JavaScript open source. JSMpeg è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su WebAudio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
 
 
 
@@ -414,8 +408,8 @@ JSMpeg è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e 
 \section{Gestione input}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{Librerie JavaScript}
-Per il front-end, sono state utilizzate due librerie JavaScript open source per la gestione degli input.
+\subsection{Librerie JavaScript per la gestione dell'input}
+Per il front-end, sono state utilizzate due librerie JavaScript open source per la gestione dell'input.
 
 \subsubsection{Keypress}
 Keypress è una libreria per la cattura dell'input da tastiera specializzata per l'uso in contesti videoludici, rilasciata con licenza Apache 2.0. Viene utilizzata per gestire l'input da tastiera nel front-end \parencite{Keypress}.
@@ -429,9 +423,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 
 
-\section{MPEG}
-Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, e i contenitori usati per la trasmissione sono stati MPEG, MP4, WebM.
-
+\section{MPEG} \label{sec:cap3_MPEG}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \subsection{Compression}
 Il codec è un modo per comprimere il video non elaborato prima dello streaming; la maggior parte dei servizi di streaming non si occupa della compressione a livello di codec e funziona solo con protocolli e trasporti. Alcuni esempi di codec sono h264, aac, mp3.
