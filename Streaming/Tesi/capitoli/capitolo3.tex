@@ -374,24 +374,6 @@ Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia tr
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
 
 
-\subsection{MPEG}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsubsection{Compression}
-Il codec è un modo per comprimere il video non elaborato prima dello streaming; la maggior parte dei servizi di streaming non si occupa della compressione a livello di codec e funziona solo con protocolli e trasporti. Alcuni esempi di codec sono h264, aac, mp3.
-
-Generalmente, il processo di conversione di segnali video compressi in altri segnali video è chiamato transcodifica video. Di solito, l'obiettivo principale di questa procedura è adattare le funzionalità video come bit rate, risoluzione o codec, per soddisfare i requisiti dei canali di comunicazione e dei dispositivi endpoint. È composto principalmente da compressione e decompressione di segnali video con tecniche di codifica video. La compressione è spesso chiamata codifica e la decompressione è indicata come decodifica \parencite{CombinedICTTechnologies}.
-
-\subsubsection{Video}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsubsection{Audio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\subsubsection{Trasporto}
-Il trasporto o il contenitore definisce il modo in cui il video compresso viene compresso in byte per la trasmissione da una parte all'altra (utilizzando un protocollo). Ad esempio, MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
-
-
 
 
 \section{Trasmissione}
@@ -444,6 +426,26 @@ GameController.js è una libreria che estende le Web API per il gamepad, è rila
 
 \subsection{SDL input}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
+\section{MPEG}
+Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, e i contenitori usati per la trasmissione sono stati MPEG, MP4, WebM.
+
+
+\subsection{Compression}
+Il codec è un modo per comprimere il video non elaborato prima dello streaming; la maggior parte dei servizi di streaming non si occupa della compressione a livello di codec e funziona solo con protocolli e trasporti. Alcuni esempi di codec sono h264, aac, mp3.
+
+Generalmente, il processo di conversione di segnali video compressi in altri segnali video è chiamato transcodifica video. Di solito, l'obiettivo principale di questa procedura è adattare le funzionalità video come bit rate, risoluzione o codec, per soddisfare i requisiti dei canali di comunicazione e dei dispositivi endpoint. È composto principalmente da compressione e decompressione di segnali video con tecniche di codifica video. La compressione è spesso chiamata codifica e la decompressione è indicata come decodifica \parencite{CombinedICTTechnologies}.
+
+\subsection{Video}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsection{Audio}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsection{Trasporto}
+Il trasporto o il contenitore definisce il modo in cui il video compresso viene compresso in byte per la trasmissione da una parte all'altra (utilizzando un protocollo). Ad esempio, MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
 
 %\parencite{CPP_Primer}
 %\parencite{Computer_Networking_and_the_Internet}
