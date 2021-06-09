@@ -383,7 +383,89 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} d
 \section{Trasmissione}
 Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
 
-WebSocket è un protocollo di comunicazione che fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web \parencite{WebSocket_Web_APIs}.
+\subsection{WebSocket}
+WebSocket è un insieme di standard formato dalle API WebSocket implementate dai browser web ed dal protocollo di comunicazione WebSocket. Il protocollo di comunicazione fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web.
+
+\subsubsection{WebSocket: le API}
+Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performance_Browser_Networking} le API WebSocket fornite dal browser sono relativamente semplici. La connessione viene creata istanziando la classe \verb|WebSocket|, al costruttore oltre al URL di una risorsa WebSocket è possibile passare un vettore di stringhe che specificano dei sotto-protocolli definiti dall'utente. La classe \verb|WebSocket| espone 4 callback: errore, chiusura, apertura e ricezione messaggio. Tramite la proprietà \verb|binaryType| si può controllare il tipo di dati binari utilizzati per la ricezione (di tipo \verb|Blob| o \verb|ArrayBuffer|). La classe \verb|WebSocket| espone solo due metodi: \verb|close| per chiudere la connessione e il metodo asincrono \verb|send| per inviare dati (di tipo \verb|String|, \verb|Blob|, \verb|ArrayBuffer| o \verb|ArrayBufferView|) \parencite{WebSocket_Web_APIs}.
+
+\begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
+	var ws = new WebSocket(
+		'ws://example.com/socket', 
+		['protocollo_utente1', 'protocollo_utente2']); 
+
+	ws.binaryType = 'arraybuffer'; //'blob';
+
+	ws.onerror = function (error) { ... } 
+	ws.onclose = function () { ... } 
+
+	ws.onopen = function () { 
+		ws.send('Connection established. Hello server!'); 
+	}
+
+	ws.onmessage = function(msg) { 
+		if(msg.data instanceof ArrayBuffer)
+			processArrayBuffer(msg.data);
+		else if(msg.data instanceof Blob)
+			processBlob(msg.data);
+		else
+			processText(msg.data);	
+	}
+\end{lstlisting}
+
+\subsubsection{WebSocket: il protocollo}
+Il protocollo WebSocket è composto da due componenti: l'handshake utilizzato per negoziare i parametri della connessione, ed un meccanismo di framing dei messaggi binari per consentire un basso sovraccarico \parencite{High_Performance_Browser_Networking}.
+
+Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server riponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake}.
+
+\begin{lstlisting}[language=HTML, caption=Richiesta handshake da parte del client, label={lst:Handshake_CLI}]
+	GET /mamecgp HTTP/1.1
+	Host: www.maionemiky.it
+	Upgrade: websocket
+	Connection: Upgrade
+	Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==	
+	Sec-WebSocket-Protocol: cloudgaming
+	Sec-WebSocket-Version: 13
+	Origin: http://www.maionemiky.it
+\end{lstlisting}
+
+\begin{lstlisting}[language=HTML, caption=Risposta handshake da parte del server, label={lst:Handshake_SRV}]
+	HTTP/1.1 101 Switching Protocols
+	Upgrade: websocket
+	Connection: Upgrade
+	Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
+	Sec-WebSocket-Protocol: cloudgaming
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Codice dell'handshake implementato, label={lst:Handshake}]
+	bool generate_handshake(Connection &c, ostream &handshake)
+	{
+		auto ws_magic_string =
+			"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+		auto header_it = 
+			connection->header.find("Sec-WebSocket-Key");	
+		auto sha1 =
+			sha1_encode(header_it->second + ws_magic_string);
+
+		handshake
+			<< "HTTP/1.1 101 Web Socket Protocol Handshake" << endl
+			<< "Upgrade: websocket" << endl
+			<< "Connection: Upgrade" << endl
+			<< "Sec-WebSocket-Accept: "
+			<< base64_encode(sha1)			
+			<< endl << endl;
+
+		return true;
+	}
+\end{lstlisting}
+
+Come detto precedentemente WebSocket implementa un meccanismo di framing dei messaggi binari che consente la comunicazione orientata ai messaggi. Quando viene inviato un messaggio il destinatario riceve una notifica quando l'intero messaggio è stato ricevuto. Questo meccanismo divite ogni messaggio in più frame, che vengono trasportati, e poi riassemblati. \ref{fig:dataframe_websocket}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/dataframe_websocket}
+	\caption{Frame del WebSocket}
+	\label{fig:dataframe_websocket}
+\end{figure}
 
 Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
 
