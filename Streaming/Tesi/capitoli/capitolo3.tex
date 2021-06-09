@@ -252,16 +252,15 @@ Il progetto FFmpeg è un insieme di librerie e programmi open source per la gest
 	\item \verb|Post Proc| è una libreria contenente le vecchie routine di post-elaborazione video basate su h263.
 \end{itemize}
 
+La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}).
+
+Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
 	\caption{Diagramma delle classi relativo alla codifica}
 	\label{fig:class_server_and_encoding}
 \end{figure}
-
-La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}):
-
-Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
 
 Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
 
@@ -305,8 +304,7 @@ Con riferimento al List. \ref{lst:videoCodecFFmpeg}, la codifica video inizia tr
 			rgb_frame->linesize, 0, height,	// dimesione input
 			yuv_frame->data, 				// output
 			yuv_frame->linesize); 			// dimensione output
-
-		// inizializzazione pacchetto video
+		
 		av_init_packet(&video_packet);		// pacchetto video
 
 		// inizio codifica
@@ -360,8 +358,7 @@ Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia tr
 			audio_codec_context->sample_fmt,// formato output
 			convertedData,					// input
 			buffer_size);					// dimensione input			
-		
-		// inizializzazione pacchetto audio
+				
 		av_init_packet(&audio_packet);		// pacchetto audio
 		
 		// codifica
@@ -386,10 +383,15 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} d
 \section{Trasmissione}
 Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
 
-WebSocket è un protocollo di comunicazione del computer che fornisce canali di comunicazione full-duplex su una singola connessione TCP. È compatibile con HTTP perché l'handshake WebSocket utilizza l'intestazione di aggiornamento HTTP per passare dal protocollo HTTP al protocollo WebSocket. È supportato nativamente da tutti i browser e il suo utilizzo è simile ai normali socket sia sul lato client che su quello server. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web \parencite{WebSocket_Web_APIs}.
+WebSocket è un protocollo di comunicazione che fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web \parencite{WebSocket_Web_APIs}.
 
+La classe che si occupa della comunicazione tramite WebSocket è \verb|streaming_server|. Come mostrato in Fig. \ref{fig:class_server_and_encoding_full} \verb|streaming_server| utilizza la classe \verb|ws_server|
 
-
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
+	\caption{Diagramma delle classi del server}
+	\label{fig:class_server_and_encoding_full}
+\end{figure}
 
 \section{Decodifica}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

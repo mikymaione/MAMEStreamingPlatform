@@ -1,0 +1,111 @@
+@startuml
+skinparam monochrome true
+
+skinparam Shadowing false
+skinparam LineType ortho
+
+skinparam nodesep 15
+skinparam ranksep 30
+
+class SDL_main #Linen 
+SDL_main -- streaming_server 
+
+encode_to_movie -- stream
+
+class encode_to_movie {
+	+encode_to_movie(stream socket, int in_width, int in_height, int fps)
+	+add_frame(char[] pixels)
+	+add_instant(char[] stream, int size, int samples)
+	-{static} int write_packet(char[] buf, int buf_size)
+}
+
+streaming_server -- SendStream
+streaming_server -- encode_to_movie
+SocketServerBase -- stream
+
+class SocketServerBase<SocketType> {
+	+Endpoint[] endpoints
+	+Config config
+	+Connection[] get_connections()		
+	+start()
+	+stop()	
+	+void send(Connection c, SendStream stream, function callback, char opcode)	
+	#{abstract} accept()
+	#read_handshake(Connection c)
+	#parse_handshake(Connection c, stream handshake)
+	#write_handshake(Connection c, asio::streambuf buffer)
+	#bool generate_handshake(Connection c, stream handshake)
+	#read_message(Connection c, asio::streambuf buffer, Endpoint e)
+	#read_message_content(Connection c, asio::streambuf buffer, int length, Endpoint e, char opcode)
+	#connection_open(Connection c, Endpoint e)	
+	#connection_close(Connection c, Endpoint e, int status, string reason)
+	#connection_error(Connection c, Endpoint e, error_code ec)	
+}
+
+Connection --+ SocketServerBase
+SendStream --+ SocketServerBase
+Endpoint --+ SocketServerBase
+Config --+ SocketServerBase
+Message --+ SocketServerBase
+
+class Message extends stream {
+	+char opcode
+	+int size()
+	+string string()
+}
+
+class SendStream extends stream {
+	-asio::streambuf streambuf
+	+int size()
+}
+
+class SendData {
+	+SendStream header_stream
+	+SendStream message_stream
+	+function callback
+}
+
+SendData -- SendStream
+SendData --+ Connection
+
+class Connection {
+	-SendData[] send_queue
+	-SocketType socket
+	-send_from_queue(Connection c)
+	-read_remote_endpoint_data()
+}
+
+class SocketServer<SocketType> extends SocketServerBase {
+	#void accept()
+}
+
+class streaming_server {
+	+start(ushort port)
+	+send_video_frame(char[] pixels)
+	+send_audio_interval(char[] stream, int size, int samples)
+	+generate_key_event(char[] key, bool pressed)
+	-send(SendStream socket)
+}
+
+class ws_server <asio::ip::tcp::socket> extends SocketServer {
+
+}
+
+streaming_server -- ws_server
+
+Endpoint -- Connection
+Endpoint -- Message
+
+class Endpoint {
+	-Connection[] connections
+	+on_open(Connection c)
+	+on_close(Connection c, int status, string reason)
+	+on_message(Connection c, Message msg)
+	+on_error(Connection c, error_code e)
+}
+
+class Config {
+	+ushort port
+	+string address
+}
+@enduml
