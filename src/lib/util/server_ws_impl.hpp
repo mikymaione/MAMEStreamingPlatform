@@ -26,20 +26,24 @@
 
 #ifndef CASE_INSENSITIVE_EQUALS_AND_HASH
 #define CASE_INSENSITIVE_EQUALS_AND_HASH
-class case_insensitive_equals {
+class case_insensitive_equals
+{
 public:
-	bool operator()(const std::string& key1, const std::string& key2) const {
-		return key1.size() == key2.size()
-			&& equal(key1.cbegin(), key1.cend(), key2.cbegin(),
-					 [](std::string::value_type key1v, std::string::value_type key2v)
-		{ return tolower(key1v) == tolower(key2v); });
+	bool operator()(const std::string &key1, const std::string &key2) const
+	{
+		return key1.size() == key2.size() && equal(key1.cbegin(), key1.cend(), key2.cbegin(),
+												   [](std::string::value_type key1v, std::string::value_type key2v)
+												   { return tolower(key1v) == tolower(key2v); });
 	}
 };
-class case_insensitive_hash {
+class case_insensitive_hash
+{
 public:
-	size_t operator()(const std::string& key) const {
+	size_t operator()(const std::string &key) const
+	{
 		size_t seed = 0;
-		for (auto& c : key) {
+		for (auto &c : key)
+		{
 			std::hash<char> hasher;
 			seed ^= hasher(std::tolower(c)) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 		}
@@ -48,44 +52,49 @@ public:
 };
 #endif
 
-namespace webpp {
+namespace webpp
+{
 	template <class socket_type>
 	class SocketServer;
 
 	template <class socket_type>
-	class SocketServerBase {
+	class SocketServerBase
+	{
 	public:
 		virtual ~SocketServerBase() {}
 
-		class SendStream : public std::ostream, public std::enable_shared_from_this<SendStream> {
+		class SendStream : public std::ostream, public std::enable_shared_from_this<SendStream>
+		{
 			friend class SocketServerBase<socket_type>;
 
 			asio::streambuf streambuf;
+
 		public:
 			SendStream() : std::ostream(&streambuf) {}
-			size_t size() const {
+			size_t size() const
+			{
 				return streambuf.size();
 			}
 		};
 
-
-		class Connection : public webpp::Connection {
+		class Connection : public webpp::Connection
+		{
 			friend class SocketServerBase<socket_type>;
 			friend class SocketServer<socket_type>;
 			using super = webpp::Connection;
 
 		public:
 			virtual ~Connection() {}
-			explicit Connection(const std::shared_ptr<socket_type>& socket) : super(0), socket(socket), strand(socket->get_io_service()), closed(false) { }
+			explicit Connection(const std::shared_ptr<socket_type> &socket) : super(0), socket(socket), strand(socket->get_io_service()), closed(false) {}
 
 		private:
-			explicit Connection(socket_type* socket) : super(0), socket(socket), strand(socket->get_io_service()), closed(false) { }
+			explicit Connection(socket_type *socket) : super(0), socket(socket), strand(socket->get_io_service()), closed(false) {}
 
-			class SendData {
+			class SendData
+			{
 			public:
-				SendData(const std::shared_ptr<SendStream>& header_stream, const std::shared_ptr<SendStream>& message_stream,
-						 const std::function<void(const std::error_code)>& callback) :
-					header_stream(header_stream), message_stream(message_stream), callback(callback) {}
+				SendData(const std::shared_ptr<SendStream> &header_stream, const std::shared_ptr<SendStream> &message_stream,
+						 const std::function<void(const std::error_code)> &callback) : header_stream(header_stream), message_stream(message_stream), callback(callback) {}
 
 				std::shared_ptr<SendStream> header_stream;
 				std::shared_ptr<SendStream> message_stream;
@@ -98,71 +107,88 @@ namespace webpp {
 
 			std::list<SendData> send_queue;
 
-			void send_from_queue(const std::shared_ptr<Connection>& connection)
+			void send_from_queue(const std::shared_ptr<Connection> &connection)
 			{
-				strand.post([this, connection]()
-				{
-					asio::async_write(*socket, send_queue.begin()->header_stream->streambuf, strand.wrap([this, connection](const std::error_code& ec, size_t /*bytes_transferred*/)
+				strand.post(
+					[this, connection]()
 					{
-						if (!ec)
-						{
-							asio::async_write(*socket, send_queue.begin()->message_stream->streambuf, strand.wrap([this, connection](const std::error_code& ec, size_t /*bytes_transferred*/)
-							{
-								auto send_queued = send_queue.begin();
-
-								if (send_queued->callback)
-									send_queued->callback(ec);
-
-								if (!ec)
+						asio::async_write(
+							*socket,
+							send_queue.begin()->header_stream->streambuf,
+							strand.wrap(
+								[this, connection](const std::error_code &ec, size_t /*bytes_transferred*/)
 								{
-									send_queue.erase(send_queued);
+									if (!ec)
+									{
+										asio::async_write(
+											*socket,
+											send_queue.begin()->message_stream->streambuf,
+											strand.wrap(
+												[this, connection](const std::error_code &ec, size_t /*bytes_transferred*/)
+												{
+													auto send_queued = send_queue.begin();
 
-									if (send_queue.size() > 0)
-										send_from_queue(connection);
-								}
-								else
-									send_queue.clear();
-							}));
-						}
-						else
-						{
-							auto send_queued = send_queue.begin();
+													if (send_queued->callback)
+														send_queued->callback(ec);
 
-							if (send_queued->callback)
-								send_queued->callback(ec);
+													if (!ec)
+													{
+														send_queue.erase(send_queued);
 
-							send_queue.clear();
-						}
-					}));
-				});
+														if (send_queue.size() > 0)
+															send_from_queue(connection);
+													}
+													else
+														send_queue.clear();
+												}));
+									}
+									else
+									{
+										auto send_queued = send_queue.begin();
+
+										if (send_queued->callback)
+											send_queued->callback(ec);
+
+										send_queue.clear();
+									}
+								}));
+					});
 			}
 
 			std::atomic<bool> closed;
 
 			std::unique_ptr<asio::system_timer> timer_idle;
 
-			void read_remote_endpoint_data() {
-				try {
+			void read_remote_endpoint_data()
+			{
+				try
+				{
 					remote_endpoint_address = socket->lowest_layer().remote_endpoint().address().to_string();
 					remote_endpoint_port = socket->lowest_layer().remote_endpoint().port();
 				}
-				catch (...) {}
+				catch (...)
+				{
+				}
 			}
 		};
 
-		class Message : public std::istream, public std::enable_shared_from_this<Message> {
+		class Message : public std::istream, public std::enable_shared_from_this<Message>
+		{
 			friend class SocketServerBase<socket_type>;
 
 		public:
 			unsigned char fin_rsv_opcode;
-			size_t size() const {
+			size_t size() const
+			{
 				return length;
 			}
-			std::string string() const {
+			std::string string() const
+			{
 				std::stringstream ss;
 				ss << rdbuf();
 				return ss.str();
 			}
+
 		private:
 			Message() : std::istream(&streambuf), fin_rsv_opcode(0), length(0) {}
 
@@ -170,28 +196,32 @@ namespace webpp {
 			asio::streambuf streambuf;
 		};
 
-		class Endpoint : public std::enable_shared_from_this<Endpoint> {
+		class Endpoint : public std::enable_shared_from_this<Endpoint>
+		{
 			friend class SocketServerBase<socket_type>;
-			std::unordered_set<std::shared_ptr<Connection> > connections;
+			std::unordered_set<std::shared_ptr<Connection>> connections;
 			std::mutex connections_mutex;
 
 		public:
 			std::function<void(std::shared_ptr<Connection>)> on_open;
 			std::function<void(std::shared_ptr<Connection>, std::shared_ptr<Message>)> on_message;
-			std::function<void(std::shared_ptr<Connection>, int, const std::string&)> on_close;
-			std::function<void(std::shared_ptr<Connection>, const std::error_code&)> on_error;
+			std::function<void(std::shared_ptr<Connection>, int, const std::string &)> on_close;
+			std::function<void(std::shared_ptr<Connection>, const std::error_code &)> on_error;
 
-			std::unordered_set<std::shared_ptr<Connection> > get_connections() {
+			std::unordered_set<std::shared_ptr<Connection>> get_connections()
+			{
 				std::lock_guard<std::mutex> lock(connections_mutex);
 				auto copy = connections;
 				return copy;
 			}
 		};
 
-		class Config {
+		class Config
+		{
 			friend class SocketServerBase<socket_type>;
 
 			Config(unsigned short port) : port(port) {}
+
 		public:
 			/// Use only one connection
 			bool client_mode = false;
@@ -213,22 +243,27 @@ namespace webpp {
 		Config config;
 
 	private:
-		class regex_orderable : public std::regex {
+		class regex_orderable : public std::regex
+		{
 			std::string str;
 			path2regex::Keys keys;
+
 		public:
-			regex_orderable(const char* regex_cstr) : std::regex(path2regex::path_to_regex(regex_cstr, keys)), str(regex_cstr) {}
-			regex_orderable(const std::string& regex_cstr) : std::regex(path2regex::path_to_regex(regex_cstr, keys)), str(regex_cstr) {}
-			bool operator<(const regex_orderable& rhs) const {
+			regex_orderable(const char *regex_cstr) : std::regex(path2regex::path_to_regex(regex_cstr, keys)), str(regex_cstr) {}
+			regex_orderable(const std::string &regex_cstr) : std::regex(path2regex::path_to_regex(regex_cstr, keys)), str(regex_cstr) {}
+			bool operator<(const regex_orderable &rhs) const
+			{
 				return str < rhs.str;
 			}
 		};
+
 	public:
 		/// Warning: do not access (red or write) m_endpoint without holding m_endpoint_mutex
 		std::map<regex_orderable, Endpoint> m_endpoint;
 		std::mutex m_endpoint_mutex;
 
-		virtual void start() {
+		virtual void start()
+		{
 			if (!io_context)
 				io_context = std::make_shared<asio::io_context>();
 
@@ -253,18 +288,19 @@ namespace webpp {
 			io_context->run();
 		}
 
-		void stop() {
+		void stop()
+		{
 			acceptor->close();
 			io_context->stop();
 
 			std::lock_guard<std::mutex> lock(m_endpoint_mutex);
-			for (auto& p : m_endpoint)
+			for (auto &p : m_endpoint)
 				p.second.connections.clear();
 		}
 
 		///fin_rsv_opcode: 129=one fragment, text, 130=one fragment, binary, 136=close connection.
 		///See http://tools.ietf.org/html/rfc6455#section-5.2 for more information
-		void send(std::shared_ptr<webpp::Connection> conn, const std::shared_ptr<SendStream>& message_stream, const std::function<void(const std::error_code&)>& callback = nullptr, unsigned char fin_rsv_opcode = 129) const
+		void send(std::shared_ptr<webpp::Connection> conn, const std::shared_ptr<SendStream> &message_stream, const std::function<void(const std::error_code &)> &callback = nullptr, unsigned char fin_rsv_opcode = 129) const
 		{
 			std::shared_ptr<Connection> connection = std::dynamic_pointer_cast<Connection>(conn);
 
@@ -281,19 +317,23 @@ namespace webpp {
 			header_stream->put(fin_rsv_opcode);
 
 			//unmasked (first length byte<128)
-			if (length >= 126) {
+			if (length >= 126)
+			{
 				int num_bytes;
 
-				if (length > 0xffff) {
+				if (length > 0xffff)
+				{
 					num_bytes = 8;
 					header_stream->put(127);
 				}
-				else {
+				else
+				{
 					num_bytes = 2;
 					header_stream->put(126);
 				}
 
-				for (int c = num_bytes - 1; c >= 0; c--) {
+				for (int c = num_bytes - 1; c >= 0; c--)
+				{
 					header_stream->put((static_cast<unsigned long long>(length) >> (8 * c)) % 256);
 				}
 			}
@@ -301,18 +341,20 @@ namespace webpp {
 				header_stream->put(static_cast<unsigned char>(length));
 
 			connection->strand.post([connection, header_stream, message_stream, callback]()
-			{
-				connection->send_queue.emplace_back(header_stream, message_stream, callback);
+									{
+										connection->send_queue.emplace_back(header_stream, message_stream, callback);
 
-				if (connection->send_queue.size() == 1)
-					connection->send_from_queue(connection);
-			});
+										if (connection->send_queue.size() == 1)
+											connection->send_from_queue(connection);
+									});
 		}
 
-		void send_close(std::shared_ptr<webpp::Connection> conn, int status, const std::string& reason = "",
-						const std::function<void(const std::error_code&)>& callback = nullptr) const {
-			std::shared_ptr<Connection> connection = std::dynamic_pointer_cast<Connection> (conn);
-			if (!connection) return;
+		void send_close(std::shared_ptr<webpp::Connection> conn, int status, const std::string &reason = "",
+						const std::function<void(const std::error_code &)> &callback = nullptr) const
+		{
+			std::shared_ptr<Connection> connection = std::dynamic_pointer_cast<Connection>(conn);
+			if (!connection)
+				return;
 			//Send close only once (in case close is initiated by server)
 			if (connection->closed)
 				return;
@@ -329,10 +371,12 @@ namespace webpp {
 			send(connection, send_stream, callback, 136);
 		}
 
-		std::unordered_set<std::shared_ptr<Connection> > get_connections() {
-			std::unordered_set<std::shared_ptr<Connection> > all_connections;
+		std::unordered_set<std::shared_ptr<Connection>> get_connections()
+		{
+			std::unordered_set<std::shared_ptr<Connection>> all_connections;
 			std::lock_guard<std::mutex> lock(m_endpoint_mutex);
-			for (auto& e : m_endpoint) {
+			for (auto &e : m_endpoint)
+			{
 				std::lock_guard<std::mutex> lock(e.second.connections_mutex);
 				all_connections.insert(e.second.connections.begin(), e.second.connections.end());
 			}
@@ -357,12 +401,13 @@ namespace webpp {
 		*   socket_server.upgrade(connection);
 		* }
 		*/
-		void upgrade(const std::shared_ptr<Connection>& connection) {
+		void upgrade(const std::shared_ptr<Connection> &connection)
+		{
 			auto read_buffer = std::make_shared<asio::streambuf>();
 			write_handshake(connection, read_buffer);
 		}
 
-		static std::vector<std::string> split(const std::string& s, const std::string& delimiter)
+		static std::vector<std::string> split(const std::string &s, const std::string &delimiter)
 		{
 			const auto delimiter_length = delimiter.length();
 			std::vector<std::string> res;
@@ -391,26 +436,29 @@ namespace webpp {
 
 		std::vector<std::thread> threads;
 
-		SocketServerBase(unsigned short port) :
-			config(port) {}
+		SocketServerBase(unsigned short port) : config(port) {}
 
 		virtual void accept() = 0;
 
-		std::shared_ptr<asio::system_timer> get_timeout_timer(const std::shared_ptr<Connection>& connection, size_t seconds) {
+		std::shared_ptr<asio::system_timer> get_timeout_timer(const std::shared_ptr<Connection> &connection, size_t seconds)
+		{
 			if (seconds == 0)
 				return nullptr;
 			auto timer = std::make_shared<asio::system_timer>(connection->socket->get_io_service());
 			timer->expires_at(std::chrono::system_clock::now() + std::chrono::seconds(static_cast<long>(seconds)));
-			timer->async_wait([connection](const std::error_code& ec) {
-				if (!ec) {
-					connection->socket->lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both);
-					connection->socket->lowest_layer().close();
-				}
-			});
+			timer->async_wait([connection](const std::error_code &ec)
+							  {
+								  if (!ec)
+								  {
+									  connection->socket->lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both);
+									  connection->socket->lowest_layer().close();
+								  }
+							  });
 			return timer;
 		}
 
-		void read_handshake(const std::shared_ptr<Connection>& connection) {
+		void read_handshake(const std::shared_ptr<Connection> &connection)
+		{
 			connection->read_remote_endpoint_data();
 
 			//Create new read_buffer for async_read_until()
@@ -421,28 +469,32 @@ namespace webpp {
 			auto timer = get_timeout_timer(connection, config.timeout_request);
 
 			asio::async_read_until(*connection->socket, *read_buffer, "\r\n\r\n",
-								   [this, connection, read_buffer, timer]
-			(const std::error_code& ec, size_t /*bytes_transferred*/) {
-				if (timer)
-					timer->cancel();
-				if (!ec) {
-					//Convert to istream to extract string-lines
-					std::istream stream(read_buffer.get());
+								   [this, connection, read_buffer, timer](const std::error_code &ec, size_t /*bytes_transferred*/)
+								   {
+									   if (timer)
+										   timer->cancel();
+									   if (!ec)
+									   {
+										   //Convert to istream to extract string-lines
+										   std::istream stream(read_buffer.get());
 
-					parse_handshake(connection, stream);
+										   parse_handshake(connection, stream);
 
-					write_handshake(connection, read_buffer);
-				}
-			});
+										   write_handshake(connection, read_buffer);
+									   }
+								   });
 		}
 
-		void parse_handshake(const std::shared_ptr<Connection>& connection, std::istream& stream) const {
+		void parse_handshake(const std::shared_ptr<Connection> &connection, std::istream &stream) const
+		{
 			std::string line;
 			getline(stream, line);
 			size_t method_end;
-			if ((method_end = line.find(' ')) != std::string::npos) {
+			if ((method_end = line.find(' ')) != std::string::npos)
+			{
 				size_t path_end;
-				if ((path_end = line.find(' ', method_end + 1)) != std::string::npos) {
+				if ((path_end = line.find(' ', method_end + 1)) != std::string::npos)
+				{
 					connection->method = line.substr(0, method_end);
 					connection->path = line.substr(method_end + 1, path_end - method_end - 1);
 					if ((path_end + 6) < line.size())
@@ -452,9 +504,11 @@ namespace webpp {
 
 					getline(stream, line);
 					size_t param_end;
-					while ((param_end = line.find(':')) != std::string::npos) {
+					while ((param_end = line.find(':')) != std::string::npos)
+					{
 						size_t value_start = param_end + 1;
-						if ((value_start) < line.size()) {
+						if ((value_start) < line.size())
+						{
 							if (line[value_start] == ' ')
 								value_start++;
 							if (value_start < line.size())
@@ -467,12 +521,12 @@ namespace webpp {
 			}
 		}
 
-		void write_handshake(const std::shared_ptr<Connection>& connection, const std::shared_ptr<asio::streambuf>& read_buffer)
+		void write_handshake(const std::shared_ptr<Connection> &connection, const std::shared_ptr<asio::streambuf> &read_buffer)
 		{
 			//Find path- and method-match, and generate response
 			std::lock_guard<std::mutex> lock(m_endpoint_mutex);
 
-			for (auto& regex_endpoint : m_endpoint)
+			for (auto &regex_endpoint : m_endpoint)
 			{
 				const auto parameters_index = connection->path.find("?");
 
@@ -508,18 +562,18 @@ namespace webpp {
 						connection->path_match = std::move(path_match);
 
 						//Capture write_buffer in lambda so it is not destroyed before async_write is finished
-						asio::async_write(*connection->socket, *write_buffer, [this, connection, write_buffer, read_buffer, &regex_endpoint](const std::error_code& ec, size_t /*bytes_transferred*/)
-						{
-							if (!ec)
-							{
-								connection_open(connection, regex_endpoint.second);
-								read_message(connection, read_buffer, regex_endpoint.second);
-							}
-							else
-							{
-								connection_error(connection, regex_endpoint.second, ec);
-							}
-						});
+						asio::async_write(*connection->socket, *write_buffer, [this, connection, write_buffer, read_buffer, &regex_endpoint](const std::error_code &ec, size_t /*bytes_transferred*/)
+										  {
+											  if (!ec)
+											  {
+												  connection_open(connection, regex_endpoint.second);
+												  read_message(connection, read_buffer, regex_endpoint.second);
+											  }
+											  else
+											  {
+												  connection_error(connection, regex_endpoint.second, ec);
+											  }
+										  });
 					}
 
 					return;
@@ -527,7 +581,8 @@ namespace webpp {
 			}
 		}
 
-		bool generate_handshake(const std::shared_ptr<Connection>& connection, std::ostream& handshake) const {
+		bool generate_handshake(const std::shared_ptr<Connection> &connection, std::ostream &handshake) const
+		{
 			auto header_it = connection->header.find("Sec-WebSocket-Key");
 			if (header_it == connection->header.end())
 				return false;
@@ -543,146 +598,163 @@ namespace webpp {
 			return true;
 		}
 
-		void read_message(const std::shared_ptr<Connection>& connection,
-						  const std::shared_ptr<asio::streambuf>& read_buffer, Endpoint& endpoint) const {
+		void read_message(const std::shared_ptr<Connection> &connection,
+						  const std::shared_ptr<asio::streambuf> &read_buffer, Endpoint &endpoint) const
+		{
 			asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(2),
-							 [this, connection, read_buffer, &endpoint]
-			(const std::error_code& ec, size_t bytes_transferred) {
-				if (!ec) {
-					if (bytes_transferred == 0) { //TODO: why does this happen sometimes?
-						read_message(connection, read_buffer, endpoint);
-						return;
-					}
-					std::istream stream(read_buffer.get());
+							 [this, connection, read_buffer, &endpoint](const std::error_code &ec, size_t bytes_transferred)
+							 {
+								 if (!ec)
+								 {
+									 if (bytes_transferred == 0)
+									 { //TODO: why does this happen sometimes?
+										 read_message(connection, read_buffer, endpoint);
+										 return;
+									 }
+									 std::istream stream(read_buffer.get());
 
-					std::vector<unsigned char> first_bytes;
-					first_bytes.resize(2);
-					stream.read(reinterpret_cast<char*>(&first_bytes[0]), 2);
+									 std::vector<unsigned char> first_bytes;
+									 first_bytes.resize(2);
+									 stream.read(reinterpret_cast<char *>(&first_bytes[0]), 2);
 
-					unsigned char fin_rsv_opcode = first_bytes[0];
+									 unsigned char fin_rsv_opcode = first_bytes[0];
 
-					//Close connection if unmasked message from client (protocol error)
-					if (first_bytes[1] < 128) {
-						const std::string reason("message from client not masked");
-						send_close(connection, 1002, reason, [connection](const std::error_code& /*ec*/) {});
-						connection_close(connection, endpoint, 1002, reason);
-						return;
-					}
+									 //Close connection if unmasked message from client (protocol error)
+									 if (first_bytes[1] < 128)
+									 {
+										 const std::string reason("message from client not masked");
+										 send_close(connection, 1002, reason, [connection](const std::error_code & /*ec*/) {});
+										 connection_close(connection, endpoint, 1002, reason);
+										 return;
+									 }
 
-					size_t length = (first_bytes[1] & 127);
+									 size_t length = (first_bytes[1] & 127);
 
-					if (length == 126) {
-						//2 next bytes is the size of content
-						asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(2),
-										 [this, connection, read_buffer, &endpoint, fin_rsv_opcode]
-						(const std::error_code& ec, size_t /*bytes_transferred*/) {
-							if (!ec) {
-								std::istream stream(read_buffer.get());
+									 if (length == 126)
+									 {
+										 //2 next bytes is the size of content
+										 asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(2),
+														  [this, connection, read_buffer, &endpoint, fin_rsv_opcode](const std::error_code &ec, size_t /*bytes_transferred*/)
+														  {
+															  if (!ec)
+															  {
+																  std::istream stream(read_buffer.get());
 
-								std::vector<unsigned char> length_bytes;
-								length_bytes.resize(2);
-								stream.read(reinterpret_cast<char*>(&length_bytes[0]), 2);
+																  std::vector<unsigned char> length_bytes;
+																  length_bytes.resize(2);
+																  stream.read(reinterpret_cast<char *>(&length_bytes[0]), 2);
 
-								size_t length = 0;
-								int num_bytes = 2;
-								for (int c = 0; c < num_bytes; c++)
-									length += length_bytes[c] << (8 * (num_bytes - 1 - c));
+																  size_t length = 0;
+																  int num_bytes = 2;
+																  for (int c = 0; c < num_bytes; c++)
+																	  length += length_bytes[c] << (8 * (num_bytes - 1 - c));
 
-								read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
-							}
-							else
-								connection_error(connection, endpoint, ec);
-						});
-					}
-					else if (length == 127) {
-						//8 next bytes is the size of content
-						asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(8),
-										 [this, connection, read_buffer, &endpoint, fin_rsv_opcode]
-						(const std::error_code& ec, size_t /*bytes_transferred*/) {
-							if (!ec) {
-								std::istream stream(read_buffer.get());
+																  read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
+															  }
+															  else
+																  connection_error(connection, endpoint, ec);
+														  });
+									 }
+									 else if (length == 127)
+									 {
+										 //8 next bytes is the size of content
+										 asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(8),
+														  [this, connection, read_buffer, &endpoint, fin_rsv_opcode](const std::error_code &ec, size_t /*bytes_transferred*/)
+														  {
+															  if (!ec)
+															  {
+																  std::istream stream(read_buffer.get());
 
-								std::vector<unsigned char> length_bytes;
-								length_bytes.resize(8);
-								stream.read(reinterpret_cast<char*>(&length_bytes[0]), 8);
+																  std::vector<unsigned char> length_bytes;
+																  length_bytes.resize(8);
+																  stream.read(reinterpret_cast<char *>(&length_bytes[0]), 8);
 
-								size_t length = 0;
-								int num_bytes = 8;
-								for (int c = 0; c < num_bytes; c++)
-									length += length_bytes[c] << (8 * (num_bytes - 1 - c));
+																  size_t length = 0;
+																  int num_bytes = 8;
+																  for (int c = 0; c < num_bytes; c++)
+																	  length += length_bytes[c] << (8 * (num_bytes - 1 - c));
 
-								read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
-							}
-							else
-								connection_error(connection, endpoint, ec);
-						});
-					}
-					else
-						read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
-				}
-				else
-					connection_error(connection, endpoint, ec);
-			});
+																  read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
+															  }
+															  else
+																  connection_error(connection, endpoint, ec);
+														  });
+									 }
+									 else
+										 read_message_content(connection, read_buffer, length, endpoint, fin_rsv_opcode);
+								 }
+								 else
+									 connection_error(connection, endpoint, ec);
+							 });
 		}
 
-		void read_message_content(const std::shared_ptr<Connection>& connection, const std::shared_ptr<asio::streambuf>& read_buffer,
-								  size_t length, Endpoint& endpoint, unsigned char fin_rsv_opcode) const {
+		void read_message_content(const std::shared_ptr<Connection> &connection, const std::shared_ptr<asio::streambuf> &read_buffer,
+								  size_t length, Endpoint &endpoint, unsigned char fin_rsv_opcode) const
+		{
 			asio::async_read(*connection->socket, *read_buffer, asio::transfer_exactly(4 + length),
-							 [this, connection, read_buffer, length, &endpoint, fin_rsv_opcode]
-			(const std::error_code& ec, size_t /*bytes_transferred*/) {
-				if (!ec) {
-					std::istream raw_message_data(read_buffer.get());
+							 [this, connection, read_buffer, length, &endpoint, fin_rsv_opcode](const std::error_code &ec, size_t /*bytes_transferred*/)
+							 {
+								 if (!ec)
+								 {
+									 std::istream raw_message_data(read_buffer.get());
 
-					//Read mask
-					std::vector<unsigned char> mask;
-					mask.resize(4);
-					raw_message_data.read(reinterpret_cast<char*>(&mask[0]), 4);
+									 //Read mask
+									 std::vector<unsigned char> mask;
+									 mask.resize(4);
+									 raw_message_data.read(reinterpret_cast<char *>(&mask[0]), 4);
 
-					std::shared_ptr<Message> message(new Message());
-					message->length = length;
-					message->fin_rsv_opcode = fin_rsv_opcode;
+									 std::shared_ptr<Message> message(new Message());
+									 message->length = length;
+									 message->fin_rsv_opcode = fin_rsv_opcode;
 
-					std::ostream message_data_out_stream(&message->streambuf);
-					for (size_t c = 0; c < length; c++) {
-						message_data_out_stream.put(raw_message_data.get() ^ mask[c % 4]);
-					}
+									 std::ostream message_data_out_stream(&message->streambuf);
+									 for (size_t c = 0; c < length; c++)
+									 {
+										 message_data_out_stream.put(raw_message_data.get() ^ mask[c % 4]);
+									 }
 
-					//If connection close
-					if ((fin_rsv_opcode & 0x0f) == 8) {
-						int status = 0;
-						if (length >= 2) {
-							unsigned char byte1 = message->get();
-							unsigned char byte2 = message->get();
-							status = (byte1 << 8) + byte2;
-						}
+									 //If connection close
+									 if ((fin_rsv_opcode & 0x0f) == 8)
+									 {
+										 int status = 0;
+										 if (length >= 2)
+										 {
+											 unsigned char byte1 = message->get();
+											 unsigned char byte2 = message->get();
+											 status = (byte1 << 8) + byte2;
+										 }
 
-						auto reason = message->string();
-						send_close(connection, status, reason, [connection](const std::error_code& /*ec*/) {});
-						connection_close(connection, endpoint, status, reason);
-						return;
-					}
-					else {
-						//If ping
-						if ((fin_rsv_opcode & 0x0f) == 9) {
-							//send pong
-							auto empty_send_stream = std::make_shared<SendStream>();
-							send(connection, empty_send_stream, nullptr, fin_rsv_opcode + 1);
-						}
-						else if (endpoint.on_message) {
-							timer_idle_reset(connection);
-							endpoint.on_message(connection, message);
-						}
+										 auto reason = message->string();
+										 send_close(connection, status, reason, [connection](const std::error_code & /*ec*/) {});
+										 connection_close(connection, endpoint, status, reason);
+										 return;
+									 }
+									 else
+									 {
+										 //If ping
+										 if ((fin_rsv_opcode & 0x0f) == 9)
+										 {
+											 //send pong
+											 auto empty_send_stream = std::make_shared<SendStream>();
+											 send(connection, empty_send_stream, nullptr, fin_rsv_opcode + 1);
+										 }
+										 else if (endpoint.on_message)
+										 {
+											 timer_idle_reset(connection);
+											 endpoint.on_message(connection, message);
+										 }
 
-						//Next message
-						read_message(connection, read_buffer, endpoint);
-					}
-				}
-				else
-					connection_error(connection, endpoint, ec);
-			});
+										 //Next message
+										 read_message(connection, read_buffer, endpoint);
+									 }
+								 }
+								 else
+									 connection_error(connection, endpoint, ec);
+							 });
 		}
 
-		void connection_open(const std::shared_ptr<Connection>& connection, Endpoint& endpoint) {
+		void connection_open(const std::shared_ptr<Connection> &connection, Endpoint &endpoint)
+		{
 			timer_idle_init(connection);
 
 			{
@@ -694,7 +766,8 @@ namespace webpp {
 				endpoint.on_open(connection);
 		}
 
-		void connection_close(const std::shared_ptr<Connection>& connection, Endpoint& endpoint, int status, const std::string& reason) const {
+		void connection_close(const std::shared_ptr<Connection> &connection, Endpoint &endpoint, int status, const std::string &reason) const
+		{
 			timer_idle_cancel(connection);
 
 			{
@@ -706,7 +779,8 @@ namespace webpp {
 				endpoint.on_close(connection, status, reason);
 		}
 
-		void connection_error(const std::shared_ptr<Connection>& connection, Endpoint& endpoint, const std::error_code& ec) const {
+		void connection_error(const std::shared_ptr<Connection> &connection, Endpoint &endpoint, const std::error_code &ec) const
+		{
 			timer_idle_cancel(connection);
 
 			{
@@ -714,38 +788,46 @@ namespace webpp {
 				endpoint.connections.erase(connection);
 			}
 
-			if (endpoint.on_error) {
+			if (endpoint.on_error)
+			{
 				std::error_code ec_tmp = ec;
 				endpoint.on_error(connection, ec_tmp);
 			}
 		}
 
-		void timer_idle_init(const std::shared_ptr<Connection>& connection) {
-			if (config.timeout_idle > 0) {
+		void timer_idle_init(const std::shared_ptr<Connection> &connection)
+		{
+			if (config.timeout_idle > 0)
+			{
 				connection->timer_idle = std::make_unique<asio::system_timer>(connection->socket->get_io_service());
 				connection->timer_idle->expires_from_now(std::chrono::seconds(static_cast<unsigned long>(config.timeout_idle)));
 				timer_idle_expired_function(connection);
 			}
 		}
-		void timer_idle_reset(const std::shared_ptr<Connection>& connection) const {
+		void timer_idle_reset(const std::shared_ptr<Connection> &connection) const
+		{
 			if (config.timeout_idle > 0 && connection->timer_idle->expires_from_now(std::chrono::seconds(static_cast<unsigned long>(config.timeout_idle))) > 0)
 				timer_idle_expired_function(connection);
 		}
-		void timer_idle_cancel(const std::shared_ptr<Connection>& connection) const {
+		void timer_idle_cancel(const std::shared_ptr<Connection> &connection) const
+		{
 			if (config.timeout_idle > 0)
 				connection->timer_idle->cancel();
 		}
 
-		void timer_idle_expired_function(const std::shared_ptr<Connection>& connection) const {
-			connection->timer_idle->async_wait([this, connection](const std::error_code& ec) {
-				if (!ec)
-					send_close(connection, 1000, "idle timeout"); //1000=normal closure
-			});
+		void timer_idle_expired_function(const std::shared_ptr<Connection> &connection) const
+		{
+			connection->timer_idle->async_wait([this, connection](const std::error_code &ec)
+											   {
+												   if (!ec)
+													   send_close(connection, 1000, "idle timeout"); //1000=normal closure
+											   });
 		}
 	};
 
-	template<class socket_type>
-	class SocketServer : public SocketServerBase<socket_type> {
+	template <class socket_type>
+	class SocketServer : public SocketServerBase<socket_type>
+	{
 	public:
 		SocketServer(unsigned short port, size_t timeout_request, size_t timeout_idle)
 			: SocketServerBase<socket_type>(port, timeout_request, timeout_idle)
@@ -755,12 +837,15 @@ namespace webpp {
 
 	using WS = asio::ip::tcp::socket;
 
-	template<>
-	class SocketServer<WS> : public SocketServerBase<WS> {
+	template <>
+	class SocketServer<WS> : public SocketServerBase<WS>
+	{
 	public:
 		SocketServer() : SocketServerBase<WS>(80) {}
+
 	protected:
-		void accept() override {
+		void accept() override
+		{
 			//Create new socket for this connection (stored in Connection::socket)
 			//Shared_ptr is used to pass temporary objects to the asynchronous functions
 			std::shared_ptr<Connection> connection(new Connection(new WS(*io_context)));
@@ -795,9 +880,10 @@ namespace webpp {
 		}
 	};
 
-	class ws_server : public SocketServer<WS> {
+	class ws_server : public SocketServer<WS>
+	{
 	public:
 		ws_server() : SocketServer<WS>::SocketServer() {}
 	};
 }
-#endif  /* MAME_LIB_UTIL_SERVER_WS_IMPL_HPP */
+#endif /* MAME_LIB_UTIL_SERVER_WS_IMPL_HPP */
