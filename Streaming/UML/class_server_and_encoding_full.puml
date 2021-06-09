@@ -24,6 +24,8 @@ streaming_server -- encode_to_movie
 SocketServerBase -- stream
 
 class SocketServerBase<SocketType> {
+	-asio::ip::tcp::acceptor acceptor
+	+asio::io_context io_context
 	+Endpoint[] endpoints
 	+Config config
 	+Connection[] get_connections()		

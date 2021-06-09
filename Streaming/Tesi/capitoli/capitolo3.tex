@@ -385,7 +385,22 @@ Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piatt
 
 WebSocket è un protocollo di comunicazione che fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web \parencite{WebSocket_Web_APIs}.
 
-La classe che si occupa della comunicazione tramite WebSocket è \verb|streaming_server|. Come mostrato in Fig. \ref{fig:class_server_and_encoding_full} \verb|streaming_server| utilizza la classe \verb|ws_server|
+Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
+
+La classe \verb|ws_server| implementa la classe generica \verb|SocketServer| tipizzandola come socket TCP della lirberia Asio\footnote{Asio è una libreria open source per la programmazione di rete.}.
+
+\verb|SocketServer| che eredita da \verb|SocketServerBase| implementa solo il metodo \verb|accept| utilizzato per accettare una nuova connessione, come mostrato nel Lis. \ref{lst:SocketServer_accept}.
+
+\begin{lstlisting}[caption=Funzione accept della classe SocketServer, label={lst:SocketServer_accept}]
+	void accept() override
+	{
+		auto connection = new Connection(new SocketType(io_context));
+		acceptor->accept(connection->socket);
+		read_handshake(connection);
+	}
+\end{lstlisting}
+
+\verb|SocketServerBase| offre le funzioni per avviare e fermare il server, gestire la connessione, scrivere e leggere tramite socket e gestire l'handshake.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
