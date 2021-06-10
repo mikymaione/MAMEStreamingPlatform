@@ -23,16 +23,16 @@ Per la cattura video esistono tre metodi di cattura: l'hook di funzioni della li
 L'hook di funzione è una tecnica di programmazione con la quale si sostituisce il comportamento di una funzione di un programma o di una libreria già compilata. Questa operazione su una libreria multimediale consiste nel modificare il normale funzionamento della procedura che invia il framebuffer della scheda video all'uscita. Ad esempio per le librerie multimediali più usate le funzioni da catturare sono: \verb|SDL_RenderPresent| per SDL, \verb|Present| per DirectX e \verb|SwapBuffer| per OpenGL \parencite{GamingAnywhere}. Questo metodo è stato usato ad esempio da OnLive, Gaikai e Vortex. Un esempio di codice per l'hook di funzioni per SDL è mostrato nel Lis. \ref{lst:hookCode}.
 
 \begin{lstlisting}[caption=Codice di hook per la libreria SDL, label={lst:hookCode}]
-	HOOK_TRACE_INFO hHook = { NULL };
-	
-	HMODULE lib_handle = LoadLibrary("SDL2.dll");
+HOOK_TRACE_INFO hHook = { NULL };
 
-	FARPROC old_SDL_RenderPresent =	GetProcAddress(
-		lib_handle, "SDL_RenderPresent");
+HMODULE lib_handle = LoadLibrary("SDL2.dll");
 
-	NTSTATUS result = LhInstallHook(
-		old_SDL_RenderPresent, my_SDL_RenderPresent,
-		NULL, &hHook);
+FARPROC old_SDL_RenderPresent =	GetProcAddress(
+	lib_handle, "SDL_RenderPresent");
+
+NTSTATUS result = LhInstallHook(
+	old_SDL_RenderPresent, my_SDL_RenderPresent,
+	NULL, &hHook);
 \end{lstlisting}
 
 Il framebuffer virtuale è una funzionalità offerta dalle API di sistema per accedere all'attuale framebuffer presente nella scheda video. Il loro utilizzo principale è per il remote desktop, ma alcune piattaforme come "GamingAnywhere" \parencite{GamingAnywhere} e "Parsec"\footnote{Parsec è un servizio di desktop remoto basato su Windows offerto dalla omonima società.} \parencite{TheTechnologyBehindALowLatencyCloudGamingService} utilizzano questa funzionalità per la cattura video, il primo per la piattaforma di cloud gaming, il secondo per offrire un computer virtuale. Alcuni esempi nei moderni sistemi operativi sono: "X virtual framebuffer" del gestore grafico X11 su Linux \parencite{XVFB}, "Desktop Duplication API" su Windows \parencite{DesktopDuplicationAPI} e \verb|CGDisplayStream| della libreria "Quartz Display Services" su macOS.
@@ -48,26 +48,26 @@ Poiché sono disponibili i sorgenti del progetto MAME in questo progetto ho scel
 \end{itemize}
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura video: inizializzazione, label={lst:init_streaming_render_init}]
-	sdl_buffer_bytes_length = w * h * 4; // RGBA = 4 bytes
-	sdl_buffer_bytes = new char[sdl_buffer_bytes_length];
+sdl_buffer_bytes_length = w * h * 4; // RGBA = 4 bytes
+sdl_buffer_bytes = new char[sdl_buffer_bytes_length];
 
-	sdl_surface = SDL_CreateRGBSurfaceWithFormat(
-		0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
-	
-	sdl_renderer = SDL_CreateSoftwareRenderer(sdl_surface);	
-	sdl_buffer = SDL_RWFromMem(
-		sdl_buffer_bytes, sdl_buffer_bytes_length);
+sdl_surface = SDL_CreateRGBSurfaceWithFormat(
+	0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
+
+sdl_renderer = SDL_CreateSoftwareRenderer(sdl_surface);	
+sdl_buffer = SDL_RWFromMem(
+	sdl_buffer_bytes, sdl_buffer_bytes_length);
 \end{lstlisting}
 
 Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato inserito per inviare alla classe statica che gestisce lo streaming (\verb|streaming_server|) il frame da inviare al giocatore (che verrà codificato prima dell'invio). Poiché l'attuale contesto di rendering (\verb|sdl_renderer|) è creato su una superfice RGB (\verb|sdl_surface|) quando il contesto di rendering viene aggiornato con il framebuffer corrente (tramite \verb|SDL_RenderPresent|) è la superfice a ricevere il frame attuale.
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura video: disegno, label={lst:init_streaming_render_draw}]
-	SDL_RenderPresent(sdl_renderer);
+SDL_RenderPresent(sdl_renderer);
 
-	streaming_server::instance()
-		.send_video_frame(sdl_surface->pixels);
+streaming_server::instance()
+	.send_video_frame(sdl_surface->pixels);
 
-	SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET); // pos. inizio del buffer
+SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET); // pos. inizio del buffer
 \end{lstlisting}
 
 \begin{figure}[H]
@@ -86,11 +86,11 @@ Come per la cattura video si può ricorrere all'hook di funzioni della libreria 
 Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{subsec:cap2_MissaggioAudio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
 
 \begin{lstlisting}[caption=Codice aggiunto per la cattura audio, label={lst:sdl_sound_callback}]
-	// 512 campioni audio (per canale)
-	streaming_server::instance()
-		.send_audio_interval(stream, len, 512);
+// 512 campioni audio (per canale)
+streaming_server::instance()
+	.send_audio_interval(stream, len, 512);
 
-	memset(stream, 0, len); // svuota buffer sonoro
+memset(stream, 0, len); // svuota buffer sonoro
 \end{lstlisting}
 
 
@@ -288,40 +288,40 @@ Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia all
 Con riferimento al List. \ref{lst:videoCodecFFmpeg}, la codifica video inizia trasformando il frame video da SDL (\verb|uint8_t[] pixels|) al frame video FFmpeg (\verb|AVFrame|) tramite la funzione \verb|avpicture_fill|. Come detto precedentemente i codificatori video funzionano sul modello di colore YCbCr, la conversione da RGB avviene tramite la funzione \verb|sws_scale|; al termine di questa operazione \verb|yuv_frame| conterrà il frame convertito in YCbCr. Tramite le funzioni \verb|avcodec_send_frame| e \verb|avcodec_receive_packet| si comunica alla libreria FFmpeg di voler codificare il frame YCbCr. Tramite la funzione \verb|av_interleaved_write_frame| avviene la multiplazione del pacchetto video nel formato contenitore.
 
 \begin{lstlisting}[caption=Codice per la codifica video, label={lst:videoCodecFFmpeg}]
-	void add_frame(uint8_t[] pixels)
-	{
-		// Riempimento AVPicture con frame generato da SDL
-		avpicture_fill(
-			rgb_frame, 						// output
-			pixels, 						// input
-			AV_PIX_FMT_BGR32,				// formato input
-			width, height); 				// dimensione input
+void add_frame(uint8_t[] pixels)
+{
+	// Riempimento AVPicture con frame generato da SDL
+	avpicture_fill(
+		rgb_frame, 						// output
+		pixels, 						// input
+		AV_PIX_FMT_BGR32,				// formato input
+		width, height); 				// dimensione input
 
-		// conversione da RGB a YUV
-		sws_scale(
-			video_converter_context,		// contesto conversione
-			rgb_frame->data,				// input
-			rgb_frame->linesize, 0, height,	// dimesione input
-			yuv_frame->data, 				// output
-			yuv_frame->linesize); 			// dimensione output
-		
-		av_init_packet(&video_packet);		// pacchetto video
+	// conversione da RGB a YUV
+	sws_scale(
+		video_converter_context,		// contesto conversione
+		rgb_frame->data,				// input
+		rgb_frame->linesize, 0, height,	// dimesione input
+		yuv_frame->data, 				// output
+		yuv_frame->linesize); 			// dimensione output
+	
+	av_init_packet(&video_packet);		// pacchetto video
 
-		// inizio codifica
-		avcodec_send_frame(
-			video_codec_context,			// contesto codifica
-			yuv_frame);						// frame YCbCr
+	// inizio codifica
+	avcodec_send_frame(
+		video_codec_context,			// contesto codifica
+		yuv_frame);						// frame YCbCr
 
-		// fine codifica
-		avcodec_receive_packet(
-			video_codec_context,			// contesto codifica
-			&video_packet);					// pacchetto video
+	// fine codifica
+	avcodec_receive_packet(
+		video_codec_context,			// contesto codifica
+		&video_packet);					// pacchetto video
 
-		// multiplazione pacchetto video
-		av_interleaved_write_frame(
-			muxer_context,					// contesto multiplazione
-			&video_packet);					// pacchetto video
-	}
+	// multiplazione pacchetto video
+	av_interleaved_write_frame(
+		muxer_context,					// contesto multiplazione
+		&video_packet);					// pacchetto video
+}
 \end{lstlisting}
 
 I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} disponibile in appendice \ref{cap:Listato}.
@@ -332,46 +332,46 @@ I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} d
 Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia trasformando il frame audio da SDL (\verb|uint8_t[] stream|) al frame audio FFmpeg tramite la funzione \verb|avcodec_fill_audio_frame|. Tramite la funzione \verb|swr_convert| si converte dal formato audio SDL (PCM rappresentato tramite interi a 16 bit con segno per ogni canale) al formato audio di destinazione (come riportato in Tab. \ref{table:PossibiliCodifiche}). La funzione \verb|avcodec_fill_audio_frame| viene utilizzata nuovamente per riempire il frame audio FFmpeg con i dati appena convertiti (\verb|convertedData|). Tramite la funzione \verb|avcodec_encode_audio2| si comunica alla libreria FFmpeg di voler codificare il frame audio. Tramite la funzione \verb|av_interleaved_write_frame| avviene la multiplazione del pacchetto audio nel formato contenitore.
 
 \begin{lstlisting}[caption=Codice per la codifica audio, label={lst:audioCodecFFmpeg}]
-	void add_instant(uint8_t[] stream, int stream_size, 
-		int stream_num_samples)
-	{
-		// Riempimento frame con audio da SDL
-		avcodec_fill_audio_frame(
-			wav_frame,						// output
-			2,								// canali input
-			AV_SAMPLE_FMT_S16,				// formato input
-			stream,							// input
-			stream_size);					// dimensione input			
+void add_instant(uint8_t[] stream, int stream_size, 
+	int stream_num_samples)
+{
+	// Riempimento frame con audio da SDL
+	avcodec_fill_audio_frame(
+		wav_frame,						// output
+		2,								// canali input
+		AV_SAMPLE_FMT_S16,				// formato input
+		stream,							// input
+		stream_size);					// dimensione input			
 
-		// conversione audio
-		swr_convert(
-			audio_converter_context,		// contesto audio
-			&convertedData,					// output
-			output_frame->nb_samples,		// campioni output
-			wav_frame->data,				// input
-			wav_frame->nb_samples);			// campioni input
+	// conversione audio
+	swr_convert(
+		audio_converter_context,		// contesto audio
+		&convertedData,					// output
+		output_frame->nb_samples,		// campioni output
+		wav_frame->data,				// input
+		wav_frame->nb_samples);			// campioni input
 
-		// riempimento frame destinazione
-		avcodec_fill_audio_frame(
-			output_frame, 					// output
-			2,								// canali output
-			audio_codec_context->sample_fmt,// formato output
-			convertedData,					// input
-			buffer_size);					// dimensione input			
-				
-		av_init_packet(&audio_packet);		// pacchetto audio
-		
-		// codifica
-		avcodec_encode_audio2(
-			audio_codec_context,			// contesto codifica
-			&audio_packet,					// pacchetto audio
-			output_frame_frame);			// output			
-		
-		// multiplazione pacchetto audio
-		av_interleaved_write_frame(
-			muxer_context,					// contesto multiplazione
-			&audio_packet);					// pacchetto audio
-	}
+	// riempimento frame destinazione
+	avcodec_fill_audio_frame(
+		output_frame, 					// output
+		2,								// canali output
+		audio_codec_context->sample_fmt,// formato output
+		convertedData,					// input
+		buffer_size);					// dimensione input			
+			
+	av_init_packet(&audio_packet);		// pacchetto audio
+	
+	// codifica
+	avcodec_encode_audio2(
+		audio_codec_context,			// contesto codifica
+		&audio_packet,					// pacchetto audio
+		output_frame_frame);			// output			
+	
+	// multiplazione pacchetto audio
+	av_interleaved_write_frame(
+		muxer_context,					// contesto multiplazione
+		&audio_packet);					// pacchetto audio
+}
 \end{lstlisting}
 
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
@@ -390,25 +390,25 @@ WebSocket è un insieme di standard formato dalle API WebSocket implementate dai
 Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performance_Browser_Networking} le API WebSocket fornite dal browser sono relativamente semplici. La connessione viene creata istanziando la classe \verb|WebSocket|, al costruttore oltre al URL di una risorsa WebSocket è possibile passare un vettore di stringhe che specificano dei sotto-protocolli definiti dall'utente. La classe \verb|WebSocket| espone 4 callback: errore, chiusura, apertura e ricezione messaggio. Tramite la proprietà \verb|binaryType| si può controllare il tipo di dati binari utilizzati per la ricezione (di tipo \verb|Blob| o \verb|ArrayBuffer|). La classe \verb|WebSocket| espone solo due metodi: \verb|close| per chiudere la connessione e il metodo asincrono \verb|send| per inviare dati (di tipo \verb|String|, \verb|Blob|, \verb|ArrayBuffer| o \verb|ArrayBufferView|) \parencite{WebSocket_Web_APIs}.
 
 \begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
-	var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
-		['protocollo_utente1', 'protocollo_utente2']);
-	ws.binaryType = 'arraybuffer'; //'blob';
+var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
+	['protocollo_utente1', 'protocollo_utente2']);
+ws.binaryType = 'arraybuffer'; //'blob';
 
-	ws.onerror = function (error) { ... } 
-	ws.onclose = function () { ... } 
+ws.onerror = function (error) { ... } 
+ws.onclose = function () { ... } 
 
-	ws.onopen = function () { 
-		ws.send('Connection established. Hello server!'); 
-	}
+ws.onopen = function () { 
+	ws.send('Connection established. Hello server!'); 
+}
 
-	ws.onmessage = function(msg) { 
-		if(msg.data instanceof ArrayBuffer)
-			processArrayBuffer(msg.data);
-		else if(msg.data instanceof Blob)
-			processBlob(msg.data);
-		else
-			processText(msg.data);	
-	}
+ws.onmessage = function(msg) { 
+	if(msg.data instanceof ArrayBuffer)
+		processArrayBuffer(msg.data);
+	else if(msg.data instanceof Blob)
+		processBlob(msg.data);
+	else
+		processText(msg.data);	
+}
 \end{lstlisting}
 
 \subsubsection{WebSocket: il protocollo}
@@ -417,44 +417,44 @@ Il protocollo WebSocket è composto da due componenti: l'handshake utilizzato pe
 Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server riponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake}.
 
 \begin{lstlisting}[language=HTML, caption=Richiesta handshake da parte del client, label={lst:Handshake_CLI}]
-	GET /mamecgp HTTP/1.1
-	Host: www.maionemiky.it
-	Upgrade: websocket
-	Connection: Upgrade
-	Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==	
-	Sec-WebSocket-Protocol: cloudgaming
-	Sec-WebSocket-Version: 13
-	Origin: http://www.maionemiky.it
+GET /mamecgp HTTP/1.1
+Host: www.maionemiky.it
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==	
+Sec-WebSocket-Protocol: cloudgaming
+Sec-WebSocket-Version: 13
+Origin: http://www.maionemiky.it
 \end{lstlisting}
 
 \begin{lstlisting}[language=HTML, caption=Risposta handshake da parte del server, label={lst:Handshake_SRV}]
-	HTTP/1.1 101 Switching Protocols
-	Upgrade: websocket
-	Connection: Upgrade
-	Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
-	Sec-WebSocket-Protocol: cloudgaming
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
+Sec-WebSocket-Protocol: cloudgaming
 \end{lstlisting}
 
 \begin{lstlisting}[caption=Codice dell'handshake implementato, label={lst:Handshake}]
-	bool generate_handshake(Connection &c, ostream &handshake)
-	{
-		auto ws_magic_string =
-			"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-		auto header_it = 
-			connection->header.find("Sec-WebSocket-Key");	
-		auto sha1 =
-			sha1_encode(header_it->second + ws_magic_string);
+bool generate_handshake(Connection &c, ostream &handshake)
+{
+	auto ws_magic_string =
+		"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+	auto header_it = 
+		connection->header.find("Sec-WebSocket-Key");	
+	auto sha1 =
+		sha1_encode(header_it->second + ws_magic_string);
 
-		handshake
-			<< "HTTP/1.1 101 Web Socket Protocol Handshake" << endl
-			<< "Upgrade: websocket" << endl
-			<< "Connection: Upgrade" << endl
-			<< "Sec-WebSocket-Accept: "
-			<< base64_encode(sha1)			
-			<< endl << endl;
+	handshake
+		<< "HTTP/1.1 101 Web Socket Protocol Handshake" << endl
+		<< "Upgrade: websocket" << endl
+		<< "Connection: Upgrade" << endl
+		<< "Sec-WebSocket-Accept: "
+		<< base64_encode(sha1)			
+		<< endl << endl;
 
-		return true;
-	}
+	return true;
+}
 \end{lstlisting}
 
 Come detto precedentemente WebSocket implementa un meccanismo di framing dei messaggi binari che consente la comunicazione orientata ai messaggi. Quando viene inviato un messaggio il destinatario riceve una notifica quando l'intero messaggio è stato ricevuto. Questo meccanismo divide ogni messaggio in più frame, mostrato in Fig. \ref{fig:dataframe_websocket}, che vengono trasportati, riassemblati e poi viene inviata una notifica al destinatario \parencite{High_Performance_Browser_Networking}.
@@ -477,17 +477,17 @@ Le parti più importanti che compongono un frame sono:
 
 Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
 
-La classe \verb|ws_server| implementa la classe generica \verb|SocketServer| tipizzandola come socket TCP della lirberia Asio\footnote{Asio è una libreria open source per la programmazione di rete.}.
+La classe \verb|ws_server| implementa la classe generica \verb|SocketServer| tipizzandola come socket TCP della libreria Asio\footnote{Asio è una libreria open source per la programmazione di rete.}.
 
 \verb|SocketServer| che eredita da \verb|SocketServerBase| implementa solo il metodo \verb|accept| utilizzato per accettare una nuova connessione, come mostrato nel Lis. \ref{lst:SocketServer_accept}.
 
 \begin{lstlisting}[caption=Funzione accept della classe SocketServer, label={lst:SocketServer_accept}]
-	void accept() override
-	{
-		auto connection = new Connection(new SocketType(io_context));
-		acceptor->accept(connection->socket);
-		read_handshake(connection);
-	}
+void accept() override
+{
+	auto connection = new Connection(new SocketType(io_context));
+	acceptor->accept(connection->socket);
+	read_handshake(connection);
+}
 \end{lstlisting}
 
 \verb|SocketServerBase| offre le funzioni per avviare e fermare il server, gestire la connessione, scrivere e leggere tramite socket e gestire l'handshake.
