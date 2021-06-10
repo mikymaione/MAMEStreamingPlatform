@@ -414,7 +414,7 @@ ws.onmessage = function(msg) {
 \subsubsection{WebSocket: il protocollo}
 Il protocollo WebSocket è composto da due componenti: l'handshake utilizzato per negoziare i parametri della connessione, ed un meccanismo di framing dei messaggi binari per consentire un basso sovraccarico \parencite{High_Performance_Browser_Networking}.
 
-Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server riponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake}.
+Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server riponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake} relativo alla classe \verb|SocketServerBase|.
 
 \begin{lstlisting}[language=HTML, caption=Richiesta handshake da parte del client, label={lst:Handshake_CLI}]
 GET /mamecgp HTTP/1.1
@@ -435,7 +435,7 @@ Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
 Sec-WebSocket-Protocol: cloudgaming
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Codice dell'handshake implementato, label={lst:Handshake}]
+\begin{lstlisting}[caption=Codice dell'handshake implementato in SocketServerBase, label={lst:Handshake}]
 bool generate_handshake(Connection &c, ostream &handshake)
 {
 	auto ws_magic_string =
@@ -462,11 +462,11 @@ Come detto precedentemente WebSocket implementa un meccanismo di framing dei mes
 Le parti più importanti che compongono un frame sono:
 
 \begin{itemize}
-    \item \textit{FIN} che indica se è l'ultimo frame;
-    \item \textit{Opcode} che indica il tipo di messaggio: testo (1), binario (2), chiusura connessione (8), ping (9) e pong (10);
-    \item \textit{mask} indica se il \textit{payload} è mascherato (i messaggi dal client al server hanno questo bit a 1);
-    \item \textit{lunghezza payload} indica quanto è lungo il \textit{payload}: 7 bit, 7+16 bit o 7+64 bit;
-    \item \textit{masking-key} contiene un valore a 32 bit usato per masherare il \textit{payload}.
+	\item \textit{FIN} che indica se è l'ultimo frame;
+	\item \textit{Opcode} che indica il tipo di messaggio: testo (1), binario (2), chiusura connessione (8), ping (9) e pong (10);
+	\item \textit{mask} indica se il \textit{payload} è mascherato (i messaggi dal client al server hanno questo bit a 1);
+	\item \textit{lunghezza payload} indica quanto è lungo il \textit{payload}: 7 bit, 7+16 bit o 7+64 bit;
+	\item \textit{masking-key} contiene un valore a 32 bit usato per masherare il \textit{payload}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -476,6 +476,12 @@ Le parti più importanti che compongono un frame sono:
 \end{figure}
 
 Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
+	\caption{Diagramma delle classi del server}
+	\label{fig:class_server_and_encoding_full}
+\end{figure}
 
 La classe \verb|ws_server| implementa la classe generica \verb|SocketServer| tipizzandola come socket TCP della libreria Asio\footnote{Asio è una libreria open source per la programmazione di rete.}.
 
@@ -492,11 +498,70 @@ void accept() override
 
 \verb|SocketServerBase| offre le funzioni per avviare e fermare il server, gestire la connessione, scrivere e leggere tramite socket e gestire l'handshake.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
-	\caption{Diagramma delle classi del server}
-	\label{fig:class_server_and_encoding_full}
-\end{figure}
+La classe \verb|SocketServerBase| espone gli stessi quattro eventi delle API WebSocket che vengono gestiti da \verb|SocketServerBase| ed utilizzati da \verb|streaming_server|, come mostrato in Lis. \ref{lst:SocketServer_AllCallbacks}:
+
+\begin{itemize}
+	\item \textit{open}: viene avviato il thread per eseguire l'emulazione del gioco selezionato;
+	\item \textit{close}: viene spenta la macchina emulata;
+	\item \textit{error}: viene stampato a video il messaggio d'errore, dopodiché il browser spegne la connessione e si verifica l'evento \textit{close};
+	\item \textit{message}: alla ricezione di un messaggio viene gestito tramite la funzione \verb|process_key| l'input utente oppure il meccanismo di pausa dell'emulazione in caso di bit-rate insufficiente (è meglio mettere in pausa che far perdere il giocatore).
+\end{itemize}
+
+\begin{lstlisting}[caption=Codice relativo alle callback WebSocket, label={lst:SocketServer_AllCallbacks}]
+void start(const unsigned short port)
+{
+	// continua ...
+
+	endpoint.on_open = [this](auto connection)
+	{
+		game_thread = new thread(on_accept, connection->parameters);
+	};
+
+	endpoint.on_close = [this](auto connection,
+		auto status, auto reason)
+	{
+		machine->schedule_exit();
+	};
+
+	endpoint.on_message = [this](auto connection, auto message)
+	{
+		const auto msg = message->string();
+		const auto values = split(msg, ":");
+
+		if (values[0] == "ping")
+			process_pausing_mechanism();
+		else if (values[0] == "key")
+			process_key(values);
+	};
+
+	endpoint.on_error = [](auto connection, auto code)
+	{
+		std::cout
+			<< "-Error on connection from "
+			<< connection->remote_endpoint_address << ":"
+			<< connection->remote_endpoint_port << std::endl << ": "
+			<< code.message() << std::endl;
+	};
+	// continua ...
+}
+\end{lstlisting}
+
+Nel main del programma è implementata la funzione \verb|on_accept| che avvia l'emulazione della macchina arcade selezionata, come mostrato in Lis. \ref{lst:sdlmain_callback}.
+
+\begin{lstlisting}[caption=Codice relativo alla callback di avvenuta connessione, label={lst:sdlmain_callback}]
+int main(int argc, char** argv)
+{
+	// continua ...
+	streaming_server::instance().on_accept = [&](auto parameters)
+	{
+		main_sdl(argc, argv, parameters["game"]);
+	};
+	// continua ...
+}	
+\end{lstlisting}
+
+
+
 
 \section{Decodifica}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
