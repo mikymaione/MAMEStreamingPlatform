@@ -371,7 +371,7 @@ Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per 
 
 
 \section{Trasmissione}
-Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
+La trasmissione è la fase del cloud gaming che influisce maggiormente sulla latenza e l'unica ad avere un tempo d'esecuzione condizionato dalla qualità della connessione dell'utente. Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
 
 \subsection{WebSocket}
 WebSocket è un insieme di standard formato dalle API WebSocket implementate dai browser web ed dal protocollo di comunicazione WebSocket. Il protocollo di comunicazione fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web.
@@ -382,8 +382,7 @@ Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performa
 \begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
 var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
 	['protocollo_utente1', 'protocollo_utente2']);
-ws.binaryType = 'arraybuffer'; //'blob';
-
+ws.binaryType = 'arraybuffer'; // or 'blob';
 ws.onerror = function (error) { ... } 
 ws.onclose = function () { ... } 
 
