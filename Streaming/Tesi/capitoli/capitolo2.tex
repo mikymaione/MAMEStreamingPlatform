@@ -136,7 +136,7 @@ La funzione \verb|SDL_OpenAudio| utilizza la struttura \verb|SDL_AudioSpec| che 
 
 
 
-\subsection{Gestione input}
+\subsection{Gestione input} \label{subsec:cap2_GestioneInput}
 Il MAME nasce come emulatore di videogiochi arcade e quindi ha bisogno di gestire l'input della gettoniera, dei controlli per il personale di servizio\footnote{I controlli per il personale di servizio sono quegli interruttori presenti su apparecchi non recenti che servono per testare il funzionamento dell'apparecchio, regolare il livello di difficoltà, ecc\dots; sono stati poi sostituiti dai menu interattivi.} e dei comandi del giocatore. Il dispositivo più usato è il joystick, tuttavia alcuni apparecchi montano volante e pedali, spinner, trackball, pistole e fucili ottici, ecc\dots \parencite{Il_progetto_MAME}.
 
 La libreria SDL gestisce la tastiera, il mouse e i joystick (pistola ottica, volante e pedali rientrano in questa categoria) tramite un sistema ad eventi:
