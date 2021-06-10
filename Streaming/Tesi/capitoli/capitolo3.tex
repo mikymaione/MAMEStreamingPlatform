@@ -390,10 +390,8 @@ WebSocket è un insieme di standard formato dalle API WebSocket implementate dai
 Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performance_Browser_Networking} le API WebSocket fornite dal browser sono relativamente semplici. La connessione viene creata istanziando la classe \verb|WebSocket|, al costruttore oltre al URL di una risorsa WebSocket è possibile passare un vettore di stringhe che specificano dei sotto-protocolli definiti dall'utente. La classe \verb|WebSocket| espone 4 callback: errore, chiusura, apertura e ricezione messaggio. Tramite la proprietà \verb|binaryType| si può controllare il tipo di dati binari utilizzati per la ricezione (di tipo \verb|Blob| o \verb|ArrayBuffer|). La classe \verb|WebSocket| espone solo due metodi: \verb|close| per chiudere la connessione e il metodo asincrono \verb|send| per inviare dati (di tipo \verb|String|, \verb|Blob|, \verb|ArrayBuffer| o \verb|ArrayBufferView|) \parencite{WebSocket_Web_APIs}.
 
 \begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
-	var ws = new WebSocket(
-		'ws://example.com/socket', 
-		['protocollo_utente1', 'protocollo_utente2']); 
-
+	var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
+		['protocollo_utente1', 'protocollo_utente2']);
 	ws.binaryType = 'arraybuffer'; //'blob';
 
 	ws.onerror = function (error) { ... } 
@@ -459,7 +457,17 @@ Per stabilire la connessione il client invia una richiesta di handshake prestabi
 	}
 \end{lstlisting}
 
-Come detto precedentemente WebSocket implementa un meccanismo di framing dei messaggi binari che consente la comunicazione orientata ai messaggi. Quando viene inviato un messaggio il destinatario riceve una notifica quando l'intero messaggio è stato ricevuto. Questo meccanismo divite ogni messaggio in più frame, che vengono trasportati, e poi riassemblati. \ref{fig:dataframe_websocket}.
+Come detto precedentemente WebSocket implementa un meccanismo di framing dei messaggi binari che consente la comunicazione orientata ai messaggi. Quando viene inviato un messaggio il destinatario riceve una notifica quando l'intero messaggio è stato ricevuto. Questo meccanismo divide ogni messaggio in più frame, mostrato in Fig. \ref{fig:dataframe_websocket}, che vengono trasportati, riassemblati e poi viene inviata una notifica al destinatario \parencite{High_Performance_Browser_Networking}.
+
+Le parti più importanti che compongono un frame sono:
+
+\begin{itemize}
+    \item \textit{FIN} che indica se è l'ultimo frame;
+    \item \textit{Opcode} che indica il tipo di messaggio: testo (1), binario (2), chiusura connessione (8), ping (9) e pong (10);
+    \item \textit{mask} indica se il \textit{payload} è mascherato (i messaggi dal client al server hanno questo bit a 1);
+    \item \textit{lunghezza payload} indica quanto è lungo il \textit{payload}: 7 bit, 7+16 bit o 7+64 bit;
+    \item \textit{masking-key} contiene un valore a 32 bit usato per masherare il \textit{payload}.
+\end{itemize}
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/dataframe_websocket}
