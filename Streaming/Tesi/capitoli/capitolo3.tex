@@ -556,36 +556,84 @@ int main(int argc, char** argv)
 \section{Decodifica}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+\subsection{Decodifica nel browser web}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 \subsubsection{Canvas API}
-L'API Canvas fornisce un mezzo per disegnare grafica tramite JavaScript, si concentra principalmente sulla grafica 2D ma quando viene utilizzata dall'API WebGL può disegnare grafica 2D e 3D con accelerazione hardware. È completamente supportato da tutti i browser \parencite{Canvas_API}.
+Le API Canvas forniscono un mezzo per disegnare grafica tramite JavaScript, si concentrano principalmente sulla grafica 2D ma quandono vengono utilizzate dalle API WebGL possono disegnare grafica 2D e 3D con accelerazione hardware. Sono completamente supportate da tutti i browser \parencite{Canvas_API}.
 
 \subsubsection{WebGL API}
-WebGL è un'API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D che consente l'utilizzo accelerato dalla GPU della fisica e dell'elaborazione e degli effetti delle immagini. WebGL 1.0 è supportato su tutti i browser, mentre WebGL 2.0 viene testato su Safari \parencite{WebGL}.
+WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D che consente l'utilizzo accelerato dalla GPU della fisica e dell'elaborazione e degli effetti delle immagini. WebGL 1.0 è supportato da tutti i browser, mentre WebGL 2.0 è in fase di testing \parencite{WebGL}.
 
-\subsection{Librerie JavaScript per la decodifica: JSMpeg}
+\subsubsection{JSMpeg}
 Per la decodifica del filmato lato front-end è stata utilizzata la libreria JSMpeg, una libreria JavaScript open source. JSMpeg è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su WebAudio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
 
 
 
 
 \section{Gestione input}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+La piattaforma offre all'utente la possibilità di poter giocare sia tramite tastiera che tramite joystick e consentire il multiplayer sullo stesso dispositivo, anche sui dispositivi mobili tramite periferiche Bluetooth. Per far ciò sono state utilizzate due librerie JavaScript open source per la gestione dell'input:
 
-\subsection{Librerie JavaScript per la gestione dell'input}
-Per il front-end, sono state utilizzate due librerie JavaScript open source per la gestione dell'input.
+\begin{itemize}
+	\item Keypress è una libreria per la cattura dell'input da tastiera specializzata per l'uso in contesti videoludici, rilasciata con licenza Apache 2.0 \parencite{Keypress};
+	\item GameController.js è una libreria che estende le Web API per il gamepad, rilasciata con licenza MIT \parencite{gameController_js}.
+\end{itemize}
 
-\subsubsection{Keypress}
-Keypress è una libreria per la cattura dell'input da tastiera specializzata per l'uso in contesti videoludici, rilasciata con licenza Apache 2.0. Viene utilizzata per gestire l'input da tastiera nel front-end \parencite{Keypress}.
+Come mostrato nel Lis. \ref{lst:InitInput} presente nel file \verb|MAME.js| la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria Keypress e la funzione \verb|InitGamepad| della libreria GameController. I tasti mappati sono le quattro direzioni, gli otto tasti azione e i tasti funzione start, coin, pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In ambedue i casi deve essere gestita la pressione e il rilascio.
 
-\subsubsection{GameController.js}
-GameController.js è una libreria che estende le Web API per il gamepad, è rilasciata con licenza MIT. Nel front-end viene utilizzata per gestire i gamepads, per consentire il multiplayer sullo stesso dispositivo \parencite{gameController_js}.
+\begin{lstlisting}[language=JavaScript, caption=Codice relativo alla gestione input lato client, label={lst:InitInput}]
+function InitKeyboard()
+{
+	keypress_Listener = new window.keypress.Listener();
 
+	if (!keypress_Listener)
+		return; // tastiera non presente
 
-\subsection{SDL input}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	keypress_Listener.register_many([
+		{
+			"keys": "p",
+			"on_keydown": ()=> InputSend(keyboard, 'PAUSE', true),
+			"on_keyup": (e)=> InputSend(keyboard, 'PAUSE', false),
+		},
+		// continua ...
+	]);
+}
 
+function InitGamepad()
+{
+	gameControl.on('connect', gamepad =>
+	{
+		gamepad.before('r2', ()=> InputSend(gamepad.id, 'R2', true));
+		gamepad.after('r2', ()=> InputSend(gamepad.id, 'R2', false));
+		// continua ...
+	}
+}
+\end{lstlisting}
+	
+\subsection{Invio dell'input a SDL}
+Come detto nel paragrafo \ref{subsec:cap2_GestioneInput} l'input è gestito tramite la libreria SDL. Come mostrato nel Lis. \ref{lst:SocketServer_AllCallbacks} alla ricezione di un messaggio di tipo "key" il server chiama la funzione \verb|process_key| che si occupa di analizzare i dati contenuti nel messaggio e chiamare la funzione \verb|generate_key_event|, mostrata nel Lis. \ref{lst:generate_key_event}, che invia alla tastiera gestita da SDL l'input ricevuto tramite WebSocket (lo stesso avviene per il joystick). Nel Lis. \ref{lst:sdl_keyboard_device} è mostrata l'unica modifica apportata alla classe \verb|sdl_keyboard_device| che serve a passare per riferimento il device SDL alla classe \verb|streaming_server|.
 
+\begin{lstlisting}[caption=Codice relativo alla gestione input lato server: modulo server, label={lst:generate_key_event}]
+void generate_key_event(char[] key, bool down)
+{
+	SDL_Event e;
+	e.type = down ? SDL_KEYDOWN : SDL_KEYUP;
+	e.key.keysym.scancode = SDL_GetScancodeFromName(key);
+	e.key.keysym.sym = SDL_GetKeyFromScancode(e.key.keysym.scancode);
 
+	keyboard->queue_events(&e, 1);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Codice relativo alla gestione input lato server: modulo SDL, label={lst:sdl_keyboard_device}]
+// costruttore
+sdl_keyboard_device(running_machine &r, char[] n, char[] id,
+	input_module &m): sdl_device(r, n, id, DEVICE_CLASS_KEYBOARD, m)
+{
+	streaming_server::instance().set_keyboard(this);
+}
+\end{lstlisting}
+	
 \section{MPEG} \label{sec:cap3_MPEG}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
