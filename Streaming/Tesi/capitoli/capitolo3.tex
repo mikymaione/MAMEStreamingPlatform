@@ -76,8 +76,6 @@ SDL_RWseek(sdl_buffer, 0, RW_SEEK_SET); // pos. inizio del buffer
 	\label{fig:class_renderingSDLFull_Streaming}
 \end{figure}
 
-I listati precedenti sono stati estrapolati dal Lis. \ref{lst:draw13} disponibile in appendice \ref{cap:Listato}.
-
 
 
 \subsection{Cattura audio} \label{subsec:cap3_Audio}
@@ -99,9 +97,6 @@ memset(stream, 0, len); // svuota buffer sonoro
 	\caption{Diagramma delle classi relative alla cattura audio}
 	\label{fig:class_mixingSDL_streaming}
 \end{figure}
-
-Il listato precedente è stato estrapolato dal Lis. \ref{lst:sdl_sound} disponibile in appendice \ref{cap:Listato}.
-
 
 
 
@@ -324,8 +319,6 @@ void add_frame(uint8_t[] pixels)
 }
 \end{lstlisting}
 
-I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} disponibile in appendice \ref{cap:Listato}.
-
 
 
 \subsubsection{Codifica audio con FFmpeg}
@@ -375,9 +368,6 @@ void add_instant(uint8_t[] stream, int stream_size,
 \end{lstlisting}
 
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
-
-I listati precedenti sono stati estrapolati dal Lis. \ref{lst:encode_to_movie} disponibile in appendice \ref{cap:Listato}.
-
 
 
 \section{Trasmissione}
