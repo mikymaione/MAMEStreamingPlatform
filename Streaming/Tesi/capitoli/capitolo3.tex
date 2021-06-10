@@ -572,14 +572,14 @@ Per la decodifica del filmato lato front-end è stata utilizzata la libreria JSM
 
 
 \section{Gestione input}
-La piattaforma offre all'utente la possibilità di poter giocare sia tramite tastiera che tramite joystick e consentire il multiplayer sullo stesso dispositivo, anche sui dispositivi mobili tramite periferiche Bluetooth. Per far ciò sono state utilizzate due librerie JavaScript open source per la gestione dell'input:
+La piattaforma consente di poter giocare sia tramite tastiera che tramite joystick a più giocatori sullo stesso dispositivo. Per far ciò sono state utilizzate due librerie JavaScript open source per la gestione dell'input:
 
 \begin{itemize}
 	\item Keypress è una libreria per la cattura dell'input da tastiera specializzata per l'uso in contesti videoludici, rilasciata con licenza Apache 2.0 \parencite{Keypress};
 	\item GameController.js è una libreria che estende le Web API per il gamepad, rilasciata con licenza MIT \parencite{gameController_js}.
 \end{itemize}
 
-Come mostrato nel Lis. \ref{lst:InitInput} presente nel file \verb|MAME.js| la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria Keypress e la funzione \verb|InitGamepad| della libreria GameController. I tasti mappati sono le quattro direzioni, gli otto tasti azione e i tasti funzione start, coin, pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In ambedue i casi deve essere gestita la pressione e il rilascio.
+Come mostrato nel Lis. \ref{lst:InitInput}, tratto dal file \verb|MAME.js|, la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria Keypress e la funzione \verb|InitGamepad| la libreria GameController. I tasti mappati sono: le quattro direzioni, gli otto tasti azione e i tasti funzione start, gettone e pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In ambedue i casi deve essere gestita la pressione e il rilascio.
 
 \begin{lstlisting}[language=JavaScript, caption=Codice relativo alla gestione input lato client, label={lst:InitInput}]
 function InitKeyboard()
@@ -610,8 +610,8 @@ function InitGamepad()
 }
 \end{lstlisting}
 	
-\subsection{Invio dell'input a SDL}
-Come detto nel paragrafo \ref{subsec:cap2_GestioneInput} l'input è gestito tramite la libreria SDL. Come mostrato nel Lis. \ref{lst:SocketServer_AllCallbacks} alla ricezione di un messaggio di tipo "key" il server chiama la funzione \verb|process_key| che si occupa di analizzare i dati contenuti nel messaggio e chiamare la funzione \verb|generate_key_event|, mostrata nel Lis. \ref{lst:generate_key_event}, che invia alla tastiera gestita da SDL l'input ricevuto tramite WebSocket (lo stesso avviene per il joystick). Nel Lis. \ref{lst:sdl_keyboard_device} è mostrata l'unica modifica apportata alla classe \verb|sdl_keyboard_device| che serve a passare per riferimento il device SDL alla classe \verb|streaming_server|.
+\subsection{Invio dell'input alla libreria SDL}
+Come detto nel paragrafo \ref{subsec:cap2_GestioneInput} l'input è gestito tramite la libreria SDL. Come mostrato nel Lis. \ref{lst:SocketServer_AllCallbacks} alla ricezione di un messaggio di tipo "key" il server chiama la funzione \verb|process_key| che si occupa di analizzare i dati contenuti nel messaggio e chiamare la funzione \verb|generate_key_event|, mostrata nel Lis. \ref{lst:generate_key_event}, che invia alla classe device l'input ricevuto tramite WebSocket. Nel Lis. \ref{lst:sdl_keyboard_device} è mostrata l'unica modifica apportata alla classe \verb|sdl_keyboard_device| che serve a passare per riferimento il device SDL alla classe \verb|streaming_server|.
 
 \begin{lstlisting}[caption=Codice relativo alla gestione input lato server: modulo server, label={lst:generate_key_event}]
 void generate_key_event(char[] key, bool down)
