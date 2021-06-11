@@ -637,7 +637,8 @@ let player = new JSMpeg.Player(URL, {
 });
 \end{lstlisting}
 
-La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
+La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
+
 
 
 
@@ -679,7 +680,8 @@ function InitGamepad()
 	}
 }
 \end{lstlisting}
-	
+
+
 \subsection{Invio dell'input alla libreria SDL}
 Come detto nel paragrafo \ref{subsec:cap2_GestioneInput} l'input è gestito tramite la libreria SDL. Come mostrato nel Lis. \ref{lst:SocketServer_AllCallbacks} alla ricezione di un messaggio di tipo "key" il server chiama la funzione \verb|process_key| che si occupa di analizzare i dati contenuti nel messaggio e chiamare la funzione \verb|generate_key_event|, mostrata nel Lis. \ref{lst:generate_key_event}, che invia alla classe device l'input ricevuto tramite WebSocket. Nel Lis. \ref{lst:sdl_keyboard_device} è mostrata l'unica modifica apportata alla classe \verb|sdl_keyboard_device| che serve a passare per riferimento il device SDL alla classe \verb|streaming_server|.
 
@@ -703,6 +705,9 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 	streaming_server::instance().set_keyboard(this);
 }
 \end{lstlisting}
+
+
+
 	
 \section{MPEG} \label{sec:cap3_MPEG}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
