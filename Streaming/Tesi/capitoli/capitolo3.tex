@@ -583,9 +583,9 @@ Nel paradigma del cloud gaming la decodifica viene eseguita lato client. Questa 
 
 I moderni browser web offrono due API per la grafica, le Canvas API e WebGL, e le Web Audio API per la riproduzione sonora.
 
-Le Canvas API forniscono un mezzo per disegnare grafica tramite JavaScript, si concentrano principalmente sulla grafica 2D ma quandono vengono utilizzate dalle API WebGL possono disegnare grafica 2D e 3D con accelerazione hardware. Sono completamente supportate da tutti i browser \parencite{Canvas_API}.
+Le Canvas API forniscono un mezzo per disegnare grafica tramite JavaScript, si concentrano principalmente sulla grafica 2D ma quando vengono utilizzate dalle API WebGL possono disegnare grafica 2D e 3D con accelerazione hardware. Sono completamente supportate da tutti i browser \parencite{Canvas_API}.
 
-WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D che consente l'utilizzo accelerato dalla GPU della fisica e dell'elaborazione e degli effetti delle immagini. WebGL 1.0 è supportato da tutti i browser, mentre WebGL 2.0 è in fase di testing \parencite{WebGL}.
+WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D. WebGL 1.0 è supportato da tutti i browser, mentre WebGL 2.0 è in fase di testing \parencite{WebGL}.
 
 Su queste API sono state create delle librerie JavaScript per la decodifica di vari formati audiovisivi.
 
@@ -593,38 +593,38 @@ Su queste API sono state create delle librerie JavaScript per la decodifica di v
 Per questo progetto sono state provate varie librerie open-source:
 
 \begin{itemize}
-	\item jMuxer per la decodifica audiovisiva dei formati AVC e AAC. Necessita di due stream separati, uno per l'audio ed uno per il video;	
-	\item ogv.js in grado di decodificare i seguenti formati audiovisivi open-source: Vorbis, Theora, Opus, VP8, VP9 e AV1;
-	\item JSMpeg in grado di decodificare il formato MPEG-TS con i codec MPEG1 per il video e MP2 per l'audio.
+	\item \textit{jMuxer} per la decodifica audiovisiva dei formati AVC e AAC. Necessita di due stream separati, uno per l'audio ed uno per il video;	
+	\item \textit{ogv.js} in grado di decodificare i seguenti formati audiovisivi open-source: Vorbis, Theora, Opus, VP8, VP9 e AV1;
+	\item \textit{JSMpeg} in grado di decodificare il formato MPEG-TS con i codec MPEG1 per il video e MP2 per l'audio.
 \end{itemize}
 
-jMuxer, come mostrato nel Lis. \ref{lst:example_jMuxer}, richiede che lo stream audio e video siano separati e che venga specificata la durata in millisecondi del pacchetto audio/video.
+\textit{jMuxer}, come mostrato nel Lis. \ref{lst:example_jMuxer}, richiede che lo stream audio e video siano separati e che venga specificata la durata in millisecondi del pacchetto audio/video.
  
 \begin{lstlisting}[language=JavaScript, caption=Esempio di utilizzo di jMuxer, label={lst:example_jMuxer}]
-let jmuxer = new JMuxer({
+let player = new JMuxer({
 	node: 'myCanvas',
 	mode: 'both', // available values are: both, audio and video
 });
 
-jmuxer.feed({
+player.feed({
 	audio: audio,
 	video: video,
 	duration: duration // in ms
 });
 \end{lstlisting}
 
-La libreria ogv.js, come mostrato nel Lis. \ref{lst:example_ogv}, è anche essa molto semplice da usare, ed è in grado di decodificare molti formati open-source; l'unico problema è che è stata programmata (nella versione attuale) per leggere file statici HTTP.
+La libreria \textit{ogv.js}, come mostrato nel Lis. \ref{lst:example_ogv}, è anche essa molto semplice da usare ed è in grado di decodificare molti formati open-source; purtroppo nella versione attuale può leggere solamente file completi.
  
 \begin{lstlisting}[language=JavaScript, caption=Esempio di utilizzo di ogv.js, label={lst:example_ogv}]
 let player = new OGVPlayer();
 
-containerElement.appendChild(player);
+myCanvas.appendChild(player);
 
 player.src = URL;
 player.play();
 \end{lstlisting}
 
-JSMpeg si è rivelato relativamente facile da usare. Come mostrato nel Lis. \ref{lst:example_JSMpeg}, si possono specificare le dimensioni del buffer video e di quello audio, questa funzionalità è stata molto utile per ridurre l'effetto di latenza percepito dall'utente proprio perché il cloud gaming è un paradigma che non ammette l'uso di buffer. Con una piccola modifica al sorgente della libreria si è potuto usare come URL l'indirizzo della connessione WebSocket.
+\textit{JSMpeg} si è rivelato relativamente facile da usare. Come mostrato nel Lis. \ref{lst:example_JSMpeg}, si possono specificare le dimensioni del buffer video e di quello audio. Questa funzionalità è stata molto utile per ridurre l'effetto di latenza percepito dall'utente, poiché non è possibile usare buffer nel paradigma del cloud gaming. La libreria è in grado di acquisire il filmato tramite connessione WebSocket (questa operazione ha richiesto una modifica al sorgente della libreria).
 
 \begin{lstlisting}[language=JavaScript, caption=Esempio di utilizzo di JSMpeg, label={lst:example_JSMpeg}]
 let player = new JSMpeg.Player(URL, {
@@ -637,7 +637,7 @@ let player = new JSMpeg.Player(URL, {
 });
 \end{lstlisting}
 
-La scelta finale è ricaduta su JSMpeg sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. JSMpeg è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
+La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}.
 
 
 
