@@ -141,7 +141,7 @@ Come detto precedentemente la codifica può essere sia software che hardware, pe
 
 La prima società che modificò una scheda video adattandola per il cloud gaming fu Sony che incluse un chip di codifica sulle GPU Nvidia ed AMD (rispettivamente per il rendering PS3 e PS4) \parencite{PlayStation_Now_Chip}. Altre piattaforme di cloud gaming che usano schede video con funzionalità di encoding incluse sono "Nvidia GeForce Now" su schede Nvidia \parencite{GeForce_Now}, "Microsoft XBox Cloud Gaming" su schede AMD \parencite{xCloudBlade}, "Google Stadia" su AMD \parencite{Google_Stadia_Server} e "Amazon Luna" su Nvidia \parencite{Amazon_Luna_GPU}. La lista delle aziende che creano schede video con questa funzionalità è riportata in Tab. \ref{table:VideoCardEncodingFeature} \parencite{GCNArchitecture} \parencite{IntelQuickSyncVideo} \parencite{NVIDIAVideoCodecSDK} \parencite{Hexagon_DSP_SDK}.
 
-\begin{table}
+\begin{table}[H]
 	\centering
 	\begin{tabular}{||l l l||} 
 		\hline
@@ -163,7 +163,7 @@ La prima società che modificò una scheda video adattandola per il cloud gaming
 
 Una varietà di codec audio e video sono stati implementati fino ad oggi con licenza proprietaria o libera e caratteristiche diverse. Una lista dei codec video più utilizzati\footnote{I codec video più utilizzati sono di categoria interframe.} è mostrata in Tab. \ref{table:CodecsVideo} \parencite{WebVideoCodecGuide}.
 
-\begin{table}
+\begin{table}[H]
 	\centering
 	\begin{tabular}{||l l l r l||} 
 		\hline
@@ -194,16 +194,26 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 
 
 \subsection{Codificatori audio}
-Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa, che solitamente è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso. La compressione audio avviene solo tramite codificatori software. Anche questi hanno tre formati di codifica: con perdita, senza perdita e nessuna compressione.
+Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa. Il segnale è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso.
 
-Il formato di codifica audio con perdita (l'unico usato per lo streaming) riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Altri fattori che influenzano la dimensione dell'audio codificato sono il numero di canali (che influisce solo sulla percezione della direzionalità e non sulla qualità) e il numero di campioni disponibili al secondo (che influiscono sulla fedeltà audio codificata) \parencite{AudioSignalProcessingAndCoding}.
+Come mostrato in Fig. \ref{fig:audio-waveform-samples}, la linea arancione rappresenta i campioni prelevati (in questo esempio viene utilizzato il punto medio) dalla forma d'onda audio. Alla riproduzione queste ampiezze vengono utilizzate per generare un'approssimazione della forma d'onda originale. Il numero di campioni prelevati al secondo è chiamato frequenza di campionamento.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/audio-waveform-samples}
+	\caption{Conversione audio da analogico a digitale}
+	\label{fig:audio-waveform-samples}
+\end{figure}
+
+Esistono diversi formati per rappresentare i campioni all'interno di un file audio: naturali a 8 bit (uchar), interi a 16 bit (short), interi a 32 bit (int), reali a 32 bit (float) e reali a 64 bit (double); sia \textit{planar}\footnote{\textit{Planar}: ogni canale audio si trova su un piano dati separato. Tutti i piani dati hanno la stessa dimensione.} che \textit{packed}\footnote{\textit{Packed}: viene utilizzato un unico piano dati e i campioni per ciascun canale vengono interlacciati.}.
+
+La compressione audio avviene solo tramite codificatori software. Anche questi hanno tre formati di codifica: con perdita, senza perdita e nessuna compressione. Il formato di codifica audio con perdita (l'unico usato per lo streaming) riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Altri fattori che influenzano la dimensione dell'audio codificato sono il numero di canali (che influisce solo sulla percezione della direzionalità e non sulla qualità) e il numero di campioni disponibili al secondo (che influiscono sulla fedeltà audio codificata) \parencite{AudioSignalProcessingAndCoding}.
 
 %Ci sono vari algorimi base per la compressione di cui due sono maggiormente usati nei codificatori audio per lo streaming: \textit{Modified discrete cosine transform} (MDCT) e \textit{Sub-band coding} (SBC). La MDCT è una trasformata lineare ortogonale lappata, basata sull'idea della cancellazione dell'aliasing nel dominio del tempo. \parencite{AudioSignalProcessingAndCoding}.
 
 
 Una lista dei codec audio più utilizzati è mostrata in Tab. \ref{table:CodecsAudio} \parencite{WebAudioCodecGuide}.
 
-\begin{table}
+\begin{table}[H]
 	\centering
 	\begin{tabular}{||l l l r l||} 
 		\hline
@@ -247,16 +257,6 @@ Il progetto FFmpeg è un insieme di librerie e programmi open source per la gest
 
 La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}).
 
-Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
-	\caption{Diagramma delle classi relativo alla codifica}
-	\label{fig:class_server_and_encoding}
-\end{figure}
-
-Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
-
 \begin{table}[H]
 	\centering
 	\begin{tabular}{||l l l l l||} 
@@ -274,6 +274,16 @@ Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia all
 	\caption{Lista dei codificatori utilizzabili}
 	\label{table:PossibiliCodifiche}
 \end{table}
+
+Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
+	\caption{Diagramma delle classi relativo alla codifica}
+	\label{fig:class_server_and_encoding}
+\end{figure}
+
+Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
 
 
 
@@ -322,6 +332,8 @@ void add_frame(uint8_t[] pixels)
 \subsubsection{Codifica audio con FFmpeg}
 Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia trasformando il frame audio da SDL (\verb|uint8_t[] stream|) al frame audio FFmpeg tramite la funzione \verb|avcodec_fill_audio_frame|. Tramite la funzione \verb|swr_convert| si converte dal formato audio SDL (PCM rappresentato tramite interi a 16 bit con segno per ogni canale) al formato audio di destinazione (come riportato in Tab. \ref{table:PossibiliCodifiche}). La funzione \verb|avcodec_fill_audio_frame| viene utilizzata nuovamente per riempire il frame audio FFmpeg con i dati appena convertiti (\verb|convertedData|). Tramite la funzione \verb|avcodec_encode_audio2| si comunica alla libreria FFmpeg di voler codificare il frame audio. Tramite la funzione \verb|av_interleaved_write_frame| avviene la multiplazione del pacchetto audio nel formato contenitore.
 
+Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
+
 \begin{lstlisting}[caption=Codice per la codifica audio. File: \detokenize{lib/util/encoding/encode_to_movie.hpp}, label={lst:audioCodecFFmpeg}]
 void add_instant(uint8_t[] stream, int stream_size, 
 	int stream_num_samples)
@@ -365,7 +377,6 @@ void add_instant(uint8_t[] stream, int stream_size,
 }
 \end{lstlisting}
 
-Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
 
 
 \section{Trasmissione}
@@ -380,7 +391,9 @@ Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performa
 \begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
 var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
 	['protocollo_utente1', 'protocollo_utente2']);
+
 ws.binaryType = 'arraybuffer'; // or 'blob';
+
 ws.onerror = function (error) { ... } 
 ws.onclose = function () { ... } 
 
@@ -437,9 +450,7 @@ bool generate_handshake(Connection &c, ostream &handshake)
 		<< "Upgrade: websocket" << endl
 		<< "Connection: Upgrade" << endl
 		<< "Sec-WebSocket-Accept: "
-		<< base64_encode(sha1)			
-		<< endl << endl;
-
+		<< base64_encode(sha1) << endl << endl;
 	return true;
 }
 \end{lstlisting}
@@ -463,12 +474,6 @@ Le parti più importanti che compongono un frame sono:
 \end{figure}
 
 Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
-	\caption{Diagramma delle classi del server}
-	\label{fig:class_server_and_encoding_full}
-\end{figure}
 
 La classe \verb|ws_server| implementa la classe generica \verb|SocketServer| tipizzandola come socket TCP della libreria Asio\footnote{Asio è una libreria open source per la programmazione di rete.}.
 
@@ -536,8 +541,11 @@ streaming_server::instance().on_accept = [&](auto parameters)
 };
 \end{lstlisting}
 
-
-
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
+	\caption{Diagramma delle classi del server}
+	\label{fig:class_server_and_encoding_full}
+\end{figure}
 
 \section{Decodifica}
 Nel paradigma del cloud gaming la decodifica viene eseguita lato client. Questa fase è vincolata dai codec installati sul sistema operativo del giocatore, per questo motivo quasi tutte le piattaforme di cloud gaming, come mostrato in Tab. \ref{table:ClientPerCloudGaming}, necessitano dell'installazione di un software client proprietario. Amazon Luna e Google Stadia, che utilizzano la tecnologia WebRTC, sono attualmente le uniche piattaforme ad offrire la possibilità di poter giocare tramite il browser Chrome. Come detto precedentemente questo progetto mira ad offrire il più semplice accesso alla piattaforma, per questo motivo la decodifica è eseguita dal browser utilizzando una libreria JavaScript, di cui parleremo nel paragrafo \ref{subsec:cap3_JSMpeg}.
