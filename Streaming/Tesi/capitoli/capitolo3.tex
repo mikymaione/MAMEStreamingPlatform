@@ -8,7 +8,13 @@
 \chapter{Implementazione}
 %In questa sezione si spiega come è stato affrontato il problema concettualmente, la soluzione logica che ne è seguita senza la documentazione.
 %Si mostra il progetto dell’architettura del sistema con i vari moduli.
-In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming e la loro implementazione in C++ come nuovi moduli del MAME: la cattura audio-video, la codifica, la trasmissione, la decodifica e la cattura dell'input utente.
+In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming e la loro implementazione in C++ come nuovi moduli del MAME: la cattura audio-video, la codifica, la trasmissione, la decodifica e la cattura dell'input utente. Il processo completo è mostrato in Fig. \ref{fig:decodificaFilmato}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/decodificaFilmato}
+	\caption{Processo completo delle fasi del cloud gaming: dalla cattura audiovisiva alla visualizzazione}
+	\label{fig:decodificaFilmato}
+\end{figure}
 
 
 
@@ -208,6 +214,7 @@ Esistono diversi formati per rappresentare i campioni all'interno di un file aud
 
 La compressione audio avviene solo tramite codificatori software. Anche questi hanno tre formati di codifica: con perdita, senza perdita e nessuna compressione. Il formato di codifica audio con perdita (l'unico usato per lo streaming) riduce la risoluzione in bit del suono e rimuove le frequenze che l'essere umano non può sentire o sente poco (secondo un modello psicoacustico). Altri fattori che influenzano la dimensione dell'audio codificato sono il numero di canali (che influisce solo sulla percezione della direzionalità e non sulla qualità) e il numero di campioni disponibili al secondo (che influiscono sulla fedeltà audio codificata) \parencite{AudioSignalProcessingAndCoding}.
 
+
 %Ci sono vari algorimi base per la compressione di cui due sono maggiormente usati nei codificatori audio per lo streaming: \textit{Modified discrete cosine transform} (MDCT) e \textit{Sub-band coding} (SBC). La MDCT è una trasformata lineare ortogonale lappata, basata sull'idea della cancellazione dell'aliasing nel dominio del tempo. \parencite{AudioSignalProcessingAndCoding}.
 
 
@@ -335,9 +342,9 @@ Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia tr
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
 
 \begin{lstlisting}[caption=Codice per la codifica audio. File: \detokenize{lib/util/encoding/encode_to_movie.hpp}, label={lst:audioCodecFFmpeg}]
-void add_instant(uint8_t[] stream, int stream_size, 
-	int stream_num_samples)
+void add_instant(uint8_t[] stream, int stream_size,	int num_samples)
 {
+	wav_frame->nb_samples = num_samples;
 	// Riempimento frame con audio da SDL
 	avcodec_fill_audio_frame(
 		wav_frame,						// output
@@ -362,8 +369,7 @@ void add_instant(uint8_t[] stream, int stream_size,
 		convertedData,					// input
 		buffer_size);					// dimensione input			
 			
-	av_init_packet(&audio_packet);		// pacchetto audio
-	
+	av_init_packet(&audio_packet);		// pacchetto audio	
 	// codifica
 	avcodec_encode_audio2(
 		audio_codec_context,			// contesto codifica
@@ -712,10 +718,9 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 \section{MPEG-1} \label{sec:cap3_MPEG}
 MPEG-1 è uno standard del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita.
 
-\subsection{Compression}
-Il codec è un modo per comprimere il video non elaborato prima dello streaming; la maggior parte dei servizi di streaming non si occupa della compressione a livello di codec e funziona solo con protocolli e trasporti. Alcuni esempi di codec sono h264, aac, mp3.
 
-Generalmente, il processo di conversione di segnali video compressi in altri segnali video è chiamato transcodifica video. Di solito, l'obiettivo principale di questa procedura è adattare le funzionalità video come bit rate, risoluzione o codec, per soddisfare i requisiti dei canali di comunicazione e dei dispositivi endpoint. È composto principalmente da compressione e decompressione di segnali video con tecniche di codifica video. La compressione è spesso chiamata codifica e la decompressione è indicata come decodifica \parencite{CombinedICTTechnologies}.
+\subsection{Compression}
+
 
 \subsection{Video}
 È stato progettato per un bit-rate di 1,5 Mbit/s.
@@ -723,7 +728,8 @@ Generalmente, il processo di conversione di segnali video compressi in altri seg
 \subsection{Audio}
 
 \subsection{Trasporto}
-Il trasporto o il contenitore definisce il modo in cui il video compresso viene compresso in byte per la trasmissione da una parte all'altra (utilizzando un protocollo). Ad esempio, MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
+Il trasporto definisce il modo in cui il filmto viene compresso in byte per la trasmissione da una parte all'altra, utilizzando un protocollo. Ad esempio MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
+
 
 %\parencite{CPP_Primer}
 %\parencite{Computer_Networking_and_the_Internet}
