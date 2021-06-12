@@ -196,13 +196,13 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 \subsection{Codificatori audio}
 Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa. Il segnale è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso.
 
-Come mostrato in Fig. \ref{fig:audio-waveform-samples}, la linea arancione rappresenta i campioni prelevati (in questo esempio viene utilizzato il punto medio) dalla forma d'onda audio. Alla riproduzione queste ampiezze vengono utilizzate per generare un'approssimazione della forma d'onda originale. Il numero di campioni prelevati al secondo è chiamato frequenza di campionamento.
-
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/audio-waveform-samples}
 	\caption{Conversione audio da analogico a digitale}
 	\label{fig:audio-waveform-samples}
 \end{figure}
+
+Come mostrato in Fig. \ref{fig:audio-waveform-samples}, la linea arancione rappresenta i campioni prelevati (in questo esempio viene utilizzato il punto medio) dalla forma d'onda audio. Alla riproduzione queste ampiezze vengono utilizzate per generare un'approssimazione della forma d'onda originale. Il numero di campioni prelevati al secondo è chiamato frequenza di campionamento.
 
 Esistono diversi formati per rappresentare i campioni all'interno di un file audio: naturali a 8 bit (uchar), interi a 16 bit (short), interi a 32 bit (int), reali a 32 bit (float) e reali a 64 bit (double); sia \textit{planar}\footnote{\textit{Planar}: ogni canale audio si trova su un piano dati separato. Tutti i piani dati hanno la stessa dimensione.} che \textit{packed}\footnote{\textit{Packed}: viene utilizzato un unico piano dati e i campioni per ciascun canale vengono interlacciati.}.
 
@@ -277,13 +277,13 @@ La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le
 
 Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
 
+Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
+
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
 	\caption{Diagramma delle classi relativo alla codifica}
 	\label{fig:class_server_and_encoding}
 \end{figure}
-
-Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
 
 
 
@@ -595,7 +595,7 @@ Per questo progetto sono state provate varie librerie open-source:
 \begin{itemize}
 	\item \textit{jMuxer} per la decodifica audiovisiva dei formati AVC e AAC. Necessita di due stream separati, uno per l'audio ed uno per il video;	
 	\item \textit{ogv.js} in grado di decodificare i seguenti formati audiovisivi open-source: Vorbis, Theora, Opus, VP8, VP9 e AV1;
-	\item \textit{JSMpeg} in grado di decodificare il formato MPEG-TS con i codec MPEG1 per il video e MP2 per l'audio.
+	\item \textit{JSMpeg} in grado di decodificare il formato MPEG-TS con i codec MPEG-1 per il video e MP2 per l'audio.
 \end{itemize}
 
 \textit{jMuxer}, come mostrato nel Lis. \ref{lst:example_jMuxer}, richiede che lo stream audio e video siano separati e che venga specificata la durata in millisecondi del pacchetto audio/video.
@@ -637,7 +637,7 @@ let player = new JSMpeg.Player(URL, {
 });
 \end{lstlisting}
 
-La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
+La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG-1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
 
 
 
@@ -708,9 +708,9 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 
 
 
-	
-\section{MPEG} \label{sec:cap3_MPEG}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\section{MPEG-1} \label{sec:cap3_MPEG}
+MPEG-1 è uno standard del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per risoluzioni video  
 
 \subsection{Compression}
 Il codec è un modo per comprimere il video non elaborato prima dello streaming; la maggior parte dei servizi di streaming non si occupa della compressione a livello di codec e funziona solo con protocolli e trasporti. Alcuni esempi di codec sono h264, aac, mp3.
