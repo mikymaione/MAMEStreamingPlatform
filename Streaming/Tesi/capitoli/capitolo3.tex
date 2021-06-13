@@ -734,13 +734,22 @@ Come detto precedentemente la maggior parte dei codec usano il modello di colori
     \item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in quel punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dai \textit{I-frame}.
 \end{itemize}
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
+	\caption{Esempio di GOP. Fonte: wikipedia.org}
+	\label{fig:I_P_and_B_frames}
+\end{figure}
+
 Ogni frame è scomposto in macro-blocchi di $16\times16px$ a loro volta formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr di YCbCr). Per ogni \textit{I-frame} i macro-blocchi vengono ri-calcolati. Per i \textit{P-frame} e \textit{B-frame} i macro-blocchi possono essere: ri-calcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
-	\caption{Esempio di GOP}
-	\label{fig:I_P_and_B_frames}
+	\includegraphics[width=10cm]{immagini/macroblocchi}
+	\centering
+	\caption{Disposizione blocchi 4:2:0}
+	\label{fig:macroblocchi}
 \end{figure}
+
+
 
 \subsection{Audio}
 
