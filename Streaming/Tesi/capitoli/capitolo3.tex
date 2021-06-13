@@ -719,7 +719,7 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di 1,5 Mbit/s; in questo progetto è stato utilizzato con una risoluzione di 480p a 30fps per un bit-rate massimo di 2,1 Mbit/s (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica).
 
 \subsection{Video}
-Come detto precedentemente la maggior parte dei codec usano il modello di colori YCbCr, tra cui anche \textit{MPEG-1 Video}. Questo codec supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s.
+Come detto precedentemente la maggior parte dei codec usano il modello di colori YCbCr, tra cui anche \textit{MPEG-1 Video}. Questo codec supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In Fig. \ref{fig:mpegPhases} è mostrato il processo completo di codifica video.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegPhases}
@@ -727,12 +727,7 @@ Come detto precedentemente la maggior parte dei codec usano il modello di colori
 	\label{fig:mpegPhases}
 \end{figure}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/gop}
-	\caption{GOP (ogni \textit{I-frame} inizia un nuovo GOP)}
-	\label{fig:gop}
-\end{figure}
-
+\subsubsection{Frame e macro-blocchi}
 \textit{MPEG-1 Video} compone il filmato video in "gruppi di immagini" (GOP), ogni \textit{GOP} è composto da un solo \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un solo \textit{D-frame}, come mostrato in \ref{fig:gop}. Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
 
 \begin{itemize}
@@ -741,6 +736,12 @@ Come detto precedentemente la maggior parte dei codec usano il modello di colori
 	\item \textit{B-frame} (\textit{Bidirectional-frame}) come i \textit{P-frame} fanno una predizione però sfruttando sia il frame precedente che quello successivo;
 	\item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in quel punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dai \textit{I-frame}.
 \end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/gop}
+	\caption{GOP (ogni \textit{I-frame} inizia un nuovo GOP)}
+	\label{fig:gop}
+\end{figure}
 
 Un esempio del funzionamento è mostrato in \ref{fig:I_P_and_B_frames}.
 
@@ -753,23 +754,32 @@ Un esempio del funzionamento è mostrato in \ref{fig:I_P_and_B_frames}.
 Ogni frame contiene macro-blocchi, che sono l'unità d'elaborazione della compressione. I macro-blocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. Essi si dividono in:
 
 \begin{itemize}
-	\item \textit{Macroblocchi I} codificato indipendentemente da altri macroblocchi (dalla trasformazione coseno discreta 2D come nei blocchi JPEG);
-	\item \textit{Macroblocchi P} codificare non la regione ma il vettore di movimento e il blocco di errore del fotogramma precedente (macroblocco previsto in avanti);
-	\item \textit{Macroblocchi B} come sopra tranne che il vettore di movimento e il blocco di errore sono codificati dal frame precedente (macroblocco previsto in avanti) o successivo (macroblocco previsto all'indietro).
+	\item \textit{macro-blocchi I} codificato indipendentemente da altri macro-blocchi (dalla trasformazione coseno discreta 2D come nei blocchi JPEG);
+	\item \textit{macro-blocchi P} codificare non la regione ma il vettore di movimento e il blocco di errore del fotogramma precedente (macro-blocco previsto in avanti);
+	\item \textit{macro-blocchi B} come sopra tranne che il vettore di movimento e il blocco di errore sono codificati dal frame precedente (macro-blocco previsto in avanti) o successivo (macro-blocco previsto all'indietro).
 \end{itemize}
 
+I frame possono contenere differenti tipi di macro-blocchi:
 
+\begin{itemize}
+	\item \textit{I-frame} contiene solamente macro-blocchi \textit{I};
+	\item \textit{P-frame} può contenere macro-blocchi \textit{I} o \textit{P};
+	\item \textit{B-frame} pul contenere tutti i tipi di macro-blocchi (\textit{I}, \textit{P} o \textit{B}).
+\end{itemize}
 
 Ogni frame è scomposto in macro-blocchi di $16\times16$ px a loro volta formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr di YCbCr). Per ogni \textit{I-frame} i macro-blocchi vengono ri-calcolati. Per i \textit{P-frame} e \textit{B-frame} i macro-blocchi possono essere: ri-calcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/macroblocchi}
 	\centering
-	\caption{Disposizione blocchi 4:2:0}
+	\caption{Disposizione blocchi (campionamento 4:2:0)}
 	\label{fig:macroblocchi}
 \end{figure}
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la trasformata discreta del coseno (DCT) definita in Eq. \ref{eq:DCT}:
+I macro-blocchi sono organizzati in \textit{slice} divise nei 3 tipi: Y, Cb e Cr.
+
+\subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la trasformata discreta del coseno (DCT) definita in Eq. \ref{eq:DCT} eseguita su $8\times8$ px:
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -786,11 +796,32 @@ con
 	\end{cases}	
 \end{equation}
 
-Eq. \ref{eq:DCT} può essere risctitta in forma matriciale bidimensionale come in Eq. \ref{eq:DCTMX2D}:
+Eq. \ref{eq:DCT} può essere riscritta in forma matriciale bidimensionale come in Eq. \ref{eq:DCTMX2D}:
 
 \begin{equation} \label{eq:DCTMX2D}
 	[Z_N] = [C_N][X_N][C_N]^T
 \end{equation}
+
+\subsubsection{La quantizzazione}
+Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata utilizzando la matrice di quantizzazione in Matr. \ref{matr:MPEG_Quant_Matrix}. La quantizzazione spazialmente adattiva è resa possibile dal fattore "scala di quantizzazione". Questo parametro può variare per ogni macro-blocco all'interno di un'immagine per regolare in modo adattivo la quantizzazione.
+
+\begin{equation} \label{matr:MPEG_Quant_Matrix}
+\begin{bmatrix} 
+	8 & 16 & 19 & 22 & 26 & 27 & 29 & 34\\
+	16 & 16 & 22 & 24 & 27 & 29 & 34 & 37\\
+	19 & 22 & 26 & 27 & 29 & 34 & 34 & 38\\
+	22 & 22 & 26 & 27 & 29 & 34 & 37 & 40\\
+	22 & 26 & 27 & 29 & 32 & 35 & 40 & 48\\
+	26 & 27 & 29 & 32 & 35 & 40 & 48 & 58\\
+	26 & 27 & 29 & 34 & 38 & 46 & 56 & 69\\
+	27 & 29 & 35 & 38 & 46 & 56 & 69 & 83\\
+\end{bmatrix}
+\end{equation}
+
+\subsubsection{La scansione zig zag}
+
+\subsubsection{La codifica di Huffman}
+
 
 \parencite{HyesookLim2000Asaf}.
 
