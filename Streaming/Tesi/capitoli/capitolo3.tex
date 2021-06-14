@@ -7,7 +7,7 @@
 %============================================================
 \chapter{Implementazione}
 %In questa sezione si spiega come è stato affrontato il problema concettualmente, la soluzione logica che ne è seguita senza la documentazione.
-%Si mostra il progetto dell’architettura del sistema con i vari moduli.
+%Si mostra il progetto dell'architettura del sistema con i vari moduli.
 In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming e la loro implementazione in C++ come nuovi moduli del MAME: la cattura audio-video, la codifica, la trasmissione, la decodifica e la cattura dell'input utente. Il processo completo è mostrato in Fig. \ref{fig:decodificaFilmato}.
 
 \begin{figure}[H]
@@ -722,13 +722,14 @@ MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group
 
 
 \subsection{Video}
-Come detto precedentemente la maggior parte dei codec usano il modello di colori YCbCr, tra cui anche \textit{MPEG-1 Video}. Questo codec supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In Fig. \ref{fig:mpegPhases} è mostrato il processo completo di codifica video.
+\textit{MPEG-1 Video} supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In Fig. \ref{fig:mpegPhases} è mostrato il processo completo di codifica video.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegPhases}
 	\caption{Fasi della codifica video}
 	\label{fig:mpegPhases}
 \end{figure}
+
 
 
 
@@ -786,7 +787,7 @@ I macroblocchi sono organizzati in \textit{slice} divise nei 3 tipi: Y, Cb e Cr.
 
 
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
-La trasformata discreta del coseno (DCT) divide la forma d’onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
+La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
@@ -795,7 +796,7 @@ La trasformata discreta del coseno (DCT) divide la forma d’onda nelle sue comp
 	\label{fig:MPEGCodingScheme}
 \end{figure}
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, eseguita su $8\times8$ px \parencite{HyesookLim2000Asaf}:
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, eseguita sui blocchi $8\times8$ px della luminanza e della crominanza \parencite{HyesookLim2000Asaf}:
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -821,7 +822,7 @@ Eq. \ref{eq:DCT} può essere riscritta in forma matriciale bidimensionale come i
 
 
 \subsubsection{La quantizzazione e la scansione zig-zag}
-Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Questo processo introduce perdita di qualità del segnale.
+Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Questo processo introduce perdita di qualità del segnale.
 
 \begin{equation} \label{matr:MPEG_Quant_Matrix}
 \begin{bmatrix} 
@@ -836,14 +837,22 @@ Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata (ope
 \end{bmatrix}
 \end{equation}
 
-La scansione zig-zag rappresenta in successione (in ordine crescente) i coefficienti DCT.
+Dopo la quantizzazione, il coefficiente DCT più basso (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT e le loro posizioni vengono quindi scansionati "a zig-zag" e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
+
+La scansione zig-zag ispeziona in successione ed in ordine crescente gli elementi.
 
 
 
-\subsubsection{La codifica di Huffman}
-I coefficienti AC sono codificati senza perdite secondo il \textit{run-length encoding} (RLE) e la codifica di Huffman. Vengono formate tabelle (per Y, Cb e Cr) su base statistica. I coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
+\subsubsection{Run-length encoding e la codifica di Huffman}
+Il \textit{run-length encoding} (RLE) è un algoritmo di compressione senza perdita di informazione. Sostituisce nell'input le sequenze di caratteri uguali con il numero di occorrenze consecutive, il carattere ed un simbolo.
 
-\parencite{jurgem_1997}
+Ad esempio la stringa \verb|AAAAAAFDDCCCCCCCAEEEEEEEEEEEEEEEE| diventa \verb|6A:1F:2D:7C:1A:16E|.
+
+La codifica di Huffman è anche esso un algoritmo per la compressione senza perdita di informazione. L'algoritmo crea un albero binario di simboli ordinati in base al conteggio delle loro occorrenze. Agli elementi che si ripetono più spesso viene assegnato il codice più breve.
+
+I coefficienti AC sono codificati senza perdite secondo il RLE e la codifica di Huffman, mentre i coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
+
+Al termine di queste due operazioni si ottiene il bitstream del video \parencite{jurgem_1997}.
 
 
 
