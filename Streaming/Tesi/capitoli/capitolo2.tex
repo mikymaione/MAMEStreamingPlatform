@@ -7,7 +7,7 @@
 %============================================================
 
 \chapter{Architettura del sistema}
-%In questa sezione si deve descrivere l’obiettivo della ricerca, le problematiche affrontate ed eventuali definizioni preliminari nel caso la tesi sia di carattere teorico.
+%In questa sezione si deve descrivere l'obiettivo della ricerca, le problematiche affrontate ed eventuali definizioni preliminari nel caso la tesi sia di carattere teorico.
 In questo capitolo verrà descritto il sistema proposto, il MAME e le sue funzioni di rendering, missaggio audio e gestione dell'input utente.
 
 
@@ -57,7 +57,7 @@ Multiple Arcade Machine Emulator (MAME) è un progetto open-source (GNU-GPL) di 
 	\label{fig:mame_schema_moduli_d}
 \end{figure}
 
-Il progetto ha una struttura modulare, schematizzata in Fig. \ref{fig:mame_schema_moduli_d}, formata da un nucleo centrale che dirige le operazioni, gestisce l’interfaccia utente e mette a disposizione dei driver un buon numero di funzioni d'uso comune. Il nucleo delega a moduli esterni l'emulazione dei vari tipi di CPU e di chip audio supportati. In pratica il nucleo fornisce un ambiente operativo specializzato nell'emulazione di videogiochi arcade, che i driver possono sfruttare con poco codice aggiuntivo. Spesso la maggior parte del contenuto di un driver è costituita da strutture dati, gestite direttamente dal nucleo. Il driver deve fornire codice solo per alcuni compiti specifici, ad esempio l'aggiornamento del video \parencite{Il_progetto_MAME}.
+Il progetto ha una struttura modulare, schematizzata in Fig. \ref{fig:mame_schema_moduli_d}, formata da un nucleo centrale che dirige le operazioni, gestisce l'interfaccia utente e mette a disposizione dei driver un buon numero di funzioni d'uso comune. Il nucleo delega a moduli esterni l'emulazione dei vari tipi di CPU e di chip audio supportati. In pratica il nucleo fornisce un ambiente operativo specializzato nell'emulazione di videogiochi arcade, che i driver possono sfruttare con poco codice aggiuntivo. Spesso la maggior parte del contenuto di un driver è costituita da strutture dati, gestite direttamente dal nucleo. Il driver deve fornire codice solo per alcuni compiti specifici, ad esempio l'aggiornamento del video \parencite{Il_progetto_MAME}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mame_architettura_full}
