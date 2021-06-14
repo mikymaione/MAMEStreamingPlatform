@@ -718,6 +718,9 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 \section{MPEG-1} \label{sec:cap3_MPEG}
 MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di 1,5 Mbit/s; in questo progetto è stato utilizzato con una risoluzione di 480p a 30fps per un bit-rate massimo di 2,1 Mbit/s (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica).
 
+
+
+
 \subsection{Video}
 Come detto precedentemente la maggior parte dei codec usano il modello di colori YCbCr, tra cui anche \textit{MPEG-1 Video}. Questo codec supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In Fig. \ref{fig:mpegPhases} è mostrato il processo completo di codifica video.
 
@@ -726,6 +729,8 @@ Come detto precedentemente la maggior parte dei codec usano il modello di colori
 	\caption{Fasi della codifica video}
 	\label{fig:mpegPhases}
 \end{figure}
+
+
 
 \subsubsection{Frame e macroblocchi}
 \textit{MPEG-1 Video} compone il filmato video in "gruppi di immagini" (GOP), ogni \textit{GOP} è composto da un solo \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un solo \textit{D-frame}, come mostrato in \ref{fig:gop}. Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
@@ -778,8 +783,19 @@ Ogni frame è scomposto in macroblocchi di $16\times16$ px a loro volta formati 
 
 I macroblocchi sono organizzati in \textit{slice} divise nei 3 tipi: Y, Cb e Cr.
 
+
+
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la trasformata discreta del coseno (DCT), definita in Eq. \ref{eq:DCT}, eseguita su $8\times8$ px \parencite{HyesookLim2000Asaf}:
+La trasformata discreta del coseno (DCT) divide la forma d’onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
+	\centering
+	\caption{Schema di codifica e decodifica}
+	\label{fig:MPEGCodingScheme}
+\end{figure}
+
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, eseguita su $8\times8$ px \parencite{HyesookLim2000Asaf}:
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -802,8 +818,10 @@ Eq. \ref{eq:DCT} può essere riscritta in forma matriciale bidimensionale come i
 	[Z_N] = [C_N][X_N][C_N]^T
 \end{equation}
 
+
+
 \subsubsection{La quantizzazione e la scansione zig-zag}
-Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. La quantizzazione spazialmente adattiva è resa possibile dal fattore "scala di quantizzazione". Questo parametro può variare per ogni macroblocco all'interno di un'immagine per regolare in modo adattivo la quantizzazione.
+Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Questo processo introduce perdita di qualità del segnale.
 
 \begin{equation} \label{matr:MPEG_Quant_Matrix}
 \begin{bmatrix} 
@@ -818,12 +836,22 @@ Successivamente la matrice di 64 frequenze del blocco DCT viene quantizzata util
 \end{bmatrix}
 \end{equation}
 
-La scansione zig-zag rappresente in successione in ordine crescente i coefficienti DCT.
+La scansione zig-zag rappresenta in successione (in ordine crescente) i coefficienti DCT.
+
+
 
 \subsubsection{La codifica di Huffman}
-I coefficienti AC sono codificati senza perdite secondo il \textit{run-length encoding} e la codifica di Huffman. Vengono formate tabelle (per Y, Cb e Cr) su base statistica. I coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
+I coefficienti AC sono codificati senza perdite secondo il \textit{run-length encoding} (RLE) e la codifica di Huffman. Vengono formate tabelle (per Y, Cb e Cr) su base statistica. I coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
+
+\parencite{jurgem_1997}
+
+
+
 
 \subsection{Audio}
+
+
+
 
 \subsection{Trasporto}
 Il trasporto definisce il modo in cui il filmto viene compresso in byte per la trasmissione da una parte all'altra, utilizzando un protocollo. Ad esempio MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
