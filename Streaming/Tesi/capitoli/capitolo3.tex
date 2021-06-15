@@ -716,13 +716,12 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 
 
 \section{MPEG-1} \label{sec:cap3_MPEG}
-MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di 1,5 Mbit/s; in questo progetto è stato utilizzato con una risoluzione di 480p a 30fps per un bit-rate massimo di 2,1 Mbit/s (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica).
-
+MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di 1,5 Mbit/s ma supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In questo progetto è stato utilizzato con una risoluzione di 480p a 30fps per un bit-rate massimo di 2,1 Mbit/s (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica); questa impostazione può essere cambiata a riga di comando come mostrato nel paragrafo \ref{sec:chapMU_Esecuzione}. Di seguito vedremo il processo di codifica video ed audio e il trasporto.
 
 
 
 \subsection{Video}
-\textit{MPEG-1 Video} supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In Fig. \ref{fig:mpegPhases} è mostrato il processo completo di codifica video.
+Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. \ref{fig:MPEG_layers}, su cui si applicano dei processi di codifica e decodifica formati da vari algoritmi; il processo di codifica è mostrato in Fig. \ref{fig:mpegPhases}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegPhases}
@@ -732,15 +731,16 @@ MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group
 
 
 
-
 \subsubsection{Frame e macroblocchi}
-\textit{MPEG-1 Video} compone il filmato video in "gruppi di immagini" (GOP), ogni \textit{GOP} è composto da un solo \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un solo \textit{D-frame}, come mostrato in \ref{fig:gop}. Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
+In \textit{MPEG-1 Video} la sequenza video è composta da "gruppi di immagini" (GOP: \textit{group of pictures}); ogni GOP è composto da un \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un \textit{D-frame}, come mostrato in \ref{fig:gop}.
+
+Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
 
 \begin{itemize}
-	\item \textit{I-frame} (\textit{Intra-frame}) sono chiamati anche \textit{keyframe} perché sono codificati senza utilizzare informazioni diverse da quelle contenute nell'immagine stessa;
+	\item \textit{I-frame} (\textit{Intra-frame}) sono chiamati anche \textit{key-frame} perché sono codificati senza utilizzare informazioni diverse da quelle contenute nell'immagine stessa;
 	\item \textit{P-frame} (\textit{Predicted-frame}) sfruttano la ridondanza temporale per aumentare la compressione. Memorizzano solamente le differenze nell'immagine rispetto al frame precedente;
 	\item \textit{B-frame} (\textit{Bidirectional-frame}) come i \textit{P-frame} fanno una predizione però sfruttando sia il frame precedente che quello successivo;
-	\item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in quel punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dai \textit{I-frame}.
+	\item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in un punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dagli \textit{I-frame}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -749,31 +749,26 @@ MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group
 	\label{fig:gop}
 \end{figure}
 
-Un esempio del funzionamento è mostrato in \ref{fig:I_P_and_B_frames}.
-
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
-	\caption{Esempio di GOP. Fonte: wikipedia.org}
-	\label{fig:I_P_and_B_frames}
+	\includegraphics[width=\linewidth]{immagini/MPEG_layers}
+	\caption{Layer di \textit{MPEG-1 Video}}
+	\label{fig:MPEG_layers}
 \end{figure}
 
-Ogni frame contiene macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. Essi si dividono in:
+%Un esempio del funzionamento è mostrato in \ref{fig:I_P_and_B_frames}.
+%\begin{figure}[H]
+%	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
+%	\caption{Esempio di GOP. Fonte: wikipedia.org}
+%	\label{fig:I_P_and_B_frames}
+%\end{figure}
+
+Come mostrato in Fig. \ref{fig:MPEG_layers}, ogni immagine (frame) è divisa in \textit{slice}. Le slice sono di 3 tipi: Y, Cb e Cr. Ogni \textit{slice} è scomposta in macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. I macroblocchi a loro volta sono formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr), come mostrato in Fig. \ref{fig:macroblocchi}. Essi si dividono in \parencite{ProgettazioneEproduzioneMultimediale}:
 
 \begin{itemize}
 	\item \textit{macroblocchi I} codificato indipendentemente da altri macroblocchi (dalla trasformazione coseno discreta 2D come nei blocchi JPEG);
 	\item \textit{macroblocchi P} codificare non la regione ma il vettore di movimento e il blocco di errore del fotogramma precedente (macroblocco previsto in avanti);
 	\item \textit{macroblocchi B} come sopra tranne che il vettore di movimento e il blocco di errore sono codificati dal frame precedente (macroblocco previsto in avanti) o successivo (macroblocco previsto all'indietro).
 \end{itemize}
-
-I frame possono contenere differenti tipi di macroblocchi:
-
-\begin{itemize}
-	\item \textit{I-frame} contiene solamente macroblocchi \textit{I};
-	\item \textit{P-frame} può contenere macroblocchi \textit{I} o \textit{P};
-	\item \textit{B-frame} pul contenere tutti i tipi di macroblocchi (\textit{I}, \textit{P} o \textit{B}).
-\end{itemize}
-
-Ogni frame è scomposto in macroblocchi di $16\times16$ px a loro volta formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr di YCbCr). Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-frame} e \textit{B-frame} i macroblocchi possono essere: ri-calcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/macroblocchi}
@@ -782,35 +777,26 @@ Ogni frame è scomposto in macroblocchi di $16\times16$ px a loro volta formati 
 	\label{fig:macroblocchi}
 \end{figure}
 
-%I macroblocchi sono organizzati in \textit{slice} divise nei 3 tipi: Y, Cb e Cr.
+I frame possono contenere differenti tipi di macroblocchi:
 
-I layer di cui è composta una sequenza video MPEG-1 sono mostrati in Fig. \ref{fig:MPEG_layers}.
+\begin{itemize}
+	\item \textit{I-frame} contiene solamente macroblocchi \textit{I};
+	\item \textit{P-frame} può contenere macroblocchi \textit{I} o \textit{P};
+	\item \textit{B-frame} può contenere tutti i tipi di macroblocchi (\textit{I}, \textit{P} o \textit{B}).
+\end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/MPEG_layers}
-	\caption{Layer di \textit{MPEG-1 Video}}
-	\label{fig:MPEG_layers}
-\end{figure}
-
+Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-frame} e \textit{B-frame} i macroblocchi possono essere: ri-calcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
 
 
 
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
 La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
-	\centering
-	\caption{Schema di codifica e decodifica}
-	\label{fig:MPEGCodingScheme}
-\end{figure}
-
 I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, eseguita sui blocchi $8\times8$ px della luminanza e della crominanza \parencite{HyesookLim2000Asaf}:
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
-		& y(k) = \sqrt{\frac{2}{N}} u(k) \sum_{n=0}^{N-1} x(n) cos \frac{(2n+1)k\pi}{2N} \\
-		& k = 0, 1, \dots, N-1	
+		& y(k) = \sqrt{\frac{2}{N}} u(k) \sum_{n=0}^{N-1} x(n) cos \frac{(2n+1)k\pi}{2N}, & k = 0, 1, \dots, N-1
 	\end{aligned}
 \end{equation}
 con
@@ -827,6 +813,13 @@ Eq. \ref{eq:DCT} può essere riscritta in forma matriciale bidimensionale come i
 \begin{equation} \label{eq:DCTMX2D}
 	[Z_N] = [C_N][X_N][C_N]^T
 \end{equation}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
+	\centering
+	\caption{Schema di codifica e decodifica}
+	\label{fig:MPEGCodingScheme}
+\end{figure}
 
 
 
