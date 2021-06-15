@@ -721,7 +721,13 @@ MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group
 
 
 \subsection{Video}
-Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. \ref{fig:MPEG_layers}, su cui si applicano dei processi di codifica e decodifica formati da vari algoritmi; il processo di codifica è mostrato in Fig. \ref{fig:mpegPhases}.
+Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. \ref{fig:MPEG_layers}, su cui si applicano dei processi di codifica e decodifica formati da vari algoritmi. Il processo di codifica, mostrato in Fig. \ref{fig:mpegPhases}, utilizza l'algoritmo di compressione (con perdita) JPEG:
+
+\begin{enumerate}
+    \item L'immagine viene elaborata in blocchi da $8\times8$ px;
+    \item Viene applicata, su ogni blocco, la trasformata discreta del coseno monodimensionale (DCT 1D) prima orizzontalmente e poi verticalmente;
+    \item Ogni blocco viene compresso tramite quantizzazione.
+\end{enumerate}
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegPhases}
@@ -729,10 +735,25 @@ Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. 
 	\label{fig:mpegPhases}
 \end{figure}
 
+Il processo completo di codifica e decodifica è mostrato in Fig. \ref{fig:MPEGCodingScheme}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
+	\centering
+	\caption{Schema di codifica e decodifica}
+	\label{fig:MPEGCodingScheme}
+\end{figure}
+
 
 
 \subsubsection{Frame e macroblocchi}
 In \textit{MPEG-1 Video} la sequenza video è composta da "gruppi di immagini" (GOP: \textit{group of pictures}); ogni GOP è composto da un \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un \textit{D-frame}, come mostrato in \ref{fig:gop}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/gop}
+	\caption{GOP: ogni \textit{I-frame} inizia un nuovo GOP; le frecce indicano da che frame prendono informazioni}
+	\label{fig:gop}
+\end{figure}
 
 Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
 
@@ -742,12 +763,6 @@ Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \te
 	\item \textit{B-frame} (\textit{Bidirectional-frame}) come i \textit{P-frame} fanno una predizione però sfruttando sia il frame precedente che quello successivo;
 	\item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in un punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dagli \textit{I-frame}.
 \end{itemize}
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/gop}
-	\caption{GOP: ogni \textit{I-frame} inizia un nuovo GOP; le frecce indicano da che frame prendono informazioni}
-	\label{fig:gop}
-\end{figure}
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/MPEG_layers}
@@ -792,34 +807,20 @@ Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-f
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
 La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, eseguita sui blocchi $8\times8$ px della luminanza e della crominanza \parencite{HyesookLim2000Asaf}:
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT (1D) che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}. La DCT (1D) è definita in Eq. \ref{eq:DCT}:
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
-		& y(k) = \sqrt{\frac{2}{N}} u(k) \sum_{n=0}^{N-1} x(n) cos \frac{(2n+1)k\pi}{2N}, & k = 0, 1, \dots, N-1
+		& y(k) = \sqrt{\frac{2}{N}} \cdot u(k) \cdot \sum_{n=0}^{N-1} x(n) \cdot cos \frac{(2n+1)k\pi}{2N}, & \forall k = 0, 1, \dots, N-1\\
+		& u(k) =
+		\begin{cases}
+			\frac{1}{\sqrt{2}},	& \text{se } k=0\\
+			1,					& \text{altrimenti}
+		\end{cases}
 	\end{aligned}
 \end{equation}
-con
-\begin{equation} \label{eq:u_k}
-	u(k)=  
-	\begin{cases}
-		\frac{1}{\sqrt{2}},	& \text{se } k=0\\
-		1,					& \text{altrimenti}
-	\end{cases}	
-\end{equation}
 
-Eq. \ref{eq:DCT} può essere riscritta in forma matriciale bidimensionale come in Eq. \ref{eq:DCTMX2D}:
-
-\begin{equation} \label{eq:DCTMX2D}
-	[Z_N] = [C_N][X_N][C_N]^T
-\end{equation}
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
-	\centering
-	\caption{Schema di codifica e decodifica}
-	\label{fig:MPEGCodingScheme}
-\end{figure}
+%È computazionalmente più facile da implementare e più efficiente considerare la DCT come un insieme di funzioni di base che può essere precalcolato e memorizzato. In pratica si calcolano i valori per un kernel di convoluzione ($8\times8$) che verrà successivamente applicato. I valori sono calcolati dalla formula DCT.
 
 
 
