@@ -855,6 +855,15 @@ La scansione zig-zag ispeziona in successione ed in ordine crescente gli element
 
 
 
+\subsubsection{Codifica predittiva}
+La codifica predittiva mira a ridurre i dati trasmessi calcolando il movimento degli oggetti in una sequenza video, risparmiando tra il 50\% e il 80\% di bit da memorizzare. Questo metodo si applica solamente ai \textit{P-frame} e \textit{B-frame}.
+
+Trova il macroblocco più adatto nel frame di riferimento cercando in una determinata area, questo è il macroblocco predetto.
+Invia i coefficienti DCT quantizzati della differenza tra i due frame (è l'errore di predizione).
+Codifica e invia il vettore movimento tra la posizione del macroblocco predetto e quello del frame di riferimento.
+
+
+
 \subsubsection{Run-length encoding e la codifica di Huffman}
 Il \textit{run-length encoding} (RLE) è un algoritmo di compressione senza perdita di informazione. Sostituisce nell'input le sequenze di caratteri uguali con il numero di occorrenze consecutive, il carattere ed un simbolo.
 
