@@ -805,9 +805,9 @@ Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-f
 
 
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
-La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza. Poiché non tutte le frequenze spaziali sono presenti si avranno, come risultato, molti coefficienti prossimi allo zero.
+La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT (1D) che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}. La DCT (1D) è definita in Eq. \ref{eq:DCT}:
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT (1D), definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -825,7 +825,7 @@ I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello 
 
 
 \subsubsection{La quantizzazione e la scansione zig-zag}
-Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Questo processo introduce perdita di qualità del segnale.
+Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Il sistema visivo umano è più sensibile agli errori di ricostruzione relativi alle frequenze spaziali più basse per questo si migliora la qualità visiva dell'immagine decodificata utilizzando dei pesi tarati sulle proprietà fisiche del sistema visivo umano. La quantizzazione è un processo che introduce perdita di qualità del segnale.
 
 \begin{equation} \label{matr:MPEG_Quant_Matrix}
 \begin{bmatrix} 
@@ -840,7 +840,7 @@ Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente qu
 \end{bmatrix}
 \end{equation}
 
-Dopo la quantizzazione, il coefficiente DCT più basso (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT e le loro posizioni vengono quindi scansionati "a zig-zag" e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
+Dopo la quantizzazione, il coefficiente DCT più basso (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT vengono scansionati "a zig-zag" e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
 
 La scansione zig-zag ispeziona in successione ed in ordine crescente gli elementi.
 
