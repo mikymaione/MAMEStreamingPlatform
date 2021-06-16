@@ -827,18 +827,27 @@ I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello 
 \subsubsection{La quantizzazione e la scansione zig-zag}
 Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Il sistema visivo umano è più sensibile agli errori di ricostruzione relativi alle frequenze spaziali più basse per questo si migliora la qualità visiva dell'immagine decodificata utilizzando dei pesi tarati sulle proprietà fisiche del sistema visivo umano. La quantizzazione è un processo che introduce perdita di qualità del segnale.
 
-\begin{equation} \label{matr:MPEG_Quant_Matrix}
-\begin{bmatrix} 
-	8 & 16 & 19 & 22 & 26 & 27 & 29 & 34\\
-	16 & 16 & 22 & 24 & 27 & 29 & 34 & 37\\
-	19 & 22 & 26 & 27 & 29 & 34 & 34 & 38\\
-	22 & 22 & 26 & 27 & 29 & 34 & 37 & 40\\
-	22 & 26 & 27 & 29 & 32 & 35 & 40 & 48\\
-	26 & 27 & 29 & 32 & 35 & 40 & 48 & 58\\
-	26 & 27 & 29 & 34 & 38 & 46 & 56 & 69\\
-	27 & 29 & 35 & 38 & 46 & 56 & 69 & 83\\
-\end{bmatrix}
-\end{equation}
+\begin{minipage}{0.5\linewidth}
+	\begin{equation} \label{matr:MPEG_Quant_Matrix}
+		\begin{bmatrix} 
+			8 & 16 & 19 & 22 & 26 & 27 & 29 & 34\\
+			16 & 16 & 22 & 24 & 27 & 29 & 34 & 37\\
+			19 & 22 & 26 & 27 & 29 & 34 & 34 & 38\\
+			22 & 22 & 26 & 27 & 29 & 34 & 37 & 40\\
+			22 & 26 & 27 & 29 & 32 & 35 & 40 & 48\\
+			26 & 27 & 29 & 32 & 35 & 40 & 48 & 58\\
+			26 & 27 & 29 & 34 & 38 & 46 & 56 & 69\\
+			27 & 29 & 35 & 38 & 46 & 56 & 69 & 83\\
+		\end{bmatrix}
+	\end{equation}
+	\vfill
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+	\centering
+	\includegraphics[width=4cm]{immagini/JPEG_ZigZag}
+	\captionof{figure}{Scansione zig-zag}
+	\label{fig:JPEG_ZigZag}    
+\end{minipage}%
 
 Dopo la quantizzazione, il coefficiente DCT più basso (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT vengono scansionati "a zig-zag" e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
 
