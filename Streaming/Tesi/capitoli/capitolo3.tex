@@ -725,7 +725,7 @@ Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. 
 
 \begin{enumerate}
     \item L'immagine viene elaborata in blocchi da $8\times8$ px;
-    \item Viene applicata, su ogni blocco, la trasformata discreta del coseno monodimensionale (DCT 1D) prima orizzontalmente e poi verticalmente;
+    \item Viene applicata, su ogni blocco, la trasformata discreta del coseno (DCT) prima orizzontalmente e poi verticalmente;
     \item Ogni blocco viene compresso tramite quantizzazione.
 \end{enumerate}
 
@@ -777,7 +777,7 @@ Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \te
 %	\label{fig:I_P_and_B_frames}
 %\end{figure}
 
-Come mostrato in Fig. \ref{fig:MPEG_layers}, ogni immagine (frame) è divisa in \textit{slice}. Le slice sono di 3 tipi: Y, Cb e Cr. Ogni \textit{slice} è scomposta in macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. I macroblocchi a loro volta sono formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr), come mostrato in Fig. \ref{fig:macroblocchi}. Essi si dividono in \parencite{ProgettazioneEproduzioneMultimediale}:
+Come mostrato in Fig. \ref{fig:MPEG_layers}, ogni immagine (frame) è divisa in \textit{slice}. Le slice sono di 3 tipi: Y, Cb e Cr. Ogni \textit{slice} è scomposta in macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. I macroblocchi a loro volta, utilizzando un campionamento 4:2:0\footnote{Il campionamento 4:2:0 riduce di un fattore 2 in ambedue le direzioni.}, sono formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr) come mostrato in Fig. \ref{fig:macroblocchi}. Essi si dividono in \parencite{ProgettazioneEproduzioneMultimediale}:
 
 \begin{itemize}
 	\item \textit{macroblocchi I} codificato indipendentemente da altri macroblocchi (dalla trasformazione coseno discreta 2D come nei blocchi JPEG);
@@ -805,9 +805,9 @@ Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-f
 
 
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
-La trasformata discreta del coseno (DCT) divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
+La trasformata discreta del coseno (DCT)\footnote{La forma più comune è la DCT-II che è quella utilizzata in questo contesto.} divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT (1D), definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -825,7 +825,7 @@ I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello 
 
 
 \subsubsection{La quantizzazione e la scansione zig-zag}
-Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (operazione di divisione) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Il sistema visivo umano è più sensibile agli errori di ricostruzione relativi alle frequenze spaziali più basse per questo si migliora la qualità visiva dell'immagine decodificata utilizzando dei pesi tarati sulle proprietà fisiche del sistema visivo umano. La quantizzazione è un processo che introduce perdita di qualità del segnale.
+Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente quantizzata (dividendo per lo \textit{step-size}) utilizzando la matrice di quantizzazione in Eq. \ref{matr:MPEG_Quant_Matrix}. Il sistema visivo umano è più sensibile agli errori di ricostruzione relativi alle frequenze spaziali più basse per questo si migliora la qualità visiva dell'immagine decodificata utilizzando dei pesi tarati sulle proprietà fisiche del sistema visivo umano. La quantizzazione è un processo che introduce perdita di qualità del segnale \ref{ProgettazioneEproduzioneMultimediale}.
 
 \begin{minipage}{0.5\linewidth}
 	\begin{equation} \label{matr:MPEG_Quant_Matrix}
@@ -846,10 +846,10 @@ Successivamente la matrice di 64 frequenze del blocco DCT viene uniformemente qu
 	\centering
 	\includegraphics[width=4cm]{immagini/JPEG_ZigZag}
 	\captionof{figure}{Scansione zig-zag}
-	\label{fig:JPEG_ZigZag}    
+	\label{fig:JPEG_ZigZag}
 \end{minipage}%
 
-Dopo la quantizzazione, il coefficiente DCT più basso (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT vengono scansionati "a zig-zag" e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
+Dopo la quantizzazione, il coefficiente DCT con la varianza più alta (coefficiente DC) viene trattato in modo diverso dai coefficienti rimanenti (coefficienti AC). Il coefficiente DC corrisponde all'intensità media del blocco. I valori del quantizzatore diversi da zero dei restanti coefficienti DCT vengono scansionati "a zig-zag", come mostrato in Fig. \ref{fig:JPEG_ZigZag}, e codificati con l'entropia della lunghezza di esecuzione utilizzando tabelle di "codici a lunghezza variabile".
 
 La scansione zig-zag ispeziona in successione ed in ordine crescente gli elementi.
 
@@ -862,7 +862,7 @@ Ad esempio la stringa \verb|AAAAAAFDDCCCCCCCAEEEEEEEEEEEEEEEE| diventa \verb|6A:
 
 La codifica di Huffman è anche esso un algoritmo per la compressione senza perdita di informazione. L'algoritmo crea un albero binario di simboli ordinati in base al conteggio delle loro occorrenze. Agli elementi che si ripetono più spesso viene assegnato il codice più breve.
 
-I coefficienti AC sono codificati senza perdite secondo il RLE e la codifica di Huffman, mentre i coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
+I coefficienti AC sono codificati senza perdite secondo il RLE e memorizzati utilizzando la codifica di Huffman, mentre i coefficienti DC codificano le differenze tra blocchi dei macroblocchi.
 
 Al termine di queste due operazioni si ottiene il bitstream del video \parencite{jurgem_1997}.
 
