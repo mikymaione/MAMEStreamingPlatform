@@ -595,7 +595,7 @@ WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, 
 
 Su queste API sono state create delle librerie JavaScript per la decodifica di vari formati audiovisivi.
 
-\subsection{Le librerie JavaScript per la decodifica}
+\subsection{Le librerie JavaScript per la decodifica} \label{subsec:chap3_LibJavascript}
 Per questo progetto sono state provate varie librerie open-source:
 
 \begin{itemize}
@@ -894,9 +894,17 @@ Al termine di queste due operazioni si ottiene il bitstream del video \parencite
 
 
 \subsection{Audio}
+\textit{MPEG-1 Audio} riduce il quantitativo di dati da utilizzare per l'audio tramitete psicoacustica, eliminado frequenze che l'orecchio umano non può sentire. Lo standard sonoro è diviso in 3 layer:
 
+\begin{itemize}
+	\item Layer I: è progettato per la codifica in tempo reale tramite hardware con un bit-rate di 384 kbit/s. L'estensione del file è \verb|.m1a|;
+	\item Layer II: è un formato con perdita proggettato per l'alta qualità a 192 kbit/s. L'estensione del file è \verb|.mp2|;
+	\item Layer III: anche esso un formato con perdita progettato per una buona qualità a 128 kbit/s; L'estensione del file è \verb|.mp3|.
+\end{itemize}
 
+Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{JSMpeg} supporta \textit{MP2}. 
 
+\parencite{AudioSignalProcessingAndCoding}.
 
 \subsection{Trasporto}
 Il trasporto definisce il modo in cui il filmato viene compresso in byte per la trasmissione da una parte all'altra, utilizzando un protocollo. Ad esempio MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
