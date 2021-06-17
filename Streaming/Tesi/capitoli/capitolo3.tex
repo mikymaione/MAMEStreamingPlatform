@@ -846,8 +846,8 @@ Dopo la quantizzazione, il coefficiente DCT con la varianza più alta (coefficie
 
 
 
-\subsubsection{Codifica predittiva}
-La codifica predittiva mira a ridurre i dati trasmessi calcolando il movimento degli oggetti in una sequenza video, risparmiando tra il 50\% e il 80\% di bit da memorizzare. Il metodo, che si applica solamente ai \textit{P-frame} e \textit{B-frame}, esegue i seguenti passaggi:
+\subsubsection{Stima predittiva e compensazione del movimento}
+La stima predittiva del movimento mira a ridurre i dati trasmessi calcolando il movimento degli oggetti in una sequenza video, risparmiando tra il 50\% e il 80\% di bit da memorizzare. I passaggi di questo processo sono:
 
 \begin{enumerate}
 	\item trova il macroblocco più adatto nel frame di riferimento cercando in una determinata area, questo è il macroblocco predetto;
@@ -855,12 +855,18 @@ La codifica predittiva mira a ridurre i dati trasmessi calcolando il movimento d
 	\item codifica e invia il vettore movimento tra la posizione del macroblocco predetto e quello del frame di riferimento.
 \end{enumerate}
 
-Un esempio del suo funzionamento è visibile in Fig. \ref{fig:I_P_and_B_frames}.
+Il processo di sostituire i macroblocchi con un vettore movimento ed un blocco errore è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}, come mostrato in Fig. \ref{fig:I_P_and_B_frames}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
-	\caption{Esempio di codifica predittiva. Le frecce partono dal frame di riferimento al frame di predizione. Fonte: wikipedia.org}
+	\caption{Esempio di codifica predittiva. Le frecce arancioni che partono dal frame di riferimento al frame di predizione indicano i frame che l'algoritmo prende in considerazione; le frecce rosse indicano il vettore movimento calcolato. Fonte: wikipedia.org}
 	\label{fig:I_P_and_B_frames}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/motionvectors}
+	\caption{Vettori movimento in un frame. Fonte: ffmpeg.org}
+	\label{fig:motionvectors}
 \end{figure}
 
 
