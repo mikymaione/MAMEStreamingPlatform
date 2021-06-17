@@ -851,11 +851,17 @@ La stima predittiva del movimento mira a ridurre i dati trasmessi calcolando il 
 
 \begin{enumerate}
 	\item trova il macroblocco più adatto nel frame di riferimento cercando in una determinata area, questo è il macroblocco predetto;
-	\item invia i coefficienti DCT quantizzati della differenza tra i due frame (è l'errore di predizione);
+	\item invia i coefficienti DCT quantizzati della differenza tra i due frame, chiamata errore di predizione;
 	\item codifica e invia il vettore movimento tra la posizione del macroblocco predetto e quello del frame di riferimento.
 \end{enumerate}
 
 Il processo di applicare i vettori movimenti ad un frame per sintetizzare la trasformazione al frame successivo è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}. 
+
+L'errore di predizione può essere calcolato tramite \textit{mean absolute error}, \textit{sum of squared error} o \textit{mean squared error}. Solitamente implementata utilizzando \textit{mean absolute error}, utilizzando l'Eq. \ref{eq:MAE}, dove $C_{ij}$ è il frame corrente e $R_{ij}$ quello di riferimento \parencite{ProgettazioneEproduzioneMultimediale}:
+
+\begin{equation} \label{eq:MAE}
+	MAE(x, y) = \frac{1}{N^2} \sum_{i=0}^{N-1} \sum_{j=0}^{N-1} |C_{ij}-R_{ij}|
+\end{equation}
 
 Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
 
