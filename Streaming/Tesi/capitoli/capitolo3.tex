@@ -855,18 +855,20 @@ La stima predittiva del movimento mira a ridurre i dati trasmessi calcolando il 
 	\item codifica e invia il vettore movimento tra la posizione del macroblocco predetto e quello del frame di riferimento.
 \end{enumerate}
 
-Il processo di sostituire i macroblocchi con un vettore movimento ed un blocco errore è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}, come mostrato in Fig. \ref{fig:I_P_and_B_frames}.
+Il processo di applicare i vettori movimenti ad un frame per sintetizzare la trasformazione al frame successivo è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}. 
+
+Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
-	\caption{Esempio di codifica predittiva. Le frecce arancioni che partono dal frame di riferimento al frame di predizione indicano i frame che l'algoritmo prende in considerazione; le frecce rosse indicano il vettore movimento calcolato. Fonte: wikipedia.org}
+	\caption{Vettori movimento. Le frecce arancioni che partono dal frame di riferimento al frame di predizione indicano i frame che l'algoritmo prende in considerazione; le frecce rosse indicano il vettore movimento calcolato. Fonte: wikipedia.org}
 	\label{fig:I_P_and_B_frames}
 \end{figure}
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/motionvectors}
-	\caption{Vettori movimento in un frame. Fonte: ffmpeg.org}
-	\label{fig:motionvectors}
+	\includegraphics[width=\linewidth]{immagini/motioncompensation}
+	\caption{Compensazione del movimento: vettori di movimento ed errore di predizione. Fonte: \fullcite{Computer_Vision_A_Modern_Approach}}
+	\label{fig:motioncompensation}
 \end{figure}
 
 
