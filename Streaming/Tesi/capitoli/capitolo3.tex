@@ -740,7 +740,7 @@ Il processo completo di codifica e decodifica è mostrato in Fig. \ref{fig:MPEGC
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/MPEGCodingScheme}
 	\centering
-	\caption{Schema di codifica e decodifica}
+	\caption{\textit{MPEG-1 Video}: schema di codifica e decodifica}
 	\label{fig:MPEGCodingScheme}
 \end{figure}
 
@@ -894,7 +894,7 @@ Al termine di queste due operazioni si ottiene il bitstream del video \parencite
 
 
 \subsection{Audio}
-\textit{MPEG-1 Audio} riduce il quantitativo di dati da utilizzare per l'audio tramitete psicoacustica, eliminado frequenze che l'orecchio umano non può sentire. Lo standard sonoro è diviso in 3 layer:
+\textit{MPEG-1 Audio} riduce il quantitativo di dati da utilizzare per l'audio tramite psicoacustica, eliminado frequenze che l'orecchio umano non può sentire. Lo standard sonoro è diviso in 3 layer:
 
 \begin{itemize}
 	\item Layer I: è progettato per la codifica in tempo reale tramite hardware con un bit-rate di 384 kbit/s. L'estensione del file è \verb|.m1a|;
@@ -902,7 +902,18 @@ Al termine di queste due operazioni si ottiene il bitstream del video \parencite
 	\item Layer III: anche esso un formato con perdita progettato per una buona qualità a 128 kbit/s; L'estensione del file è \verb|.mp3|.
 \end{itemize}
 
-Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{JSMpeg} supporta \textit{MP2}. 
+Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{JSMpeg} supporta \textit{MPEG-1 Audio Layer II (MP2)}.
+
+\subsubsection{La tecnica di codifica}
+La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposto in 32 sottobande utilizzando un PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.} filterbank. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
+
+Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/mpegaudio}
+	\caption{\textit{MPEG-1 Audio}: schema di codifica}
+	\label{fig:mpegaudio}
+\end{figure}
 
 \parencite{AudioSignalProcessingAndCoding}.
 
