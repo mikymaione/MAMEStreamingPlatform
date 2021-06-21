@@ -855,15 +855,13 @@ La stima predittiva del movimento mira a ridurre i dati trasmessi calcolando il 
 	\item codifica e invia il vettore movimento tra la posizione del macroblocco predetto e quello del frame di riferimento.
 \end{enumerate}
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/motioncompensation}
+	\caption{Compensazione del movimento: vettori di movimento ed errore di predizione. Fonte: \fullcite{Computer_Vision_A_Modern_Approach}}
+	\label{fig:motioncompensation}
+\end{figure}
+
 Il processo di applicare i vettori movimenti ad un frame per sintetizzare la trasformazione al frame successivo è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}. 
-
-L'errore di predizione può essere calcolato tramite \textit{mean absolute error}, \textit{sum of squared error} o \textit{mean squared error}. Solitamente implementato utilizzando \textit{mean absolute error}, utilizzando l'Eq. \ref{eq:MAE}, dove $C_{ij}$ è il frame corrente e $R_{ij}$ quello di riferimento \parencite{ProgettazioneEproduzioneMultimediale}:
-
-\begin{equation} \label{eq:MAE}
-	\frac{1}{N^2} \sum_{i=0}^{N-1} \sum_{j=0}^{N-1} |C_{ij}-R_{ij}|
-\end{equation}
-
-Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
@@ -871,11 +869,13 @@ Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P
 	\label{fig:I_P_and_B_frames}
 \end{figure}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/motioncompensation}
-	\caption{Compensazione del movimento: vettori di movimento ed errore di predizione. Fonte: \fullcite{Computer_Vision_A_Modern_Approach}}
-	\label{fig:motioncompensation}
-\end{figure}
+Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
+
+L'errore di predizione può essere calcolato tramite \textit{mean absolute error}, \textit{sum of squared error} o \textit{mean squared error}. Solitamente implementato utilizzando \textit{mean absolute error}, utilizzando l'Eq. \ref{eq:MAE}, dove $C_{ij}$ è il frame corrente e $R_{ij}$ quello di riferimento \parencite{ProgettazioneEproduzioneMultimediale}:
+
+\begin{equation} \label{eq:MAE}
+	\frac{1}{N^2} \sum_{i=0}^{N-1} \sum_{j=0}^{N-1} |C_{ij}-R_{ij}|
+\end{equation}
 
 
 
@@ -907,12 +907,18 @@ Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{J
 \subsubsection{La tecnica di codifica}
 La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposti in 32 sottobande utilizzando un filterbank PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.}. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
 
-Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti.
+Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}).
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegaudio}
 	\caption{\textit{MPEG-1 Audio}: schema di codifica}
 	\label{fig:mpegaudio}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/FFT}
+	\caption{Schema dell'effetto dell'applicazione della trasformata di Fourier}
+	\label{fig:FFT}
 \end{figure}
 
 \parencite{AudioSignalProcessingAndCoding}.
