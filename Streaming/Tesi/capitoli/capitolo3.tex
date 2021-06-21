@@ -907,7 +907,7 @@ Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{J
 \subsubsection{La tecnica di codifica}
 La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposti in 32 sottobande utilizzando un filterbank PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.}. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
 
-Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}).
+Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}) insieme a quelli difficilmente audibili. Quindi una procedura di allocazione dinamica dei bit (iterativa) applica la soglia di "distorsione appena rilevabile" (JND\footnote{JND: \textit{just noticeable distortion}.}) per selezionare il quantizzatore migliore da un insieme predeterminato per ciascuna sottobanda \parencite{AudioSignalProcessingAndCoding}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegaudio}
@@ -917,11 +917,9 @@ Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast F
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/FFT}
-	\caption{Applicazione della trasformata discreta di Fourier (1D) su 10 secondi di audio tratti da \textit{Street Fighter III}}
+	\caption{Applicazione della trasformata discreta di Fourier (1D) su 10 secondi di audio (PCM a 16 bit) tratti da \textit{Street Fighter III}}
 	\label{fig:FFT}
 \end{figure}
-
-\parencite{AudioSignalProcessingAndCoding}.
 
 
 
