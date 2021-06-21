@@ -905,7 +905,7 @@ Al termine di queste due operazioni si ottiene il bitstream del video \parencite
 Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{JSMpeg} supporta \textit{MPEG-1 Audio Layer II (MP2)}.
 
 \subsubsection{La tecnica di codifica}
-La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposto in 32 sottobande utilizzando un PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.} filterbank. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
+La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposti in 32 sottobande utilizzando un filterbank PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.}. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
 
 Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti.
 
@@ -916,6 +916,8 @@ Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast F
 \end{figure}
 
 \parencite{AudioSignalProcessingAndCoding}.
+
+
 
 \subsection{Trasporto}
 Il trasporto definisce il modo in cui il filmato viene compresso in byte per la trasmissione da una parte all'altra, utilizzando un protocollo. Ad esempio MPEG-TS e RTMP sono contenitori \parencite{CombinedICTTechnologies}.
