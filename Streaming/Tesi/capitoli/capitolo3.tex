@@ -926,7 +926,15 @@ Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast F
 \subsection{Trasporto}
 Il trasporto definisce il modo in cui il filmato viene compresso in byte per la trasmissione da una parte all'altra, utilizzando un protocollo. MPEG, nel layer di sistema, definisce \textit{Program Stream} (PS) e \textit{Transport Stream} (TS), il primo usato per la memorizzazione sui DVD ed il secondo per i sistemi di trasmissione per la TV via cavo. 
 
-\textit{MPEG-TS} è composto da più flussi audio e video (PES\footnote{PES: \textit{Packetized elementary stream} definisce il trasporto dei flussi elementari (ES), cioè l'output di un codificatore audio o video.}), non necessariamente sincronizzati, che vengono multiplessati assieme e trasmessi sotto forma di pacchetti. I pacchetti TS sono formati da un header di 4 bytes e un payload di 184 bytes, come mostrato in Fig. \ref{fig:TS_Packet}, e sono composti da:
+\textit{MPEG-TS} è composto da più flussi audio e video (PES\footnote{PES: \textit{Packetized elementary stream} definisce il trasporto dei flussi elementari (ES), cioè l'output di un codificatore audio o video.}), non necessariamente sincronizzati, che vengono multiplessati assieme e trasmessi sotto forma di pacchetti, come mostrato in Fig. \ref{fig:MPEGTS}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/MPEGTS}
+	\caption{Schema di funzionamento del \textit{Transport Stream}}
+	\label{fig:MPEGTS}
+\end{figure}
+
+I pacchetti TS sono formati da un header di 4 bytes e un payload di 184 bytes, come mostrato in Fig. \ref{fig:TS_Packet}, e sono composti da \parencite{RetiInternetMultimediali}:
 
 \begin{itemize}
     \item \textit{Synchronization Byte}: identifica l'inizio del pacchetto (è la costante 0x47);
@@ -944,14 +952,6 @@ Il trasporto definisce il modo in cui il filmato viene compresso in byte per la 
 	\includegraphics[width=\linewidth]{immagini/TS_Packet}
 	\caption{Pacchetto \textit{MPEG-TS}}
 	\label{fig:TS_Packet}
-\end{figure}
-
-Il processo è mostrato in Fig. \ref{fig:MPEGTS} \parencite{RetiInternetMultimediali}.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/MPEGTS}
-	\caption{Schema di funzionamento del \textit{Transport Stream}}
-	\label{fig:MPEGTS}
 \end{figure}
 
 
