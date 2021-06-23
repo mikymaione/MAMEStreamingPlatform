@@ -13,48 +13,54 @@ Questo capitolo analizza le prestazioni del progetto relativamente ai tre difett
 
 
 \section{Qualità audio-video}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
+Il cloud gaming effettua lo streaming in tempo reale ed è quindi essenziale garantire un livello di qualità del flusso audiovisivo percepito. Lo streaming video a bit-rate e frequenza dei fotogrammi bassi è possibile preservando la qualità percepita ed è particolarmente adatto per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe flat per reti mobili. Solitamente sono abbonamenti solo dati per tablet e smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/ssf3_compare}
-	\caption{Comparazione tra rendering e streaming}
-	\label{fig:ssf3_compare}
+
+
+\subsection{Video}
+Qualsiasi elaborazione applicata ad un'immagine può causare perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa e può essere descritta, ad esempio, dal degrado della nitidezza, della gamma dinamica, della fusione dei colori, del contrasto, dell'effetto di blocco o della sfocatura. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti e sono possibili diversi riferimenti come la verità fondamentale o le conoscenze pregresse espresse in termini di parametri e test statistici. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini.
+
+
+
+\subsubsection{Peak signal-to-noise ratio}
+Il PSNR è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine \parencite{relationship_PSNR_and_SSI}.
+
+\begin{equation} \label{eq:MSE}
+	MSE(f,g)=\frac{1}{MN} \sum_{i=1}^{M} \sum_{j=1}^{N} (f_{ij}-g_{ij})^2
+\end{equation}
+
+\begin{equation} \label{eq:PSNR}
+	PSNR(f,g)=10 \log_{10}  \frac{255^2}{MSE(f,g)}	
+\end{equation}
+
+
+\subsubsection{Structural Similarity Index Measure}
+SSIM è considerato in correlazione con la percezione della qualità del sistema visivo umano. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori che sono la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto \parencite{relationship_PSNR_and_SSI}.
+
+\begin{equation} \label{eq:SSIM}
+	\begin{matrix*}[l]
+		SSIM(f,g) =  l(f,g) c(f,g) s(f,g) & l(f,g)= \frac{2 \mu_f \mu_g  + C_1}{\mu_f^2 \mu_g^2  + C_1} \\
+		c(f,g)= \frac{2 \sigma_f \sigma_g  + C_2}{\sigma_f^2 + \sigma_g^2  + C_2} & s(f,g)= \frac{\sigma_{fg}+C_3}{\sigma_f \sigma_g + C_3}
+	\end{matrix*}
+\end{equation}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[keepaspectratio,height=\textheight]{immagini/BMP_MPEG_compare}
+	\caption{Comparazione tra rendering BMP32 (sx) e streaming in MPEG-1 (dx)}
+	\label{fig:BMP_MPEG_compare}
 \end{figure}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection{Total Harmonic Distortion}
-Questo è per l'audio.
 
-\subsection{Peak signal-to-noise ratio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/basket_compare}
-	\caption{Comparazione tra rendering e streaming}
-	\label{fig:basket_compare}
-\end{figure}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+\subsection{Audio}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
-\subsection{Structural Similarity Index Method}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/puzzle_compare}
-	\caption{Comparazione tra rendering e streaming}
-	\label{fig:puzzle_compare}
-\end{figure}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+\subsubsection{Total Harmonic Distortion}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
@@ -64,11 +70,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}.
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}
+
+
 
 
 \section{Latenza} \label{sec:cap4_Latenza}
@@ -80,7 +84,6 @@ Per quanto riguarda la latenza è un problema che non può essere eliminato nel 
 	%Fonte: shadow.tech/blog/news/roadmap-cloud-gaming-without-latency
 	\label{fig:latenzaCloudGaming}
 \end{figure}
-
 
 Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
