@@ -557,7 +557,7 @@ streaming_server::instance().on_accept = [&](auto parameters)
 
 
 \section{Decodifica}
-Nel paradigma del cloud gaming la decodifica viene eseguita lato client. Questa fase è vincolata dai codec installati sul sistema operativo del giocatore, per questo motivo quasi tutte le piattaforme di cloud gaming, come mostrato in Tab. \ref{table:ClientPerCloudGaming}, necessitano dell'installazione di un software client proprietario. Amazon Luna e Google Stadia, che utilizzano la tecnologia WebRTC, sono attualmente le uniche piattaforme ad offrire la possibilità di poter giocare tramite il browser Chrome. Come detto precedentemente questo progetto mira ad offrire il più semplice accesso alla piattaforma, per questo motivo si è scelto come client il browser web e quindi la fase di decodifica viene eseguita dal browser utilizzando una libreria JavaScript.
+Nel paradigma del cloud gaming la decodifica viene eseguita lato client. Questa fase è vincolata dai codec installati sul sistema operativo del giocatore, per questo motivo quasi tutte le piattaforme di cloud gaming, come mostrato in Tab. \ref{table:ClientPerCloudGaming}, necessitano dell'installazione di un software client proprietario. Amazon Luna e Google Stadia, che utilizzano la tecnologia WebRTC, sono attualmente le uniche piattaforme ad offrire la possibilità di poter giocare tramite il browser (solo Chrome è supportato). Come detto precedentemente questo progetto mira ad offrire il più semplice accesso alla piattaforma, per questo motivo si è scelto come client il browser web e quindi la fase di decodifica viene eseguita dal browser utilizzando una libreria JavaScript.
 
 \begin{table}[H]
 	\centering
