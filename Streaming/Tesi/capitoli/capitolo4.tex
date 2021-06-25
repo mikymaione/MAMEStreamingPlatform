@@ -18,12 +18,12 @@ Nell'ambito videoludico la qualità audiovisiva (soprattutto la visiva) influisc
 
 
 \subsection{Video}
-Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa (o quella generata digitalmente) e può essere descritta dal degradarsi di alcune caratteristiche tra cui: nitidezza, gamma dinamica, fusione dei colori, contrasto, sfocatura, ecc\dots. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini.
+Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa (o quella generata digitalmente) e può essere descritta dal degradarsi di alcune caratteristiche tra cui: nitidezza, gamma dinamica, fusione dei colori, contrasto, sfocatura, ecc\dots. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini \parencite{relationship_PSNR_and_SSI}.
 
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine \parencite{relationship_PSNR_and_SSI}.
+Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine. Esistono diversi approcci per calcolare il PSNR di un'immagine a colori, ad esempio utilizzando un'immagine nel formato YCbCr calcolando il PSNR solo sul canale della luminanza \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
 
 \begin{equation} \label{eq:PSNR}
 	PSNR(f,g)=10 \log_{10}  \frac{255^2}{MSE(f,g)}	
