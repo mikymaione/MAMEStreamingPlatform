@@ -23,7 +23,7 @@ Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di quali
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine. Esistono diversi approcci per calcolare il PSNR di un'immagine a colori, ad esempio utilizzando un'immagine nel formato YCbCr calcolando il PSNR solo sul canale della luminanza \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
+Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
 
 \begin{equation} \label{eq:PSNR}
 	PSNR(f,g)=10 \log_{10}  \frac{255^2}{MSE(f,g)}	
@@ -36,7 +36,7 @@ Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità d
 
 
 \subsubsection{Structural Similarity Index Measure}
-SSIM è considerato in correlazione con la percezione della qualità del sistema visivo umano. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori che sono la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto \parencite{relationship_PSNR_and_SSI}.
+SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori che sono la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto \parencite{relationship_PSNR_and_SSI}.
 
 \begin{equation} \label{eq:SSIM}
 	\begin{matrix*}[l]
