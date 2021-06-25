@@ -13,25 +13,26 @@ Questo capitolo analizza le prestazioni del progetto relativamente ai tre difett
 
 
 \section{Qualità audio-video}
-Il cloud gaming effettua lo streaming in tempo reale ed è quindi essenziale garantire un livello di qualità del flusso audiovisivo percepito. Lo streaming video a bit-rate e frequenza dei fotogrammi bassi è possibile preservando la qualità percepita ed è particolarmente adatto per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe flat per reti mobili. Solitamente sono abbonamenti solo dati per tablet e smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
+Nell'ambito videoludico la qualità audiovisiva (soprattutto la visiva) influisce sulla qualità generale percepita dall'utente, per questo nel cloud gaming è necessario garantire un livello di qualità quasi identico alla versione in locale. Lo streaming a bit-rate bassi è possibile preservando la qualità percepita ed è particolarmente adatto per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe flat per reti mobili. Solitamente sono abbonamenti solo dati per tablet e smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
 
 
 
 \subsection{Video}
-Qualsiasi elaborazione applicata ad un'immagine può causare perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa e può essere descritta, ad esempio, dal degrado della nitidezza, della gamma dinamica, della fusione dei colori, del contrasto, dell'effetto di blocco o della sfocatura. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti e sono possibili diversi riferimenti come la verità fondamentale o le conoscenze pregresse espresse in termini di parametri e test statistici. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini.
+Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa (o quella generata digitalmente) e può essere descritta dal degradarsi di alcune caratteristiche tra cui: nitidezza, gamma dinamica, fusione dei colori, contrasto, sfocatura, ecc\dots. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini.
 
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine \parencite{relationship_PSNR_and_SSI}.
+Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della ricostruzione nella compressione e nella riduzione del rumore dell'immagine \parencite{relationship_PSNR_and_SSI}.
+
+\begin{equation} \label{eq:PSNR}
+	PSNR(f,g)=10 \log_{10}  \frac{255^2}{MSE(f,g)}	
+\end{equation}
 
 \begin{equation} \label{eq:MSE}
 	MSE(f,g)=\frac{1}{MN} \sum_{i=1}^{M} \sum_{j=1}^{N} (f_{ij}-g_{ij})^2
 \end{equation}
 
-\begin{equation} \label{eq:PSNR}
-	PSNR(f,g)=10 \log_{10}  \frac{255^2}{MSE(f,g)}	
-\end{equation}
 
 
 \subsubsection{Structural Similarity Index Measure}
@@ -44,6 +45,12 @@ SSIM è considerato in correlazione con la percezione della qualità del sistema
 	\end{matrix*}
 \end{equation}
 
+In Eq. \ref{eq:SSIM} abbiamo:
+\begin{itemize}
+	\item $l(f,g)$ è la funzione di comparazione della luminanza tra le medie $\mu_f$ e $\mu_g$;
+	\item $l(f,g)$ è la funzione di comparazione del contrasto tra le deviazioni standard $\sigma_f$ e $\sigma_g$;
+	\item $s(f,g)$ è la funzione di comparazione della struttura che misura il coefficiente di correlazione; $\sigma_{fg}$ è la covarianza tra $f$ e $g$.
+\end{itemize}
 
 \begin{figure}
 	\centering
@@ -67,7 +74,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 
 \section{Bit-rate}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}.
+Il cloud gaming effettua lo streaming in tempo reale lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}.
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}
