@@ -36,7 +36,7 @@ Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità d
 
 
 \subsubsection{Structural Similarity Index Measure}
-SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori che sono la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto \parencite{relationship_PSNR_and_SSI}.
+SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori: la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto \parencite{relationship_PSNR_and_SSI}.
 
 \begin{equation} \label{eq:SSIM}
 	\begin{matrix*}[l]
@@ -47,8 +47,11 @@ SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. I
 
 In Eq. \ref{eq:SSIM} abbiamo:
 \begin{itemize}
+	\item $k_1 = 0.01$ e $k_2 = 0.03$ sono delle costanti;
+	\item $L = 255$ è l'intervallo dinamico (per le immagini in scala di grigio, e per il metodo che usa solamente la luminanza);
+	\item $c_1 = (k_1 L)^2$ e $c_2 = (k_2 L)^2$ sono due variabili di stabilizzazione della divisione; $c_3 = c_2 / 2$;
 	\item $l(f,g)$ è la funzione di comparazione della luminanza tra le medie $\mu_f$ e $\mu_g$;
-	\item $l(f,g)$ è la funzione di comparazione del contrasto tra le deviazioni standard $\sigma_f$ e $\sigma_g$;
+	\item $c(f,g)$ è la funzione di comparazione del contrasto tra le deviazioni standard $\sigma_f$ e $\sigma_g$;
 	\item $s(f,g)$ è la funzione di comparazione della struttura che misura il coefficiente di correlazione; $\sigma_{fg}$ è la covarianza tra $f$ e $g$.
 \end{itemize}
 
@@ -58,7 +61,6 @@ In Eq. \ref{eq:SSIM} abbiamo:
 	\caption{Comparazione tra rendering BMP32 (sx) e streaming in MPEG-1 (dx)}
 	\label{fig:BMP_MPEG_compare}
 \end{figure}
-
 
 
 
