@@ -1,8 +1,6 @@
 from skimage.metrics import structural_similarity
 from skimage.metrics import peak_signal_noise_ratio
-import argparse
-import imutils
-import cv2
+from skimage.io import imread
 
 def PSNR(D, A, imgD, imgA):
 	score = peak_signal_noise_ratio(imgD, imgA)
@@ -13,11 +11,10 @@ def SSIM(D, A, imgD, imgA):
 	print(f"{A} SSIM {score}")
 
 def main(D, A):
-	imgD = cv2.imread(D)
-	imgA = cv2.imread(A)
+	imgD = imread(D)
+	imgA = imread(A)
 
 	PSNR(D, A, imgD, imgA)
 	SSIM(D, A, imgD, imgA)
 
-for x in range(1, 7):
-	main(f"{x}s.png", f"{x}w.png")
+main("comparazioneS.png", "comparazioneW.png")
