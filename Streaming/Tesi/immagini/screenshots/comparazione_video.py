@@ -13,8 +13,8 @@ def SSIM(D, A, imgD, imgA):
 def main(D, A):
 	imgD = imread(D)
 	imgA = imread(A)
-
+	
 	PSNR(D, A, imgD, imgA)
 	SSIM(D, A, imgD, imgA)
 
-main("comparazioneS.png", "comparazioneW.png")
+main("comparazioneS.bmp", "comparazioneW.bmp")
