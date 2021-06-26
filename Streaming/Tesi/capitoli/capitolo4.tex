@@ -23,31 +23,17 @@ Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di quali
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR, in Eq. \ref{eq:PSNR}, è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. PSNR è espresso solitamente in decibel con valori tipici per la compressione video tra 30 \si{dB} e 60 \si{dB} \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
+Il PSNR è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. Il PSNR è espresso solitamente in decibel con valori tipici per la compressione video tra 30 \si{dB} e 60 \si{dB} e si calcola utilizzando l'Eq. \ref{eq:PSNR} con $MSE(f,g)$ l'errore quadratico medio e $L = 255$ l'intervallo dinamico \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
 
 \begin{equation} \label{eq:PSNR}
 	PSNR(f,g)=10 \log_{10}  \frac{L^2}{MSE(f,g)}	
 \end{equation}
 
-con:
-\begin{itemize}
-	\item $MSE(f,g)$ l'errore quadratico medio;
-	\item $L = 255$ l'intervallo dinamico (per le immagini in scala di grigio e per il metodo che usa solamente la luminanza del formato YCbCr).
-\end{itemize}
-
 
 
 \subsubsection{Structural Similarity Index Measure}
-SSIM, in Eq. \ref{eq:SSIM}, è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori: la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto. L'indice SSIM è un valore decimale compreso tra 0 e 1 \parencite{relationship_PSNR_and_SSI}.
+SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori: la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto. L'indice SSIM è un valore decimale compreso tra 0 e 1 e si calcola utilizzando l'Eq. \ref{eq:SSIM} con \parencite{relationship_PSNR_and_SSI}:
 
-\begin{equation} \label{eq:SSIM}
-	\begin{matrix*}[l]
-		SSIM(f,g) =  l(f,g) c(f,g) s(f,g) & l(f,g)= \frac{2 \mu_f \mu_g  + C_1}{\mu_f^2 \mu_g^2  + C_1} \\
-		c(f,g)= \frac{2 \sigma_f \sigma_g  + C_2}{\sigma_f^2 + \sigma_g^2  + C_2} & s(f,g)= \frac{\sigma_{fg}+C_3}{\sigma_f \sigma_g + C_3}
-	\end{matrix*}
-\end{equation}
-
-con:
 \begin{itemize}
 	\item $k_1 = 0.01$ e $k_2 = 0.03$ costanti;
 	\item $L = 255$ l'intervallo dinamico;
@@ -57,8 +43,25 @@ con:
 	\item $s(f,g)$ funzione di comparazione della struttura che misura il coefficiente di correlazione; $\sigma_{fg}$ è la covarianza tra $f$ e $g$.
 \end{itemize}
 
+\begin{equation} \label{eq:SSIM}
+	\begin{matrix*}[l]
+		SSIM(f,g) =  l(f,g) c(f,g) s(f,g) & l(f,g)= \frac{2 \mu_f \mu_g  + C_1}{\mu_f^2 \mu_g^2  + C_1} \\
+		c(f,g)= \frac{2 \sigma_f \sigma_g  + C_2}{\sigma_f^2 + \sigma_g^2  + C_2} & s(f,g)= \frac{\sigma_{fg}+C_3}{\sigma_f \sigma_g + C_3}
+	\end{matrix*}
+\end{equation}
+
+
+
 \subsubsection{Risultati ottenuti}
-La codifica \textit{MPEG-1 Video} utilizzata ha dato un valore PSNR di $27.703$ \si{dB} e un indice SSIM di $0.899$. Alcuni esempi sono visibili in Fig. \ref{fig:BMP_MPEG_compare}.
+Tramite lo script in Lis. \ref{lst:PyPSNR_SSIM} sono stati calcolati per la codifica \textit{MPEG-1 Video} il valore PSNR di $27.703$ \si{dB} e l'indice SSIM di $0.899$. Alcune immagini d'esempio sono visibili in Fig. \ref{fig:BMP_MPEG_compare}.
+
+\begin{lstlisting}[language=Python, caption=Script Python per il calcolo di PSNR e SSIM, label={lst:PyPSNR_SSIM}]
+imgRGB = skimage.io.imread("frameRGB.bmp")
+imgMPEG1 = skimage.io.imread("frameMPEG1.bmp")
+PSNR = skimage.metrics.peak_signal_noise_ratio(imgRGB, imgMPEG1)
+SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
+	multichannel=True)
+\end{lstlisting}
 
 \begin{figure}
 	\centering
