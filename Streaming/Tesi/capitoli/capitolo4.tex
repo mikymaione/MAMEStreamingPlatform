@@ -23,7 +23,7 @@ Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di quali
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. Il PSNR è espresso solitamente in decibel con valori tipici per la compressione video per lo streaming tra $20$ \si{dB} e $25$ \si{dB} \parencite{ThomosN2006OtoJ} e si calcola utilizzando l'Eq. \ref{eq:PSNR} con $MSE(f,g)$ l'errore quadratico medio e $L = 255$ l'intervallo dinamico \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
+Il PSNR è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. Il PSNR è espresso solitamente in decibel con valori tipici per la compressione video per lo streaming tra $20$ \si{dB} e $30$ \si{dB} \parencite{ThomosN2006OtoJ} e si calcola utilizzando l'Eq. \ref{eq:PSNR} con $MSE(f,g)$ l'errore quadratico medio e $L = 255$ l'intervallo dinamico \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
 
 \begin{equation} \label{eq:PSNR}
 	PSNR(f,g)=10 \log_{10}  \frac{L^2}{MSE(f,g)}	
@@ -75,12 +75,17 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 
 
 \subsection{Audio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{PoctaPeter2015SaOA}.
 
 
 
-\subsubsection{Total Harmonic Distortion}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\subsubsection{Perceptual Evaluation of Audio Quality}
+Perceptual Evaluation of Audio Quality (PEAQ) lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
+\subsubsection{Perceptual Objective Listening Quality Assessment}
+Perceptual Objective Listening Quality Assessment (POLQA) lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
 
