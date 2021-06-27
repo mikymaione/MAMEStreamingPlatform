@@ -31,8 +31,8 @@ Il PSNR è comunemente usato come misura della qualità della compressione e del
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[keepaspectratio,width=\textwidth,height=\textheight]{immagini/BMP_MPEG_compare}
-	\caption{Comparazione tra rendering RGBA (sx) e streaming in MPEG-1 (dx)}
+	\includegraphics[width=\linewidth]{immagini/BMP_MPEG_compare}
+	\caption{Alcuni frame d'esempio: a sinistra i frame renderizzati dal MAME (RGBA), a destra i frame codificati in MPEG-1. © Capcom, Data East, Taito}
 	\label{fig:BMP_MPEG_compare}
 \end{figure}
 
@@ -65,7 +65,9 @@ Tramite lo script in Lis. \ref{lst:PyPSNR_SSIM} sono stati calcolati per la codi
 \begin{lstlisting}[language=Python, caption=Script Python per il calcolo di PSNR e SSIM, label={lst:PyPSNR_SSIM}]
 imgRGB = skimage.io.imread("frameRGB.bmp")
 imgMPEG1 = skimage.io.imread("frameMPEG1.bmp")
+
 PSNR = skimage.metrics.peak_signal_noise_ratio(imgRGB, imgMPEG1)
+
 SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 	multichannel=True)
 \end{lstlisting}
