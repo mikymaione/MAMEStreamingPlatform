@@ -119,13 +119,13 @@ I codificatori video si divino in due gruppi:
 %YUV 4:2:0 planare da 12bpp (1 Cr & Cb campioni per 2x2 Y campioni)
 Gli attuali monitor (CRT, LCD, PDP e OLED) utilizzano RGB come modello di colori (e di conseguenza gli attuali sistemi operativi), ma gli algoritmi di codifica video utilizzano il modello YCbCr\footnote{Il termine YUV è usato molto spesso come sinonimo di YCbCr. Si tratta tuttavia di formati differenti, uno analogico e l'altro digitale.}. Sfruttando l'innata sensibilità alla luminosità del sistema visivo umano questo modello suddivide i dati del colore in componenti separati di luminanza e crominanza, come mostrato in Fig. \ref{fig:RGB_YCbCr}, possiamo comprimere selettivamente solo i componenti di crominanza per ottenere risparmi di spazio con una perdita minima di qualità.
 
-Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0.299$, $0.587$ e $0.114$ \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
+Utilizzando le costanti dello standard NTSC e PAL: $K_R$, $K_G$ e $K_B$ che valgono rispettivamente $0,299$, $0,587$ e $0,114$ \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}, la conversione da YCbCr a RGB avviene utilizzando l'Eq. \ref{eq:YUV_from_RGB}:
 
 \begin{equation} \label{eq:YUV_from_RGB}
 	\begin{aligned}
 		& Y = K_R R + K_G G + K_B B, \\	
-		& C_B = \frac{0.5}{1 - K_B} (B - Y), \\
-		& C_R = \frac{0.5}{1 - K_R} (R - Y).	
+		& C_B = \frac{0,5}{1 - K_B} (B - Y), \\
+		& C_R = \frac{0,5}{1 - K_R} (R - Y).	
 	\end{aligned}
 \end{equation}
 
@@ -468,9 +468,9 @@ Le parti più importanti che compongono un frame sono:
 \begin{itemize}
 	\item \textit{FIN} che indica se è l'ultimo frame;
 	\item \textit{Opcode} che indica il tipo di messaggio: testo (1), binario (2), chiusura connessione (8), ping (9) e pong (10);
-	\item \textit{mask} indica se il \textit{payload} è mascherato (i messaggi dal client al server hanno questo bit a 1);
-	\item \textit{lunghezza payload} indica quanto è lungo il \textit{payload}: 7 bit, 7+16 bit o 7+64 bit;
-	\item \textit{masking-key} contiene un valore a 32 bit usato per masherare il \textit{payload}.
+	\item \textit{mask} indica se il \textit{payload} è mascherato (i messaggi dal client al server hanno questo bit a $1$);
+	\item \textit{lunghezza payload} indica quanto è lungo il \textit{payload}: $7$ bit, $7+16$ bit o $7+64$ bit;
+	\item \textit{masking-key} contiene un valore a $32$ bit usato per masherare il \textit{payload}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -643,7 +643,7 @@ let player = new JSMpeg.Player(URL, {
 });
 \end{lstlisting}
 
-La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG-1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
+La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG-1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50 ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
 
 
 
@@ -716,7 +716,7 @@ sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 
 
 \section{MPEG-1} \label{sec:cap3_MPEG}
-MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di 1,5 Mbit/s ma supporta risoluzioni fino a $4095\times4095$ px ed un bit-rate fino a 100 Mbit/s. In questo progetto è stato utilizzato con una risoluzione di 480p a 30fps per un bit-rate massimo di 2,1 Mbit/s (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica); questa impostazione può essere cambiata a riga di comando come mostrato nel paragrafo \ref{sec:chapMU_Esecuzione}. Di seguito vedremo il processo di codifica video ed audio e il trasporto.
+MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group} del 1991 per la compressione audiovisiva con perdita. È stato progettato per lo standard NTSC (240p a 30 fps) per un bit-rate di $1,5$ Mbps ma supporta risoluzioni fino a $4095 \times 4095$ px ed un bit-rate fino a $100$ Mbps. In questo progetto è stato utilizzato con una risoluzione di 480p a 30 fps per un bit-rate massimo di $2,1$ Mbps (dipende dalla dinamicità delle schermate del gioco e dalla presenza di musica); questa impostazione può essere cambiata a riga di comando come mostrato nel paragrafo \ref{sec:chapMU_Esecuzione}. Di seguito vedremo il processo di codifica video ed audio e il trasporto.
 
 
 
@@ -724,7 +724,7 @@ MPEG-1 è uno standard (ISO/IEC 11172) del \textit{Moving Pictures Experts Group
 Un filmato \textit{MPEG-1 Video} è suddiviso in 6 layer, come mostrato in Fig. \ref{fig:MPEG_layers}, su cui si applicano dei processi di codifica e decodifica formati da vari algoritmi. Il processo di codifica, mostrato in Fig. \ref{fig:mpegPhases}, utilizza l'algoritmo di compressione (con perdita) JPEG:
 
 \begin{enumerate}
-    \item L'immagine viene elaborata in blocchi da $8\times8$ px;
+    \item L'immagine viene elaborata in blocchi da $8 \times 8$ px;
     \item Viene applicata, su ogni blocco, la trasformata discreta del coseno (DCT) prima orizzontalmente e poi verticalmente;
     \item Ogni blocco viene compresso tramite quantizzazione.
 \end{enumerate}
@@ -770,7 +770,7 @@ Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \te
 	\label{fig:MPEG_layers}
 \end{figure}
 
-Come mostrato in Fig. \ref{fig:MPEG_layers}, ogni immagine (frame) è divisa in \textit{slice}. Le slice sono di 3 tipi: Y, Cb e Cr. Ogni \textit{slice} è scomposta in macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16\times16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. I macroblocchi a loro volta, utilizzando un campionamento 4:2:0\footnote{Il campionamento 4:2:0 riduce di un fattore 2 in ambedue le direzioni.}, sono formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr) come mostrato in Fig. \ref{fig:macroblocchi}. Essi si dividono in \parencite{ProgettazioneEproduzioneMultimediale}:
+Come mostrato in Fig. \ref{fig:MPEG_layers}, ogni immagine (frame) è divisa in \textit{slice}. Le slice sono di 3 tipi: Y, Cb e Cr. Ogni \textit{slice} è scomposta in macroblocchi, che sono l'unità d'elaborazione della compressione. I macroblocchi sono formati da $16 \times 16$ px e sono necessari ai fini del calcolo dei vettori di movimento e dei blocchi di errore per la compensazione del movimento. I macroblocchi a loro volta, utilizzando un campionamento 4:2:0\footnote{Il campionamento 4:2:0 riduce di un fattore 2 in ambedue le direzioni.}, sono formati da 4 blocchi per la luminanza (Y di YCbCr) e 2 per la crominanza (Cb e Cr) come mostrato in Fig. \ref{fig:macroblocchi}. Essi si dividono in \parencite{ProgettazioneEproduzioneMultimediale}:
 
 \begin{itemize}
 	\item \textit{macroblocchi I} codificato indipendentemente da altri macroblocchi (dalla trasformazione coseno discreta 2D come nei blocchi JPEG);
@@ -800,7 +800,7 @@ Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-f
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
 La trasformata discreta del coseno (DCT)\footnote{La forma più comune è la DCT-II che è quella utilizzata in questo contesto.} divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
 
-I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8\times8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
+I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8 \times 8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
 
 \begin{equation} \label{eq:DCT}
 	\begin{aligned}
@@ -897,9 +897,9 @@ Al termine di queste due operazioni si ottiene il bitstream del video \parencite
 \textit{MPEG-1 Audio} riduce il quantitativo di dati da utilizzare per l'audio tramite psicoacustica, eliminado frequenze che l'orecchio umano non può sentire. Lo standard sonoro è diviso in 3 layer:
 
 \begin{itemize}
-	\item Layer I: è progettato per la codifica in tempo reale tramite hardware con un bit-rate di 384 kbit/s. L'estensione del file è \verb|.m1a|;
-	\item Layer II: è un formato con perdita proggettato per l'alta qualità a 192 kbit/s. L'estensione del file è \verb|.mp2|;
-	\item Layer III: anche esso un formato con perdita progettato per una buona qualità a 128 kbit/s; L'estensione del file è \verb|.mp3|.
+	\item Layer I: è progettato per la codifica in tempo reale tramite hardware con un bit-rate di 384 kbps. L'estensione del file è \verb|.m1a|;
+	\item Layer II: è un formato con perdita proggettato per l'alta qualità a 192 kbps. L'estensione del file è \verb|.mp2|;
+	\item Layer III: anche esso un formato con perdita progettato per una buona qualità a 128 kbps; L'estensione del file è \verb|.mp3|.
 \end{itemize}
 
 Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{JSMpeg} supporta \textit{MPEG-1 Audio Layer II (MP2)}.
@@ -907,7 +907,7 @@ Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{J
 \subsubsection{La tecnica di codifica}
 La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposti in 32 sottobande utilizzando un filterbank PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.}. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
 
-Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da 1024 punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}) insieme a quelli difficilmente audibili. Quindi una procedura di allocazione dinamica dei bit (iterativa) applica la soglia di "distorsione appena rilevabile" (JND\footnote{JND: \textit{just noticeable distortion}.}) per selezionare il quantizzatore migliore da un insieme predeterminato per ciascuna sottobanda \parencite{AudioSignalProcessingAndCoding}.
+Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da $1024$ punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}) insieme a quelli difficilmente audibili. Quindi una procedura di allocazione dinamica dei bit (iterativa) applica la soglia di "distorsione appena rilevabile" (JND\footnote{JND: \textit{just noticeable distortion}.}) per selezionare il quantizzatore migliore da un insieme predeterminato per ciascuna sottobanda \parencite{AudioSignalProcessingAndCoding}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegaudio}
