@@ -82,21 +82,14 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 \subsubsection{Perceptual Evaluation of Audio Quality}
 \textit{Perceptual Evaluation of Audio Quality} (PEAQ)
 \textit{Objective Difference Grade} (ODG)
-In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto Peaq è disponibile qui: sourceforge.net/projects/peaqb.}.
+\textit{molto fastidioso} (1), \textit{fastidioso} (2), \textit{leggermente fastidioso} (3), \textit{percettibile ma non fastidioso} (4), \textit{impercettibile} (5).
 
-\begin{enumerate}
-    \item molto fastidioso;
-    \item fastidioso;
-    \item leggermente fastidioso;
-    \item percettibile ma non fastidioso;
-    \item impercettibile.
-\end{enumerate}
 
 \subsubsection{Risultati ottenuti}
-Tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 3 (leggermente fastidioso).
+In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 3 (leggermente fastidioso).
 
 \begin{lstlisting}[language=bash, caption=Script bash per l'esecuzione del programma per l'algoritmo PEAQ, label={lst:bashPEAQ}]
-peaqb -r Castelvania_PCM.wav -t Castelvania_MP2.wav
+peaqb -r sf3_PCM.wav -t sf3_MP2.wav
 \end{lstlisting}
 
 
