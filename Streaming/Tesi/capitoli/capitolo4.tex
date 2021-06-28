@@ -75,19 +75,30 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 
 
 \subsection{Audio}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{PoctaPeter2015SaOA}.
+Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulato le proprietà percettive dell'orecchio umano ed applicano modelli informatici dell'elaborazione del segnale uditivo per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza, ma sono disponibili alcune implementazioni per uso accademico \parencite{PoctaPeter2015SaOA}.
 
 
 
 \subsubsection{Perceptual Evaluation of Audio Quality}
 \textit{Perceptual Evaluation of Audio Quality} (PEAQ)
 \textit{Objective Difference Grade} (ODG)
+In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto Peaq è disponibile qui: sourceforge.net/projects/peaqb.}.
 
+\begin{enumerate}
+    \item molto fastidioso;
+    \item fastidioso;
+    \item leggermente fastidioso;
+    \item percettibile ma non fastidioso;
+    \item impercettibile.
+\end{enumerate}
 
+\subsubsection{Risultati ottenuti}
+Tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 3 (leggermente fastidioso).
 
-\subsubsection{Perceptual Objective Listening Quality Assessment}
-\textit{Perceptual Objective Listening Quality Assessment} (POLQA) 
-\textit{Objective Mean Opinion Score} (OMOS)
+\begin{lstlisting}[language=bash, caption=Script bash per l'esecuzione del programma per l'algoritmo PEAQ, label={lst:bashPEAQ}]
+peaqb -r Castelvania_PCM.wav -t Castelvania_MP2.wav
+\end{lstlisting}
+
 
 
 
