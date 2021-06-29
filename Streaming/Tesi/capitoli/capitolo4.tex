@@ -86,10 +86,10 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 
 
 \subsubsection{Risultati ottenuti}
-In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 3 (leggermente fastidioso).
+In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 4 (percettibile ma non fastidioso).
 
 \begin{lstlisting}[language=bash, caption=Script bash per l'esecuzione del programma per l'algoritmo PEAQ, label={lst:bashPEAQ}]
-peaqb -r sf3_PCM.wav -t sf3_MP2.wav
+peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
 \end{lstlisting}
 
 
