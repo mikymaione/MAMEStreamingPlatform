@@ -60,7 +60,7 @@ SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. I
 
 
 \subsubsection{Risultati ottenuti}
-Tramite lo script in Lis. \ref{lst:PyPSNR_SSIM} è stata calcolata la qualità video per la codifica \textit{MPEG-1 Video} che ha dato come risultati un valore di PSNR di $27,703$ \si{dB} e un indice SSIM del $89,9\%$. Alcune immagini d'esempio del risultato ottenuto sono visibili in Fig. \ref{fig:BMP_MPEG_compare}.
+Tramite lo script in Lis. \ref{lst:PyPSNR_SSIM} è stata calcolata la qualità video per la codifica \textit{MPEG-1 Video} a 1024 kbps che ha dato come risultati un valore di PSNR di $27,703$ \si{dB} e un indice SSIM del $89,9\%$. Alcune immagini d'esempio del risultato ottenuto sono visibili in Fig. \ref{fig:BMP_MPEG_compare}.
 
 \begin{lstlisting}[language=Python, caption=Script Python per il calcolo di PSNR e SSIM, label={lst:PyPSNR_SSIM}]
 imgRGB = skimage.io.imread("frameRGB.bmp")
@@ -75,7 +75,7 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 
 
 \subsection{Audio}
-Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulato le proprietà percettive dell'orecchio umano ed applicano modelli informatici dell'elaborazione del segnale uditivo per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza, ma sono disponibili alcune implementazioni per uso accademico \parencite{PoctaPeter2015SaOA}.
+Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza. Per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
 
 
 
@@ -86,7 +86,7 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 
 
 \subsubsection{Risultati ottenuti}
-In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 4 (percettibile ma non fastidioso).
+In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 4 (\textit{percettibile ma non fastidioso}).
 
 \begin{lstlisting}[language=bash, caption=Script bash per l'esecuzione del programma per l'algoritmo PEAQ, label={lst:bashPEAQ}]
 peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
