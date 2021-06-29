@@ -206,13 +206,13 @@ Una varietà di codec audio e video sono stati implementati fino ad oggi con lic
 \subsection{Codificatori audio}
 Come per i codificatori video anche i codificatori audio sono di tipo hardware o software. I codificatori hardware sono integrati nelle schede audio e sono in grado di trasformare il segnale da analogico a digitale e viceversa. Il segnale è rappresentato digitalmente come modulazione a impulsi codificati (PCM) e non è compresso.
 
+Come mostrato in Fig. \ref{fig:audio-waveform-samples}, la linea arancione rappresenta i campioni prelevati (in questo esempio viene utilizzato il punto medio) dalla forma d'onda audio. Alla riproduzione queste ampiezze vengono utilizzate per generare un'approssimazione della forma d'onda originale. Il numero di campioni prelevati al secondo è chiamato frequenza di campionamento.
+
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/audio-waveform-samples}
 	\caption{Conversione audio da analogico a digitale}
 	\label{fig:audio-waveform-samples}
 \end{figure}
-
-Come mostrato in Fig. \ref{fig:audio-waveform-samples}, la linea arancione rappresenta i campioni prelevati (in questo esempio viene utilizzato il punto medio) dalla forma d'onda audio. Alla riproduzione queste ampiezze vengono utilizzate per generare un'approssimazione della forma d'onda originale. Il numero di campioni prelevati al secondo è chiamato frequenza di campionamento.
 
 Esistono diversi formati per rappresentare i campioni all'interno di un file audio: naturali a 8 bit (uchar), interi a 16 bit (short), interi a 32 bit (int), reali a 32 bit (float) e reali a 64 bit (double); sia \textit{planar}\footnote{\textit{Planar}: ogni canale audio si trova su un piano dati separato. Tutti i piani dati hanno la stessa dimensione.} che \textit{packed}\footnote{\textit{Packed}: viene utilizzato un unico piano dati e i campioni per ciascun canale vengono interlacciati.}.
 
@@ -268,6 +268,12 @@ Il progetto FFmpeg è un insieme di librerie (per il linguaggio C) e programmi o
 
 La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}).
 
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
+	\caption{Diagramma delle classi relativo alla codifica}
+	\label{fig:class_server_and_encoding}
+\end{figure}
+
 \begin{table}[H]
 	\centering
 	\begin{tabular}{||l l l l l||} 
@@ -289,12 +295,6 @@ La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le
 Come mostrato in Fig. \ref{fig:class_server_and_encoding} il costruttore di \verb|encode_to_movie| richiede il parametro \verb|socket| su cui verrà inviato il filmato al client. Tramite le funzioni \verb|add_frame| e \verb|add_instant| vengono aggiunti il frame video e quello audio per essere codificati.
 
 Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia alla funzione di callback \verb|encode_to_movie::write_packet| il pacchetto (\verb|buf| di lunghezza \verb|buf_size|) appena codificato, che viene scritto sulla \verb|socket|. 
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
-	\caption{Diagramma delle classi relativo alla codifica}
-	\label{fig:class_server_and_encoding}
-\end{figure}
 
 
 
@@ -373,13 +373,12 @@ void add_instant(uint8_t[] stream, int stream_size,	int num_samples)
 		convertedData,					// input
 		buffer_size);					// dimensione input			
 			
-	av_init_packet(&audio_packet);		// pacchetto audio	
+	av_init_packet(&audio_packet);		// pacchetto audio
 	// codifica
 	avcodec_encode_audio2(
 		audio_codec_context,			// contesto codifica
 		&audio_packet,					// pacchetto audio
-		output_frame_frame);			// output			
-	
+		output_frame_frame);			// output
 	// multiplazione pacchetto audio
 	av_interleaved_write_frame(
 		muxer_context,					// contesto multiplazione
@@ -399,25 +398,27 @@ WebSocket è un insieme di standard formato dalle API WebSocket implementate dai
 Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performance_Browser_Networking} le API WebSocket fornite dal browser sono relativamente semplici. La connessione viene creata istanziando la classe \verb|WebSocket|, al costruttore oltre al URL di una risorsa WebSocket è possibile passare un vettore di stringhe che specificano dei sotto-protocolli definiti dall'utente. La classe \verb|WebSocket| espone 4 callback: errore, chiusura, apertura e ricezione messaggio. Tramite la proprietà \verb|binaryType| si può controllare il tipo di dati binari utilizzati per la ricezione (di tipo \verb|Blob| o \verb|ArrayBuffer|). La classe \verb|WebSocket| espone solo due metodi: \verb|close| per chiudere la connessione e il metodo asincrono \verb|send| per inviare dati (di tipo \verb|String|, \verb|Blob|, \verb|ArrayBuffer| o \verb|ArrayBufferView|) \parencite{WebSocket_Web_APIs}.
 
 \begin{lstlisting}[language=JavaScript, caption=Esempio di codice delle API WebSocket, label={lst:WebSocketAPI}]
-var ws = new WebSocket('ws://www.maionemiky.it/mamecgp', 
+var ws = new WebSocket(
+	'ws://www.maionemiky.it/mamecgp',
 	['protocollo_utente1', 'protocollo_utente2']);
 
 ws.binaryType = 'arraybuffer'; // or 'blob';
 
-ws.onerror = function (error) { ... } 
-ws.onclose = function () { ... } 
+ws.onerror = function (error) { ... }
 
-ws.onopen = function () { 
-	ws.send('Connection established. Hello server!'); 
+ws.onclose = function () { ... }
+
+ws.onopen = function () {
+	ws.send('Connection established. Hello server!');
 }
 
-ws.onmessage = function(msg) { 
+ws.onmessage = function(msg) {
 	if(msg.data instanceof ArrayBuffer)
 		processArrayBuffer(msg.data);
 	else if(msg.data instanceof Blob)
 		processBlob(msg.data);
 	else
-		processText(msg.data);	
+		processText(msg.data);
 }
 \end{lstlisting}
 
@@ -450,8 +451,9 @@ bool generate_handshake(Connection &c, ostream &handshake)
 {
 	auto ws_magic_string =
 		"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-	auto header_it = 
-		connection->header.find("Sec-WebSocket-Key");	
+
+	auto header_it =
+		connection->header.find("Sec-WebSocket-Key");
 	auto sha1 =
 		sha1_encode(header_it->second + ws_magic_string);
 
@@ -461,11 +463,18 @@ bool generate_handshake(Connection &c, ostream &handshake)
 		<< "Connection: Upgrade" << endl
 		<< "Sec-WebSocket-Accept: "
 		<< base64_encode(sha1) << endl << endl;
+
 	return true;
 }
 \end{lstlisting}
 
 Come detto precedentemente WebSocket implementa un meccanismo di framing dei messaggi binari che consente la comunicazione orientata ai messaggi. Quando viene inviato un messaggio il destinatario riceve una notifica quando l'intero messaggio è stato ricevuto. Questo meccanismo divide ogni messaggio in più frame, mostrato in Fig. \ref{fig:dataframe_websocket}, che vengono trasportati, riassemblati e poi viene inviata una notifica al destinatario \parencite{High_Performance_Browser_Networking}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/dataframe_websocket}
+	\caption{Frame del WebSocket}
+	\label{fig:dataframe_websocket}
+\end{figure}
 
 Le parti più importanti che compongono un frame sono:
 
@@ -477,10 +486,10 @@ Le parti più importanti che compongono un frame sono:
 	\item \textit{masking-key} contiene un valore a $32$ bit usato per masherare il \textit{payload}.
 \end{itemize}
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/dataframe_websocket}
-	\caption{Frame del WebSocket}
-	\label{fig:dataframe_websocket}
+\begin{figure}
+	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
+	\caption{Diagramma delle classi del server}
+	\label{fig:class_server_and_encoding_full}
 \end{figure}
 
 Con riferimento alla Fig. \ref{fig:class_server_and_encoding_full}, la classe che si occupa di inizializzare il server e comunicare con la classe per la codifica è \verb|streaming_server| la quale utilizza la classe \verb|ws_server| per comunicare tramite il protocollo WebSocket con la pagina HTML.
@@ -515,8 +524,7 @@ endpoint.on_open = [this](auto connection)
 	game_thread = new thread(on_accept, connection->parameters);
 };
 
-endpoint.on_close = [this](auto connection,
-	auto status, auto reason)
+endpoint.on_close = [this](auto connection,	auto status, auto reason)
 {
 	machine->schedule_exit();
 };	
@@ -550,12 +558,6 @@ streaming_server::instance().on_accept = [&](auto parameters)
 	main_sdl(argc, argv, parameters["game"]);
 };
 \end{lstlisting}
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding_full}
-	\caption{Diagramma delle classi del server}
-	\label{fig:class_server_and_encoding_full}
-\end{figure}
 
 
 
@@ -595,7 +597,7 @@ I moderni browser web offrono due API per la grafica, le Canvas API e WebGL, e l
 
 Le Canvas API forniscono un mezzo per disegnare grafica tramite JavaScript, si concentrano principalmente sulla grafica 2D ma quando vengono utilizzate dalle API WebGL possono disegnare grafica 2D e 3D con accelerazione hardware. Sono completamente supportate da tutti i browser \parencite{Canvas_API}.
 
-WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D. WebGL 1.0 è supportato da tutti i browser, mentre WebGL 2.0 è in fase di testing \parencite{WebGL}.
+WebGL è una API JavaScript, progettata e gestita dal gruppo no-profit Khronos, per il rendering di grafica 2D e 3D. WebGL 2.0 è supportato da tutti i moderni browser\footnote{Il supporto a WebGL 2.0 su Safari è disponibile nella versione \textit{Technology Preview 15} su macOS e abilitando le \textit{Experimental Feautures} nella versione \textit{14.6} su iOS.} \parencite{WebGL}.
 
 Su queste API sono state create delle librerie JavaScript per la decodifica di vari formati audiovisivi.
 
@@ -753,13 +755,7 @@ Il processo completo di codifica e decodifica è mostrato in Fig. \ref{fig:MPEGC
 \subsubsection{Frame e macroblocchi}
 In \textit{MPEG-1 Video} la sequenza video è composta da "gruppi di immagini" (GOP: \textit{group of pictures}); ogni GOP è composto da un \textit{I-frame}, da una sequenza di \textit{P-frame} e \textit{B-frame} e da un \textit{D-frame}, come mostrato in \ref{fig:gop}.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/gop}
-	\caption{GOP: ogni \textit{I-frame} inizia un nuovo GOP; le frecce indicano da che frame prendono informazioni}
-	\label{fig:gop}
-\end{figure}
-
-Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
+Una configurazione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \textit{B-frame}. Ogni GOP è formato da quattro diversi tipi di frame \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}:
 
 \begin{itemize}
 	\item \textit{I-frame} (\textit{Intra-frame}) sono chiamati anche \textit{key-frame} perché sono codificati senza utilizzare informazioni diverse da quelle contenute nell'immagine stessa;
@@ -767,6 +763,12 @@ Una configurzione tipica è formata da 9 frame di cui 2 \textit{P-frame} e 6 \te
 	\item \textit{B-frame} (\textit{Bidirectional-frame}) come i \textit{P-frame} fanno una predizione però sfruttando sia il frame precedente che quello successivo;
 	\item \textit{D-frame} mentre gli altri tre sono presenti in quasi tutti i codec video i \textit{D-frame} sono presenti solamente in \textit{MPEG-1 Video}. La loro funzione è di fornire un'anteprima del video in un punto (usata nei visualizzatori video). Sono frame a bassa qualità (proprio perché le anteprime solitamente sono molto piccole) ed oggi la loro funzione è stata sostituita dagli \textit{I-frame}.
 \end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/gop}
+	\caption{GOP: ogni \textit{I-frame} inizia un nuovo GOP; le frecce indicano da che frame prendono informazioni}
+	\label{fig:gop}
+\end{figure}
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/MPEG_layers}
@@ -867,13 +869,13 @@ La stima predittiva del movimento mira a ridurre i dati trasmessi calcolando il 
 
 Il processo di applicare i vettori movimenti ad un frame per sintetizzare la trasformazione al frame successivo è chiamato compensazione del movimento e si applica solamente ai \textit{P-frame} e \textit{B-frame}. 
 
+Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
+
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/I_P_and_B_frames}
 	\caption{Vettori movimento. Le frecce arancioni che partono dal frame di riferimento al frame di predizione indicano i frame che l'algoritmo prende in considerazione; le frecce rosse indicano il vettore movimento calcolato. Fonte: wikipedia.org}
 	\label{fig:I_P_and_B_frames}
 \end{figure}
-
-Un esempio molto semplice dei vettori movimento è mostrato in Fig. \ref{fig:I_P_and_B_frames}, mentre in Fig. \ref{fig:motioncompensation} è mostrata la compensazione del movimento.
 
 L'errore di predizione può essere calcolato tramite \textit{mean absolute error}, \textit{sum of squared error} o \textit{mean squared error}. Solitamente implementato utilizzando \textit{mean absolute error}, utilizzando l'Eq. \ref{eq:MAE}, dove $C_{ij}$ è il frame corrente e $R_{ij}$ quello di riferimento \parencite{ProgettazioneEproduzioneMultimediale}:
 
@@ -911,13 +913,13 @@ Come detto nel paragrafo \ref{subsec:chap3_LibJavascript}, la libreria \textit{J
 \subsubsection{La tecnica di codifica}
 La codifica, come mostrato in Fig. \ref{fig:mpegaudio}, opera su dati di tipo PCM a 16 bit campionati a $32$, $44,1$ o $48$ kHz, che vengono decomposti in 32 sottobande utilizzando un filterbank PQMF\footnote{PQMF: \textit{pseudo quadrature mirror filter} è un filterbank in cui la cancellazione dell'aliasing avviene solo tra bande adiacenti.}. Le sottobande sono sottoposte a compansione a blocchi dimodoché l'ampiezza massima dei campioni sia unitaria.
 
-Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da $1024$ punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}) insieme a quelli difficilmente audibili. Quindi una procedura di allocazione dinamica dei bit (iterativa) applica la soglia di "distorsione appena rilevabile" (JND\footnote{JND: \textit{just noticeable distortion}.}) per selezionare il quantizzatore migliore da un insieme predeterminato per ciascuna sottobanda \parencite{AudioSignalProcessingAndCoding}.
-
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/mpegaudio}
 	\caption{\textit{MPEG-1 Audio}: schema di codifica}
 	\label{fig:mpegaudio}
 \end{figure}
+
+Parallelamente l'input PCM viene inviato ad una FFT\footnote{FFT: \textit{fast Fourier transform} (trasformata di Fourier veloce) è un algoritmo per calcolare la trasformata discreta di Fourier.} da $1024$ punti, che scompone il segnale nelle sue frequenze costituenti, come mostrato in Fig. \ref{fig:FFT}. Successivamente l'analisi del segnale psicoacustico scarta tutti i suoni sotto la \textit{soglia assoluta della percezione sonora} (ATH\footnote{ATH: \textit{Absolute Threshold of Hearing}, stimata attorno i $10^{-12} W/m^{2}$.}) insieme a quelli difficilmente audibili. Quindi una procedura di allocazione dinamica dei bit (iterativa) applica la soglia di "distorsione appena rilevabile" (JND\footnote{JND: \textit{just noticeable distortion}.}) per selezionare il quantizzatore migliore da un insieme predeterminato per ciascuna sottobanda \parencite{AudioSignalProcessingAndCoding}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/FFT}
