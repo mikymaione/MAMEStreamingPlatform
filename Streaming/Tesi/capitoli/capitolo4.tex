@@ -80,7 +80,9 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 
 
 \subsubsection{Perceptual Evaluation of Audio Quality}
-\textit{Perceptual Evaluation of Audio Quality} (PEAQ) è un algoritmo sviluppato dal ITU-R\footnote{ITU-R: \textit{International Telecommunication Union - Radiocommunication Sector} è un organizzazione internazionale che si occupa degli standard nel campo delle telecomunicazioni, settore radio.} che simula le proprietà percettive dell'orecchio umano tramite modelli informatici, per determinare il livello di rumore che si può introdurre in un segnale acustico prima che esso diventi udibile. Per PEAQ sono stati creati due modelli, \textit{basic} e \textit{advanced}, il modello avanzato viene utilizzato per test più approfonditi \parencite{UlovecK2018PAQA}. Il risultato dell'algoritmo è il \textit{Objective Difference Grade} (ODG) che viene assegnato ad ogni frame audio, in questo modo si può intervenire precisamente sull'algoritmo di codifica per migliorarlo. Facendo la media degli ODG di tutti i frame si può dare una stima della qualità di tutto il segnale. La scala ODG è basata su un test uditivo soggettivo (ITU-R BS.1116) ed è la seguente: \textit{molto fastidioso} (1), \textit{fastidioso} (2), \textit{leggermente fastidioso} (3), \textit{percettibile ma non fastidioso} (4), \textit{impercettibile} (5) \parencite{PoctaPeter2015SaOA}.
+\textit{Perceptual Evaluation of Audio Quality} (PEAQ) è un algoritmo sviluppato dal ITU-R\footnote{ITU-R: \textit{International Telecommunication Union - Radiocommunication Sector} è un organizzazione internazionale che si occupa degli standard nel campo delle telecomunicazioni, settore radio.} che simula le proprietà percettive dell'orecchio umano tramite modelli informatici, per determinare il livello di rumore che si può introdurre in un segnale acustico prima che esso diventi udibile. Per PEAQ sono stati creati due modelli, \textit{basic} e \textit{advanced}, il modello avanzato viene utilizzato per test più approfonditi \parencite{UlovecK2018PAQA}. Gli output dell'algoritmo sono il \textit{Objective Difference Grade} (ODG) e l'\textit{indice di distorsione} (DI) che vengono assegnati ad ogni frame audio, in questo modo si può intervenire precisamente sull'algoritmo di codifica per migliorarlo. Facendo la media degli ODG di tutti i frame si può dare una stima della qualità di tutto il segnale. La scala ODG è basata su un test uditivo soggettivo (ITU-R BS.1116) ed è la seguente: \textit{molto fastidioso} (1), \textit{fastidioso} (2), \textit{leggermente fastidioso} (3), \textit{percettibile ma non fastidioso} (4), \textit{impercettibile} (5) \parencite{PoctaPeter2015SaOA}.
+
+Il metodo, illustrato in Fig. \ref{fig:PEAQ}, inizia applicando un allineamento temporale tra i due segnali in ingresso (alcuni codificatori slittano leggermente il segnale in avanti), questi vengono inviati al modello percettivo. I segnali audio vengono tagliati in frame di $0,042$ s con una sovrapposizione del $50\%$. Il modello percettivo trasforma i segnali utilizzando una funzione finestra e una \textit{FFT}. Successivamente vengono applicati dei pre-processamenti per calcolare: i modelli di eccitazione, i modelli di volume, i modelli di modulazione e il segnale di errore. Utilizzando questi modelli una funzione calcola le \textit{Model Output Variables} (MOVs) che vengono mappate sul corrispettivo \textit{ODG} \parencite{PEAQ}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/PEAQ}
@@ -88,10 +90,10 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 	\label{fig:PEAQ}
 \end{figure}
 
-\parencite{PEAQ}
+
 
 \subsubsection{Risultati ottenuti}
-In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 4 (\textit{percettibile ma non fastidioso}).
+In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 2 (\textit{fastidioso}).
 
 \begin{lstlisting}[language=bash, caption=Script bash per l'esecuzione del programma per l'algoritmo PEAQ, label={lst:bashPEAQ}]
 peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
