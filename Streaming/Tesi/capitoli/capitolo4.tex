@@ -88,9 +88,7 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 	\label{fig:PEAQ}
 \end{figure}
 
-in generale comprende modelli di orecchio basati sulla trasformata di Fourier veloce e su un banco di filtri. I valori di output dei modelli si basano in parte sul concetto di soglia mascherata e in parte su un confronto di rappresentazioni interne (noto anche come confronto nel dominio cocleare). Inoltre, fornisce anche valori di output basati su un confronto di spettri lineari, che non vengono elaborati da un modello di orecchio.
-Il modello restituisce il volume parziale delle distorsioni non lineari, il volume parziale delle distorsioni lineari (componenti del segnale persi a causa di una risposta in frequenza sbilanciata), un rapporto rumore/maschera, misure di alterazioni degli inviluppi temporali, una misura di armoniche nel segnale di errore, una probabilità di rilevamento dell'errore e la proporzione di frame di segnale contenenti distorsioni udibili. I valori di output selezionati vengono mappati su un singolo indicatore di qualità, l'Obiettivo Differenza Grado (ODG), da una rete neurale artificiale con un livello nascosto. L'ODG indica la qualità audio di base misurata del segnale in prova su una scala continua da -4 (danno molto fastidioso) a 0 (danno impercettibile). Oltre all'ODG, il modello emette un valore di qualità complementare: l'indice di distorsione (DI). Il DI è un indicatore di qualità come l'ODG tranne che per la sua maggiore sensibilità verso qualità del segnale molto basse.
-
+\parencite{PEAQ}
 
 \subsubsection{Risultati ottenuti}
 In questo progetto è stata usata un'implementazione per scopi accademici di PEAQ e tramite lo script bash mostrato in Lis. \ref{lst:bashPEAQ} è stato calcolato per la codifica \textit{MPEG-1 Audio Layer II} (MP2) a 64 kbps un grado PEAQ di 4 (\textit{percettibile ma non fastidioso}).
