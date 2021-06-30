@@ -80,9 +80,16 @@ Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita
 
 
 \subsubsection{Perceptual Evaluation of Audio Quality}
-\textit{Perceptual Evaluation of Audio Quality} (PEAQ)
-\textit{Objective Difference Grade} (ODG)
-\textit{molto fastidioso} (1), \textit{fastidioso} (2), \textit{leggermente fastidioso} (3), \textit{percettibile ma non fastidioso} (4), \textit{impercettibile} (5).
+\textit{Perceptual Evaluation of Audio Quality} (PEAQ) è un algoritmo sviluppato dal ITU-R\footnote{ITU-R: \textit{International Telecommunication Union - Radiocommunication Sector} è un organizzazione internazionale che si occupa degli standard nel campo delle telecomunicazioni, settore radio.} che simula le proprietà percettive dell'orecchio umano tramite modelli informatici, per determinare il livello di rumore che si può introdurre in un segnale acustico prima che esso diventi udibile. Per PEAQ sono stati creati due modelli, \textit{basic} e \textit{advanced}, il modello avanzato viene utilizzato per test più approfonditi \parencite{UlovecK2018PAQA}. Il risultato dell'algoritmo è il \textit{Objective Difference Grade} (ODG) che viene assegnato ad ogni frame audio, in questo modo si può intervenire precisamente sull'algoritmo di codifica per migliorarlo. Facendo la media degli ODG di tutti i frame si può dare una stima della qualità di tutto il segnale. La scala ODG è basata su un test uditivo soggettivo (ITU-R BS.1116) ed è la seguente: \textit{molto fastidioso} (1), \textit{fastidioso} (2), \textit{leggermente fastidioso} (3), \textit{percettibile ma non fastidioso} (4), \textit{impercettibile} (5) \parencite{PoctaPeter2015SaOA}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{immagini/PEAQ}
+	\caption{Diagramma del funzionamento di PEAQ}	
+	\label{fig:PEAQ}
+\end{figure}
+
+in generale comprende modelli di orecchio basati sulla trasformata di Fourier veloce e su un banco di filtri. I valori di output dei modelli si basano in parte sul concetto di soglia mascherata e in parte su un confronto di rappresentazioni interne (noto anche come confronto nel dominio cocleare). Inoltre, fornisce anche valori di output basati su un confronto di spettri lineari, che non vengono elaborati da un modello di orecchio.
+Il modello restituisce il volume parziale delle distorsioni non lineari, il volume parziale delle distorsioni lineari (componenti del segnale persi a causa di una risposta in frequenza sbilanciata), un rapporto rumore/maschera, misure di alterazioni degli inviluppi temporali, una misura di armoniche nel segnale di errore, una probabilità di rilevamento dell'errore e la proporzione di frame di segnale contenenti distorsioni udibili. I valori di output selezionati vengono mappati su un singolo indicatore di qualità, l'Obiettivo Differenza Grado (ODG), da una rete neurale artificiale con un livello nascosto. L'ODG indica la qualità audio di base misurata del segnale in prova su una scala continua da -4 (danno molto fastidioso) a 0 (danno impercettibile). Oltre all'ODG, il modello emette un valore di qualità complementare: l'indice di distorsione (DI). Il DI è un indicatore di qualità come l'ODG tranne che per la sua maggiore sensibilità verso qualità del segnale molto basse.
 
 
 \subsubsection{Risultati ottenuti}
