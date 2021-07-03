@@ -8,16 +8,16 @@
 
 \chapter{Prestazioni} \label{cap:cap4}
 %Si mostra il progetto dal punto di vista sperimentale, le cose materialmente realizzate. In questa sezione si mostrano le attività sperimentali svolte, si illustra il funzionamento del sistema (a grandi linee) e si spiegano i risultati ottenuti con la loro valutazione critica. Bisogna introdurre dati sulla complessità degli algoritmi e valutare l'efficienza del sistema.
-Questo capitolo analizza le prestazioni del progetto relativamente ai tre difetti intrinseci del cloud gaming: riduzione della qualità audio-video, bit-rate richiesto e il problema della latenza.
+Questo capitolo analizza le prestazioni del progetto relativamente ai tre difetti intrinseci del cloud gaming: riduzione della qualità audiovisiva, il problema della latenza ed il bit-rate richiesto.
 
 
 
-\section{Qualità audio-video}
+\section{Riduzione della qualità audiovisiva}
 Nell'ambito videoludico la qualità audiovisiva (soprattutto la visiva) influisce sulla qualità generale percepita dall'utente, per questo nel cloud gaming è necessario garantire un livello di qualità quasi identico alla versione in locale. Lo streaming a bit-rate bassi è possibile preservando la qualità percepita ed è particolarmente adatto per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe flat per reti mobili. Solitamente sono abbonamenti solo dati per tablet e smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
 
 
 
-\subsection{Video}
+\subsection{La qualità visiva}
 Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di qualità. La qualità dell'immagine si riferisce al modo in cui viene riprodotta la scena ripresa (o quella generata digitalmente) e può essere descritta dal degradarsi di alcune caratteristiche tra cui: nitidezza, gamma dinamica, fusione dei colori, contrasto, sfocatura, ecc\dots. I metodi di valutazione della qualità dell'immagine possono essere suddivisi in metodi oggettivi e soggettivi. I metodi oggettivi si basano su confronti utilizzando criteri numerici espliciti. L'errore quadratico medio (MSE), il \textit{peak signal-to-noise ratio} (PSNR) e la \textit{structural similarity index measure} (SSIM) sono esempi di misure di qualità utilizzate nell'analisi delle immagini \parencite{relationship_PSNR_and_SSI}.
 
 
@@ -74,7 +74,7 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 
 
 
-\subsection{Audio}
+\subsection{La qualità uditiva}
 Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza. Per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
 
 
@@ -102,14 +102,8 @@ peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
 
 
 
-\section{Bit-rate}
-Il cloud gaming effettua lo streaming in tempo reale \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}. Ciao \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}
-
-
-
-
-\section{Latenza} \label{sec:cap4_Latenza}
-Per quanto riguarda la latenza è un problema che non può essere eliminato nel cloud gaming perché le fasi di un videogioco sono: ricezione input, esecuzione, rendering, display; mentre nel caso del cloud gaming si aggiungono: invio al server dell'input utente, codifica audio-video, invio all'utente dello stream video, decodifica audio-video. Un leggero ritardo in un filmato su internet o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, una tempistica di esempio è visibile in Fig. \ref{fig:latenzaCloudGaming}, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà \parencite{Cloud_Gaming_Architecture_and_Performance}.
+\section{Il problema della latenza} \label{sec:cap4_Latenza}
+La latenza è un problema che non può essere eliminato nel cloud gaming poiché alle fasi di un videogioco: ricezione input, esecuzione, rendering, display; vanno ad aggiungersi: invio al server dell'input utente, codifica audio-video, trasmissione, decodifica audio-video. Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, una tempistica di esempio è visibile in Fig. \ref{fig:latenzaCloudGaming}, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/latenzaCloudGaming.png}
@@ -118,7 +112,7 @@ Per quanto riguarda la latenza è un problema che non può essere eliminato nel 
 	\label{fig:latenzaCloudGaming}
 \end{figure}
 
-Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum \parencite{Cloud_Gaming_Architecture_and_Performance}.
+Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco}, ciao \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{table}[H]
 	\centering
@@ -137,3 +131,9 @@ Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} lorem i
 	\caption{Ritardo tollerato per tipo di gioco}
 	\label{table:Ritardo_tollerato_per_tipo_di_gioco}
 \end{table}
+
+
+
+
+\section{Bit-rate richiesto}
+Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}. Ciao \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}
