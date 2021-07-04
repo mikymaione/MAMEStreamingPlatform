@@ -248,18 +248,7 @@ namespace webpp
 
 				encoder = std::make_unique<encoding::encode_to_movie>(encoder_socket, w, h, fps, [&]()
 				{
-					const auto _start = std::chrono::system_clock::now();
-					
 					send(encoder_socket, 130);
-					
-					const auto _end = std::chrono::system_clock::now();
-					const auto _total = std::chrono::duration_cast<std::chrono::microseconds>(_end - _start);
-
-					std::cout
-						<< "--Net : "
-						<< _total.count()
-						<< "ms"
-						<< std::endl;
 
 					//send_pausing_ping();
 				});
@@ -272,18 +261,7 @@ namespace webpp
 		*/
 		void send_video_frame(const uint8_t* pixels) const
 		{
-			const auto _start = std::chrono::system_clock::now();
-			
 			encoder->add_frame(pixels);
-			
-			const auto _end = std::chrono::system_clock::now();
-			const auto _total = std::chrono::duration_cast<std::chrono::microseconds>(_end - _start);
-
-			std::cout
-				<< "--Video : "
-				<< _total.count()
-				<< "ms"
-				<< std::endl;
 		}
 
 		/**
@@ -294,18 +272,7 @@ namespace webpp
 		*/
 		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size, const int audio_stream_num_samples) const
 		{
-			const auto _start = std::chrono::system_clock::now();
-			
 			encoder->add_instant(audio_stream, audio_stream_size, audio_stream_num_samples);
-			
-			const auto _end = std::chrono::system_clock::now();
-			const auto _total = std::chrono::duration_cast<std::chrono::microseconds>(_end - _start);
-
-			std::cout
-				<< "--Audio : "
-				<< _total.count()
-				<< "ms"
-				<< std::endl;
 		}
 
 		void start(const unsigned short port)

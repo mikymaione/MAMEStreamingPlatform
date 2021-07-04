@@ -1,0 +1,9 @@
+AMD Ryzen 5 2500U 8core
+AMD Radeon Vega 8 Mobile Graphics 4,5 GB
+8 GB Ram
+SanDisk SSD SD9SN8W256G1027
+
+
+Net 30ms
+Video 2500 ms
+Audio 130ms
