@@ -248,7 +248,18 @@ namespace webpp
 
 				encoder = std::make_unique<encoding::encode_to_movie>(encoder_socket, w, h, fps, [&]()
 				{
+					const auto _start = std::chrono::system_clock::now();
+					
 					send(encoder_socket, 130);
+					
+					const auto _end = std::chrono::system_clock::now();
+					const auto _total = std::chrono::duration_cast<std::chrono::microseconds>(_end - _start);
+
+					std::cout
+						<< "--Net : "
+						<< _total.count()
+						<< "ms"
+						<< std::endl;
 
 					//send_pausing_ping();
 				});
