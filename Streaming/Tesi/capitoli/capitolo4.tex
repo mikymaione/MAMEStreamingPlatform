@@ -112,6 +112,8 @@ La latenza è un problema che non può essere eliminato nel cloud gaming poiché
 	\label{fig:latenzaCloudGaming}
 \end{figure}
 
+Secondo diversi studi, affinché il gameplay sia fluido e senza jitter, il ritardo tra la trasmissione della reazione dell'utente e la visualizzazione del frame corrispondente, chiamato anche round trip delay, deve essere inferiore a 200 millisecondi. Se il ritardo di andata e ritorno è maggiore di 200 msec, la reazione dell'utente viene visualizzata con un ritardo irritante che rende il gioco molto difficile, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale.
+
 Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco}, ciao \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{table}[H]
@@ -132,7 +134,26 @@ Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco}, ciao \
 	\label{table:Ritardo_tollerato_per_tipo_di_gioco}
 \end{table}
 
+\subsubsection{Risultati ottenuti}
+Risultati ottenuti, come mostrato in Tab. \ref{table:LatenzaOttenuta}, ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti.
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||l l r||}
+		\hline
+		Tipo di gioco & Prospettiva & Soglia di ritardo (ms) \\
+		\hline\hline
+		FPS & Prima persona & 100 \\
+		\hline
+		RPG & Terza persona & 500 \\
+		\hline
+		RTS & Onnipresente & 1000 \\
+		\hline
+	\end{tabular}
+
+	\caption{Ritardo tollerato per tipo di gioco}
+	\label{table:LatenzaOttenuta}
+\end{table}
 
 
 \section{Bit-rate richiesto}
