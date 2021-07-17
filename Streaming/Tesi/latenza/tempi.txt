@@ -7,3 +7,12 @@ SanDisk SSD SD9SN8W256G1027
 Net 30ms
 Video 2500 ms
 Audio 130ms
+
+
+
+
+Pacchetto 0,3 ms
+Video 25 ms
+Audio 2 ms
+Display 4 ms
+Trasmissione 12 ms
