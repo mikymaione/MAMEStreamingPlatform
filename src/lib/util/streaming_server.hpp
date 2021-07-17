@@ -28,11 +28,12 @@ namespace webpp
 	class streaming_server
 	{
 	private:
-		bool active = false;
+		bool active = false;		
 
 		unsigned long ping = 0;
 
 		std::chrono::time_point<std::chrono::system_clock> game_start_time;
+		int64_t render_total, audio_total, send_total;
 
 		std::chrono::time_point<std::chrono::system_clock> ping_sent =
 			std::chrono::system_clock::now();
@@ -248,7 +249,13 @@ namespace webpp
 
 				encoder = std::make_unique<encoding::encode_to_movie>(encoder_socket, w, h, fps, [&]()
 				{
+					const auto send_start_time = std::chrono::system_clock::now();
+
 					send(encoder_socket, 130);
+
+					const auto send_end_time = std::chrono::system_clock::now();
+					const auto total = std::chrono::duration_cast<std::chrono::milliseconds>(send_end_time - send_start_time);
+					send_total = total.count();
 
 					//send_pausing_ping();
 				});
@@ -261,7 +268,13 @@ namespace webpp
 		*/
 		void send_video_frame(const uint8_t* pixels) const
 		{
+			const auto render_start_time = std::chrono::system_clock::now();
+			
 			encoder->add_frame(pixels);
+
+			const auto render_end_time = std::chrono::system_clock::now();
+			const auto total = std::chrono::duration_cast<std::chrono::milliseconds>(render_end_time - render_start_time);
+			render_total = total.count();
 		}
 
 		/**
@@ -272,7 +285,13 @@ namespace webpp
 		*/
 		void send_audio_interval(const uint8_t* audio_stream, const int audio_stream_size, const int audio_stream_num_samples) const
 		{
+			const auto audio_start_time = std::chrono::system_clock::now();
+
 			encoder->add_instant(audio_stream, audio_stream_size, audio_stream_num_samples);
+			
+			const auto audio_end_time = std::chrono::system_clock::now();
+			const auto total = std::chrono::duration_cast<std::chrono::milliseconds>(audio_end_time - audio_start_time);
+			audio_total = total.count();
 		}
 
 		void start(const unsigned short port)
@@ -342,8 +361,15 @@ namespace webpp
 					<< std::endl;
 
 				std::cout
-					<< game
-					<< " played for: " << game_total_minute_played.count() << "min."
+					<< game << " played for: " 
+					<< game_total_minute_played.count() << "min."
+					<< std::endl;
+				
+				std::cout					
+					<< "Time: " << std::endl
+					<< " render: " << render_total << std::endl
+					<< " audio: " << audio_total << std::endl
+					<< " send: " << send_total << std::endl
 					<< std::endl;
 
 				machine->schedule_exit();
