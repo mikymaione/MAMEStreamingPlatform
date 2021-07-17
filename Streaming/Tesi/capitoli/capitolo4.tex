@@ -103,7 +103,9 @@ peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
 
 
 \section{Il problema della latenza} \label{sec:cap4_Latenza}
-La latenza è un problema che non può essere eliminato nel cloud gaming poiché alle fasi di un videogioco: ricezione input, esecuzione, rendering, display; vanno ad aggiungersi: invio al server dell'input utente, codifica audio-video, trasmissione, decodifica audio-video. Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, una tempistica di esempio è visibile in Fig. \ref{fig:latenzaCloudGaming}, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà \parencite{Cloud_Gaming_Architecture_and_Performance}.
+Alle fasi di base di un videogioco (ricezione input, esecuzione, rendering e display) nel cloud gaming vanno ad aggiungersi: invio al server dell'input utente, codifica, trasmissione e decodifica. Queste fasi aggiuntive aumentano il tempo che intercorre tra l'input del giocatore e l'azione visualizzata sullo schermo.
+
+Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, una tempistica di esempio è visibile in Fig. \ref{fig:latenzaCloudGaming}, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà.
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/latenzaCloudGaming.png}
@@ -112,9 +114,7 @@ La latenza è un problema che non può essere eliminato nel cloud gaming poiché
 	\label{fig:latenzaCloudGaming}
 \end{figure}
 
-Secondo diversi studi, affinché il gameplay sia fluido e senza jitter, il ritardo tra la trasmissione della reazione dell'utente e la visualizzazione del frame corrispondente, chiamato anche round trip delay, deve essere inferiore a 200 millisecondi. Se il ritardo di andata e ritorno è maggiore di 200 msec, la reazione dell'utente viene visualizzata con un ritardo irritante che rende il gioco molto difficile, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale.
-
-Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco}, ciao \parencite{Cloud_Gaming_Architecture_and_Performance}.
+Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche round trip delay, deve essere inferiore a 100 millisecondi. Se il round trip delay è maggiore della soglia di ritardo tollerata, la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{table}[H]
 	\centering
@@ -133,6 +133,8 @@ Come mostrato in tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco}, ciao \
 	\caption{Ritardo tollerato per tipo di gioco}
 	\label{table:Ritardo_tollerato_per_tipo_di_gioco}
 \end{table}
+
+
 
 \subsubsection{Risultati ottenuti}
 Risultati ottenuti, come mostrato in Tab. \ref{table:LatenzaOttenuta}, ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti.
