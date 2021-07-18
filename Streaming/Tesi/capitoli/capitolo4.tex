@@ -105,14 +105,7 @@ peaqb -r sf3_PCM.wav -t sf3_MP2.wav -c > risultati.csv
 \section{Il problema della latenza} \label{sec:cap4_Latenza}
 Alle fasi di base di un videogioco (ricezione input, esecuzione, rendering e display) nel cloud gaming vanno ad aggiungersi: invio al server dell'input utente, codifica, trasmissione e decodifica. Queste fasi aggiuntive aumentano il tempo che intercorre tra l'input del giocatore e l'azione visualizzata sullo schermo.
 
-Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, una tempistica di esempio è visibile in Fig. \ref{fig:latenzaCloudGaming}, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{immagini/latenzaCloudGaming.png}
-	\caption{Latenza del videogioco: locale vs cloud gaming.}
-	%Fonte: shadow.tech/blog/news/roadmap-cloud-gaming-without-latency
-	\label{fig:latenzaCloudGaming}
-\end{figure}
+Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà.
 
 Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche round trip delay, deve essere inferiore a 100 millisecondi. Se il round trip delay è maggiore della soglia di ritardo tollerata, la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
@@ -137,24 +130,80 @@ Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{
 
 
 \subsubsection{Risultati ottenuti}
-Risultati ottenuti, come mostrato in Tab. \ref{table:LatenzaOttenuta}, ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti ottenuti.
+La latenza è stata calcolata cronometrando il \textit{round trip delay} e calcolando le medie al termine della partita, lato server della codifica\footnote{Il tempo medio di codifica contiene anche il tempo di cattura.} e della creazione del pacchetto di rete, e lato client della decodifica. Per calcolare il \textit{round trip delay} è stata eseguita una sessione di gioco di \textit{Street Fighter III} ed è stato effettuato lo screencast utilizzando il programma \textit{OBS Studio}\footnote{OBS Studio è un software open-source per lo streaming e la cattura video.} a 60 fps. Utilizzando una \textit{tastiera su schermo} veniva premuto il tasto \textit{P} per mettere il gioco in pausa, successivamente è stato analizzato manualmente lo screencast calcolando il \textit{round trip delay} medio tra il frame in cui avveniva la pressione del tasto e il frame del gioco in pausa. Il tempo medio di trasmissione\footnote{Il tempo medio di trasmissione contiene anche il tempo di visualizzazione del frame sullo schermo.} è stato calcolato come la differenza tra il \textit{round trip delay} medio e le altre operazioni. I tempi medi ottenuti sono mostrati in Tab. \ref{table:LatenzaOttenuta}.
+
+Le caratteristiche dei computer utilizzati per i test sono descritte nelle Tab. \ref{table:ServerUsato} e \ref{table:ClientUsato}.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{||l r||}
 		\hline
-		Tipo & Tempo (ms) \\
-		\hline\hline		
-		Terza persona & 500 \\
+		Operazione & Tempo (ms) \\
+		\hline\hline				
 		\hline
-		Onnipresente & 1000 \\
+		Codifica & $6,71$ \\
+		\hline
+		Creazione pacchetto di rete & $0,07$ \\
+		\hline
+		Trasmissione & $\sim 174,00$ \\
+		\hline
+		Decodifica & $1,04$ \\
 		\hline\hline
-		\textbf{Round trip delay} & \textbf{183} \\
+		\textbf{Round trip delay} & \textbf{$\sim 182,00$} \\
 		\hline
 	\end{tabular}
 
-	\caption{Ritardo tollerato per tipo di gioco}
+	\caption{Tempi medi d'elaborazione per \textit{Street Fighter III}}
 	\label{table:LatenzaOttenuta}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||l l||}
+		\hline
+		Componente & Modello \\
+		\hline\hline				
+		\hline
+		CPU & AMD Ryzen 5 2500U (8 threads) @ $3,6$ GHz \\
+		\hline
+		GPU & AMD Radeon Vega 8 Mobile Graphics $4$ GB \\
+		\hline
+		RAM & 8 GB \\
+		\hline
+		Disco & SanDisk SSD SD9SN8W \\
+		\hline
+		S.O. & Fedora 34 \\
+		\hline
+	\end{tabular}
+
+	\caption{Server utilizzato per il test}
+	\label{table:ServerUsato}
+\end{table}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||l l||}
+		\hline
+		Componente & Modello \\
+		\hline\hline				
+		\hline
+		CPU & Intel Core2 Quad Q6600 (4 threads) @ $2,4$ GHz \\
+		\hline
+		GPU & Nvidia GeForce 9500 GT 1 GB\\
+		\hline
+		RAM & 8 GB \\
+		\hline
+		Disco & Samsung 860 EVO SSD \\
+		\hline
+		S.O. & Windows 10 \\
+		\hline
+		Browser & Firefox 88 \\
+		\hline
+	\end{tabular}
+
+	\caption{Client utilizzato per il test}
+	\label{table:ClientUsato}
 \end{table}
 
 

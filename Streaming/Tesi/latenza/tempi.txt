@@ -1,11 +1,10 @@
 AMD Ryzen 5 2500U 8core
 AMD Radeon Vega 8 Mobile Graphics 4,5 GB
 8 GB Ram
-SanDisk SSD SD9SN8W256G1027
+SanDisk SSD SD9SN8W 256G 1027
 
 
-sfiii3nr1 played for: 0min.
 Time:
- render: 6703100
- audio: 125700
- send: 69500
+ render: 6,7031 ms
+ audio: 0,1257 ms
+ send: 0,0695 ns
