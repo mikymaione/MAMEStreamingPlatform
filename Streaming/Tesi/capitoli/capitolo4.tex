@@ -210,7 +210,32 @@ Le caratteristiche dei computer utilizzati per i test sono descritte nelle Tab. 
 \section{Bit-rate richiesto}
 Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}. Ciao \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}. Probabilmente \parencite{ChenKuanTa2014OtQo}.
 
-\begin{figure}[H]
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||l l r r r||}
+		\hline
+		Gioco & Tipo & Media & Dev. std & Varianza \\
+		\hline\hline
+		\hline
+		Castelvania & piattaforma & 0.867 & 0.537 & 0.289 \\
+		\hline		
+		Metal Slug 3 & piattaforma & 0.688 & 0.360 & 0.129 \\
+		\hline
+		Out Run & guida & 0.835 & 0.443 & 0.196 \\
+		\hline
+		Puzzle Booble 2 & puzzle & 0.731 & 0.320 & 0.102 \\
+		\hline
+		Street Fighter III & picchiaduro & 0.848 & 0.400 & 0.160 \\
+		\hline	
+		Street Slam & sport & 1.075 & 0.555 & 0.308 \\
+		\hline
+	\end{tabular}
+
+	\caption{Client utilizzato per il test}
+	\label{table:bandwith_e_medie}
+\end{table}
+
+\begin{figure}
 	\includegraphics[width=\linewidth]{immagini/bandwith}
 	\caption{Bit-rate richiesto per vari tipi di giochi}	
 	\label{fig:bandwith}
