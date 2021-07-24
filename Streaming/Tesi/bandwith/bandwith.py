@@ -1,5 +1,6 @@
 import time
 import psutil
+import statistics
 import matplotlib.pyplot as plt
 
 
@@ -12,8 +13,6 @@ def main():
     try:
         while True:
             new_value = psutil.net_io_counters().bytes_recv
-            # psutil.net_io_counters().bytes_recv
-            # psutil.net_io_counters().bytes_sent
 
             new_tempo += 0.5
             tempo.append(new_tempo)
@@ -30,6 +29,21 @@ def main():
             time.sleep(0.5)
     except KeyboardInterrupt:
         pass
+
+    x = statistics.mean(bandwith)
+    print("mean: ", x)
+
+    y = statistics.median(bandwith)
+    print("median: ", y)
+
+    z = statistics.mode(bandwith)
+    print("mode: ", z)
+
+    a = statistics.stdev(bandwith)
+    print("stdev: ", a)
+
+    b = statistics.variance(bandwith)
+    print("variance: ", b)
 
     plt.plot(tempo, bandwith)
     plt.xlabel('s')
