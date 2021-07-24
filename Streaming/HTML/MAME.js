@@ -9,7 +9,7 @@ copyright-holders:Michele Maione
 */
 
 //const uri = "ws://80.183.63.209:8888";
-const uri = "ws://192.168.1.8:8888";
+const uri = "ws://192.168.1.7:8888";
 //const uri = "ws://localhost:8888";
 
 let keypress_Listener;
