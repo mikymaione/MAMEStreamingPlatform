@@ -210,7 +210,36 @@ Le caratteristiche dei computer utilizzati per i test sono descritte nelle Tab. 
 \section{Bit-rate richiesto}
 Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}. Ciao \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}. Probabilmente \parencite{ChenKuanTa2014OtQo}.
 
-Come mostrato in Tab. \ref{table:bandwith_e_medie}, come mostrato in Fig. \ref{fig:bandwith}.
+\subsubsection{Risultati ottenuti}
+Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati in Tab. \ref{table:bandwith_e_medie} e Fig. \ref{fig:bandwith}.
+
+\begin{lstlisting}[language=Python, caption=Script Python per il calcolo del bit-rate richiesto, label={lst:PyBitRate}]
+try:
+	while True:
+		new_value = psutil.net_io_counters().bytes_recv
+		new_seconds += 0.1
+		seconds.append(new_seconds)
+
+		if old_value
+			bw = (new_value - old_value) * 8. / 1024. / 1024.
+		else:
+			bw = 0
+
+		bandwith.append(bw)
+		old_value = new_value
+		time.sleep(0.1)
+except KeyboardInterrupt:
+	pass
+
+print("Media:", statistics.mean(bandwith))
+print("Dev. std:", statistics.stdev(bandwith))
+print("Varianza:", statistics.variance(bandwith))
+
+plt.plot(seconds, bandwith)
+plt.xlabel('s')
+plt.ylabel('Mbps')
+plt.show()
+\end{lstlisting}
 
 \begin{table}[H]
 	\centering
