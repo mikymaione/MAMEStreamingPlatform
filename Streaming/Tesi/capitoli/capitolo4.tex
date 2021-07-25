@@ -258,10 +258,10 @@ Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\foot
 
 
 \section{Bit-rate richiesto}
-Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}. Ciao \parencite{StreamingMobileCloudGamingVideoOverTCPWithAdaptiveSourceFECCoding}. Probabilmente \parencite{ChenKuanTa2014OtQo}.
+Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{ChenKuanTa2014OtQo}.
 
 \subsubsection{Risultati ottenuti}
-Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati in Tab. \ref{table:bandwith_e_medie} e Fig. \ref{fig:bandwith}.
+Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati in Tab. \ref{table:bandwidth_e_medie} e Fig. \ref{fig:bandwidth}.
 
 \begin{lstlisting}[language=Python, caption=Script Python per il calcolo del bit-rate richiesto, label={lst:PyBitRate}]
 try:
@@ -275,17 +275,17 @@ try:
 		else:
 			bw = 0
 
-		bandwith.append(bw)
+		bandwidth.append(bw)
 		old_value = new_value
 		time.sleep(0.1)
 except KeyboardInterrupt:
 	pass
 
-print("Media:", statistics.mean(bandwith))
-print("Dev. std:", statistics.stdev(bandwith))
-print("Varianza:", statistics.variance(bandwith))
+print("Media:", statistics.mean(bandwidth))
+print("Dev. std:", statistics.stdev(bandwidth))
+print("Varianza:", statistics.variance(bandwidth))
 
-plt.plot(seconds, bandwith)
+plt.plot(seconds, bandwidth)
 plt.xlabel('s')
 plt.ylabel('Mbps')
 plt.show()
@@ -313,11 +313,11 @@ plt.show()
 	\end{tabular}
 
 	\caption{Bit-rate richiesto per vari tipi di giochi (in Mbps)}
-	\label{table:bandwith_e_medie}
+	\label{table:bandwidth_e_medie}
 \end{table}
 
 \begin{figure}
-	\includegraphics[width=\linewidth]{immagini/bandwith}
+	\includegraphics[width=\linewidth]{immagini/bandwidth}
 	\caption{Bit-rate richiesto per vari tipi di giochi}	
-	\label{fig:bandwith}
+	\label{fig:bandwidth}
 \end{figure}
