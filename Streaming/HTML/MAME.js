@@ -8,12 +8,13 @@ copyright-holders:Michele Maione
 ============================================================
 */
 
-//const uri = "ws://80.183.63.209:8888";
-const uri = "ws://192.168.1.7:8888";
+const uri = "ws://79.49.155.126:8888";
+//const uri = "ws://192.168.1.7:8888";
 //const uri = "ws://localhost:8888";
 
 let keypress_Listener;
 
+let PingPong;
 let navigation_menu;
 let myCanvas;
 let player;
@@ -320,8 +321,8 @@ function Start(game, description)
 				case 'pingpong':
 					const end_date = values[1];
 					const millis = Date.now() - end_date;
-					
-					document.title = 'MAME Cloud Gaming - RTD: ' + millis;
+
+					PingPong.innerHTML = 'Ping-Pong: ' + millis + 'ms';
 					break;
 			}
 		};
@@ -339,6 +340,7 @@ function Start(game, description)
 
 navigation_menu = document.getElementById("navigation_menu");
 myCanvas = document.getElementById("myCanvas");
+PingPong = document.getElementById("PingPong");
 
 readRomList();
 
