@@ -225,8 +225,6 @@ Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\foot
 		\hline
 		Comune & Distanza (km) & Min (ms) & Max (ms) \\
 		\hline\hline
-		\hline
-		Sant'Anastasia & $\sim70$ & 3 & 17 \\
 		\hline		
 		Milano & $\sim1540$ & 20 & 28 \\
 		\hline
@@ -236,18 +234,20 @@ Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\foot
 		\hline
 		Bologna & $\sim1160$ & 30 & 60 \\
 		\hline
-		Casalpusterlengo & $\sim1440$ & 35 & 40 \\
+		Campobasso & $\sim300$ & 30 & 60 \\
 		\hline
+		Casalpusterlengo & $\sim1440$ & 35 & 40 \\		
+		\hline
+		Treviso & $\sim1480$ & 35 & 45 \\
+		\hline		
 		Basiano & $\sim1580$ & 30 & 50 \\
 		\hline
 		Verona & $\sim1420$ & 30 & 70 \\
 		\hline
 		Cimitile & $\sim140$ & 26 & 80 \\
 		\hline
-		Novara & $\sim1640$ & 30 & 79 \\
-		\hline		
-		Treviso & $\sim1480$ & 35 & 45 \\
-		\hline		
+		Novara & $\sim1640$ & 30 & 80 \\
+		\hline
 	\end{tabular}
 
 	\caption{Tempo di \textit{ping-pong} da vari comuni italiani}
@@ -258,10 +258,10 @@ Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\foot
 
 
 \section{Bit-rate richiesto}
-Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio senza \parencite{ChenKuanTa2014OtQo}.
+Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio offrendo un'esperienza di gioco all'utente priva di ritardi e con la miglior qualità audiovisiva. Il bit-rate richiesto è l'unico parametro che è influenzato dalla compressione video, e differesce tra i vari giochi. Calcolando i differenti bit-rate massimi per le differenti qualità audiovisive si può scegliere il miglior bilanciamento tra qualità offerta e bit-rate richiesto all'utente \parencite{ChenKuanTa2014OtQo}.
 
 \subsubsection{Risultati ottenuti}
-Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati in Tab. \ref{table:bandwidth_e_medie} e Fig. \ref{fig:bandwidth}.
+Il MAME CGP può essere avviato specificando la risoluzione video da utilizzare e come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} è stata usata una risoluzione di 480p, che con la compressione \textit{MPEG-1 Video} ed \textit{MPEG-1 Audio Layer II}, necessitano di un bit-rate medio di 1 Mbps (con picchi in alcuni casi fino a 3.5 Mbps). Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati mostrati in Tab. \ref{table:bandwidth_e_medie} e Fig. \ref{fig:bandwidth}.
 
 \begin{lstlisting}[language=Python, caption=Script Python per il calcolo del bit-rate richiesto, label={lst:PyBitRate}]
 try:
@@ -286,8 +286,6 @@ print("Dev. std:", statistics.stdev(bandwidth))
 print("Varianza:", statistics.variance(bandwidth))
 
 plt.plot(seconds, bandwidth)
-plt.xlabel('s')
-plt.ylabel('Mbps')
 plt.show()
 \end{lstlisting}
 
