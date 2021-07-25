@@ -316,8 +316,20 @@ function Start(game, description)
 				case 'ping':
 					player.source.socket.send('ping:' + values[1]);
 					break;
+				
+				case 'pingpong':
+					const end_date = values[1];
+					const millis = Date.now() - end_date;
+					
+					document.title = 'MAME Cloud Gaming - RTD: ' + millis;
+					break;
 			}
 		};
+
+		setInterval(function()
+		{			
+			player.source.socket.send('pingpong:' + Date.now());
+		}, 2000);
 	}
 	else
 	{

@@ -118,6 +118,16 @@ namespace webpp
 			}
 		}
 
+		void process_pingpong(const std::vector<std::string>& values)
+		{
+			const auto millis = values[1];
+
+			std::stringstream string_stream;
+			string_stream << "pingpong:" << millis;
+
+			send_string(string_stream.str());
+		}
+
 		void send_pausing_ping()
 		{
 			const auto now = std::chrono::system_clock::now();
@@ -311,6 +321,8 @@ namespace webpp
 
 				if (values[0] == "ping")
 					process_pausing_mechanism();
+				else if (values[0] == "pingpong")
+					process_pingpong(values);
 				else if (values[0] == "key")
 					process_key(values);
 			};
