@@ -13,7 +13,7 @@ Questo capitolo analizza le prestazioni del progetto relativamente ai tre difett
 
 
 \section{Riduzione della qualità audiovisiva}
-Nell'ambito videoludico la qualità audiovisiva (soprattutto la visiva) influisce sulla qualità generale percepita dall'utente, per questo nel cloud gaming è necessario garantire un livello di qualità quasi identico alla versione in locale. Lo streaming a bit-rate bassi è possibile preservando la qualità percepita ed è particolarmente adatto per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe flat per reti mobili. Solitamente sono abbonamenti solo dati per tablet e smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
+Nell'ambito videoludico la qualità audiovisiva (soprattutto la visiva) influisce sulla qualità generale percepita dall'utente, per questo nel cloud gaming è necessario garantire un livello di qualità quasi identico alla versione in locale. È possibile preservare la qualità percepita durante lo streaming anche se si utilizzano bassi bit-rate, che sono particolarmente adatti per l'utilizzo in reti mobili\footnote{Con l'utilizzo di tariffe \textit{flat} per reti mobili sia per tablet che per smartphone.} e WLAN \parencite{VideoAndMultimediaTransmissionsOverCellularNetworks}.
 
 
 
@@ -23,18 +23,11 @@ Qualsiasi elaborazione applicata ad un'immagine può causare la perdita di quali
 
 
 \subsubsection{Peak signal-to-noise ratio}
-Il PSNR è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. Il PSNR è espresso solitamente in decibel con valori tipici per la compressione video per lo streaming tra $20$ \si{dB} e $30$ \si{dB} \parencite{ThomosN2006OtoJ} e si calcola utilizzando l'Eq. \ref{eq:PSNR} con $MSE(f,g)$ l'errore quadratico medio e $L = 255$ l'intervallo dinamico \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
+Il PSNR è comunemente usato come misura della qualità della compressione e della riduzione del rumore nelle immagini digitali a scala di grigi. Esistono diversi approcci per calcolare il PSNR delle immagini a colori, ad esempio (il più semplice) utilizzando immagini in formato YCbCr e calcolando il PSNR solo sul canale della luminanza. Il PSNR è espresso solitamente in decibel con valori tipici per la compressione video per lo streaming tra $20$ \si{dB} e $30$ \si{dB} \parencite{ThomosN2006OtoJ} e si calcola utilizzando l'Eq. \ref{eq:PSNR}, con $MSE(f,g)$ l'errore quadratico medio e $L = 255$ l'intervallo dinamico \parencite{AnewcombinedPSNRforobjectivevideoqualityassessment}.
 
 \begin{equation} \label{eq:PSNR}
 	PSNR(f,g)=10 \log_{10}  \frac{L^2}{MSE(f,g)}	
 \end{equation}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{immagini/BMP_MPEG_compare}
-	\caption{Alcuni frame d'esempio: a sinistra i frame renderizzati dal MAME (RGBA), a destra i frame codificati in \textit{MPEG-1}. © Capcom, Data East, Taito}
-	\label{fig:BMP_MPEG_compare}
-\end{figure}
 
 
 
@@ -72,10 +65,17 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 	multichannel=True)
 \end{lstlisting}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{immagini/BMP_MPEG_compare}
+	\caption{Alcuni frame d'esempio: a sinistra i frame renderizzati dal MAME (RGBA), a destra i frame codificati in \textit{MPEG-1}. © Capcom, Data East, Taito}
+	\label{fig:BMP_MPEG_compare}
+\end{figure}
+
 
 
 \subsection{La qualità uditiva}
-Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza. Per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
+Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza ma per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
 
 
 
@@ -107,7 +107,7 @@ Alle fasi di base di un videogioco (ricezione input, esecuzione, rendering e dis
 
 Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà.
 
-Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche \textit{round trip delay}, deve essere inferiore alla soglia di ritardo tollerata. Se il \textit{round trip delay} è maggiore della soglia di ritardo tollerata, la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
+Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche \textit{round trip delay}, deve essere inferiore alla soglia di ritardo tollerata altrimenti la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{table}[H]
 	\centering
@@ -134,8 +134,8 @@ La latenza è stata calcolata cronometrando il \textit{round trip delay} e calco
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[height=3.3cm]{immagini/pause}
-	\caption{Frame di gioco e frame di pausa. © SNK}	
+	\includegraphics[height=2.3cm]{immagini/pause}
+	\caption{Frame di gioco (sx) e frame di pausa (dx). © Capcom}	
 	\label{fig:pause}
 \end{figure}
 
@@ -144,7 +144,7 @@ La latenza è stata calcolata cronometrando il \textit{round trip delay} e calco
 	\begin{tabular}{||l r||}
 		\hline
 		Operazione & Tempo (ms) \\
-		\hline\hline				
+		\hline\hline
 		\hline
 		Codifica & $6,71$ \\
 		\hline
@@ -162,33 +162,39 @@ La latenza è stata calcolata cronometrando il \textit{round trip delay} e calco
 	\label{table:LatenzaOttenuta}
 \end{table}
 
+Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\footnote{Con il termine \textit{ping-pong} si intende il messaggio che il client invia al server e che il server invia al client. In questo caso viene inviata anche una marca temporale.} da vari comuni italiani utilizzando il server descritto in Tab. \ref{table:ServerUsato}. I risultati ottenuti sono mostrati in Tab. \ref{table:PingPong}.
+
 \begin{table}[H]
 	\centering
-	\begin{tabular}{||l l||}
+	\begin{tabular}{||l r r r||}
 		\hline
-		Componente & Valore \\
-		\hline\hline				
-		\hline
-		CPU & Intel Core2 Quad Q6600 (4 threads) @ $2,4$ GHz \\
-		\hline
-		GPU & Nvidia GeForce 9500 GT 1 GB\\
-		\hline
-		RAM & 8 GB \\
+		Comune & Distanza (km) & Min (ms) & Max (ms) \\
+		\hline\hline
 		\hline		
-		WiFi & 2.4 GHz UHF \\
+		Milano & $\sim1540$ & 20 & 28 \\
+		\hline
+		Lamezia Terme & $\sim740$ & 20 & 40 \\		
+		\hline
+		Olgiate Olona & $\sim1620$ & 28 & 38 \\
+		\hline
+		Bologna & $\sim1160$ & 30 & 60 \\
+		\hline
+		Campobasso & $\sim300$ & 30 & 60 \\
+		\hline
+		Casalpusterlengo & $\sim1440$ & 35 & 40 \\		
+		\hline
+		Treviso & $\sim1480$ & 35 & 45 \\
 		\hline		
-		Connessione internet & $\Downarrow 41,5$ mpbs, $\Uparrow 10,5$ mbps \\
+		Basiano & $\sim1580$ & 30 & 50 \\
 		\hline
-		S.O. & Windows 10 \\
+		Verona & $\sim1420$ & 30 & 70 \\		
 		\hline
-		Browser & Firefox 88 \\
-		\hline
-		Posizione & Sant'Anastasia \\
+		Novara & $\sim1640$ & 30 & 80 \\
 		\hline
 	\end{tabular}
 
-	\caption{Client utilizzato per il test}
-	\label{table:ClientUsato}
+	\caption{Tempo di \textit{ping-pong} da vari comuni italiani}
+	\label{table:PingPong}
 \end{table}
 
 \begin{table}[H]
@@ -216,49 +222,34 @@ La latenza è stata calcolata cronometrando il \textit{round trip delay} e calco
 	\label{table:ServerUsato}
 \end{table}
 
-
-Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\footnote{Con il termine \textit{ping-pong} si intende il messaggio che il client invia al server e che il server invia al client. In questo caso viene inviata anche una marca temporale.} da vari comuni italiani utilizzando il server descritto in Tab. \ref{table:ServerUsato}. I risultati ottenuti sono mostrati in Tab. \ref{table:PingPong}.
-
 \begin{table}[H]
 	\centering
-	\begin{tabular}{||l r r r||}
+	\begin{tabular}{||l l||}
 		\hline
-		Comune & Distanza (km) & Min (ms) & Max (ms) \\
-		\hline\hline
-		\hline		
-		Milano & $\sim1540$ & 20 & 28 \\
+		Componente & Valore \\
+		\hline\hline				
 		\hline
-		Lamezia Terme & $\sim740$ & 20 & 40 \\		
+		CPU & Intel Core2 Quad Q6600 (4 threads) @ $2,4$ GHz \\
 		\hline
-		Olgiate Olona & $\sim1620$ & 28 & 38 \\
+		GPU & Nvidia GeForce 9500 GT 1 GB\\
 		\hline
-		Bologna & $\sim1160$ & 30 & 60 \\
+		RAM & 8 GB \\		
 		\hline
-		Campobasso & $\sim300$ & 30 & 60 \\
+		S.O. & Windows 10 \\
 		\hline
-		Casalpusterlengo & $\sim1440$ & 35 & 40 \\		
-		\hline
-		Treviso & $\sim1480$ & 35 & 45 \\
-		\hline		
-		Basiano & $\sim1580$ & 30 & 50 \\
-		\hline
-		Verona & $\sim1420$ & 30 & 70 \\
-		\hline
-		Cimitile & $\sim140$ & 26 & 80 \\
-		\hline
-		Novara & $\sim1640$ & 30 & 80 \\
+		Browser & Firefox 88 \\
 		\hline
 	\end{tabular}
 
-	\caption{Tempo di \textit{ping-pong} da vari comuni italiani}
-	\label{table:PingPong}
+	\caption{Client utilizzato per il test}
+	\label{table:ClientUsato}
 \end{table}
 
 
 
 
 \section{Bit-rate richiesto}
-Nel paradigma del cloud gaming lo streaming viene effettuato in tempo reale e non c'è possibilità di utilizzare alcun tipo di buffer, per questo motivo è necessario stimare il bit-rate richiesto per usufruire del servizio offrendo un'esperienza di gioco all'utente priva di ritardi e con la miglior qualità audiovisiva. Il bit-rate richiesto è l'unico parametro che è influenzato dalla compressione video, e differesce tra i vari giochi. Calcolando i differenti bit-rate massimi per le differenti qualità audiovisive si può scegliere il miglior bilanciamento tra qualità offerta e bit-rate richiesto all'utente \parencite{ChenKuanTa2014OtQo}.
+È necessario stimare il bit-rate richiesto per offrire un'esperienza di gioco all'utente priva di ritardi e con la miglior qualità audiovisiva. Il bit-rate richiesto è l'unico parametro che è influenzato dalla compressione video, e differisce tra i vari giochi. Calcolando i differenti bit-rate massimi per le differenti qualità audiovisive si può scegliere il miglior bilanciamento tra qualità offerta e bit-rate richiesto all'utente \parencite{ChenKuanTa2014OtQo}.
 
 \subsubsection{Risultati ottenuti}
 Il MAME CGP può essere avviato specificando la risoluzione video da utilizzare e come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} è stata usata una risoluzione di 480p, che con la compressione \textit{MPEG-1 Video} ed \textit{MPEG-1 Audio Layer II}, necessitano di un bit-rate medio di 1 Mbps (con picchi in alcuni casi fino a 3.5 Mbps). Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati mostrati in Tab. \ref{table:bandwidth_e_medie} e Fig. \ref{fig:bandwidth}.
@@ -284,9 +275,6 @@ except KeyboardInterrupt:
 print("Media:", statistics.mean(bandwidth))
 print("Dev. std:", statistics.stdev(bandwidth))
 print("Varianza:", statistics.variance(bandwidth))
-
-plt.plot(seconds, bandwidth)
-plt.show()
 \end{lstlisting}
 
 \begin{table}[H]
