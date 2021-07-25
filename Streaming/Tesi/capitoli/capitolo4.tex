@@ -107,7 +107,7 @@ Alle fasi di base di un videogioco (ricezione input, esecuzione, rendering e dis
 
 Un leggero ritardo in un film in streaming o in una videochiamata molto probabilmente passa inosservato, ma durante una partita la latenza può rendere il gioco ingiocabile, fortunatamente il rapido sviluppo delle reti a banda larga hanno reso questo problema meno evidente e il cloud gaming una realtà.
 
-Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche round trip delay, deve essere inferiore a 100 millisecondi. Se il round trip delay è maggiore della soglia di ritardo tollerata, la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
+Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{Il jitter è la variazione del ritardo tra i pacchetti inviati.}, il ritardo tra la trasmissione dell'input utente e la visualizzazione dell'azione corrispondente, chiamato anche \textit{round trip delay}, deve essere inferiore alla soglia di ritardo tollerata. Se il \textit{round trip delay} è maggiore della soglia di ritardo tollerata, la reazione dell'utente viene visualizzata con un ritardo che rende il gameplay difficoltoso e irritante, soprattutto nei giochi in cui la velocità è un fattore molto importante, come gli sparatutto in prima persona e i giochi di strategia in tempo reale. In tabella \ref{table:Ritardo_tollerato_per_tipo_di_gioco} sono riportate le soglie di ritardo tollerabili per tipo di gioco \parencite{Cloud_Gaming_Architecture_and_Performance}.
 
 \begin{table}[H]
 	\centering
@@ -130,9 +130,37 @@ Secondo diversi studi, affinché il gameplay sia fluido e senza jitter\footnote{
 
 
 \subsubsection{Risultati ottenuti}
-La latenza è stata calcolata cronometrando il \textit{round trip delay} e calcolando le medie al termine della partita, lato server della codifica\footnote{Il tempo medio di codifica contiene anche il tempo di cattura.} e della creazione del pacchetto di rete, e lato client della decodifica. Per calcolare il \textit{round trip delay} è stata eseguita una sessione di gioco di \textit{Street Fighter III} ed è stato effettuato lo screencast utilizzando il programma \textit{OBS Studio}\footnote{OBS Studio è un software open-source per lo streaming e la cattura video.} a 60 fps. Utilizzando una \textit{tastiera su schermo} veniva premuto il tasto \textit{P} per mettere il gioco in pausa, successivamente è stato analizzato manualmente lo screencast calcolando il \textit{round trip delay} medio tra il frame in cui avveniva la pressione del tasto e il frame del gioco in pausa. Il tempo medio di trasmissione\footnote{Il tempo medio di trasmissione contiene anche il tempo di visualizzazione del frame sullo schermo.} è stato calcolato come la differenza tra il \textit{round trip delay} medio e le altre operazioni. I test sono stati effettuati su rete LAN utilizzando i computer descritti in Tab. \ref{table:ServerUsato} e Tab. \ref{table:ClientUsato}. I tempi medi ottenuti sono mostrati in Tab. \ref{table:LatenzaOttenuta}.
+La latenza è stata calcolata cronometrando il \textit{round trip delay} e calcolando le medie al termine della partita, lato server della codifica\footnote{Il tempo medio di codifica contiene anche il tempo di cattura.} e della creazione del pacchetto di rete, e lato client della decodifica. Per calcolare il \textit{round trip delay} è stata eseguita una sessione di gioco di \textit{Street Fighter III} ed è stato effettuato lo screencast utilizzando il programma \textit{OBS Studio}\footnote{OBS Studio è un software open-source per lo streaming e la cattura video.} a 60 fps. Utilizzando una \textit{tastiera su schermo} si preme il tasto \textit{P} per mettere il gioco in pausa, e successivamente viene analizzato manualmente lo screencast, calcolando il \textit{round trip delay} medio tra il frame in cui avviene la pressione del tasto e la visualizzazione a video del frame del gioco in pausa\footnote{In MAME il frame di pausa è un frame a cui viene abbassato il canale alfa su sfondo nero.}, come mostrato in Fig. \ref{fig:pause}. Il tempo medio di trasmissione\footnote{Il tempo medio di trasmissione contiene anche il tempo di visualizzazione del frame sullo schermo.} è stato calcolato come la differenza tra il \textit{round trip delay} medio e le altre operazioni. I test sono stati effettuati su rete LAN utilizzando i computer descritti in Tab. \ref{table:ServerUsato} e Tab. \ref{table:ClientUsato}. I tempi medi ottenuti sono mostrati in Tab. \ref{table:LatenzaOttenuta}.
 
-Sono stati effettuati test per la stima del tempo di \textit{Ping-Pong}\footnote{Con il termine \textit{Ping-Pong} si intende il messaggio che il client invia al server e che il server invia al client. In questo caso viene inviata anche una marca temporale.} da vari comuni italiani utilizzando il server descritto in Tab. \ref{table:ServerUsato}. I risultati ottenuti sono mostrati in Tab. \ref{table:PingPong}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=3cm]{immagini/pause}
+	\caption{Frame di gioco e frame di pausa. © SNK}	
+	\label{fig:pause}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{||l r||}
+		\hline
+		Operazione & Tempo (ms) \\
+		\hline\hline				
+		\hline
+		Codifica & $6,71$ \\
+		\hline
+		Creazione pacchetto di rete & $0,07$ \\
+		\hline
+		Trasmissione & $\sim 174,00$ \\
+		\hline
+		Decodifica & $1,04$ \\
+		\hline\hline
+		\textbf{Round trip delay} & \textbf{$\sim 182,00$} \\
+		\hline
+	\end{tabular}
+
+	\caption{Tempi medi d'elaborazione per \textit{Street Fighter III}}
+	\label{table:LatenzaOttenuta}
+\end{table}
 
 \begin{table}[H]
 	\centering
@@ -188,57 +216,40 @@ Sono stati effettuati test per la stima del tempo di \textit{Ping-Pong}\footnote
 	\label{table:ServerUsato}
 \end{table}
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{||l r||}
-		\hline
-		Operazione & Tempo (ms) \\
-		\hline\hline				
-		\hline
-		Codifica & $6,71$ \\
-		\hline
-		Creazione pacchetto di rete & $0,07$ \\
-		\hline
-		Trasmissione & $\sim 174,00$ \\
-		\hline
-		Decodifica & $1,04$ \\
-		\hline\hline
-		\textbf{Round trip delay} & \textbf{$\sim 182,00$} \\
-		\hline
-	\end{tabular}
 
-	\caption{Tempi medi d'elaborazione per \textit{Street Fighter III}}
-	\label{table:LatenzaOttenuta}
-\end{table}
+Sono stati effettuati dei test per la stima del tempo di \textit{ping-pong}\footnote{Con il termine \textit{ping-pong} si intende il messaggio che il client invia al server e che il server invia al client. In questo caso viene inviata anche una marca temporale.} da vari comuni italiani utilizzando il server descritto in Tab. \ref{table:ServerUsato}. I risultati ottenuti sono mostrati in Tab. \ref{table:PingPong}.
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{||l r r||}
+	\begin{tabular}{||l r r r||}
 		\hline
-		Comune & Min & Max \\
+		Comune & Distanza (km) & Min (ms) & Max (ms) \\
 		\hline\hline
 		\hline
-		Sant'Anastasia & 3 & 17 \\
+		Sant'Anastasia & $\sim70$ & 3 & 17 \\
 		\hline
-		Milano & 20 & 28 \\
+		Milano & $\sim1540$ & 20 & 28 \\
 		\hline
-		Lamezia Terme & 20 & 40 \\		
+		Lamezia Terme & $\sim740$ & 20 & 40 \\		
 		\hline
-		Bologna & 30 & 60 \\
+		Bologna & $\sim1160$ & 30 & 60 \\
 		\hline
-		Casalpusterlengo & 35 & 40 \\
+		Casalpusterlengo & $\sim1440$ & 35 & 40 \\
 		\hline
-		Basiano & 30 & 50 \\
+		Basiano & $\sim1580$ & 30 & 50 \\
 		\hline
-		Verona & 30 & 70 \\
+		Verona & $\sim1420$ & 30 & 70 \\
 		\hline
-		Novara & 30 & 79 \\
+		Novara & $\sim1640$ & 30 & 79 \\
+		\hline
+		Treviso & $\sim1480$ & 35 & 45 \\
 		\hline
 	\end{tabular}
 
-	\caption{Tempo di \textit{Ping-Pong}, in millisecondi, da vari comuni italiani}
+	\caption{Tempo di \textit{ping-pong} da vari comuni italiani}
 	\label{table:PingPong}
 \end{table}
+
 
 
 
