@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    bandwith = []
+    bandwidth = []
     tempo = []
     new_tempo = 0
     old_value = 0
@@ -22,7 +22,7 @@ def main():
             else:
                 bw = 0
 
-            bandwith.append(bw)
+            bandwidth.append(bw)
 
             old_value = new_value
 
@@ -30,22 +30,22 @@ def main():
     except KeyboardInterrupt:
         pass
 
-    x = statistics.mean(bandwith)
+    x = statistics.mean(bandwidth)
     print("mean: ", x)
 
-    y = statistics.median(bandwith)
+    y = statistics.median(bandwidth)
     print("median: ", y)
 
-    z = statistics.mode(bandwith)
+    z = statistics.mode(bandwidth)
     print("mode: ", z)
 
-    a = statistics.stdev(bandwith)
+    a = statistics.stdev(bandwidth)
     print("stdev: ", a)
 
-    b = statistics.variance(bandwith)
+    b = statistics.variance(bandwidth)
     print("variance: ", b)
 
-    plt.plot(tempo, bandwith)
+    plt.plot(tempo, bandwidth)
     plt.xlabel('s')
     plt.ylabel('Mbps')
     plt.show()
