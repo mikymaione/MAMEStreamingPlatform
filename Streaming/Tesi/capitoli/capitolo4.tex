@@ -298,7 +298,7 @@ print("Varianza:", statistics.variance(bandwidth))
 	\label{table:bandwidth_e_medie}
 \end{table}
 
-\begin{figure}
+\begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/bandwidth}
 	\caption{Bit-rate richiesto per vari tipi di giochi}	
 	\label{fig:bandwidth}
@@ -307,5 +307,7 @@ print("Varianza:", statistics.variance(bandwidth))
 
 
 
-\section{Bit-rate richiesto}
-Acaihjichai hcaih ciahci \parencite{wahab_ahmad_martini_schormans_2021}. Forse più questo \parencite{sun_2019}.
+\section{Progressi per il miglioramento dell'esperienza di gioco} \label{sec:cap4_ProgressiTech}
+Le attuali tecnologie informatiche hanno reso possibile il cloud gaming e lo sviluppo di nuove tecnologie andrà a migliorare l'esperienza di gioco. I nuovi formati per la compressione digitale aumenteranno la qualità audiovisiva e ridurranno il bit-rate richiesto. Alcuni esempi sono \textit{H.266} del \textit{Moving Picture Experts Group}, \textit{AV1} del \textit{Alliance for Open Media}, \textit{Opus} e \textit{Theora} del \textit{Xiph.Org Foundation}. Per ridurre la latenza di rete nel paradigma del cloud computing si ricorre all'utilizzo di sistemi distribuiti sul territorio, bilanciando il carico dei sistemi e istradando il traffico di rete dell'utente per vicinanza geografica \parencite{sun_2019}.
+
+Nella progettazione del \textit{MAME CGP} si è tenuto conto di queste problematiche lasciando aperte strade per futuri sviluppi. Come detto nel paragrafo \ref{sec:cap3_Codifica}, la classe che si occupa della codifica utilizza \textit{FFmpeg} ed è quindi possibile sia selezionare un altro formato di compressione (a patto che sia supportato dal browser) sia cambiare durante l'esecuzione il livello di compressione per diminuire la latenza. Altre idee per futuri sviluppi verranno trattati nel capitolo seguente.
