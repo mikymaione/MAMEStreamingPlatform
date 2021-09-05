@@ -65,6 +65,11 @@
 }
 \lstset{style=mystyle}
 
+\addto\captionsitalian{
+	\renewcommand{\lstlistingname}{Listato}
+	\renewcommand\lstlistlistingname{Elenco dei listati}
+}
+
 \captionsetup[figure]{font={footnotesize, color=grigio}}
 \captionsetup[lstlisting]{font={footnotesize, color=grigio}}
 \captionsetup[table]{font={footnotesize, color=grigio}}
@@ -131,14 +136,20 @@ Ringrazio il prof. Davide Gadia per la sua guida utile durante i miei sforzi ver
 
 
 \backmatter
-\printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
-\printbibliography[type=misc,title={Sitografia},heading=bibintoc]
+\newpage
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
 
 \newpage
+\addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 
 \newpage
-\listoftables
+\addcontentsline{toc}{chapter}{\lstlistlistingname}
+\lstlistoflistings
+
+\printbibliography[type=misc,title={Sitografia},heading=bibintoc]
+\printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
 
 \newpage
 \pagenumbering{gobble}

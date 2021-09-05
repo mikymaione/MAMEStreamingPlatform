@@ -32,7 +32,7 @@ Il PSNR è comunemente usato come misura della qualità della compressione e del
 
 
 \subsubsection{Structural Similarity Index Measure}
-SSIM è un metodo per predirre la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori: la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto. L'indice SSIM è un valore decimale compreso tra $0$ e $1$ e si calcola utilizzando l'Eq. \ref{eq:SSIM} con \parencite{relationship_PSNR_and_SSI}:
+SSIM è un metodo per predire la qualità percepità nelle immagini digitali. Invece di utilizzare i tradizionali metodi di somma degli errori, SSIM è progettato modellando qualsiasi distorsione dell'immagine come una combinazione di tre fattori: la perdita di correlazione, la distorsione della luminanza e la distorsione del contrasto. L'indice SSIM è un valore decimale compreso tra $0$ e $1$ e si calcola utilizzando l'Eq. \ref{eq:SSIM} con \parencite{relationship_PSNR_and_SSI}:
 
 \begin{itemize}
 	\item $k_1 = 0,01$ e $k_2 = 0,03$ costanti;
@@ -75,7 +75,7 @@ SSIM = skimage.metrics.structural_similarity(imgRGB, imgMPEG1,
 
 
 \subsection{La qualità uditiva}
-Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza ma per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile qui: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
+Gli algoritmi sviluppati per misurare oggettivamente la qualità audio percepita simulano le proprietà percettive dell'orecchio umano ed applicano modelli informatici per stimare le similarità tra due segnali audio. Tra questi algoritmi abbiamo \textit{Perceptual Evaluation of Audio Quality} (PEAQ), \textit{Perceptual Objective Listening Quality Assessment} (POLQA) ed \textit{Evaluation of Audio Quality} (EAQUAL). Questi algoritmi sono brevettati e protetti da licenza ma per PEAQ è disponibile un'implementazione per uso accademico a cura di Giuseppe Gottardi\footnote{Il repository del progetto è disponibile al seguente indirizzo: sourceforge.net/projects/peaqb.} \parencite{PoctaPeter2015SaOA}.
 
 
 
@@ -245,7 +245,7 @@ Sono stati effettuati dei test per la stima del tempo di \textit{round-trip}\foo
 
 
 \section{Bit-rate richiesto}
-È necessario stimare il bit-rate richiesto per offrire un'esperienza di gioco all'utente priva di ritardi e con la miglior qualità audiovisiva. Il bit-rate richiesto è l'unico parametro che è influenzato dalla compressione video, e differisce tra i vari giochi. Calcolando i differenti bit-rate massimi per le differenti qualità audiovisive si può scegliere il miglior bilanciamento tra qualità offerta e bit-rate richiesto all'utente \parencite{ChenKuanTa2014OtQo}.
+È necessario stimare il bit-rate richiesto per offrire all'utente un'esperienza di gioco priva di ritardi e con la miglior qualità audiovisiva. Il bit-rate richiesto è l'unico parametro che è influenzato dalla compressione video, e differisce tra i vari giochi. Calcolando i differenti bit-rate massimi per le differenti qualità audiovisive si può scegliere il miglior bilanciamento tra qualità offerta e bit-rate richiesto all'utente \parencite{ChenKuanTa2014OtQo}.
 
 \subsubsection{Risultati ottenuti}
 Il MAME CGP può essere avviato specificando la risoluzione video da utilizzare e come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} è stata usata una risoluzione di 480p, che con la compressione \textit{MPEG-1 Video} ed \textit{MPEG-1 Audio Layer II}, necessitano di un bit-rate medio di 1 Mbps (con picchi in alcuni casi fino a 3.5 Mbps). Utilizzando lo script in Lis. \ref{lst:PyBitRate} sono stati estrapolati i dati mostrati in Tab. \ref{table:bandwidth_e_medie} e Fig. \ref{fig:bandwidth}.
@@ -310,4 +310,4 @@ print("Varianza:", statistics.variance(bandwidth))
 \section{Miglioramenti dell'esperienza di gioco} \label{sec:cap4_ProgressiTech}
 Le attuali tecnologie informatiche hanno reso possibile il cloud gaming e in seguito le nuove tecnologie andranno a migliorare l'esperienza di gioco. I nuovi formati per la compressione digitale aumenteranno la qualità audiovisiva e ridurranno il bit-rate richiesto. Alcuni esempi sono \textit{H.266} del \textit{Moving Picture Experts Group}, \textit{AV1} del \textit{Alliance for Open Media}, \textit{Opus} e \textit{Theora} del \textit{Xiph.Org Foundation}. Per ridurre la latenza di rete nel paradigma del cloud computing si ricorre all'utilizzo di sistemi distribuiti sul territorio, bilanciando il carico dei sistemi e istradando il traffico di rete dell'utente per vicinanza geografica \parencite{sun_2019}.
 
-Nella progettazione del \textit{MAME CGP} si è tenuto conto di queste problematiche lasciando aperte strade per futuri sviluppi. Come detto nel paragrafo \ref{sec:cap3_Codifica}, la classe che si occupa della codifica utilizza \textit{FFmpeg} ed è quindi possibile sia selezionare un altro formato di compressione (a patto che sia supportato dal browser) sia cambiare durante l'esecuzione il livello di compressione per diminuire la latenza. Altre idee per futuri sviluppi verranno trattati nel capitolo seguente.
+Nella progettazione del MAME CGP si è tenuto conto di queste problematiche lasciando aperte strade per futuri sviluppi. Come detto nel paragrafo \ref{sec:cap3_Codifica}, la classe che si occupa della codifica utilizza \textit{FFmpeg} ed è quindi possibile sia selezionare un altro formato di compressione (a patto che sia supportato dal browser) sia cambiare durante l'esecuzione il livello di compressione per diminuire la latenza. Altre idee per futuri sviluppi verranno trattati nel capitolo seguente.

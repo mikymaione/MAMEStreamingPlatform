@@ -20,7 +20,7 @@ In questo capitolo verranno descritte le cinque fasi aggiuntive del cloud gaming
 
 
 \section{Cattura audio-video}
-Nel paradigma del cloud gaming, per cattura si intende la fase in cui l'output audiovisivo del videogioco non viene visualizzato (l'immagine) ed emesso (il suono) ma viene inviato ad un codificatore. Bisogna distinguere tra due casi differenti, effettuare la cattura audio-video su giochi o emulatori già compilati oppure da compilare. Nei prossimi due paragrafi vedremo i metodi di cattura per la parte video e per quella audio.
+Nel paradigma del cloud gaming, per cattura si intende la fase in cui l'output audiovisivo del videogioco non viene visualizzato (l'immagine) ed emesso (il suono) ma viene inviato ad un codificatore. Bisogna distinguere tra due casi differenti: effettuare la cattura audio-video su giochi o emulatori già compilati oppure da compilare. Nei prossimi due paragrafi vedremo i metodi di cattura per la parte video e per quella audio.
 
 
 
@@ -48,12 +48,12 @@ Le schede video con codifica incorporata non hanno una fase di cattura poiché i
 Nel caso di giochi o emulatori da compilare si interviene direttamente nel codice sulla parte relativa alla chiamata della routine di rendering, come è stato fatto in questo progetto in cui ho scelto di intervenire sui sorgenti del MAME. Come mostrato in Fig. \ref{fig:class_renderingSDLFull_Streaming}, sono state aggiunte alla classe \verb|renderer_sdl2| le due funzioni (\verb|init_streaming_render| e \verb|free_streaming_render|) per allocare e deallocare le strutture dati per la cattura. Come mostrato nel Lis. \ref{lst:init_streaming_render_init} le funzioni della libreria SDL che sono state aggiunte al codice sono:
 
 \begin{itemize}
-	\item CreateRGBSurfaceWithFormat: crea una superficie RGB specificando il formato pixel da utilizzare;	
-	\item CreateSoftwareRenderer: crea un contesto di rendering 2D per una superficie;
-	\item RWFromMem: prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati RWops (read-write opaque pointer structure).	
+	\item \verb|CreateRGBSurfaceWithFormat|: crea una superficie RGB specificando il formato pixel da utilizzare;	
+	\item \verb|CreateSoftwareRenderer|: crea un contesto di rendering 2D per una superficie;
+	\item \verb|RWFromMem|: prepara un buffer di memoria di lettura-scrittura da utilizzare con la struttura dati \verb|RWops| (read-write opaque pointer structure).	
 \end{itemize}
 
-\begin{lstlisting}[caption=Codice aggiunto per la cattura video: inizializzazione. File: \detokenize{osd/modules/render/draw13.cpp}, label={lst:init_streaming_render_init}]
+\begin{lstlisting}[caption=Codice aggiunto per la cattura video: inizializzazione. File: draw13.cpp, label={lst:init_streaming_render_init}]
 buffer_bytes_length = w * h * 4; // 4 canali (RGBA)
 buffer_bytes = new char[buffer_bytes_length];
 
@@ -66,7 +66,7 @@ buffer = SDL_RWFromMem(buffer_bytes, buffer_bytes_length);
 
 Nel Lis. \ref{lst:init_streaming_render_draw} è mostrato il codice che è stato inserito per inviare alla classe statica che gestisce lo streaming (\verb|streaming_server|) il frame da inviare al giocatore (che verrà codificato prima dell'invio). Poiché l'attuale contesto di rendering (\verb|renderer|) è creato su una superfice RGB (\verb|surface|) quando il contesto di rendering viene aggiornato con il framebuffer corrente (tramite \verb|SDL_RenderPresent|) è la superfice a ricevere il frame attuale.
 
-\begin{lstlisting}[caption=Codice aggiunto per la cattura video: disegno. File: \detokenize{osd/modules/render/draw13.cpp}, label={lst:init_streaming_render_draw}]
+\begin{lstlisting}[caption=Codice aggiunto per la cattura video: disegno. File: draw13.cpp, label={lst:init_streaming_render_draw}]
 SDL_RenderPresent(renderer);
 
 streaming_server::instance()
@@ -81,7 +81,7 @@ SDL_RWseek(buffer, 0, RW_SEEK_SET); // posizione inizio buffer
 	\label{fig:class_renderingSDLFull_Streaming}
 \end{figure}
 
-Dei quattro metodi appena visti, l'hook di funzione e la modifica dei sorgenti sono equipollenti poiché vanno ambedue a sostituire il comportamento software nella fase di rendering. Il framebuffer virtuale è implementato in maniera differente sui vari sistemi operativi e, su alcune piattaforme, il sistema operativo visualizza comunque il rendering nella finestra, rendendolo in alcuni casi equipollente o inferiore a l'hook di funzione e alla modifica dei sorgenti. La codifica incorporata è il metodo migliore perché, come vederemo nel paragrafo \ref{sec:cap3_Codifica}, dopo aver eseguito il rendering, converte il frame nel formato colore adatto e lo codifica.
+Dei quattro metodi appena visti, l'hook di funzione e la modifica dei sorgenti sono equipollenti poiché vanno ambedue a sostituire il comportamento software nella fase di rendering. Il framebuffer virtuale è implementato in maniera differente sui vari sistemi operativi e, su alcune piattaforme, il sistema operativo visualizza comunque il rendering nella finestra, rendendolo in alcuni casi equipollente o inferiore a l'hook di funzione e alla modifica dei sorgenti. La codifica incorporata è il metodo migliore perché, come vedremo nel paragrafo \ref{sec:cap3_Codifica}, dopo aver eseguito il rendering, converte il frame nel formato colore adatto e lo codifica.
 
 
 
@@ -90,7 +90,7 @@ Come per la cattura video si può ricorrere all'hook di funzioni della libreria 
 
 Come nel caso della cattura video ho scelto di modificare il sorgente del programma. Come mostrato in Fig. \ref{fig:class_mixingSDL_streaming} la classe \verb|sound_sdl| implementa la funzione di callback necessaria per utilizzare il missaggio audio di SDL, di cui abbiamo parlato nel paragrafo \ref{subsec:cap2_MissaggioAudio}. All'interno di questa funzione, tramite la funzione \verb|send_audio_interval|, è stato inviato alla classe che si occupa di gestire il server di streaming (\verb|streaming_server|) il buffer sonoro (\verb|stream|) e la sua dimensione (\verb|len|). La modifica apportata è mostrata nel Lis. \ref{lst:sdl_sound_callback}.
 
-\begin{lstlisting}[caption=Codice aggiunto per la cattura audio. File: \detokenize{osd/modules/sound/sdl_sound.cpp}, label={lst:sdl_sound_callback}]
+\begin{lstlisting}[caption=Codice aggiunto per la cattura audio. File: sdl\_sound.cpp, label={lst:sdl_sound_callback}]
 // 512 campioni audio (per canale)
 streaming_server::instance()
 	.send_audio_interval(stream, len, 512);
@@ -105,7 +105,7 @@ memset(stream, 0, len); // svuota buffer sonoro
 	\label{fig:class_mixingSDL_streaming}
 \end{figure}
 
-Nel caso della cattura audio i tre metodi risultano equipollenti.
+Nel caso della cattura audio i due metodi risultano equipollenti.
 
 
 
@@ -147,7 +147,7 @@ Come mostrato in Fig. \ref{fig:RGB_YCbCr_matrix}, nel modello RGB i dati per un 
 	\label{fig:RGB_YCbCr_matrix}
 \end{figure}
 
-Come detto precedentemente la codifica può essere sia software che hardware, per quanto riguarda la codifica software nel paragrafo \ref{subsec:cap3_FFmpeg} parleremo della libreria FFmpeg che supporta la codifica e decodifica di tutti i codec presenti in Tab. \ref{table:CodecsVideo} e Tab. \ref{table:CodecsAudio}, invece per la codifica hardware è importante sottolineare quali soluzioni hardware hanno utilizzato le varie piattaforme di cloud gaming.
+Come detto precedentemente la codifica può essere sia software che hardware, per quanto riguarda la codifica software nel paragrafo \ref{subsec:cap3_FFmpeg} parleremo della libreria FFmpeg che supporta la codifica e decodifica di tutti i codec presenti in Tab. \ref{table:CodecsVideo} e Tab. \ref{table:CodecsAudio}, invece per la codifica hardware è importante sottolineare quali soluzioni hanno utilizzato le varie piattaforme di cloud gaming.
 
 La prima società che modificò una scheda video adattandola per il cloud gaming fu Sony che incluse un chip di codifica sulle GPU Nvidia ed AMD (rispettivamente per il rendering PS3 e PS4) \parencite{PlayStation_Now_Chip}. Altre piattaforme di cloud gaming che usano schede video con funzionalità di encoding incluse sono "Nvidia GeForce Now" su schede Nvidia \parencite{GeForce_Now}, "Microsoft XBox Cloud Gaming" su schede AMD \parencite{xCloudBlade}, "Google Stadia" su AMD \parencite{Google_Stadia_Server} e "Amazon Luna" su Nvidia \parencite{Amazon_Luna_GPU}. La lista delle aziende che creano schede video con questa funzionalità è riportata in Tab. \ref{table:VideoCardEncodingFeature} \parencite{GCNArchitecture} \parencite{IntelQuickSyncVideo} \parencite{NVIDIAVideoCodecSDK} \parencite{Hexagon_DSP_SDK}.
 
@@ -266,7 +266,7 @@ Il progetto FFmpeg è un insieme di librerie (per il linguaggio C) e programmi o
 	\item \verb|Post Proc| è una libreria contenente le vecchie routine di post-elaborazione video basate su h263.
 \end{itemize}
 
-La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata programmata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrao \ref{sec:cap3_MPEG}).
+La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata progettata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrafo \ref{sec:cap3_MPEG}).
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{immagini/class_server_and_encoding}
@@ -301,7 +301,7 @@ Al termine di ogni fase di incapsulamento la libreria \verb|AV Format| invia all
 \subsubsection{Codifica video con FFmpeg}
 Con riferimento al List. \ref{lst:videoCodecFFmpeg}, la codifica video inizia trasformando il frame video da SDL (\verb|uint8_t[] pixels|) al frame video FFmpeg (\verb|AVFrame|) tramite la funzione \verb|avpicture_fill|. Come detto precedentemente i codificatori video utilizzano il modello di colore YCbCr, la conversione da RGB avviene tramite la funzione \verb|sws_scale|; al termine di questa operazione \verb|yuv_frame| conterrà il frame convertito in YCbCr. Tramite le funzioni \verb|avcodec_send_frame| e \verb|avcodec_receive_packet| si comunica alla libreria FFmpeg di voler codificare il frame YCbCr. Tramite la funzione \verb|av_interleaved_write_frame| avviene la multiplazione del pacchetto video nel formato contenitore.
 
-\begin{lstlisting}[caption=Codice per la codifica video. File: \detokenize{lib/util/encoding/encode_to_movie.hpp}, label={lst:videoCodecFFmpeg}]
+\begin{lstlisting}[caption=Codice per la codifica video. File: encode\_to\_movie.hpp, label={lst:videoCodecFFmpeg}]
 void add_frame(uint8_t[] pixels)
 {
 	// Riempimento AVPicture con frame generato da SDL
@@ -345,7 +345,7 @@ Con riferimento al List. \ref{lst:audioCodecFFmpeg}, la codifica audio inizia tr
 
 Tramite la funzione \verb|avformat_write_header|, che scrive l'intestazione per il flusso e alloca i dati del contesto, ha inizio la multiplazione del pacchetto audiovisivo. Questa termina chiamando la funzione \verb|av_write_trailer| che scrive il trailer per il flusso, genera il pacchetto e libera i dati del contesto; questa funzione chiama internamente la callback \verb|write_packet| di cui abbiamo parlato precedentemente, che andrà a scrivere sulla nostra \verb|socket| il pacchetto.
 
-\begin{lstlisting}[caption=Codice per la codifica audio. File: \detokenize{lib/util/encoding/encode_to_movie.hpp}, label={lst:audioCodecFFmpeg}]
+\begin{lstlisting}[caption=Codice per la codifica audio. File: encode\_to\_movie.hpp, label={lst:audioCodecFFmpeg}]
 void add_instant(uint8_t[] stream, int stream_size,	int num_samples)
 {
 	wav_frame->nb_samples = num_samples;
@@ -392,7 +392,7 @@ void add_instant(uint8_t[] stream, int stream_size,	int num_samples)
 La trasmissione è la fase del cloud gaming che influisce maggiormente sulla latenza e l'unica ad avere un tempo d'esecuzione condizionato dalla qualità della connessione dell'utente. Nel paragrafo \ref{subsec:cap1_StoriaDelCloudGaming} abbiamo parlato delle piattaforme che hanno fatto parte del panorama del cloud gaming, come mostrato in Tab. \ref{table:PiattaformeDiCloudGaming} i protocolli di trasmissione più usati sono stati UDP e RTP. Come detto nel paragrafo \ref{sec:cap2_SistemaProposto} in questo progetto si è scelto di utilizzare come protocollo di comunicazione WebSocket.
 
 \subsection{WebSocket}
-WebSocket è un insieme di standard formato dalle API WebSocket implementate dai browser web ed dal protocollo di comunicazione WebSocket. Il protocollo di comunicazione fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web.
+WebSocket è un insieme di standard formato dalle API WebSocket implementate dai browser web e dal protocollo di comunicazione WebSocket. Il protocollo di comunicazione fornisce canali di comunicazione full-duplex su una singola connessione TCP. È supportato nativamente da tutti i browser e il suo utilizzo è simile alle normali socket. Per questi motivi è il protocollo di comunicazione generico più utilizzato sul web.
 
 \subsubsection{WebSocket: le API}
 Come mostrato nel Lis. \ref{lst:WebSocketAPI} tratto da \parencite{High_Performance_Browser_Networking} le API WebSocket fornite dal browser sono relativamente semplici. La connessione viene creata istanziando la classe \verb|WebSocket|, al costruttore oltre al URL di una risorsa WebSocket è possibile passare un vettore di stringhe che specificano dei sotto-protocolli definiti dall'utente. La classe \verb|WebSocket| espone 4 callback: errore, chiusura, apertura e ricezione messaggio. Tramite la proprietà \verb|binaryType| si può controllare il tipo di dati binari utilizzati per la ricezione (di tipo \verb|Blob| o \verb|ArrayBuffer|). La classe \verb|WebSocket| espone solo due metodi: \verb|close| per chiudere la connessione e il metodo asincrono \verb|send| per inviare dati (di tipo \verb|String|, \verb|Blob|, \verb|ArrayBuffer| o \verb|ArrayBufferView|) \parencite{WebSocket_Web_APIs}.
@@ -425,7 +425,7 @@ ws.onmessage = function(msg) {
 \subsubsection{WebSocket: il protocollo}
 Il protocollo WebSocket è composto da due componenti: l'handshake utilizzato per negoziare i parametri della connessione, ed un meccanismo di framing dei messaggi binari per consentire un basso sovraccarico \parencite{High_Performance_Browser_Networking}.
 
-Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server riponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake} relativo alla classe \verb|SocketServerBase|.
+Per stabilire la connessione il client invia una richiesta di handshake prestabilita (come mostrato in Lis. \ref{lst:Handshake_CLI}) a cui il server risponde (come mostrato in Lis. \ref{lst:Handshake_SRV}). All'interno della richiesta vengono specificati opportuni campi. Il client invia un guid casuale codificato in base64 nel campo \verb|Sec-WebSocket-Key| a cui il server risponde restituendo lo stesso guid con l'aggiunta di una costante\footnote{La stringa magica utilizzata è definita in RFC 6455.} codificando il tutto con SHA-1 prima e base64 poi. Al termine di questa procedura la comunicazione full-duplex può iniziare \parencite{Writing_WebSocket_servers}. L'implementazione server all'interno del progetto è mostrata nel Lis. \ref{lst:Handshake} relativo alla classe \verb|SocketServerBase|.
 
 \begin{lstlisting}[language=HTML, caption=Richiesta handshake da parte del client, label={lst:Handshake_CLI}]
 GET /mamecgp HTTP/1.1
@@ -446,7 +446,7 @@ Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
 Sec-WebSocket-Protocol: cloudgaming
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Codice per handshake implementato in SocketServerBase. File: \detokenize{lib/util/server_ws_impl.hpp}, label={lst:Handshake}]
+\begin{lstlisting}[caption=Handshake implementato in SocketServerBase. File: server\_ws\_impl.hpp, label={lst:Handshake}]
 bool generate_handshake(Connection &c, ostream &handshake)
 {
 	auto ws_magic_string =
@@ -498,7 +498,7 @@ La classe \verb|ws_server| implementa la classe generica \verb|SocketServer|, ti
 
 \verb|SocketServer|, che eredita da \verb|SocketServerBase|, implementa solo il metodo \verb|accept| che serve per accettare una nuova connessione, come mostrato nel Lis. \ref{lst:SocketServer_accept}.
 
-\begin{lstlisting}[caption=Funzione accept della classe SocketServer. File: \detokenize{lib/util/server_ws_impl.hpp}, label={lst:SocketServer_accept}]
+\begin{lstlisting}[caption=Funzione accept della classe SocketServer. File: server\_ws\_impl.hpp, label={lst:SocketServer_accept}]
 void accept() override
 {
 	auto connection = new Connection(new SocketType(io_context));
@@ -518,7 +518,7 @@ La classe \verb|SocketServerBase| espone gli stessi quattro eventi delle API Web
 	\item \textit{message}: alla ricezione di un messaggio viene gestito tramite la funzione \verb|process_key| l'input utente oppure il meccanismo di pausa dell'emulazione in caso di bit-rate insufficiente (è meglio mettere in pausa che far perdere il giocatore).
 \end{itemize}
 
-\begin{lstlisting}[caption=Codice relativo alle callback WebSocket. File: \detokenize{lib/util/streaming_server.hpp}, label={lst:SocketServer_AllCallbacks}]
+\begin{lstlisting}[caption=Codice relativo alle callback WebSocket. File: streaming\_server.hpp, label={lst:SocketServer_AllCallbacks}]
 endpoint.on_open = [this](auto connection)
 {
 	game_thread = new thread(on_accept, connection->parameters);
@@ -552,7 +552,7 @@ endpoint.on_message = [this](auto connection, auto message)
 
 Nel \verb|main| del programma è implementata la funzione \verb|on_accept| che avvia l'emulazione della macchina arcade selezionata, come mostrato in Lis. \ref{lst:sdlmain_callback}.
 
-\begin{lstlisting}[caption=Codice relativo alla callback di avvenuta connessione. File: osd/sdl/sdlmain.cpp, label={lst:sdlmain_callback}]
+\begin{lstlisting}[caption=Codice relativo alla callback di avvenuta connessione. File: sdlmain.cpp, label={lst:sdlmain_callback}]
 streaming_server::instance().on_accept = [&](auto parameters)
 {
 	main_sdl(argc, argv, parameters["game"]);
@@ -664,7 +664,7 @@ L'ultima fase del cloud gaming è la cattura dell'input utente da inviare al ser
 
 Come mostrato nel Lis. \ref{lst:InitInput}, tratto dal file \verb|MAME.js|, la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria Keypress e la funzione \verb|InitGamepad| la libreria GameController. I tasti mappati sono: le quattro direzioni, gli otto tasti azione e i tasti funzione start, gettone e pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In ambedue i casi deve essere gestita la pressione e il rilascio.
 
-\begin{lstlisting}[language=JavaScript, caption=Codice relativo alla gestione input lato client. File: \detokenize{Streaming/HTML/MAME.js}, label={lst:InitInput}]
+\begin{lstlisting}[language=JavaScript, caption=Gestione input lato client. File: MAME.js, label={lst:InitInput}]
 function InitKeyboard()
 {
 	keypress_Listener = new window.keypress.Listener();
@@ -697,7 +697,7 @@ function InitGamepad()
 \subsection{Invio dell'input alla libreria SDL}
 Come detto nel paragrafo \ref{subsec:cap2_GestioneInput} l'input è gestito tramite la libreria SDL. Come mostrato nel Lis. \ref{lst:SocketServer_AllCallbacks} alla ricezione di un messaggio di tipo "key" il server chiama la funzione \verb|process_key| che si occupa di analizzare i dati contenuti nel messaggio e chiamare la funzione \verb|generate_key_event|, mostrata nel Lis. \ref{lst:generate_key_event}, che invia alla classe device l'input ricevuto tramite WebSocket. Nel Lis. \ref{lst:sdl_keyboard_device} è mostrata l'unica modifica apportata alla classe \verb|sdl_keyboard_device| che serve a passare per riferimento il device SDL alla classe \verb|streaming_server|.
 
-\begin{lstlisting}[caption=Codice relativo alla gestione input lato server: modulo server. File: \detokenize{lib/util/streaming_server.hpp}, label={lst:generate_key_event}]
+\begin{lstlisting}[caption=Gestione input lato server: modulo server. File: streaming\_server.hpp, label={lst:generate_key_event}]
 void generate_key_event(char[] key, bool down)
 {
 	SDL_Event e;
@@ -709,7 +709,7 @@ void generate_key_event(char[] key, bool down)
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Codice relativo alla gestione input lato server: modulo SDL. File: \detokenize{osd/modules/input/input_sdl.cpp}, label={lst:sdl_keyboard_device}]
+\begin{lstlisting}[caption=Gestione input lato server: modulo SDL. File: input\_sdl.cpp, label={lst:sdl_keyboard_device}]
 // costruttore
 sdl_keyboard_device(running_machine &r, char[] n, char[] id,
 	input_module &m): sdl_device(r, n, id, DEVICE_CLASS_KEYBOARD, m)
