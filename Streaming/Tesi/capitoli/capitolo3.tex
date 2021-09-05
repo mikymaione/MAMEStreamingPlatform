@@ -649,7 +649,7 @@ let player = new JSMpeg.Player(URL, {
 });
 \end{lstlisting}
 
-La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG-1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. Consente lo streaming a bassa latenza ($\sim$50 ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
+La scelta finale è ricaduta su \textit{JSMpeg} sia perché offre le funzionalità per gestire i buffer sia perché supporta il protocollo WebSocket. \textit{JSMpeg} è una libreria composta da un demuxer MPEG-TS, un decoder video MPEG-1 e audio MP2, con un sistema di rendering basato sia su WebGL che su Canvas2D, ed un sistema di output audio basato su Web Audio. La libreria consente lo streaming a bassa latenza ($\sim$50 ms) tramite WebSocket, ed è rilasciata con licenza MIT \parencite{JSMpeg}. MPEG verrà descritto nel paragrafo \ref{sec:cap3_MPEG}.
 
 
 
@@ -662,7 +662,7 @@ L'ultima fase del cloud gaming è la cattura dell'input utente da inviare al ser
 	\item GameController.js è una libreria che estende le Web API per il gamepad, rilasciata con licenza MIT \parencite{gameController_js}.
 \end{itemize}
 
-Come mostrato nel Lis. \ref{lst:InitInput}, tratto dal file \verb|MAME.js|, la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria Keypress e la funzione \verb|InitGamepad| la libreria GameController. I tasti mappati sono: le quattro direzioni, gli otto tasti azione e i tasti funzione start, gettone e pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In ambedue i casi deve essere gestita la pressione e il rilascio.
+Come mostrato nel Lis. \ref{lst:InitInput}, tratto dal file \verb|MAME.js|, la funzione \verb|InitKeyboard| si occupa di inizializzare la libreria \textit{Keypress} mentre la funzione \verb|InitGamepad| la libreria GameController. I tasti mappati sono: le quattro direzioni, gli otto tasti azione e i tasti funzione start, gettone e pausa. Nel listato è mostrata la mappatura del tasto pausa per la tastiera e del tasto R2 per il joystick. In entrambi i casi viene gestita la pressione e il rilascio.
 
 \begin{lstlisting}[language=JavaScript, caption=Gestione input lato client. File: MAME.js, label={lst:InitInput}]
 function InitKeyboard()
@@ -799,12 +799,12 @@ I frame possono contenere differenti tipi di macroblocchi:
 	\item \textit{B-frame} può contenere tutti i tipi di macroblocchi (\textit{I}, \textit{P} o \textit{B}).
 \end{itemize}
 
-Per ogni \textit{I-frame} i macroblocchi vengono ri-calcolati. Per i \textit{P-frame} e \textit{B-frame} i macroblocchi possono essere: ri-calcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
+Per ogni \textit{I-frame} i macroblocchi vengono ricalcolati. Per i \textit{P-frame} e \textit{B-frame} i macroblocchi possono essere: ricalcolati, copiati, spostati o modificati \parencite{MPEG_1_Video}.
 
 
 
 \subsubsection{Dal dominio spaziale a quello delle frequenze: la DCT}
-La trasformata discreta del coseno (DCT)\footnote{La forma più comune è la DCT-II che è quella utilizzata in questo contesto.} divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
+La trasformata discreta del coseno (DCT)\footnote{La forma più comune è la DCT-II che è quella utilizzata in questo contesto.} divide la forma d'onda nelle sue componenti frequenziali, di per se non effettua nessuna compressione ma trasforma i pixel in una forma nella quale è possibile identificare la ridondanza, poiché i coefficienti della DCT sono correlati alle frequenze spaziali dell'immagine. Inoltre non tutte le frequenze spaziali sono presenti e per questo si avranno, come risultato, molti coefficienti prossimi allo zero.
 
 I blocchi degli \textit{I-frame} sono trasformati dal dominio spaziale a quello delle frequenze utilizzando la DCT, definita in Eq. \ref{eq:DCT}, che viene eseguita sui blocchi da $8 \times 8$ px della luminanza e della crominanza. Questo processo divide l'immagine in parti (in sottobande spettrali) di diversa importanza \parencite{HyesookLim2000Asaf}.
 
