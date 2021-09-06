@@ -263,7 +263,7 @@ Il progetto FFmpeg è un insieme di librerie (per il linguaggio C) e programmi o
 	\item \verb|AV Format| contiene demuxer e muxer per formati di contenitori audio e video;
 	\item \verb|AV Util| è una libreria di supporto contenente routine comuni a diverse parti di FFmpeg, come funzioni hash, cifratura, decompressore LZO e codificatore/decodificatore Base64;
 	\item \verb|AV Filter| permette di modificare o esaminare il video/audio tra il decoder e l'encoder;
-	\item \verb|Post Proc| è una libreria contenente le vecchie routine di post-elaborazione video basate su h263.
+	\item \verb|Post Proc| è una libreria contenente le vecchie routine di post-elaborazione video basate su H.263.
 \end{itemize}
 
 La classe che si occupa della codifica è \verb|encode_to_movie| che utilizza le seguenti librerie FFmpeg: \verb|SW Scale| per la conversione dal modello RGB a YCbCr, \verb|SW Resample| per il ricampionamento audio, \verb|AV Codec| per la codifica audio e video e \verb|AV Format| per l'incapsulamento nel contenitore. \verb|encode_to_movie| è stata progettata per codificare in vari formati, come mostrato in Tab. \ref{table:PossibiliCodifiche}, anche se per motivi di decodifica si è scelto MPEG-TS (di cui parleremo nel paragrafo \ref{sec:cap3_MPEG}).
