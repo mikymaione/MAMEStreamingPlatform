@@ -1,0 +1,21 @@
+PAG 1
+logo
+
+PAG 2, 3
+rapida introduzione per consentire a chi non è del settore di seguire
+
+PAG 4
+obiettivo del lavoro e l'idea che lo rende interessante, il valore aggiunto, il contributo originale
+
+PAG 5
+descrizione stato dell'arte con citazione bibliografica, e in cosa consiste il mio contributo e perché è importante
+
+PAG X
+concluioni, metto in evidenze se e come i risultati della tesi siano davvero coerenti con gli obbiettivi dichiarati all'inizio e quali gli sviluppi futuri
+
+
+tips
+sostieni i risultati con i grafici (no tabelle con numeri)
+ok figure, schemi, grafici
+demo programma
+presenta solo cose più importanti
