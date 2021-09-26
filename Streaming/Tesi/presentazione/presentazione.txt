@@ -11,7 +11,7 @@ PAG 5
 descrizione stato dell'arte con citazione bibliografica, e in cosa consiste il mio contributo e perché è importante
 
 PAG X
-concluioni, metto in evidenze se e come i risultati della tesi siano davvero coerenti con gli obbiettivi dichiarati all'inizio e quali gli sviluppi futuri
+concluioni, metto in evidenze se e come i risultati della tesi siano davvero coerenti con gli obiettivi dichiarati all'inizio e quali gli sviluppi futuri
 
 
 tips
