@@ -1,0 +1,73 @@
+%license:BSD-3-Clause
+%copyright-holders:Michele Maione
+%============================================================
+%
+%	Piattaforma di cloud gaming per giochi arcade
+%
+%============================================================
+\documentclass{article} %pdf
+
+\usepackage[T1]{fontenc}
+\usepackage[a4paper]{geometry}
+\usepackage[main=italian, english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[autostyle,italian=guillemets]{csquotes}
+\usepackage[a-1b]{pdfx}
+\usepackage{float}
+\usepackage{emptypage}
+\usepackage{tablefootnote}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{mathtools}
+\usepackage{algorithm,algpseudocode} 
+\usepackage{verbatim}
+\usepackage{commath}
+\usepackage{caption}
+\usepackage{url}
+\usepackage{siunitx}
+\usepackage[style=ext-authoryear,sorting=nty,maxbibnames=15]{biblatex}
+
+\DeclareOuterCiteDelims{parencite}{\bibopenbracket}{\bibclosebracket}
+
+\definecolor{grigiochiaro}{RGB}{245,245,245}
+\definecolor{grigio_commento}{RGB}{120,120,120}
+\definecolor{grigio}{RGB}{100,100,100}
+
+\captionsetup[figure]{font={footnotesize, color=grigio}}
+\captionsetup[lstlisting]{font={footnotesize, color=grigio}}
+\captionsetup[table]{font={footnotesize, color=grigio}}
+
+\hypersetup{hidelinks}
+
+\addbibresource{Bibliografia.bib}
+
+\title{Piattaforma di cloud gaming per giochi arcade}
+\author{Michele Maione - 931468}
+\date{Milano, ottobre 2021}
+
+\begin{document}
+\maketitle
+\addcontentsline{toc}{chapter}{Piattaforma di cloud gaming per giochi arcade}
+
+Negli ultimi anni sono apparse molte piattaforme che sfruttano il paradigma del cloud computing per offrire servizi accessibili su richiesta e da remoto per archiviare file, utilizzare le suite per l'ufficio, vedere film e serie TV, ascoltare musica e a partire dal 2011 anche giocare.
+
+Il cloud gaming è un servizio che unisce il cloud computing e il live streaming per rendere possibile giocare in remoto senza scaricare o installare il gioco sul device dell'utente, in pratica consente di archiviare ed eseguire i videogiochi su un server remoto e trasmettere l'output audio-video all'utente sul proprio dispositivo.
+
+Lo scopo di questa tesi è creare una piattaforma di cloud gaming per far conoscere alle nuove generazioni i videogiochi che hanno fatto la storia e dare la possibilità di poter giocare ancora a macchine che ormai hanno cessato di funzionare per motivi di obsolescenza. Per far ciò verrà ampliato il software MAME (rilasciato sotto licenza GNU-GPL) che è in grado di emulare oltre $7.000$ giochi arcade, in modo che possa fungere da server di cloud gaming e comunicare con un front-end HTML, rimanendo sempre indipendente dal sistema operativo, rendendo più agevole l'installazione di uno stand per il retrogaming. 
+
+Per la realizzazione del progetto sono state prese in considerazione le analisi fatte sulle piattaforme delle multinazionali come GeForce Now, Stadia e PlayStation Now in \parencite{A_Network_Analysis_on_Cloud_Gaming_Stadia_GeForce_Now_and_PSNow} e \parencite{Network_Analysis_of_the_Sony_Remote_Play_System}, come Amazon Luna in \parencite{Amazon_Luna_WebRTC}, ma anche progetti open source come "Games on Demand" di \parencite{ARealTimeStreamingGamesonDemandSystem} che propone una piattaforma basata sul hooking di funzioni DirectX, codifica in MPEG-2 e trasmissione tramite UDP; "GamingAnywhere" di \parencite{GamingAnywhere} che è un progetto multipiattaforma che trasmette tramite protocollo RTP ed esegue la cattura audio-video utilizzando la libreria SDL tramite polling.
+
+Il sistema proposto è stato progettato con un'ottica incentrata sull'utilizzo in LAN con l'utenza connessa tramite WiFi, ad esempio in stand di retrogaming ad eventi di informatica e videogiochi, in aziende come servizio di svago per i clienti in sala d'attesa e per i dipendenti durante la pausa, ecc\dots, è importante ricordare che i videogiochi, nonostante siano stati pensati come fonte d'intrattenimento, migliorano diversi tipi di abilità chiave: abilità sociali e intellettuali, riflessi e concentrazione \parencite{Use_of_Cloud_Gaming_in_Education}; per questo motivo la piattaforma può essere installata anche nelle scuole.
+
+Per ampliare il progetto MAME, lato server ho modificato le funzionalità di rendering video e missaggio audio per convogliare il loro output, che viene codificato in MPEG-TS, ad un modulo che esegue lo streaming tramite il protocollo WebSocket ad una pagina HTML. Lato client ho creato un modulo JavaScript per gestire l'input utente e decodificare il filmato MPEG-TS. La piattaforma utilizza un bit-rate tra $0,5$ Mbps e $3,5$ Mbps ed offre una risoluzione di 480p; per valutarne la latenza è stata testata su rete locale e su rete internet \parencite{Latency_analysis_for_M2M}; mentre la qualità audio-video è stata classificata tramite "peek signal-to-noise ratio", "structural similarity index method" e "perceptual evaluation of audio quality" \parencite{Cloud_Gaming_Architecture_and_Performance}.
+
+I test preliminari sono stati effettuati con un numero contenuto di utenti dai quali sono stati ricevuti feedback positivi sia riguardo le performance sia riguardo l'interesse che hanno ancora oggi i videogiochi arcade. Una valutazione più completa è rimandata ad un lavoro futuro.
+
+Dai risultati ottenuti si ritiene che gli obiettivi iniziali della tesi siano stati raggiunti e che il progetto è in grado di fungere da piattaforma di cloud gaming. Infine, il fatto che gli sviluppi possibili siano molteplici induce a pensare che il sistema abbia ampi margini evolutivi e che questo lavoro possa stimolare altre persone ad una maggiore innovazione sui sistemi di cloud gaming e sulle tecnologie di streaming in generale.
+
+\nocite{*}
+
+\printbibliography[nottype=misc,title={Bibliografia},heading=bibintoc]
+\printbibliography[type=misc,title={Sitografia},heading=bibintoc]
+
+\end{document}
