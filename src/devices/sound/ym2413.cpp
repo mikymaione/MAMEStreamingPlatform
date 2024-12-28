@@ -1674,14 +1674,11 @@ void ym2413_device::device_reset()
 	noise_rng = 1;    /* noise shift register */
 
 	/* setup instruments table */
-	if (m_inst_table != nullptr)
+	for (int i=0; i<19; i++)
 	{
-		for (int i=0; i<19; i++)
+		for (int c=0; c<8; c++)
 		{
-			for (int c=0; c<8; c++)
-			{
-				inst_tab[i][c] = m_inst_table[i][c];
-			}
+			inst_tab[i][c] = m_inst_table[i][c];
 		}
 	}
 

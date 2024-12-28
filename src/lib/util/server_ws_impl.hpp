@@ -540,7 +540,7 @@ namespace webpp
 					// ["game=outrun", "id=122132143423"]
 					const auto parameters_vector = split(parameters_string, "&");
 
-					for (const auto p : parameters_vector)
+					for (const auto &p : parameters_vector)
 					{
 						const auto duo = split(p, "=");
 						connection->parameters[duo[0]] = duo[1];

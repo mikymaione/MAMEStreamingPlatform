@@ -515,6 +515,9 @@ inline void victory_state::micro_t::count_states(int states)
 {
 	attotime const state_time = MICRO_STATE_CLOCK_PERIOD * states;
 
+	#pragma GCC diagnostic push	
+	#pragma GCC diagnostic ignored "-Wnonnull"
+
 	if (!timer)
 	{
 		// FIXME: how is dereferencing the timer when it's null supposed to be a good idea?

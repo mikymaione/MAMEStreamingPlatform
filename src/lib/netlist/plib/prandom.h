@@ -158,9 +158,14 @@ namespace plib
 	template<typename FT>
 	class normal_distribution_t
 	{
+	private:
+		std::array<FT, 256> m_buf;
+		std::size_t m_p;
+		FT m_stddev;
+
 	public:
 		normal_distribution_t(FT dev)
-		: m_p(m_buf.size()), m_stddev(dev) { }
+		: m_p(256), m_stddev(dev) { }
 
 		// Donald Knuth, Algorithm P (Polar method)
 
@@ -180,7 +185,6 @@ namespace plib
 		}
 
 	private:
-
 		template <typename P>
 		void fill(P &p) noexcept
 		{
@@ -213,10 +217,6 @@ namespace plib
 			}
 			m_p = 0;
 		}
-
-		std::array<FT, 256> m_buf;
-		std::size_t m_p;
-		FT m_stddev;
 	};
 
 	using mt19937_64 = mersenne_twister_t<

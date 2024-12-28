@@ -96,11 +96,10 @@ namespace webpp {
 		class Request : public webpp::Request {
 			friend class ServerBase<socket_type>;
 			friend class Server<socket_type>;
-		public:
-			Content content;
 
-			virtual ~Request() {}
 		private:
+			asio::streambuf streambuf;
+
 			Request(const socket_type &socket): content(streambuf) {
 				try {
 					remote_endpoint_address=socket.lowest_layer().remote_endpoint().address().to_string();
@@ -108,7 +107,11 @@ namespace webpp {
 				}
 				catch(...) {}
 			}
-			asio::streambuf streambuf;
+
+		public:
+			Content content;
+
+			virtual ~Request() {}
 		};
 
 		class Config {

@@ -19,6 +19,7 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <type_traits>
 #include <vector>
@@ -57,31 +58,44 @@ namespace plib {
 	{
 		explicit istream_uptr() = default;
 
-		istream_uptr(std::unique_ptr<std::istream> &&strm, const pstring &filename)
-		: m_strm(std::move(strm))
-		, m_filename(filename)
-		{
-		}
+		istream_uptr(std::unique_ptr<std::istream> &&strm, const pstring &filename): m_strm(std::move(strm)), m_filename(filename) {}
+		
 		istream_uptr(const istream_uptr &) = delete;
+		
 		istream_uptr &operator=(const istream_uptr &) = delete;
+		
 		istream_uptr(istream_uptr &&rhs) noexcept
 		{
 			m_strm = std::move(rhs.m_strm);
 			m_filename = std::move(rhs.m_filename);
 		}
+		
 		istream_uptr &operator=(istream_uptr &&) /*noexcept*/ = delete;
 
 		~istream_uptr() = default;
 
-		std::istream * operator ->() noexcept { return m_strm.get(); }
-		std::istream & operator *() noexcept { return *m_strm; }
-		pstring filename() { return m_filename; }
+		std::istream * operator ->() noexcept {
+			return m_strm.get();
+		}
+		
+		std::istream & operator *() noexcept {
+			return *m_strm;
+		}
 
-		bool empty() { return m_strm == nullptr; }
+		pstring filename() {
+			return m_filename;
+		}
+
+		bool empty() {
+			return m_strm == nullptr;
+		}
 
 		// FIXME: workaround input context should accept stream_ptr
 
-		std::unique_ptr<std::istream> release_stream() { return std::move(m_strm); }
+		std::unique_ptr<std::istream> release_stream() {
+			return std::move(m_strm);
+		}
+
 	private:
 		std::unique_ptr<std::istream> m_strm;
 		pstring m_filename;
