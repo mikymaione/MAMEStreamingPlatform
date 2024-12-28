@@ -103,10 +103,11 @@ else
 	-- audio-video compression	
 	links {
 		ext_lib("avcodec"),
+		ext_lib("avdevice"),
 		ext_lib("avutil"),
 		ext_lib("avformat"),
 		ext_lib("swresample"),
-		ext_lib("swscale"),	
+		ext_lib("swscale"),
 	}
 end
 

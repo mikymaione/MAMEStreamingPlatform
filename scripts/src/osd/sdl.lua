@@ -452,7 +452,11 @@ project ("osd_" .. _OPTIONS["osd"])
 
 	links {
 		ext_lib("avcodec"),
+		ext_lib("avdevice"),
 		ext_lib("avutil"),
+		ext_lib("avformat"),
+		ext_lib("swresample"),
+		ext_lib("swscale"),
 	}
 
 	-- SDL render from memory to jpg
