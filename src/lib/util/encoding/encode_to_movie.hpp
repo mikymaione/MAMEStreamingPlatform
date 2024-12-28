@@ -23,6 +23,7 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/common.h"
+#include "libavutil/imgutils.h"
 #include "libavutil/opt.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
@@ -221,10 +222,13 @@ namespace encoding
 			const auto yuv_buffer_size = width * height * 3 / 2;
 			yuv_buffer = new uint8_t[yuv_buffer_size];
 
-			avpicture_fill(
-				reinterpret_cast<AVPicture*>(yuv_frame), yuv_buffer,
+			av_image_fill_arrays(
+				yuv_frame->data, yuv_frame->linesize,
+				yuv_buffer,
 				PIXEL_FORMAT_OUT,
-				width, height);
+				width, height,
+				1 // Questo è l'allineamento (di solito 1)
+			);
 		}
 
 		void init_audio()
@@ -365,10 +369,7 @@ namespace encoding
 			fps(fps),
 			on_write(std::move(on_write))
 		{
-			//av_log_set_level(AV_LOG_DEBUG);			
-
-			av_register_all();
-			avcodec_register_all();
+			// av_log_set_level(AV_LOG_DEBUG);
 
 			switch (codec)
 			{
@@ -465,11 +466,13 @@ namespace encoding
 			if (!header)
 				write_header();
 
-			avpicture_fill(
-				reinterpret_cast<AVPicture*>(rgb_frame),
+			av_image_fill_arrays(
+				rgb_frame->data, rgb_frame->linesize,
 				pixels,
 				PIXEL_FORMAT_IN,
-				width, height);
+				width, height,
+				1 // Questo è l'allineamento (di solito 1)
+			);
 
 			//RGB to YUV
 			sws_scale(
@@ -517,7 +520,8 @@ namespace encoding
 				AUDIO_SAMPLE_FORMAT_IN,
 				audio_stream,
 				audio_stream_size,
-				1); //no-alignment
+				1 // no-alignment
+			);
 			if (ret < 0)
 				die("Cannot fill audio frame", ret);
 
@@ -529,7 +533,8 @@ namespace encoding
 					AUDIO_CHANNELS_OUT,
 					aac_frame->nb_samples,
 					AUDIO_SAMPLE_FORMAT_OUT,
-					0);
+					0
+				);
 				if (ret < 0)
 					die("Could not allocate samples", ret);
 			}
@@ -539,7 +544,8 @@ namespace encoding
 				// output
 				nullptr, 0,
 				// input
-				const_cast<const uint8_t**>(wav_frame->data), wav_frame->nb_samples);
+				const_cast<const uint8_t**>(wav_frame->data), wav_frame->nb_samples
+			);
 			if (outSamples < 0)
 				die("Could not convert", outSamples);
 
@@ -554,14 +560,16 @@ namespace encoding
 					// output
 					&convertedData, aac_frame->nb_samples,
 					// input
-					nullptr, 0);
+					nullptr, 0
+				);
 
 				const auto buffer_size = av_samples_get_buffer_size(
 					nullptr,
 					encoder_context->audio_codec_context->channels,
 					aac_frame->nb_samples,
 					encoder_context->audio_codec_context->sample_fmt,
-					0);
+					0
+				);
 				if (buffer_size < 0)
 					die("Invalid buffer size", buffer_size);
 
@@ -571,7 +579,8 @@ namespace encoding
 					encoder_context->audio_codec_context->sample_fmt,
 					convertedData,
 					buffer_size,
-					0);
+					0
+				);
 				if (ret < 0)
 					die("Could not fill frame", ret);
 
@@ -579,24 +588,28 @@ namespace encoding
 				audio_packet.data = nullptr;
 				audio_packet.size = 0;
 
-				int got_packet_ptr;
-				ret = avcodec_encode_audio2(encoder_context->audio_codec_context, &audio_packet, aac_frame, &got_packet_ptr);
+				ret = avcodec_send_frame(encoder_context->audio_codec_context, aac_frame);
 				if (ret < 0)
-					die("Error encoding audio frame", ret);
+					die("Error sending audio frame", ret);
 
-				if (got_packet_ptr)
+				while (ret >= 0)
 				{
+					ret = avcodec_receive_packet(encoder_context->audio_codec_context, &audio_packet);
+					if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+						break;
+					else if (ret < 0)
+						die("Error encoding audio frame", ret);
+
 					audio_packet.stream_index = 1;
 
 					ret = av_interleaved_write_frame(encoder_context->muxer_context, &audio_packet);
-
 					if (ret == 0)
 						send_it();
 					else
 						error("Error while writing audio frame", ret);
-				}
 
-				av_packet_unref(&audio_packet);
+					av_packet_unref(&audio_packet);
+				}
 			}
 		}
 
